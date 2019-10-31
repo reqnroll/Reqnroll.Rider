@@ -1,9 +1,46 @@
+# User-specific stuff:
+**/.idea/**/workspace.xml
+**/.idea/**/tasks.xml
+**/.idea/**/codeStyleConfig.xml
+**/.idea/shelf/*
+**/.idea/dictionaries
+
+# Sensitive or high-churn files:
+**/.idea/**/dataSources/
+**/.idea/**/dataSources.ids
+**/.idea/**/dataSources.xml
+**/.idea/**/dataSources.local.xml
+**/.idea/**/sqlDataSources.xml
+**/.idea/**/dynamic.xml
+**/.idea/**/uiDesigner.xml
+
+# Gradle:
+# NOTE: gradle.xml is often also ignored here. This is only required if the gradle.xml
+# contains path information, but we've got it configured to use the default wrapper.
+# See https://youtrack.jetbrains.com/issue/IDEA-55923 for some more information
+.gradle/
+**/.idea/**/libraries
+
+# Rider creates nested .idea folders, one for each solution, so we don't get clashes if there are multiple
+# solutions in the same folder. This is the reason for the .idea/**/whatever pattern
+# Rider auto-generates a lot of the files in the .idea folder:
+# .name (from the .sln file)
+# modules.xml and .iml files
+# contentModel.xml
+# (indexLayout.xml should be committed if you add existing folder)
+# NOTE: We normally include *.iml for JetBrains IDEs, but Gradle based projects auto generate
+# this on import, so we can happily ignore them. Don't do this for the Rider controlled project!
+**/.idea/**/.name
+**/.idea/**/modules.xml
+**/.idea/**/*.iml
+**/.idea/**/compiler.xml
+**/.idea/**/contentModel.xml
+
 # Build artifacts
 [Bb]in/
 [Oo]bj/
 build
 output
-.gradle
 .tmp
 
 # User-specific files
@@ -13,7 +50,6 @@ output
 *.cache
 
 # IDEs
-.idea
 .vs
 _ReSharper*
 _dotTrace*
