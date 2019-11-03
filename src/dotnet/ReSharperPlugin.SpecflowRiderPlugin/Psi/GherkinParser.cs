@@ -69,10 +69,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         {
             while (_builder.GetTokenType() == GherkinTokenTypes.TAG)
             {
-                var token = _builder.GetToken();
-                Protocol.TraceLogger.Log(LoggingLevel.INFO,
-                                         $"Parsed tag: [{token.Start} - {token.End}]: {_builder.GetTokenText()}");
-
                 var tagMarker = _builder.Mark();
                 _builder.AdvanceLexer();
                 _builder.Done(tagMarker, GherkinNodeTypes.TAG, null);

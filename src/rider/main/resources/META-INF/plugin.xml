@@ -2,7 +2,7 @@
   <id>com.jetbrains.rider.specflow</id>
   <name>SpecFlow Support</name>
   <version>0.1</version>
-  <vendor url="https://project-url">Author</vendor>
+  <vendor url="https://github.com/Settler">Valentin Livkin</vendor>
   <idea-version since-build="191" />
   <depends>com.intellij.modules.rider</depends>
 
