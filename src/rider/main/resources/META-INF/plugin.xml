@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>com.jetbrains.rider.specflow</id>
+  <id>com.settler.rider.specflow</id>
   <name>SpecFlow Support</name>
   <version>0.1</version>
   <vendor url="https://github.com/Settler">Valentin Livkin</vendor>
