@@ -1,0 +1,31 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: StepParam.feature
+  GherkinFeature: Do stuff
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,8): TEXT('Do stuff')
+    GherkinToken(17,4): WHITE_SPACE('\n  ')
+    GherkinScenario: My scenario
+      GherkinToken(21,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(29,1): COLON(':')
+      GherkinToken(30,1): WHITE_SPACE(' ')
+      GherkinToken(31,11): TEXT('My scenario')
+      GherkinToken(42,6): WHITE_SPACE('\n    ')
+      GherkinStep: test step test
+        GherkinToken(48,5): STEP_KEYWORD('Given')
+        GherkinToken(53,1): WHITE_SPACE(' ')
+        GherkinToken(54,9): TEXT('test step')
+        GherkinToken(63,3): WHITE_SPACE('   ')
+        GherkinToken(66,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: par01
+          GherkinToken(67,5): STEP_PARAMETER_TEXT('par01')
+        GherkinToken(72,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(73,2): WHITE_SPACE('  ')
+        GherkinToken(75,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: par01
+          GherkinToken(76,5): STEP_PARAMETER_TEXT('par01')
+        GherkinToken(81,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(82,1): WHITE_SPACE(' ')
+        GherkinToken(83,4): TEXT('test')
+

@@ -1,0 +1,40 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: ScenarioWithExamples.feature
+  GherkinFeature: test
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,4): TEXT('test')
+    GherkinToken(13,4): WHITE_SPACE('\n  ')
+    GherkinScenario: with Examples
+      GherkinToken(17,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(25,1): COLON(':')
+      GherkinToken(26,1): WHITE_SPACE(' ')
+      GherkinToken(27,13): TEXT('with Examples')
+      GherkinToken(40,6): WHITE_SPACE('\n    ')
+      GherkinStep: step
+        GherkinToken(46,5): STEP_KEYWORD('Given')
+        GherkinToken(51,1): WHITE_SPACE(' ')
+        GherkinToken(52,4): TEXT('step')
+      GherkinToken(56,6): WHITE_SPACE('\n    ')
+      GherkinExamplesBlock
+        GherkinToken(62,8): EXAMPLES_KEYWORD('Examples')
+        GherkinToken(70,1): COLON(':')
+        GherkinToken(71,8): WHITE_SPACE('\n      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(79,1): PIPE('|')
+            GherkinToken(80,1): WHITE_SPACE(' ')
+            GherkinTableCell: name
+              GherkinToken(81,4): TABLE_CELL('name')
+            GherkinToken(85,2): WHITE_SPACE('  ')
+            GherkinToken(87,1): PIPE('|')
+            GherkinToken(88,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(96,1): PIPE('|')
+            GherkinToken(97,1): WHITE_SPACE(' ')
+            GherkinTableCell: value
+              GherkinToken(98,5): TABLE_CELL('value')
+            GherkinToken(103,1): WHITE_SPACE(' ')
+            GherkinToken(104,1): PIPE('|')
+

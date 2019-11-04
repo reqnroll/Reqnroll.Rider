@@ -1,0 +1,12 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: WithoutFeatureKeyword.feature
+  GherkinToken(0,20): COMMENT('# No Feature in file')
+  GherkinToken(20,2): WHITE_SPACE('\n')
+  GherkinTag: @tag
+    GherkinToken(22,4): TAG('@tag')
+  GherkinToken(26,2): WHITE_SPACE('\n')
+  GherkinToken(28,4): TEXT('text')
+  GherkinToken(32,2): WHITE_SPACE('\n')
+  GherkinTag: @tag
+    GherkinToken(34,4): TAG('@tag')
+

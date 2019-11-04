@@ -1,0 +1,57 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: Ruby14051.feature
+  GherkinFeature: feature
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,7): TEXT('feature')
+    GherkinToken(16,6): WHITE_SPACE('\n\n  ')
+    GherkinScenario: scenario 1
+      GherkinTag: @s
+        GherkinToken(22,2): TAG('@s')
+      GherkinToken(24,2): WHITE_SPACE('  ')
+      GherkinTag: @i
+        GherkinToken(26,2): TAG('@i')
+      GherkinToken(28,1): WHITE_SPACE(' ')
+      GherkinTag: @A
+        GherkinToken(29,2): TAG('@A')
+      GherkinToken(31,4): WHITE_SPACE('\n  ')
+      GherkinToken(35,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(43,1): COLON(':')
+      GherkinToken(44,1): WHITE_SPACE(' ')
+      GherkinToken(45,10): TEXT('scenario 1')
+      GherkinToken(55,6): WHITE_SPACE('\n\n  ')
+      GherkinStep
+        GherkinToken(61,5): STEP_KEYWORD('Given')
+      GherkinToken(66,4): WHITE_SPACE('\n  ')
+      GherkinStep
+        GherkinToken(70,3): STEP_KEYWORD('And')
+      GherkinToken(73,4): WHITE_SPACE('\n  ')
+      GherkinStep
+        GherkinToken(77,4): STEP_KEYWORD('Then')
+    GherkinToken(81,8): WHITE_SPACE('\n\n\n  ')
+    GherkinScenario: scenario 2.
+      GherkinTag: @s
+        GherkinToken(89,2): TAG('@s')
+      GherkinToken(91,2): WHITE_SPACE('  ')
+      GherkinTag: @i
+        GherkinToken(93,2): TAG('@i')
+      GherkinToken(95,1): WHITE_SPACE(' ')
+      GherkinTag: @A
+        GherkinToken(96,2): TAG('@A')
+      GherkinToken(98,4): WHITE_SPACE('\n  ')
+      GherkinToken(102,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(110,1): COLON(':')
+      GherkinToken(111,1): WHITE_SPACE(' ')
+      GherkinToken(112,11): TEXT('scenario 2.')
+      GherkinToken(123,6): WHITE_SPACE('\n\n  ')
+      GherkinStep
+        GherkinToken(129,5): STEP_KEYWORD('Given')
+      GherkinToken(134,4): WHITE_SPACE('\n  ')
+      GherkinStep
+        GherkinToken(138,3): STEP_KEYWORD('And')
+      GherkinToken(141,4): WHITE_SPACE('\n  ')
+      GherkinStep
+        GherkinToken(145,4): STEP_KEYWORD('Then')
+    GherkinToken(149,6): WHITE_SPACE('\n    ')
+

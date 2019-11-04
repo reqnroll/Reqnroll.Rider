@@ -1,0 +1,43 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: TagBeforeExamples.feature
+  GherkinTag: @javascript
+    GherkinToken(0,11): TAG('@javascript')
+  GherkinToken(11,2): WHITE_SPACE('\n')
+  GherkinFeature: Autocompletion
+    GherkinToken(13,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(20,1): COLON(':')
+    GherkinToken(21,1): WHITE_SPACE(' ')
+    GherkinToken(22,14): TEXT('Autocompletion')
+    GherkinToken(36,6): WHITE_SPACE('\n\n  ')
+    GherkinScenarioOutline
+      GherkinTag: @tag1
+        GherkinToken(42,5): TAG('@tag1')
+      GherkinToken(47,4): WHITE_SPACE('\n  ')
+      GherkinToken(51,16): SCENARIO_OUTLINE_KEYWORD('Scenario Outline')
+      GherkinToken(67,6): WHITE_SPACE('\n    ')
+      GherkinStep: some
+        GherkinToken(73,5): STEP_KEYWORD('Given')
+        GherkinToken(78,1): WHITE_SPACE(' ')
+        GherkinToken(79,4): TEXT('some')
+        GherkinToken(83,1): WHITE_SPACE(' ')
+        GherkinToken(84,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: value
+          GherkinToken(85,5): STEP_PARAMETER_TEXT('value')
+        GherkinToken(90,1): STEP_PARAMETER_BRACE('>')
+      GherkinToken(91,8): WHITE_SPACE('\n\n    ')
+      GherkinTag: @tag2
+        GherkinToken(99,5): TAG('@tag2')
+      GherkinToken(104,6): WHITE_SPACE('\n    ')
+      GherkinExamplesBlock
+        GherkinToken(110,8): EXAMPLES_KEYWORD('Examples')
+        GherkinToken(118,1): COLON(':')
+        GherkinToken(119,8): WHITE_SPACE('\n      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(127,1): PIPE('|')
+            GherkinToken(128,1): WHITE_SPACE(' ')
+            GherkinTableCell: value
+              GherkinToken(129,5): TABLE_CELL('value')
+            GherkinToken(134,1): WHITE_SPACE(' ')
+            GherkinToken(135,1): PIPE('|')
+

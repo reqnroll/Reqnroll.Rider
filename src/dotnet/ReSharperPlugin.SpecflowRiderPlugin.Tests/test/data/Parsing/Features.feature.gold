@@ -1,0 +1,23 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: Features.feature
+  GherkinFeature: First feature name
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): WHITE_SPACE(' ')
+    GherkinToken(8,18): TEXT('First feature name')
+    GherkinToken(26,6): WHITE_SPACE('\n  \n')
+  GherkinFeature: Second feature name
+    GherkinToken(32,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(39,1): WHITE_SPACE(' ')
+    GherkinToken(40,19): TEXT('Second feature name')
+    GherkinToken(59,6): WHITE_SPACE('\n\n  ')
+    GherkinFeatureHeader
+      GherkinToken(65,9): TEXT('Multiline')
+      GherkinToken(74,5): WHITE_SPACE(' \n  ')
+      GherkinToken(79,11): TEXT('Description')
+      GherkinToken(90,4): WHITE_SPACE('\n\n')
+  GherkinFeature: Third feature name
+    GherkinToken(94,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(101,1): COLON(':')
+    GherkinToken(102,1): WHITE_SPACE(' ')
+    GherkinToken(103,18): TEXT('Third feature name')
+

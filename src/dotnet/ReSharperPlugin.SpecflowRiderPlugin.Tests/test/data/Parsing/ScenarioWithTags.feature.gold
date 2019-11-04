@@ -1,0 +1,52 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: ScenarioWithTags.feature
+  GherkinFeature: Do stuff
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,8): TEXT('Do stuff')
+    GherkinToken(17,8): WHITE_SPACE('\n  \n  ')
+    GherkinScenario: My scenario
+      GherkinTag: @tag1
+        GherkinToken(25,5): TAG('@tag1')
+      GherkinToken(30,2): WHITE_SPACE('  ')
+      GherkinTag: @tag2
+        GherkinToken(32,5): TAG('@tag2')
+      GherkinToken(37,4): WHITE_SPACE('\n  ')
+      GherkinToken(41,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(49,1): COLON(':')
+      GherkinToken(50,1): WHITE_SPACE(' ')
+      GherkinToken(51,11): TEXT('My scenario')
+      GherkinToken(62,6): WHITE_SPACE('\n    ')
+      GherkinStep: something
+        GherkinToken(68,5): STEP_KEYWORD('Given')
+        GherkinToken(73,1): WHITE_SPACE(' ')
+        GherkinToken(74,9): TEXT('something')
+      GherkinToken(83,6): WHITE_SPACE('\n    ')
+      GherkinStep: something else
+        GherkinToken(89,3): STEP_KEYWORD('And')
+        GherkinToken(92,1): WHITE_SPACE(' ')
+        GherkinToken(93,14): TEXT('something else')
+    GherkinToken(107,4): WHITE_SPACE('\n  ')
+    GherkinScenario: My second scenario
+      GherkinTag: @tag1
+        GherkinToken(111,5): TAG('@tag1')
+      GherkinToken(116,2): WHITE_SPACE('  ')
+      GherkinTag: @tag2
+        GherkinToken(118,5): TAG('@tag2')
+      GherkinToken(123,4): WHITE_SPACE('\n  ')
+      GherkinToken(127,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(135,1): COLON(':')
+      GherkinToken(136,1): WHITE_SPACE(' ')
+      GherkinToken(137,18): TEXT('My second scenario')
+      GherkinToken(155,6): WHITE_SPACE('\n    ')
+      GherkinStep: something
+        GherkinToken(161,5): STEP_KEYWORD('Given')
+        GherkinToken(166,1): WHITE_SPACE(' ')
+        GherkinToken(167,9): TEXT('something')
+      GherkinToken(176,6): WHITE_SPACE('\n    ')
+      GherkinStep: something else
+        GherkinToken(182,3): STEP_KEYWORD('And')
+        GherkinToken(185,1): WHITE_SPACE(' ')
+        GherkinToken(186,14): TEXT('something else')
+

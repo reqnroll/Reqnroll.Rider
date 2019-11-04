@@ -1,0 +1,11 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: NoSteps.feature
+  GherkinFeature: No steps
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,8): TEXT('No steps')
+    GherkinToken(17,4): WHITE_SPACE('\n  ')
+    GherkinFeatureHeader
+      GherkinToken(21,26): TEXT('Some description goes here')
+

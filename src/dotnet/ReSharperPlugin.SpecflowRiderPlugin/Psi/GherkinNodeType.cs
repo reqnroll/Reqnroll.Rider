@@ -1,16 +1,35 @@
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
+using JetBrains.ReSharper.Psi.TreeBuilder;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
-    public class GherkinNodeType : CompositeNodeType
+    public class GherkinNodeType : CompositeNodeWithArgumentType
     {
-        public GherkinNodeType(string name, int index) : base(name, index)
+        protected GherkinNodeType(string name, int index) : base(name, index)
         {
         }
 
-        public override CompositeElement Create()
+        public override CompositeElement Create(object userData)
         {
             return new GherkinElement(this);
+        }
+
+        public sealed override CompositeElement Create()
+        {
+            return Create(null);
+        }
+    }
+
+    public class GherkinNodeType<T> : GherkinNodeType
+        where T : CompositeElement, new()
+    {
+        protected GherkinNodeType(string name, int index) : base(name, index)
+        {
+        }
+
+        public override CompositeElement Create(object userData)
+        {
+            return new T();
         }
     }
 }

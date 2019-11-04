@@ -1,0 +1,102 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: ScenarioOutlineTable.feature
+  GherkinFeature: Cucumber stock keeping
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,22): TEXT('Cucumber stock keeping')
+    GherkinToken(31,6): WHITE_SPACE('\n\n  ')
+    GherkinScenarioOutline: eating
+      GherkinToken(37,16): SCENARIO_OUTLINE_KEYWORD('Scenario Outline')
+      GherkinToken(53,1): COLON(':')
+      GherkinToken(54,1): WHITE_SPACE(' ')
+      GherkinToken(55,6): TEXT('eating')
+      GherkinToken(61,6): WHITE_SPACE('\n    ')
+      GherkinStep: there are cucumbers
+        GherkinToken(67,5): STEP_KEYWORD('Given')
+        GherkinToken(72,1): WHITE_SPACE(' ')
+        GherkinToken(73,9): TEXT('there are')
+        GherkinToken(82,1): WHITE_SPACE(' ')
+        GherkinToken(83,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: start
+          GherkinToken(84,5): STEP_PARAMETER_TEXT('start')
+        GherkinToken(89,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(90,1): WHITE_SPACE(' ')
+        GherkinToken(91,9): TEXT('cucumbers')
+      GherkinToken(100,6): WHITE_SPACE('\n    ')
+      GherkinStep: there are cucumbers
+        GherkinToken(106,4): STEP_KEYWORD('Then')
+        GherkinToken(110,1): WHITE_SPACE(' ')
+        GherkinToken(111,9): TEXT('there are')
+        GherkinToken(120,1): WHITE_SPACE(' ')
+        GherkinToken(121,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: total
+          GherkinToken(122,5): STEP_PARAMETER_TEXT('total')
+        GherkinToken(127,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(128,1): WHITE_SPACE(' ')
+        GherkinToken(129,9): TEXT('cucumbers')
+      GherkinToken(138,8): WHITE_SPACE('\n\n    ')
+      GherkinExamplesBlock
+        GherkinToken(146,8): EXAMPLES_KEYWORD('Examples')
+        GherkinToken(154,1): COLON(':')
+        GherkinToken(155,8): WHITE_SPACE('\n      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(163,1): PIPE('|')
+            GherkinToken(164,1): WHITE_SPACE(' ')
+            GherkinTableCell: start
+              GherkinToken(165,5): TABLE_CELL('start')
+            GherkinToken(170,1): WHITE_SPACE(' ')
+            GherkinToken(171,1): PIPE('|')
+            GherkinToken(172,1): WHITE_SPACE(' ')
+            GherkinTableCell: total
+              GherkinToken(173,5): TABLE_CELL('total')
+            GherkinToken(178,2): WHITE_SPACE('  ')
+            GherkinToken(180,1): PIPE('|')
+            GherkinToken(181,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(189,1): PIPE('|')
+            GherkinToken(190,1): WHITE_SPACE(' ')
+            GherkinTableCell: 12
+              GherkinToken(191,2): TABLE_CELL('12')
+            GherkinToken(193,4): WHITE_SPACE('    ')
+            GherkinToken(197,1): PIPE('|')
+            GherkinToken(198,1): WHITE_SPACE(' ')
+            GherkinTableCell: 13  56
+              GherkinToken(199,6): TABLE_CELL('13  56')
+            GherkinToken(205,1): WHITE_SPACE(' ')
+            GherkinToken(206,1): PIPE('|')
+            GherkinToken(207,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(215,1): PIPE('|')
+            GherkinToken(216,1): WHITE_SPACE(' ')
+            GherkinTableCell: 20
+              GherkinToken(217,2): TABLE_CELL('20')
+            GherkinToken(219,4): WHITE_SPACE('    ')
+            GherkinToken(223,1): PIPE('|')
+            GherkinToken(224,1): WHITE_SPACE(' ')
+            GherkinTableCell: 20
+              GherkinToken(225,2): TABLE_CELL('20')
+            GherkinToken(227,5): WHITE_SPACE('     ')
+            GherkinToken(232,1): PIPE('|')
+            GherkinToken(233,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(241,1): PIPE('|')
+            GherkinToken(242,7): WHITE_SPACE('       ')
+            GherkinTableCell
+            GherkinToken(249,1): PIPE('|')
+            GherkinToken(250,1): WHITE_SPACE(' ')
+            GherkinTableCell: 1
+              GherkinToken(251,1): TABLE_CELL('1')
+            GherkinToken(252,6): WHITE_SPACE('      ')
+            GherkinToken(258,1): PIPE('|')
+            GherkinToken(259,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(267,1): PIPE('|')
+            GherkinToken(268,7): WHITE_SPACE('       ')
+            GherkinTableCell
+            GherkinToken(275,1): PIPE('|')
+            GherkinToken(276,8): WHITE_SPACE('        ')
+            GherkinTableCell
+            GherkinToken(284,1): PIPE('|')
+

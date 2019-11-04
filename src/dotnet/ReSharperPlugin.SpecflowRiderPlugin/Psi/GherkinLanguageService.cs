@@ -39,7 +39,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public override IParser CreateParser(ILexer lexer, IPsiModule module, IPsiSourceFile sourceFile)
         {
             Protocol.TraceLogger.Log(LoggingLevel.INFO, $"CreateParser: {sourceFile.Name}");
-            return new GherkinParser(lexer, module, sourceFile);
+            return new GherkinParser(lexer, sourceFile);
         }
 
         public override IEnumerable<ITypeDeclaration> FindTypeDeclarations(IFile file)

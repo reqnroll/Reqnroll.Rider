@@ -1,0 +1,116 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: ScenarioOutlineTableWithTags.feature
+  GherkinFeature: Cucumber stock keeping
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,22): TEXT('Cucumber stock keeping')
+    GherkinToken(31,4): WHITE_SPACE('\n  ')
+    GherkinScenarioOutline: eating
+      GherkinToken(35,16): SCENARIO_OUTLINE_KEYWORD('Scenario Outline')
+      GherkinToken(51,1): COLON(':')
+      GherkinToken(52,1): WHITE_SPACE(' ')
+      GherkinToken(53,6): TEXT('eating')
+      GherkinToken(59,6): WHITE_SPACE('\n    ')
+      GherkinStep: there are cucumbers
+        GherkinToken(65,5): STEP_KEYWORD('Given')
+        GherkinToken(70,1): WHITE_SPACE(' ')
+        GherkinToken(71,9): TEXT('there are')
+        GherkinToken(80,1): WHITE_SPACE(' ')
+        GherkinToken(81,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: start
+          GherkinToken(82,5): STEP_PARAMETER_TEXT('start')
+        GherkinToken(87,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(88,1): WHITE_SPACE(' ')
+        GherkinToken(89,9): TEXT('cucumbers')
+      GherkinToken(98,6): WHITE_SPACE('\n    ')
+      GherkinStep: there are cucumbers
+        GherkinToken(104,4): STEP_KEYWORD('Then')
+        GherkinToken(108,1): WHITE_SPACE(' ')
+        GherkinToken(109,9): TEXT('there are')
+        GherkinToken(118,1): WHITE_SPACE(' ')
+        GherkinToken(119,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: total
+          GherkinToken(120,5): STEP_PARAMETER_TEXT('total')
+        GherkinToken(125,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(126,1): WHITE_SPACE(' ')
+        GherkinToken(127,9): TEXT('cucumbers')
+      GherkinToken(136,8): WHITE_SPACE('\n\n    ')
+      GherkinExamplesBlock
+        GherkinToken(144,8): EXAMPLES_KEYWORD('Examples')
+        GherkinToken(152,1): COLON(':')
+        GherkinToken(153,8): WHITE_SPACE('\n      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(161,1): PIPE('|')
+            GherkinToken(162,1): WHITE_SPACE(' ')
+            GherkinTableCell: start
+              GherkinToken(163,5): TABLE_CELL('start')
+            GherkinToken(168,1): WHITE_SPACE(' ')
+            GherkinToken(169,1): PIPE('|')
+            GherkinToken(170,1): WHITE_SPACE(' ')
+            GherkinTableCell: total
+              GherkinToken(171,5): TABLE_CELL('total')
+            GherkinToken(176,1): WHITE_SPACE(' ')
+            GherkinToken(177,1): PIPE('|')
+            GherkinToken(178,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(186,1): PIPE('|')
+            GherkinToken(187,2): WHITE_SPACE('  ')
+            GherkinTableCell: 12
+              GherkinToken(189,2): TABLE_CELL('12')
+            GherkinToken(191,3): WHITE_SPACE('   ')
+            GherkinToken(194,1): PIPE('|')
+            GherkinToken(195,3): WHITE_SPACE('   ')
+            GherkinTableCell: 13
+              GherkinToken(198,2): TABLE_CELL('13')
+            GherkinToken(200,2): WHITE_SPACE('  ')
+            GherkinToken(202,1): PIPE('|')
+            GherkinToken(203,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(211,1): PIPE('|')
+            GherkinToken(212,2): WHITE_SPACE('  ')
+            GherkinTableCell: 20
+              GherkinToken(214,2): TABLE_CELL('20')
+            GherkinToken(216,3): WHITE_SPACE('   ')
+            GherkinToken(219,1): PIPE('|')
+            GherkinToken(220,3): WHITE_SPACE('   ')
+            GherkinTableCell: 20
+              GherkinToken(223,2): TABLE_CELL('20')
+            GherkinToken(225,2): WHITE_SPACE('  ')
+            GherkinToken(227,1): PIPE('|')
+            GherkinToken(228,8): WHITE_SPACE('\n\n    ')
+      GherkinTag: @tag
+        GherkinToken(236,4): TAG('@tag')
+      GherkinToken(240,6): WHITE_SPACE('\n    ')
+      GherkinExamplesBlock
+        GherkinToken(246,8): EXAMPLES_KEYWORD('Examples')
+        GherkinToken(254,1): COLON(':')
+        GherkinToken(255,8): WHITE_SPACE('\n      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(263,1): PIPE('|')
+            GherkinToken(264,1): WHITE_SPACE(' ')
+            GherkinTableCell: start
+              GherkinToken(265,5): TABLE_CELL('start')
+            GherkinToken(270,1): WHITE_SPACE(' ')
+            GherkinToken(271,1): PIPE('|')
+            GherkinToken(272,1): WHITE_SPACE(' ')
+            GherkinTableCell: total
+              GherkinToken(273,5): TABLE_CELL('total')
+            GherkinToken(278,1): WHITE_SPACE(' ')
+            GherkinToken(279,1): PIPE('|')
+            GherkinToken(280,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(288,1): PIPE('|')
+            GherkinToken(289,2): WHITE_SPACE('  ')
+            GherkinTableCell: 06
+              GherkinToken(291,2): TABLE_CELL('06')
+            GherkinToken(293,3): WHITE_SPACE('   ')
+            GherkinToken(296,1): PIPE('|')
+            GherkinToken(297,3): WHITE_SPACE('   ')
+            GherkinTableCell: 66
+              GherkinToken(300,2): TABLE_CELL('66')
+            GherkinToken(302,2): WHITE_SPACE('  ')
+            GherkinToken(304,1): PIPE('|')
+

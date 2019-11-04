@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi.Parsing;
@@ -15,7 +16,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private int myEndOffset;
         private string myCurLanguage;
         
-        //TODO SORTED?
         private SortedList<string, string> myKeywords;
         private GherkinKeywordProvider myKeywordProvider;
 
@@ -48,7 +48,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         
         private void UpdateLanguage(string language) {
             myCurLanguage = language;
-            myKeywords = new SortedList<string, string>(myKeywordProvider.getAllKeywords(language).ToDictionary(o => o));
+            // Need to use Descending comparer, because long keywords should be first.
+            // For example: "Scenario" keyword is a part of "Scenario Outline" keyword.
+            myKeywords = new SortedList<string, string>(myKeywordProvider.getAllKeywords(language).ToDictionary(o => o), new DescendingComparer<string>());
         }
 
         public void Advance()
@@ -370,5 +372,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public int TokenEnd => _currentPosition;
         
         public IBuffer Buffer { get; }
+        
+        class DescendingComparer<T> : IComparer<T> where T : IComparable<T> {
+            public int Compare(T x, T y) {
+                return y.CompareTo(x);
+            }
+        }
     }
 }

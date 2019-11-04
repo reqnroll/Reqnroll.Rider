@@ -1,0 +1,24 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: Pystring.feature
+  GherkinFeature: Pystring
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,8): TEXT('Pystring')
+    GherkinToken(17,4): WHITE_SPACE('\n  ')
+    GherkinScenario: Pystring
+      GherkinToken(21,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(29,1): COLON(':')
+      GherkinToken(30,1): WHITE_SPACE(' ')
+      GherkinToken(31,8): TEXT('Pystring')
+      GherkinToken(39,6): WHITE_SPACE('\n    ')
+      GherkinStep: text with
+        GherkinToken(45,5): STEP_KEYWORD('Given')
+        GherkinToken(50,1): WHITE_SPACE(' ')
+        GherkinToken(51,9): TEXT('text with')
+        GherkinToken(60,6): WHITE_SPACE('\n    ')
+        GherkinPystring
+          GherkinToken(66,3): PYSTRING_QUOTES('"""')
+          GherkinToken(69,20): PYSTRING_TEXT('\n    pystring\n    ')
+          GherkinToken(89,3): PYSTRING_QUOTES('"""')
+

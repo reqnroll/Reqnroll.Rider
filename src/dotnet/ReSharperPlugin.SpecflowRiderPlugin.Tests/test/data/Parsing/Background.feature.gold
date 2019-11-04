@@ -1,0 +1,26 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: Background.feature
+  GherkinFeature
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,4): WHITE_SPACE('\n  ')
+    GherkinScenario(Background):
+      GherkinToken(12,10): BACKGROUND_KEYWORD('Background')
+      GherkinToken(22,1): COLON(':')
+      GherkinToken(23,6): WHITE_SPACE('\n    ')
+      GherkinStep: this
+        GherkinToken(29,5): STEP_KEYWORD('Given')
+        GherkinToken(34,1): WHITE_SPACE(' ')
+        GherkinToken(35,4): TEXT('this')
+    GherkinToken(39,4): WHITE_SPACE('\n  ')
+    GherkinScenario: Foo
+      GherkinToken(43,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(51,1): COLON(':')
+      GherkinToken(52,1): WHITE_SPACE(' ')
+      GherkinToken(53,3): TEXT('Foo')
+      GherkinToken(56,6): WHITE_SPACE('\n    ')
+      GherkinStep: that
+        GherkinToken(62,5): STEP_KEYWORD('Given')
+        GherkinToken(67,1): WHITE_SPACE(' ')
+        GherkinToken(68,4): TEXT('that')
+

@@ -8,12 +8,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
     public class GherkinProjectFileType : KnownProjectFileType
     {
         public new const string Name = "GHERKIN";
+        public const string FEATURE_EXTENSION = ".feature";
         
         [CanBeNull]
         [UsedImplicitly]
         public new static GherkinProjectFileType Instance { get; private set; }
         
-        private GherkinProjectFileType() : base(Name, "Gherkin", new[] {".feature"})  {  }
+        private GherkinProjectFileType() : base(Name, "Gherkin", new[] {FEATURE_EXTENSION})  {  }
         
         protected GherkinProjectFileType([NotNull] string name) : base(name)
         {

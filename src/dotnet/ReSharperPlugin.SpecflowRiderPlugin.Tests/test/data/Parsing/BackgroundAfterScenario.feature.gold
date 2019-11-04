@@ -1,0 +1,28 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: BackgroundAfterScenario.feature
+  GherkinFeature: Current language
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,16): TEXT('Current language')
+    GherkinToken(25,4): WHITE_SPACE('\n  ')
+    GherkinScenario: Change current language
+      GherkinToken(29,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(37,1): COLON(':')
+      GherkinToken(38,1): WHITE_SPACE(' ')
+      GherkinToken(39,23): TEXT('Change current language')
+      GherkinToken(62,6): WHITE_SPACE('\n    ')
+      GherkinStep: I am on the root page
+        GherkinToken(68,4): STEP_KEYWORD('When')
+        GherkinToken(72,1): WHITE_SPACE(' ')
+        GherkinToken(73,21): TEXT('I am on the root page')
+    GherkinToken(94,6): WHITE_SPACE('\n\n  ')
+    GherkinScenario(Background):
+      GherkinToken(100,10): BACKGROUND_KEYWORD('Background')
+      GherkinToken(110,1): COLON(':')
+      GherkinToken(111,6): WHITE_SPACE('\n    ')
+      GherkinStep: signed in user
+        GherkinToken(117,5): STEP_KEYWORD('Given')
+        GherkinToken(122,1): WHITE_SPACE(' ')
+        GherkinToken(123,14): TEXT('signed in user')
+

@@ -8,5 +8,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
     {
         public override NodeType NodeType => GherkinNodeTypes.FILE;
         public override PsiLanguageType Language => GherkinLanguage.Instance.NotNull();
+        
+        public string FileName { get; }
+
+        public GherkinFile(string fileName)
+        {
+            FileName = fileName;
+        }
+        
+        public override string ToString()
+        {
+            return $"GherkinFile: {FileName}";
+        }
     }
 }

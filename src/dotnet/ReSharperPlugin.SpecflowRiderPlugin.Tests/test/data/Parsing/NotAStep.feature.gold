@@ -1,0 +1,21 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: NotAStep.feature
+  GherkinFeature: Foo
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,3): TEXT('Foo')
+    GherkinToken(12,4): WHITE_SPACE('\n  ')
+    GherkinScenario: Bar
+      GherkinToken(16,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(24,1): COLON(':')
+      GherkinToken(25,1): WHITE_SPACE(' ')
+      GherkinToken(26,3): TEXT('Bar')
+      GherkinToken(29,6): WHITE_SPACE('\n    ')
+      GherkinStep: baz
+        GherkinToken(35,5): STEP_KEYWORD('Given')
+        GherkinToken(40,1): WHITE_SPACE(' ')
+        GherkinToken(41,3): TEXT('baz')
+      GherkinToken(44,4): WHITE_SPACE('\n  ')
+      GherkinToken(48,19): TEXT('IntelliJIdeaRulezzz')
+

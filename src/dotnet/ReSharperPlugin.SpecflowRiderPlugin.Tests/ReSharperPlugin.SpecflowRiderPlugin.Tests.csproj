@@ -11,7 +11,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\ReSharperPlugin.SpecflowRiderPlugin\ReSharperPlugin.SpecflowRiderPlugin.Rider.csproj" />
+    <ProjectReference Include="..\ReSharperPlugin.SpecflowRiderPlugin\ReSharperPlugin.SpecflowRiderPlugin.csproj" />
   </ItemGroup>
 
   <ItemGroup>

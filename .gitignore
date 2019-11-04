@@ -54,3 +54,4 @@ output
 _ReSharper*
 _dotTrace*
 mono_crash*.json
+packages

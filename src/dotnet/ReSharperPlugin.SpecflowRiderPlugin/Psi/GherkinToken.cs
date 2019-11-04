@@ -29,7 +29,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         public override string ToString()
         {
-            return $"GherkinToken({GetTreeStartOffset()},{Length}): {NodeType}";
+            return $"GherkinToken({GetTreeStartOffset()},{Length}): {NodeType}('{GetText()}')";
         }
     }
 }

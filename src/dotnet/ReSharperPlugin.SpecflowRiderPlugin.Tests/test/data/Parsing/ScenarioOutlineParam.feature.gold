@@ -1,0 +1,100 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: ScenarioOutlineParam.feature
+  GherkinFeature: test
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,4): TEXT('test')
+    GherkinToken(13,6): WHITE_SPACE('\n\n  ')
+    GherkinScenarioOutline: Opening Scan Settings
+      GherkinToken(19,16): SCENARIO_OUTLINE_KEYWORD('Scenario Outline')
+      GherkinToken(35,1): COLON(':')
+      GherkinToken(36,1): WHITE_SPACE(' ')
+      GherkinToken(37,7): TEXT('Opening')
+      GherkinToken(44,1): WHITE_SPACE(' ')
+      GherkinToken(45,1): STEP_PARAMETER_BRACE('<')
+      GherkinStepParameter: scan
+        GherkinToken(46,4): STEP_PARAMETER_TEXT('scan')
+      GherkinToken(50,1): STEP_PARAMETER_BRACE('>')
+      GherkinToken(51,1): WHITE_SPACE(' ')
+      GherkinToken(52,13): TEXT('Scan Settings')
+      GherkinToken(65,6): WHITE_SPACE('\n    ')
+      GherkinStep: I am on Antivirus page
+        GherkinToken(71,5): STEP_KEYWORD('Given')
+        GherkinToken(76,1): WHITE_SPACE(' ')
+        GherkinToken(77,22): TEXT('I am on Antivirus page')
+      GherkinToken(99,6): WHITE_SPACE('\n    ')
+      GherkinStep: I go to other scans section
+        GherkinToken(105,4): STEP_KEYWORD('When')
+        GherkinToken(109,2): WHITE_SPACE('  ')
+        GherkinToken(111,27): TEXT('I go to other scans section')
+      GherkinToken(138,6): WHITE_SPACE('\n    ')
+      GherkinStep: Open Scan settings
+        GherkinToken(144,3): STEP_KEYWORD('And')
+        GherkinToken(147,1): WHITE_SPACE(' ')
+        GherkinToken(148,4): TEXT('Open')
+        GherkinToken(152,1): WHITE_SPACE(' ')
+        GherkinToken(153,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: scan
+          GherkinToken(154,4): STEP_PARAMETER_TEXT('scan')
+        GherkinToken(158,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(159,1): WHITE_SPACE(' ')
+        GherkinToken(160,13): TEXT('Scan settings')
+      GherkinToken(173,6): WHITE_SPACE('\n    ')
+      GherkinStep: I can see Scan settings window
+        GherkinToken(179,4): STEP_KEYWORD('Then')
+        GherkinToken(183,1): WHITE_SPACE(' ')
+        GherkinToken(184,9): TEXT('I can see')
+        GherkinToken(193,1): WHITE_SPACE(' ')
+        GherkinToken(194,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: scan
+          GherkinToken(195,4): STEP_PARAMETER_TEXT('scan')
+        GherkinToken(199,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(200,1): WHITE_SPACE(' ')
+        GherkinToken(201,20): TEXT('Scan settings window')
+      GherkinToken(221,6): WHITE_SPACE('\n    ')
+      GherkinExamplesBlock
+        GherkinToken(227,8): EXAMPLES_KEYWORD('Examples')
+        GherkinToken(235,1): COLON(':')
+        GherkinToken(236,8): WHITE_SPACE('\n      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(244,1): PIPE('|')
+            GherkinToken(245,1): WHITE_SPACE(' ')
+            GherkinTableCell: scan
+              GherkinToken(246,4): TABLE_CELL('scan')
+            GherkinToken(250,12): WHITE_SPACE('            ')
+            GherkinToken(262,1): PIPE('|')
+            GherkinToken(263,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(271,1): PIPE('|')
+            GherkinToken(272,1): WHITE_SPACE(' ')
+            GherkinTableCell: Quick
+              GherkinToken(273,5): TABLE_CELL('Quick')
+            GherkinToken(278,11): WHITE_SPACE('           ')
+            GherkinToken(289,1): PIPE('|')
+            GherkinToken(290,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(298,1): PIPE('|')
+            GherkinToken(299,1): WHITE_SPACE(' ')
+            GherkinTableCell: Boot time
+              GherkinToken(300,9): TABLE_CELL('Boot time')
+            GherkinToken(309,7): WHITE_SPACE('       ')
+            GherkinToken(316,1): PIPE('|')
+            GherkinToken(317,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(325,1): PIPE('|')
+            GherkinToken(326,1): WHITE_SPACE(' ')
+            GherkinTableCell: Removable media
+              GherkinToken(327,15): TABLE_CELL('Removable media')
+            GherkinToken(342,1): WHITE_SPACE(' ')
+            GherkinToken(343,1): PIPE('|')
+            GherkinToken(344,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(352,1): PIPE('|')
+            GherkinToken(353,1): WHITE_SPACE(' ')
+            GherkinTableCell: Folder Scan
+              GherkinToken(354,11): TABLE_CELL('Folder Scan')
+            GherkinToken(365,5): WHITE_SPACE('     ')
+            GherkinToken(370,1): PIPE('|')
+

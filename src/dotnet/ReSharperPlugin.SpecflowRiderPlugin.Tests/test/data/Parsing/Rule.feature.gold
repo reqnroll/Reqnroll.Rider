@@ -1,0 +1,55 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: Rule.feature
+  GherkinFeature: a sample rule
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,13): TEXT('a sample rule')
+    GherkinToken(22,4): WHITE_SPACE('\n  ')
+    GherkinScenario(Background):
+      GherkinToken(26,10): BACKGROUND_KEYWORD('Background')
+      GherkinToken(36,1): COLON(':')
+      GherkinToken(37,6): WHITE_SPACE('\n    ')
+      GherkinStep: a sample project
+        GherkinToken(43,5): STEP_KEYWORD('Given')
+        GherkinToken(48,1): WHITE_SPACE(' ')
+        GherkinToken(49,16): TEXT('a sample project')
+    GherkinToken(65,6): WHITE_SPACE('\n\n  ')
+    GherkinRule: the first rule in the project
+      GherkinToken(71,4): RULE_KEYWORD('Rule')
+      GherkinToken(75,1): COLON(':')
+      GherkinToken(76,1): WHITE_SPACE(' ')
+      GherkinToken(77,29): TEXT('the first rule in the project')
+      GherkinToken(106,8): WHITE_SPACE('\n\n    ')
+      GherkinScenario: the first example in the Rule
+        GherkinToken(114,7): SCENARIO_KEYWORD('Example')
+        GherkinToken(121,1): COLON(':')
+        GherkinToken(122,1): WHITE_SPACE(' ')
+        GherkinToken(123,29): TEXT('the first example in the Rule')
+        GherkinToken(152,8): WHITE_SPACE('\n      ')
+        GherkinStep: step one
+          GherkinToken(160,5): STEP_KEYWORD('Given')
+          GherkinToken(165,1): WHITE_SPACE(' ')
+          GherkinToken(166,8): TEXT('step one')
+        GherkinToken(174,8): WHITE_SPACE('\n      ')
+        GherkinStep: step two
+          GherkinToken(182,3): STEP_KEYWORD('And')
+          GherkinToken(185,1): WHITE_SPACE(' ')
+          GherkinToken(186,8): TEXT('step two')
+      GherkinToken(194,8): WHITE_SPACE('\n\n    ')
+      GherkinScenario: the second example in the Rule
+        GherkinToken(202,7): SCENARIO_KEYWORD('Example')
+        GherkinToken(209,1): COLON(':')
+        GherkinToken(210,1): WHITE_SPACE(' ')
+        GherkinToken(211,30): TEXT('the second example in the Rule')
+        GherkinToken(241,8): WHITE_SPACE('\n      ')
+        GherkinStep: step three
+          GherkinToken(249,5): STEP_KEYWORD('Given')
+          GherkinToken(254,1): WHITE_SPACE(' ')
+          GherkinToken(255,10): TEXT('step three')
+        GherkinToken(265,8): WHITE_SPACE('\n      ')
+        GherkinStep: step four
+          GherkinToken(273,3): STEP_KEYWORD('And')
+          GherkinToken(276,1): WHITE_SPACE(' ')
+          GherkinToken(277,9): TEXT('step four')
+
