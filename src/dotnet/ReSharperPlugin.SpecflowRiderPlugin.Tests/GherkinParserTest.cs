@@ -32,6 +32,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests
         [TestCase("WithoutFeatureKeyword")]
         [TestCase("ScenarioWithTags")]
         [TestCase("PystringWithParams")]
+        [TestCase("FeatureRu")]
         public void TestParser(string name) { DoOneTest(name); }
     }
 }

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Text;
 using JetBrains.Util;
@@ -12,13 +10,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private int _currentPosition;
         private int myCurrentTokenStart;
         private int myState;
-        private int myStartOffset;
         private int myEndOffset;
         private string myCurLanguage;
         
-        private SortedList<string, string> myKeywords;
-        private GherkinKeywordProvider myKeywordProvider;
+        private IReadOnlyCollection<string> myKeywords;
+        private readonly GherkinKeywordProvider myKeywordProvider;
 
+        // ReSharper disable InconsistentNaming
         private const int STATE_DEFAULT = 0;
         private const int STATE_AFTER_KEYWORD = 1;
         private const int STATE_TABLE = 2;
@@ -29,6 +27,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private const int STATE_PARAMETER_INSIDE_STEP = 7;
 
         private const string PYSTRING_MARKER = "\"\"\"";
+        // ReSharper restore InconsistentNaming
 
         public GherkinLexer(IBuffer buffer, GherkinKeywordProvider provider)
         {
@@ -39,7 +38,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         public void Start()
         {
-            myStartOffset = 0;
             myEndOffset = Buffer.Length;
             _currentPosition = 0;
             myState = 0;
@@ -48,9 +46,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         
         private void UpdateLanguage(string language) {
             myCurLanguage = language;
-            // Need to use Descending comparer, because long keywords should be first.
-            // For example: "Scenario" keyword is a part of "Scenario Outline" keyword.
-            myKeywords = new SortedList<string, string>(myKeywordProvider.getAllKeywords(language).ToDictionary(o => o), new DescendingComparer<string>());
+            myKeywords = myKeywordProvider.GetAllKeywords(language);
         }
 
         public void Advance()
@@ -194,13 +190,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             {
                 if (myState == STATE_DEFAULT)
                 {
-                    foreach (var keywordPair in myKeywords)
+                    foreach (var keyword in myKeywords)
                     {
-                        var keyword = keywordPair.Key;
                         int length = keyword.Length;
                         if (IsStringAtPosition(keyword))
                         {
-                            if (myKeywordProvider.isSpaceRequiredAfterKeyword(myCurLanguage, keyword) &&
+                            if (myKeywordProvider.IsSpaceRequiredAfterKeyword(myCurLanguage, keyword) &&
                                 myEndOffset - _currentPosition > length &&
                                 char.IsLetterOrDigit(Buffer[_currentPosition + length]))
                             {
@@ -208,11 +203,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                             }
 
                             char followedByChar = _currentPosition + length < myEndOffset ? Buffer[_currentPosition + length] : (char)0;
-                            TokenType = myKeywordProvider.getTokenType(myCurLanguage, keyword);
+                            TokenType = myKeywordProvider.GetTokenType(myCurLanguage, keyword);
                             if (TokenType == GherkinTokenTypes.STEP_KEYWORD)
                             {
                                 bool followedByWhitespace = char.IsWhiteSpace(followedByChar) && followedByChar != '\n';
-                                if (followedByWhitespace != myKeywordProvider.isSpaceRequiredAfterKeyword(myCurLanguage, keyword))
+                                if (followedByWhitespace != myKeywordProvider.IsSpaceRequiredAfterKeyword(myCurLanguage, keyword))
                                 {
                                     TokenType = GherkinTokenTypes.TEXT;
                                 }
@@ -372,11 +367,5 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public int TokenEnd => _currentPosition;
         
         public IBuffer Buffer { get; }
-        
-        class DescendingComparer<T> : IComparer<T> where T : IComparable<T> {
-            public int Compare(T x, T y) {
-                return y.CompareTo(x);
-            }
-        }
     }
 }

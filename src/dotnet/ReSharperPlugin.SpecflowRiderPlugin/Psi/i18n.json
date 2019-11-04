@@ -2666,7 +2666,8 @@
     "name": "Russian",
     "native": "русский",
     "rule": [
-      "Rule"
+      "Rule",
+      "Правило"
     ],
     "scenario": [
       "Пример",

@@ -1,0 +1,175 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: FeatureRu.feature
+  GherkinToken(0,13): COMMENT('#language: ru')
+  GherkinToken(13,4): WHITE_SPACE('\n\n')
+  GherkinFeature: Пробуем русский
+    GherkinToken(17,10): FEATURE_KEYWORD('Функционал')
+    GherkinToken(27,1): COLON(':')
+    GherkinToken(28,1): WHITE_SPACE(' ')
+    GherkinToken(29,15): TEXT('Пробуем русский')
+    GherkinToken(44,4): WHITE_SPACE('\n  ')
+    GherkinFeatureHeader
+      GherkinToken(48,25): TEXT('Это описание функционала.')
+      GherkinToken(73,4): WHITE_SPACE('\n  ')
+      GherkinToken(77,22): TEXT('Да, оно многострочное.')
+      GherkinToken(99,6): WHITE_SPACE('\n\n  ')
+    GherkinScenario(Background):
+      GherkinToken(105,11): BACKGROUND_KEYWORD('Предыстория')
+      GherkinToken(116,1): COLON(':')
+      GherkinToken(117,6): WHITE_SPACE('\n    ')
+      GherkinStep: есть предыстория
+        GherkinToken(123,8): STEP_KEYWORD('Допустим')
+        GherkinToken(131,1): WHITE_SPACE(' ')
+        GherkinToken(132,16): TEXT('есть предыстория')
+      GherkinToken(148,6): WHITE_SPACE('\n    ')
+      GherkinStep: она написана на русском
+        GherkinToken(154,1): STEP_KEYWORD('И')
+        GherkinToken(155,1): WHITE_SPACE(' ')
+        GherkinToken(156,23): TEXT('она написана на русском')
+    GherkinToken(179,6): WHITE_SPACE('\n\n  ')
+    GherkinScenario: А это сценарий
+      GherkinToken(185,8): SCENARIO_KEYWORD('Сценарий')
+      GherkinToken(193,1): COLON(':')
+      GherkinToken(194,1): WHITE_SPACE(' ')
+      GherkinToken(195,14): TEXT('А это сценарий')
+      GherkinToken(209,6): WHITE_SPACE('\n    ')
+      GherkinStep: есть таблица
+        GherkinToken(215,8): STEP_KEYWORD('Допустим')
+        GherkinToken(223,1): WHITE_SPACE(' ')
+        GherkinToken(224,12): TEXT('есть таблица')
+        GherkinToken(236,8): WHITE_SPACE('\n      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(244,1): PIPE('|')
+            GherkinToken(245,1): WHITE_SPACE(' ')
+            GherkinTableCell: col1
+              GherkinToken(246,4): TABLE_CELL('col1')
+            GherkinToken(250,1): WHITE_SPACE(' ')
+            GherkinToken(251,1): PIPE('|')
+            GherkinToken(252,1): WHITE_SPACE(' ')
+            GherkinTableCell: col2
+              GherkinToken(253,4): TABLE_CELL('col2')
+            GherkinToken(257,1): WHITE_SPACE(' ')
+            GherkinToken(258,1): PIPE('|')
+            GherkinToken(259,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(267,1): PIPE('|')
+            GherkinToken(268,1): WHITE_SPACE(' ')
+            GherkinTableCell: v1
+              GherkinToken(269,2): TABLE_CELL('v1')
+            GherkinToken(271,3): WHITE_SPACE('   ')
+            GherkinToken(274,1): PIPE('|')
+            GherkinToken(275,1): WHITE_SPACE(' ')
+            GherkinTableCell: v2
+              GherkinToken(276,2): TABLE_CELL('v2')
+            GherkinToken(278,3): WHITE_SPACE('   ')
+            GherkinToken(281,1): PIPE('|')
+            GherkinToken(282,6): WHITE_SPACE('\n    ')
+      GherkinStep: мы её используем
+        GherkinToken(288,5): STEP_KEYWORD('Когда')
+        GherkinToken(293,1): WHITE_SPACE(' ')
+        GherkinToken(294,16): TEXT('мы её используем')
+      GherkinToken(310,6): WHITE_SPACE('\n    ')
+      GherkinStep: можно попробовать объект
+        GherkinToken(316,5): STEP_KEYWORD('Тогда')
+        GherkinToken(321,1): WHITE_SPACE(' ')
+        GherkinToken(322,24): TEXT('можно попробовать объект')
+        GherkinToken(346,6): WHITE_SPACE('\n    ')
+        GherkinPystring
+          GherkinToken(352,3): PYSTRING_QUOTES('"""')
+          GherkinToken(355,46): PYSTRING_TEXT('\n    Это\n    многострочный\n    объект\n    ')
+          GherkinToken(401,3): PYSTRING_QUOTES('"""')
+    GherkinToken(404,6): WHITE_SPACE('\n\n  ')
+    GherkinScenarioOutline: А это структура сценария
+      GherkinToken(410,18): SCENARIO_OUTLINE_KEYWORD('Структура сценария')
+      GherkinToken(428,1): COLON(':')
+      GherkinToken(429,1): WHITE_SPACE(' ')
+      GherkinToken(430,24): TEXT('А это структура сценария')
+      GherkinToken(454,6): WHITE_SPACE('\n    ')
+      GherkinStep: мы используем переменную
+        GherkinToken(460,8): STEP_KEYWORD('Допустим')
+        GherkinToken(468,1): WHITE_SPACE(' ')
+        GherkinToken(469,13): TEXT('мы используем')
+        GherkinToken(482,1): WHITE_SPACE(' ')
+        GherkinToken(483,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: var
+          GherkinToken(484,3): STEP_PARAMETER_TEXT('var')
+        GherkinToken(487,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(488,1): WHITE_SPACE(' ')
+        GherkinToken(489,10): TEXT('переменную')
+      GherkinToken(499,6): WHITE_SPACE('\n    ')
+      GherkinStep: она равна значению
+        GherkinToken(505,5): STEP_KEYWORD('Когда')
+        GherkinToken(510,1): WHITE_SPACE(' ')
+        GherkinToken(511,9): TEXT('она равна')
+        GherkinToken(520,1): WHITE_SPACE(' ')
+        GherkinToken(521,1): STEP_PARAMETER_BRACE('<')
+        GherkinStepParameter: value
+          GherkinToken(522,5): STEP_PARAMETER_TEXT('value')
+        GherkinToken(527,1): STEP_PARAMETER_BRACE('>')
+        GherkinToken(528,1): WHITE_SPACE(' ')
+        GherkinToken(529,8): TEXT('значению')
+      GherkinToken(537,6): WHITE_SPACE('\n    ')
+      GherkinStep: все радуются и апплодируют
+        GherkinToken(543,5): STEP_KEYWORD('Тогда')
+        GherkinToken(548,1): WHITE_SPACE(' ')
+        GherkinToken(549,26): TEXT('все радуются и апплодируют')
+      GherkinToken(575,6): WHITE_SPACE('\n    ')
+      GherkinExamplesBlock
+        GherkinToken(581,7): EXAMPLES_KEYWORD('Примеры')
+        GherkinToken(588,1): COLON(':')
+        GherkinToken(589,8): WHITE_SPACE('\n      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(597,1): PIPE('|')
+            GherkinToken(598,1): WHITE_SPACE(' ')
+            GherkinTableCell: var
+              GherkinToken(599,3): TABLE_CELL('var')
+            GherkinToken(602,4): WHITE_SPACE('    ')
+            GherkinToken(606,1): PIPE('|')
+            GherkinToken(607,1): WHITE_SPACE(' ')
+            GherkinTableCell: value
+              GherkinToken(608,5): TABLE_CELL('value')
+            GherkinToken(613,1): WHITE_SPACE(' ')
+            GherkinToken(614,1): PIPE('|')
+            GherkinToken(615,8): WHITE_SPACE('\n      ')
+          GherkinTableRow
+            GherkinToken(623,1): PIPE('|')
+            GherkinToken(624,1): WHITE_SPACE(' ')
+            GherkinTableCell: Привет
+              GherkinToken(625,6): TABLE_CELL('Привет')
+            GherkinToken(631,1): WHITE_SPACE(' ')
+            GherkinToken(632,1): PIPE('|')
+            GherkinToken(633,1): WHITE_SPACE(' ')
+            GherkinTableCell: мир
+              GherkinToken(634,3): TABLE_CELL('мир')
+            GherkinToken(637,3): WHITE_SPACE('   ')
+            GherkinToken(640,1): PIPE('|')
+            GherkinToken(641,6): WHITE_SPACE('\n\n  ')
+    GherkinRule: Это бизнес правило
+      GherkinToken(647,7): RULE_KEYWORD('Правило')
+      GherkinToken(654,1): COLON(':')
+      GherkinToken(655,1): WHITE_SPACE(' ')
+      GherkinToken(656,18): TEXT('Это бизнес правило')
+      GherkinToken(674,6): WHITE_SPACE('\n    ')
+      GherkinScenario: Это пример правила
+        GherkinToken(680,6): SCENARIO_KEYWORD('Пример')
+        GherkinToken(686,1): COLON(':')
+        GherkinToken(687,1): WHITE_SPACE(' ')
+        GherkinToken(688,18): TEXT('Это пример правила')
+        GherkinToken(706,8): WHITE_SPACE('\n      ')
+        GherkinStep: мы используем правило
+          GherkinToken(714,8): STEP_KEYWORD('Допустим')
+          GherkinToken(722,1): WHITE_SPACE(' ')
+          GherkinToken(723,21): TEXT('мы используем правило')
+        GherkinToken(744,8): WHITE_SPACE('\n      ')
+        GherkinStep: оно использовано
+          GherkinToken(752,5): STEP_KEYWORD('Когда')
+          GherkinToken(757,1): WHITE_SPACE(' ')
+          GherkinToken(758,16): TEXT('оно использовано')
+        GherkinToken(774,8): WHITE_SPACE('\n      ')
+        GherkinStep: всё станет хорошо
+          GherkinToken(782,5): STEP_KEYWORD('Тогда')
+          GherkinToken(787,1): WHITE_SPACE(' ')
+          GherkinToken(788,17): TEXT('всё станет хорошо')
+

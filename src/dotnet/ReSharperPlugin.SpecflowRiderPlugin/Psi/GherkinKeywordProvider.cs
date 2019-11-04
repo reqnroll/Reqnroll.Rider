@@ -1,86 +1,55 @@
-using System;
 using System.Collections.Generic;
+using JetBrains.Collections;
+using JetBrains.Extension;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Parsing;
+using Newtonsoft.Json.Linq;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
     [Language(typeof(GherkinLanguage))]
     public class GherkinKeywordProvider
     {
-        public IReadOnlyCollection<string> getAllKeywords(string language)
+        private readonly Dictionary<string, GherkinKeywordList> _allKeywords = new Dictionary<string, GherkinKeywordList>();
+        public GherkinKeywordProvider()
         {
-            return new[]
-                   {
-                       "Feature",
-                       "Функционал",
-                       "Предыстория",
-                       "Background",
-                       "Сценарий",
-                       "Scenario",
-                       "Структура сценария",
-                       "Scenario Outline",
-                       "Примеры",
-                       "Rule",
-                       "Examples",
-                       "Example",
-                       "Допустим",
-                       "Пусть",
-                       "Дано",
-                       "Given",
-                       "Когда",
-                       "When",
-                       "Тогда",
-                       "Then",
-                       "И",
-                       "And",
-                       "Также"
-                   };
+            Initialize();
         }
 
-        public bool isSpaceRequiredAfterKeyword(string myCurLanguage, string keyword)
+        private void Initialize()
         {
-            return true;
+            var keywordsStream = typeof(GherkinKeywordProvider).Assembly.GetManifestResourceStream("ReSharperPlugin.SpecflowRiderPlugin.Psi.i18n.json");
+            var keywordsStr = keywordsStream.ReadTextFromFile();
+            var jObject = JObject.Parse(keywordsStr.Text);
+
+            foreach (var (language, value) in jObject)
+                _allKeywords.Add(language, new GherkinKeywordList((JObject)value));
         }
 
-        public TokenNodeType getTokenType(string myCurLanguage, string keyword)
+        public IReadOnlyCollection<string> GetAllKeywords(string language)
         {
-            switch (keyword)
-            {
-                case "Функционал":
-                case "Feature":
-                    return GherkinTokenTypes.FEATURE_KEYWORD;
-                case "Предыстория":
-                case "Background":
-                    return GherkinTokenTypes.BACKGROUND_KEYWORD;
-                case "Сценарий":
-                case "Scenario":
-                case "Example":
-                    return GherkinTokenTypes.SCENARIO_KEYWORD;
-                case "Структура сценария":
-                case "Scenario Outline":
-                    return GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD;
-                case "Примеры":
-                case "Examples":
-                    return GherkinTokenTypes.EXAMPLES_KEYWORD;
-                case "Допустим":
-                case "Пусть":
-                case "Дано":
-                case "Given":
-                case "Когда":
-                case "When":
-                case "Тогда":
-                case "Then":
-                case "И":
-                case "And":
-                case "Также":
-                    return GherkinTokenTypes.STEP_KEYWORD;
-                case "Rule":
-                    return GherkinTokenTypes.RULE_KEYWORD;
-                
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(keyword), keyword);
-            }
+            var keywordsList = GetKeywordsList(language);
+            return keywordsList.GetAllKeywords();
+        }
+
+        public bool IsSpaceRequiredAfterKeyword(string language, string keyword)
+        {
+            var keywordsList = GetKeywordsList(language);
+            return keywordsList.IsSpaceRequiredAfterKeyword(keyword);
+        }
+
+        public TokenNodeType GetTokenType(string language, string keyword)
+        {
+            var keywordsList = GetKeywordsList(language);
+            return keywordsList.GetTokenType(keyword);
+        }
+
+        private GherkinKeywordList GetKeywordsList(string language)
+        {
+            if (_allKeywords.TryGetValue(language, out var keywordsList))
+                return keywordsList;
+
+            return _allKeywords["en"];
         }
     }
 }

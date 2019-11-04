@@ -36,4 +36,7 @@
   <!--</ThemedIconsXamlV3>-->
   <!--</ItemGroup>-->
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <EmbeddedResource Include="Psi/i18n.json" />
+  </ItemGroup>
 </Project>
