@@ -25,10 +25,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public static readonly GherkinTokenType PIPE = new GherkinTokenType("PIPE", 1018);
         public static readonly GherkinTokenType TABLE_CELL = new GherkinTokenType("TABLE_CELL", 1019);
 
-//        TokenSet KEYWORDS = TokenSet.create(FEATURE_KEYWORD, RULE_KEYWORD, EXAMPLE_KEYWORD,
-//                                            BACKGROUND_KEYWORD, SCENARIO_KEYWORD, SCENARIO_OUTLINE_KEYWORD,
-//                                            EXAMPLES_KEYWORD, EXAMPLES_KEYWORD,
-//                                            STEP_KEYWORD);
+        public static readonly NodeTypeSet KEYWORDS = new NodeTypeSet(FEATURE_KEYWORD, RULE_KEYWORD, EXAMPLE_KEYWORD,
+                                                                      BACKGROUND_KEYWORD, SCENARIO_KEYWORD, SCENARIO_OUTLINE_KEYWORD,
+                                                                      EXAMPLES_KEYWORD, EXAMPLES_KEYWORD,
+                                                                      STEP_KEYWORD);
 
         public static readonly NodeTypeSet SCENARIOS_KEYWORDS = new NodeTypeSet(SCENARIO_KEYWORD, SCENARIO_OUTLINE_KEYWORD, EXAMPLE_KEYWORD);
     }

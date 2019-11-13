@@ -13,37 +13,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
     {
         public GherkinProjectFileLanguageService(GherkinProjectFileType projectFileType) : base(projectFileType)
         {
-            Protocol.TraceLogger.Log(LoggingLevel.INFO, $"GherkinProjectFileLanguageService");
         }
 
         public override ILexerFactory GetMixedLexerFactory(ISolution solution, IBuffer buffer, IPsiSourceFile sourceFile = null)
         {
-            Protocol.TraceLogger.Log(LoggingLevel.INFO, $"Requested lexer factory for {sourceFile?.Name}");
             return GherkinLanguage.Instance.LanguageService().GetPrimaryLexerFactory();
         }
-
-//        public override PsiLanguageType GetPsiLanguageType(IProjectFile projectFile)
-//        {
-//            var result = base.GetPsiLanguageType(projectFile);
-//            Protocol.TraceLogger.Log(LoggingLevel.INFO, $"GetPsiLanguageType(IProjectFile): {projectFile.Name}: {result}");
-//            return result;
-//        }
-
-//        public override PsiLanguageType GetPsiLanguageType(ProjectFileType languageType)
-//        {
-//            var result = base.GetPsiLanguageType(languageType);
-//            Protocol.TraceLogger.Log(LoggingLevel.INFO, $"GetPsiLanguageType(ProjectFileType): {languageType}: {result}");
-//            return result;
-//        }
-
-//        public override PsiLanguageType GetPsiLanguageType(IPsiSourceFile sourceFile)
-//        {
-//            var result = base.GetPsiLanguageType(sourceFile);
-//            Protocol.TraceLogger.Log(LoggingLevel.INFO, $"GetPsiLanguageType(IPsiSourceFile): {sourceFile.Name}: {result}");
-//            return result;
-//        }
-
-        protected override PsiLanguageType PsiLanguageType => GherkinLanguage.Instance;
+        
+        protected override PsiLanguageType PsiLanguageType => GherkinLanguage.Instance.NotNull();
         
         public override IconId Icon { get; }
     }

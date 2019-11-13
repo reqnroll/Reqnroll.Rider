@@ -24,13 +24,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.SyntaxHighlighting.Rider
             return tokenType == GherkinTokenTypes.COMMENT;
         }
 
-        protected override string LineCommentAttributeId
+        protected override bool IsKeyword(TokenNodeType tokenType)
         {
-            get
-            {
-                Protocol.TraceLogger.Log(LoggingLevel.INFO, $"GET LineCommentAttributeId");
-                return GherkinHighlightingAttributeIds.LINE_COMMENT;
-            }
+            return GherkinTokenTypes.KEYWORDS[tokenType];
         }
+
+        protected override string KeywordAttributeId => GherkinHighlightingAttributeIds.KEYWORD;
+
+        protected override string LineCommentAttributeId => GherkinHighlightingAttributeIds.LINE_COMMENT;
     }
 }

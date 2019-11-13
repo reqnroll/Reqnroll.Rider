@@ -1,20 +1,23 @@
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Text;
+using ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
     public class GherkinLexerFactory : ILexerFactory
     {
-        private readonly GherkinKeywordProvider _provider;
+        private readonly GherkinKeywordProvider _keywordProvider;
+        private readonly SpecflowSettingsProvider _settingsProvider;
 
-        public GherkinLexerFactory(GherkinKeywordProvider provider)
+        public GherkinLexerFactory(GherkinKeywordProvider keywordProvider, SpecflowSettingsProvider settingsProvider)
         {
-            _provider = provider;
+            _keywordProvider = keywordProvider;
+            _settingsProvider = settingsProvider;
         }
         
         public ILexer CreateLexer(IBuffer buffer)
         {
-            return new GherkinLexer(buffer, _provider);
+            return new GherkinLexer(buffer, _keywordProvider, _settingsProvider);
         }
     }
 }
