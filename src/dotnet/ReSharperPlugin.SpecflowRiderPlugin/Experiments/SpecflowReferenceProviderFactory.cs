@@ -51,7 +51,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Experiments
                     var stringToken = stringRegexLiteral.Literal as CSharpGenericToken;
                     var regexString = stringToken.GetText();
                         
-                    Protocol.TraceLogger.Log(LoggingLevel.INFO, $"Found GIVEN attribute with regex: {regexString}");
+                    Protocol.Logger.Log(LoggingLevel.INFO, $"Found GIVEN attribute with regex: {regexString}");
                     return oldReferences;
                 }
             }
@@ -71,7 +71,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Experiments
         {
             var sb = new StringBuilder();
             WriteObjectDump(obj, obj.GetType(), level, sb, 0);
-            Protocol.TraceLogger.Log(LoggingLevel.INFO, sb.ToString());
+            Protocol.Logger.Log(LoggingLevel.INFO, sb.ToString());
         }
 
         private static void WriteObjectDump(object obj, Type type, int level, StringBuilder sb, int indent)

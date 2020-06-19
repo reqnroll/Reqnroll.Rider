@@ -15,12 +15,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.SyntaxHighlighting.Rider
     {
         public GherkinSyntaxHighlightingManager()
         {
-            Protocol.TraceLogger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager");
+            Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager");
         }
 
         public override SyntaxHighlightingStageProcess CreateProcess(IDaemonProcess process, IContextBoundSettingsStore settings, IFile getPrimaryPsiFile)
         {
-            Protocol.TraceLogger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager:CreateProcess - {getPrimaryPsiFile.GetSourceFile().Name}");
+            Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager:CreateProcess - {getPrimaryPsiFile.GetSourceFile().Name}");
             
             return new GherkinSyntaxHighlightingStageProcess(process, settings, getPrimaryPsiFile, new GherkinSyntaxHighlightingProcessor());
         }

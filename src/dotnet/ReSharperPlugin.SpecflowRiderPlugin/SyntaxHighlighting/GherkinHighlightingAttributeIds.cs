@@ -1,4 +1,4 @@
-using JetBrains.ReSharper.Feature.Services.Daemon.IdeaAttributes;
+using JetBrains.ReSharper.Feature.Services.Daemon.Attributes.Idea;
 using JetBrains.TextControl.DocumentMarkup;
 using ReSharperPlugin.SpecflowRiderPlugin.SyntaxHighlighting;
 

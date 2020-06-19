@@ -8,7 +8,7 @@ using JetBrains.Text;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
-    public class GherkinToken : BindedToBufferLeafElement, ITokenNode
+    public class GherkinToken : BoundToBufferLeafElement, ITokenNode
     {
         private readonly TokenNodeType _nodeType;
 
