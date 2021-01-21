@@ -1,6 +1,5 @@
 using JetBrains.Diagnostics;
 using JetBrains.ProjectModel;
-using JetBrains.Rd.Impl;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Text;

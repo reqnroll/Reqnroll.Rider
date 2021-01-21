@@ -1,5 +1,5 @@
-@file:Suppress("PackageDirectoryMismatch", "UnusedImport", "unused", "LocalVariableName")
-package com.jetbrains.rider.model
+@file:Suppress("EXPERIMENTAL_API_USAGE","EXPERIMENTAL_UNSIGNED_LITERALS","PackageDirectoryMismatch","UnusedImport","unused","LocalVariableName","CanBeVal","PropertyName","EnumEntryName","ClassName","ObjectPropertyName","UnnecessaryVariable","SpellCheckingInspection")
+package com.jetbrains.rd.ide.model
 
 import com.jetbrains.rd.framework.*
 import com.jetbrains.rd.framework.base.*
@@ -13,6 +13,9 @@ import kotlin.reflect.KClass
 
 
 
+/**
+ * #### Generated from [SpecflowRiderPluginModel.kt:8]
+ */
 class SpecflowRiderPluginModel private constructor(
     private val _myString: RdOptionalProperty<String>,
     private val _myBool: RdOptionalProperty<Boolean>,
@@ -24,7 +27,7 @@ class SpecflowRiderPluginModel private constructor(
     
     companion object : ISerializersOwner {
         
-        override fun registerSerializersCore(serializers: ISerializers) {
+        override fun registerSerializersCore(serializers: ISerializers)  {
             serializers.register(MyEnum.marshaller)
             serializers.register(MyStructure)
         }
@@ -34,6 +37,7 @@ class SpecflowRiderPluginModel private constructor(
         private val __MyEnumNullableSerializer = MyEnum.marshaller.nullable()
         
         const val serializationHash = 652449028105363203L
+        
     }
     override val serializersOwner: ISerializersOwner get() = SpecflowRiderPluginModel
     override val serializationHash: Long get() = SpecflowRiderPluginModel.serializationHash
@@ -42,8 +46,9 @@ class SpecflowRiderPluginModel private constructor(
     val myString: IOptProperty<String> get() = _myString
     val myBool: IOptProperty<Boolean> get() = _myBool
     val myEnum: IProperty<MyEnum?> get() = _myEnum
-    val data: IMutableViewableMap<String, String> get() = _data
+    val `data`: IMutableViewableMap<String, String> get() = _data
     val myStructure: ISignal<MyStructure> get() = _myStructure
+    //methods
     //initializer
     init {
         _myString.optimizeNested = true
@@ -73,7 +78,7 @@ class SpecflowRiderPluginModel private constructor(
     //equals trait
     //hash code trait
     //pretty print
-    override fun print(printer: PrettyPrinter) {
+    override fun print(printer: PrettyPrinter)  {
         printer.println("SpecflowRiderPluginModel (")
         printer.indent {
             print("myString = "); _myString.print(printer); println()
@@ -84,19 +89,39 @@ class SpecflowRiderPluginModel private constructor(
         }
         printer.print(")")
     }
+    //deepClone
+    override fun deepClone(): SpecflowRiderPluginModel   {
+        return SpecflowRiderPluginModel(
+            _myString.deepClonePolymorphic(),
+            _myBool.deepClonePolymorphic(),
+            _myEnum.deepClonePolymorphic(),
+            _data.deepClonePolymorphic(),
+            _myStructure.deepClonePolymorphic()
+        )
+    }
+    //contexts
 }
 val Solution.specflowRiderPluginModel get() = getOrCreateExtension("specflowRiderPluginModel", ::SpecflowRiderPluginModel)
 
 
 
+/**
+ * #### Generated from [SpecflowRiderPluginModel.kt:10]
+ */
 enum class MyEnum {
-    FirstValue,
+    FirstValue, 
     SecondValue;
     
-    companion object { val marshaller = FrameworkMarshallers.enum<MyEnum>() }
+    companion object {
+        val marshaller = FrameworkMarshallers.enum<MyEnum>()
+        
+    }
 }
 
 
+/**
+ * #### Generated from [SpecflowRiderPluginModel.kt:15]
+ */
 data class MyStructure (
     val projectFile: String,
     val target: String
@@ -107,23 +132,25 @@ data class MyStructure (
         override val _type: KClass<MyStructure> = MyStructure::class
         
         @Suppress("UNCHECKED_CAST")
-        override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): MyStructure {
+        override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): MyStructure  {
             val projectFile = buffer.readString()
             val target = buffer.readString()
             return MyStructure(projectFile, target)
         }
         
-        override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: MyStructure) {
+        override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: MyStructure)  {
             buffer.writeString(value.projectFile)
             buffer.writeString(value.target)
         }
         
+        
     }
     //fields
+    //methods
     //initializer
     //secondary constructor
     //equals trait
-    override fun equals(other: Any?): Boolean {
+    override fun equals(other: Any?): Boolean  {
         if (this === other) return true
         if (other == null || other::class != this::class) return false
         
@@ -135,14 +162,14 @@ data class MyStructure (
         return true
     }
     //hash code trait
-    override fun hashCode(): Int {
+    override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + projectFile.hashCode()
         __r = __r*31 + target.hashCode()
         return __r
     }
     //pretty print
-    override fun print(printer: PrettyPrinter) {
+    override fun print(printer: PrettyPrinter)  {
         printer.println("MyStructure (")
         printer.indent {
             print("projectFile = "); projectFile.print(printer); println()
@@ -150,4 +177,6 @@ data class MyStructure (
         }
         printer.print(")")
     }
+    //deepClone
+    //contexts
 }

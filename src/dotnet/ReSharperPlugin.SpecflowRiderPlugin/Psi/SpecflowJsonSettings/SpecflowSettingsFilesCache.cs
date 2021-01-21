@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Application.Threading;
 using JetBrains.Collections;
 using JetBrains.DocumentModel;
 using JetBrains.Lifetimes;
@@ -15,10 +16,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings
         private readonly SpecflowSettingsProvider _settingsProvider;
 
         public SpecflowSettingsFilesCache(Lifetime lifetime,
+                                          IShellLocks shellLocks,
                                           IPersistentIndexManager persistentIndexManager,
                                           SpecflowSettingsProvider settingsProvider,
                                           SpecflowSettingsMarshaller marshaller)
-            : base(lifetime, persistentIndexManager, marshaller)
+            : base(lifetime, shellLocks, persistentIndexManager, marshaller)
         {
             _settingsProvider = settingsProvider;
         }

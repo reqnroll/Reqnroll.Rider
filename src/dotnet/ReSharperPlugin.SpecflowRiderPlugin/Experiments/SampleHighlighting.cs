@@ -1,18 +1,7 @@
-
-
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReSharperPlugin.SpecflowRiderPlugin.Experiments;
-
-[assembly: RegisterConfigurableSeverity(
-    SampleHighlighting.SeverityId,
-    CompoundItemName: null,
-    Group: HighlightingGroupIds.CodeSmell,
-    Title: SampleHighlighting.Message,
-    Description: SampleHighlighting.Description,
-    DefaultSeverity: Severity.WARNING)]
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Experiments
 {
@@ -27,7 +16,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Experiments
         public const string SeverityId = nameof(SampleHighlighting);
         public const string Message = "Sample highlighting message";
         public const string Description = "Sample highlighting description";
-        
+
         public SampleHighlighting(ICSharpDeclaration declaration)
         {
             Declaration = declaration;
@@ -46,7 +35,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Experiments
         }
 
         public string ToolTip => Message;
-        
+
         public string ErrorStripeToolTip
             => $"Sample highlighting error tooltip for '{Declaration.DeclaredName}'";
     }

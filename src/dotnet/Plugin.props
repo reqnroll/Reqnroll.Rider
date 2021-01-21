@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <SdkVersion>2020.1.0</SdkVersion>
+    <SdkVersion>2020.3.2</SdkVersion>
     
     <Title>Specflow Support</Title>
     <Description>Description</Description>

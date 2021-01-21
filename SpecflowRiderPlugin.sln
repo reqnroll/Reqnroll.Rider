@@ -9,6 +9,7 @@ ProjectSection(SolutionItems) = preProject
 	README.md = README.md
 	CHANGELOG.md = CHANGELOG.md
 	src\dotnet\Directory.Build.props = src\dotnet\Directory.Build.props
+	gradle.properties = gradle.properties
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSharperPlugin.SpecflowRiderPlugin", "src\dotnet\ReSharperPlugin.SpecflowRiderPlugin\ReSharperPlugin.SpecflowRiderPlugin.csproj", "{1A18748D-496E-49B1-AC92-C4817D6EA9EE}"
