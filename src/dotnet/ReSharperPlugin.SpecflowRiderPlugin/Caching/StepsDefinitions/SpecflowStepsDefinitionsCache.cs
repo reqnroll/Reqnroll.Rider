@@ -23,6 +23,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         public const int VersionInt = 4;
         public override string Version => VersionInt.ToString();
 
+        // FIXME: per step kind
         public OneToSetMap<IPsiSourceFile, SpecflowStepDefinitionCacheEntry> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
         private readonly SpecflowStepsDefinitionMergeData _mergeData = new SpecflowStepsDefinitionMergeData();
 

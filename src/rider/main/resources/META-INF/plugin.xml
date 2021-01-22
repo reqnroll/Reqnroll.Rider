@@ -18,7 +18,8 @@
     <lang.syntaxHighlighterFactory language="Gherkin" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes.GherkinSyntaxHighlighterFactory"/>
     <backend.markup.adapterFactory language="Gherkin" implementationClass="com.jetbrains.rdclient.daemon.FrontendMarkupAdapterFactory" />
     <backend.typedHandler language="Gherkin" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes.GherkinTypedHandler" />
-<!--    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.specflowriderplugin.SampleOptionsPage" id="SampleOptionsPage" />-->
+    <backend.actions.support language="Gherkin" implementationClass="com.jetbrains.rider.actions.RiderActionSupportPolicy" />
+    <!--    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.specflowriderplugin.SampleOptionsPage" id="SampleOptionsPage" />-->
   </extensions>
   
   <actions>
