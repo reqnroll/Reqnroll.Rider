@@ -23,7 +23,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             var jObject = JObject.Parse(keywordsStr.Text);
 
             foreach (var (language, value) in jObject)
-                _allKeywords.Add(language, new GherkinKeywordList((JObject)value));
+                _allKeywords.Add(language, new GherkinKeywordList((JObject) value));
         }
 
         public IReadOnlyCollection<string> GetAllKeywords(string language)
@@ -43,6 +43,26 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             var keywordsList = GetKeywordsList(language);
             return keywordsList.GetTokenType(keyword);
         }
+
+        public GherkinStepKind GetStepKind(string language, string keyword)
+        {
+            var keywordsList = GetKeywordsList(language);
+            var englishKeyword = keywordsList.GetEnglishTokenKeyword(keyword);
+            switch (englishKeyword)
+            {
+                case "And":
+                    return GherkinStepKind.And;
+                case "Given":
+                    return GherkinStepKind.Given;
+                case "When":
+                    return GherkinStepKind.When;
+                case "Then":
+                    return GherkinStepKind.Then;
+            }
+
+            return GherkinStepKind.Unknown;
+        }
+
 
         private GherkinKeywordList GetKeywordsList(string language)
         {

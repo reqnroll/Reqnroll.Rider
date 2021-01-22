@@ -99,6 +99,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return _translatedTokenTypes[keyword];
         }
 
+        public string GetEnglishTokenKeyword(string keyword)
+        {
+            return _translatedKeywords[keyword];
+        }
+
         private class DescendingComparer<T> : IComparer<T> where T : IComparable<T>
         {
             public int Compare(T x, T y)
