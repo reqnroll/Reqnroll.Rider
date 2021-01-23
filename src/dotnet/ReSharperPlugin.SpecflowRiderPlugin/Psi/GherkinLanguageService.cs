@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
@@ -42,10 +43,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         public override IEnumerable<ITypeDeclaration> FindTypeDeclarations(IFile file)
         {
-            throw new System.NotImplementedException();
+            return Enumerable.Empty<ITypeDeclaration>();
         }
 
-        public override ILanguageCacheProvider CacheProvider { get; }
+        public override ILanguageCacheProvider CacheProvider => null;
         public override bool IsCaseSensitive => true;
         public override bool SupportTypeMemberCache => false;
         public override ITypePresenter TypePresenter => DefaultTypePresenter.Instance;
