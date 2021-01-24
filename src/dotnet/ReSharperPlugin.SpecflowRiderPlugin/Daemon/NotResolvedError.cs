@@ -13,25 +13,24 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
         ToolTipFormatString = Message)]
     public class NotResolvedError : IHighlighting
     {
-        private readonly GherkinStep _gherkinStep;
-        public const string SeverityId = nameof(NotResolvedError);
+        public GherkinStep GherkinStep { get; }
         public const string Message = "Unresolved step";
         public string ToolTip => Message;
-        public string ErrorStripeToolTip => "Hello";
+        public string ErrorStripeToolTip => ToolTip;
 
         public NotResolvedError(GherkinStep gherkinStep)
         {
-            _gherkinStep = gherkinStep;
+            GherkinStep = gherkinStep;
         }
 
         public bool IsValid()
         {
-            return _gherkinStep.IsValid();
+            return GherkinStep.IsValid();
         }
 
         public DocumentRange CalculateRange()
         {
-            return _gherkinStep.GetDocumentRange();
+            return GherkinStep.GetDocumentRange();
         }
     }
 }

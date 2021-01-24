@@ -56,6 +56,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
             return myOwner.GetStepText();
         }
 
+        public GherkinStepKind GetStepKind()
+        {
+            return myOwner.GetStepKind();
+        }
+
+        public string GetStepText()
+        {
+            return myOwner.GetStepText();
+        }
+
         public override ISymbolTable GetReferenceSymbolTable(bool useReferenceName)
         {
             throw new NotImplementedException();

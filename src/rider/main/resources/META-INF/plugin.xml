@@ -19,6 +19,10 @@
     <backend.markup.adapterFactory language="Gherkin" implementationClass="com.jetbrains.rdclient.daemon.FrontendMarkupAdapterFactory" />
     <backend.typedHandler language="Gherkin" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes.GherkinTypedHandler" />
     <backend.actions.support language="Gherkin" implementationClass="com.jetbrains.rider.actions.RiderActionSupportPolicy" />
+    <backend.autoPopup.support language="Gherkin" implementationClass="com.jetbrains.rider.completion.BackendAndGenericRider" />
+    <rider.debuggerSupportPolicy language="Gherkin" implementationClass="com.jetbrains.rider.debugger.RiderDebuggerSupportPolicy" />
+    <lang.altEnter language="Gherkin" implementationClass="com.jetbrains.rider.intentions.altEnter.ReSharperBulbMenuModelFactory" />
+
     <!--    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.specflowriderplugin.SampleOptionsPage" id="SampleOptionsPage" />-->
   </extensions>
   
