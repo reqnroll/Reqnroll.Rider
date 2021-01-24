@@ -11,6 +11,8 @@ The "SpecFlow Support" plugin adds specific functionality for the [SpecFlow](htt
 ./gradlew :buildPlugin
 ```
 
+You can find CI builds in [Actions](https://github.com/Socolin/resharper-specflow/actions) tab
+
 ## Features
 
 ### Syntax highlight
