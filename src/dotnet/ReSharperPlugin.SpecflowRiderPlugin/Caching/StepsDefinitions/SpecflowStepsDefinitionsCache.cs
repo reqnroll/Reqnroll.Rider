@@ -47,6 +47,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             {
                 if (!(type.DeclaredElement is IClass @class))
                     continue;
+                if (@class.GetAttributeInstances(AttributesSource.Self).All(x => x.GetAttributeType().GetClrName().FullName != "TechTalk.SpecFlow.BindingAttribute"))
+                    continue;
 
                 foreach (var gherkinCache in ListSpecflowSteps(@class))
                     stepDefinitions.Add(gherkinCache);
