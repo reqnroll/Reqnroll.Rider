@@ -34,7 +34,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                 if (sourceFile.GetProject() != myOwner.GetProject())
                     if (projectReferences?.Any(x => x.Name == sourceFile.GetProject()?.Name) != true)
                         continue;
-                foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
+                foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind).OrderByDescending(x => x.Pattern.Length))
                 {
                     if (cacheEntry.Regex?.IsMatch(stepText) == true)
                     {
