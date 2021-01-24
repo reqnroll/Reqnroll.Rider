@@ -24,4 +24,8 @@ jobs:
       uses: eskatos/gradle-command-action@v1.3.3
       with:
         arguments: buildPlugin --stacktrace -PintellijPublishToken=none
-
+    - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: SpecFlowPlugin
+          path: output/
