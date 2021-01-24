@@ -23,7 +23,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Options
     public class SpekflowOptionsPage : BeSimpleOptionsPage
     {
         private new const string Id = nameof(SpekflowOptionsPage);
-        private const string PageTitle = "Specflow Options";
+        private const string PageTitle = "SpecFlow Options";
 
         private readonly Lifetime _lifetime;
 
