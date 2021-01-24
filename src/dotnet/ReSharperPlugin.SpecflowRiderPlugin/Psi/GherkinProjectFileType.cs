@@ -14,7 +14,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         [UsedImplicitly]
         public new static GherkinProjectFileType Instance { get; private set; }
         
-        private GherkinProjectFileType() : base(Name, "Gherkin", new[] {FEATURE_EXTENSION})  {  }
+        private GherkinProjectFileType() : base(Name, "GherkinDotnet", new[] {FEATURE_EXTENSION})  {  }
         
         protected GherkinProjectFileType([NotNull] string name) : base(name)
         {

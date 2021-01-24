@@ -10,7 +10,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         [CanBeNull] [UsedImplicitly] public static GherkinLanguage Instance { get; private set; }
 
-        private GherkinLanguage() : base(Name, "Gherkin")
+        private GherkinLanguage() : base(Name, "GherkinDotnet")
         {
         }
 
