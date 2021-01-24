@@ -27,7 +27,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
             {
                 foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
                 {
-                    if (cacheEntry.Regex.IsMatch(myOwner.GetStepText()))
+                    if (cacheEntry.Regex?.IsMatch(myOwner.GetStepText()) == true)
                     {
                         var types = psiServices.Symbols.GetTypesAndNamespacesInFile(sourceFile);
                         foreach (var decElement in types)
