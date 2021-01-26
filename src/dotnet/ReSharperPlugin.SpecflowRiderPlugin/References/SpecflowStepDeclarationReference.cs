@@ -85,6 +85,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
             return myOwner.GetTreeTextRange();
         }
 
+        public IProject GetProject()
+        {
+            return myOwner.GetProject();
+        }
+
         public override IReference BindTo(IDeclaredElement element)
         {
             return BindTo(element, EmptySubstitution.INSTANCE);

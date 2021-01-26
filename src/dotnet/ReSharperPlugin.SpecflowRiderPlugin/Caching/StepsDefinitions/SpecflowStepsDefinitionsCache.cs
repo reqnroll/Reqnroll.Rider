@@ -20,11 +20,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     [PsiComponent]
     public class SpecflowStepsDefinitionsCache : SimpleICache<SpecflowStepsDefinitionsCacheEntries>
     {
-        public const int VersionInt = 4;
+        private const int VersionInt = 5;
         public override string Version => VersionInt.ToString();
 
         // FIXME: per step kind
-        public OneToSetMap<IPsiSourceFile, SpecflowStepDefinitionCacheEntry> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
+        public OneToSetMap<IPsiSourceFile, SpecflowStepInfo> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
+        public OneToSetMap<string, IPsiSourceFile> AllBindingTypes => _mergeData.SpecflowBindingTypes;
         private readonly SpecflowStepsDefinitionMergeData _mergeData = new SpecflowStepsDefinitionMergeData();
 
         public SpecflowStepsDefinitionsCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager)
@@ -50,8 +51,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                 if (@class.GetAttributeInstances(AttributesSource.Self).All(x => x.GetAttributeType().GetClrName().FullName != "TechTalk.SpecFlow.BindingAttribute"))
                     continue;
 
-                foreach (var gherkinCache in ListSpecflowSteps(@class))
-                    stepDefinitions.Add(gherkinCache);
+                stepDefinitions.Add(BuildBindingClassCacheEntry(@class));
             }
 
             return stepDefinitions;
@@ -81,14 +81,21 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             if (cacheItems == null)
                 return;
 
-            foreach (var stepDefinition in cacheItems)
+            foreach (var classEntry in cacheItems)
             {
-                _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, stepDefinition);
+                _mergeData.SpecflowBindingTypes.Add(classEntry.ClassName, sourceFile);
+                foreach (var method in classEntry.Methods)
+                foreach (var step in method.Steps)
+                    _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, new SpecflowStepInfo(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern));
             }
         }
 
         private void RemoveFromLocalCache(IPsiSourceFile sourceFile)
         {
+            var fileSteps = _mergeData.StepsDefinitionsPerFiles[sourceFile];
+            foreach (var classNameInFile in fileSteps.Select(x => x.ClassFullName).Distinct())
+                _mergeData.SpecflowBindingTypes.Remove(classNameInFile, sourceFile);
+
             _mergeData.StepsDefinitionsPerFiles.RemoveKey(sourceFile);
         }
 
@@ -103,12 +110,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                     yield return typeDeclaration;
         }
 
-        private IEnumerable<SpecflowStepDefinitionCacheEntry> ListSpecflowSteps(IClass @class)
+        private SpecflowStepDefinitionCacheClassEntry BuildBindingClassCacheEntry(IClass @class)
         {
+            var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(@class.GetClrName().FullName);
+
             foreach (var member in @class.GetMembers())
             {
                 if (!(member is IMethod method))
                     continue;
+
+                var methodCacheEntry = classCacheEntry.AddMethod(method.ShortName);
 
                 var attributeInstances = method.GetAttributeInstances(AttributesSource.All);
                 foreach (var attributeInstance in attributeInstances)
@@ -122,13 +133,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                         continue;
 
                     if (attributeInstance.GetAttributeType().GetClrName().Equals(SpecflowAttributeHelper.GivenAttribute))
-                        yield return new SpecflowStepDefinitionCacheEntry(regex, GherkinStepKind.Given, method.ShortName);
+                        methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
                     if (attributeInstance.GetAttributeType().GetClrName().Equals(SpecflowAttributeHelper.WhenAttribute))
-                        yield return new SpecflowStepDefinitionCacheEntry(regex, GherkinStepKind.When, method.ShortName);
+                        methodCacheEntry.AddStep(GherkinStepKind.When, regex);
                     if (attributeInstance.GetAttributeType().GetClrName().Equals(SpecflowAttributeHelper.ThenAttribute))
-                        yield return new SpecflowStepDefinitionCacheEntry(regex, GherkinStepKind.Then, method.ShortName);
+                        methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
                 }
             }
+            return classCacheEntry;
         }
     }
 }

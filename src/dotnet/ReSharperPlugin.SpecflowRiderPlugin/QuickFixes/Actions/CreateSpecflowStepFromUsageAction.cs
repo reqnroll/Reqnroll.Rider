@@ -1,9 +1,8 @@
-using System;
 using System.Linq;
-using System.Text;
 using JetBrains.Application.UI.Controls;
 using JetBrains.Application.UI.Controls.JetPopupMenu;
 using JetBrains.ProjectModel;
+using JetBrains.ProjectModel.Impl;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.Navigation.NavigationExtensions;
 using JetBrains.ReSharper.Feature.Services.Resources;
@@ -11,7 +10,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Transactions;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.RiderTutorials.Utils;
 using JetBrains.TextControl;
 using JetBrains.UI.RichText;
@@ -33,10 +31,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions
             _reference = reference;
         }
 
-        private class Option
+        private class AvailableBindingClass
         {
-            public string Key { get; set; }
+            public IPsiSourceFile SourceFile { get; }
+            public string FullClassName { get; }
 
+            public AvailableBindingClass(IPsiSourceFile sourceFile, string fullClassName)
+            {
+                SourceFile = sourceFile;
+                FullClassName = fullClassName;
+            }
         }
 
         public void Execute(ISolution solution, ITextControl textControl)
@@ -48,18 +52,35 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions
                 {
                     menu.Caption.Value = WindowlessControlAutomation.Create("Where to create the step ?");
                     // FIXME: use class instead of files
-                    menu.ItemKeys.AddRange(cache.AllStepsPerFiles.Keys);
+                    var project = _reference.GetProject();
+                    var projectReferences = project?.GetAllModuleReferences().OfType<SimpleProjectToProjectReference>().ToList();
+
+                    var availableSteps = cache.AllBindingTypes
+                        .SelectMany(e => e.Value.Select(v => (fullClassName: e.Key, sourceFile: v)))
+                        .Where(e =>
+                               {
+                                   var (_, sourceFile) = e;
+                                   if (ReferenceEquals(sourceFile.GetProject(), project))
+                                       return true;
+                                   if (projectReferences?.Any(x => x.Name == sourceFile.GetProject()?.Name) == true)
+                                       return true;
+                                   return false;
+                               })
+                        .Select(e => new AvailableBindingClass(e.sourceFile, e.fullClassName));
+                    // FIXME: Remove full qualifier when not needed
+
+                    menu.ItemKeys.AddRange(availableSteps);
                     menu.DescribeItem.Advise(lifetime, e =>
                                                        {
-                                                           var key = (IPsiSourceFile) e.Key;
+                                                           var key = (AvailableBindingClass) e.Key;
                                                            e.Descriptor.Icon = BulbThemedIcons.RedBulb.Id;
                                                            e.Descriptor.Style = MenuItemStyle.Enabled;
-                                                           e.Descriptor.Text = new RichText(key.Name);
+                                                           e.Descriptor.Text = new RichText(key.FullClassName);
                                                        });
                     menu.ItemClicked.Advise(lifetime, key =>
                                                       {
-                                                          var targetFile = (IPsiSourceFile) key;
-                                                          AddSpecflowStep(targetFile, _reference.GetStepKind(), _reference.GetStepText());
+                                                          var targetFile = (AvailableBindingClass) key;
+                                                          AddSpecflowStep(targetFile.SourceFile, _reference.GetStepKind(), _reference.GetStepText());
                                                       });
                     menu.PopupWindowContextSource = textControl.PopupWindowContextFactory.ForCaret();
                 });

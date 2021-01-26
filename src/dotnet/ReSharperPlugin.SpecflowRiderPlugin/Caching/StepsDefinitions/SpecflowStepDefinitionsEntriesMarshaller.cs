@@ -9,25 +9,48 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         public void Marshal(UnsafeWriter writer, SpecflowStepsDefinitionsCacheEntries value)
         {
             writer.Write(value.Count);
-            foreach (var entry in value)
+            foreach (var cacheClass in value)
             {
-                writer.Write((int) entry.StepKind);
-                writer.Write(entry.Pattern);
-                writer.Write(entry.MethodName);
+                writer.Write(cacheClass.ClassName);
+                writer.Write(cacheClass.Methods.Count);
+                foreach (var cacheMethod in cacheClass.Methods)
+                {
+                    writer.Write(cacheMethod.MethodName);
+                    writer.Write(cacheMethod.Steps.Count);
+                    foreach (var cacheStep in cacheMethod.Steps)
+                    {
+                        writer.Write((int) cacheStep.StepKind);
+                        writer.Write(cacheStep.Pattern);
+                    }
+                }
             }
         }
 
         public SpecflowStepsDefinitionsCacheEntries Unmarshal(UnsafeReader reader)
         {
             var entries = new SpecflowStepsDefinitionsCacheEntries();
-            var count = reader.ReadInt();
-            for (var i = 0; i < count; i++)
+            var classCount = reader.ReadInt();
+            for (var i = 0; i < classCount; i++)
             {
-                var type = reader.ReadInt();
-                var pattern = reader.ReadString();
-                var methodName = reader.ReadString();
+                var className = reader.ReadString();
+                var cacheClassEntry = new SpecflowStepDefinitionCacheClassEntry(className);
 
-                entries.Add(new SpecflowStepDefinitionCacheEntry(pattern, (GherkinStepKind) type, methodName));
+                var methodCount = reader.ReadInt();
+                for (var j = 0; j < methodCount; j++)
+                {
+                    var methodName = reader.ReadString();
+                    var methodCacheEntry = cacheClassEntry.AddMethod(methodName);
+                    var stepCount = reader.ReadInt();
+                    for (var k = 0; k < stepCount; k++)
+                    {
+                        var type = reader.ReadInt();
+                        var pattern = reader.ReadString();
+
+                        methodCacheEntry.AddStep((GherkinStepKind) type, pattern);
+                    }
+                }
+
+                entries.Add(cacheClassEntry);
             }
             return entries;
         }
