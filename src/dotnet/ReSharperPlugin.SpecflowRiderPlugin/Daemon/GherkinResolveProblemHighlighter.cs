@@ -17,7 +17,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
             return null;
         }
 
-        public IEnumerable<ResolveErrorType> ErrorTypes { get; } = new ResolveErrorType[1]
+        public IEnumerable<ResolveErrorType> ErrorTypes { get; } = new []
         {
             ResolveErrorType.NOT_RESOLVED
         };
