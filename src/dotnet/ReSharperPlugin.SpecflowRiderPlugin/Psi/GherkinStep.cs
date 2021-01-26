@@ -69,7 +69,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                         break;
                 }
             }
-            return sb.ToString();
+            return sb.ToString().Trim();
         }
 
         public SpecflowStepDeclarationReference GetStepReference()

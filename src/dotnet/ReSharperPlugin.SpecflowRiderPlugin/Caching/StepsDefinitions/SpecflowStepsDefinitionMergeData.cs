@@ -31,6 +31,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 
             try
             {
+                if (!pattern.StartsWith("^"))
+                    pattern = "^" + pattern;
+                if (!pattern.EndsWith("$"))
+                    pattern += "$";
                 Regex = new Regex(pattern, RegexOptions.Compiled, TimeSpan.FromSeconds(2));
             }
             catch (ArgumentException)
