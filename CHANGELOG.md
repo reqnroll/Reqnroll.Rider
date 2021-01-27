@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Find usage on a step definition now list all usage of a step and let you navigate to it.
 ### Fixed
-- Fix bug where quickfix was proposing some files not accessible by the current project
+- Fix bug: The quick fix to create step was proposing to create the new step in some files not accessible by the current project
 
 ## 1.0.0
 ### Added
