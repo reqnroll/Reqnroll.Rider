@@ -20,7 +20,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
 
         public void Execute(Action<DaemonStageResult> committer)
         {
-            var consumer = new FilteringHighlightingConsumer(DaemonProcess.SourceFile, _file, DaemonProcess.ContextBoundSettingsStore);
+            var psiSourceFile = _file.GetSourceFile();
+            if (psiSourceFile == null)
+                return;
+            var consumer = new FilteringHighlightingConsumer(psiSourceFile, _file, DaemonProcess.ContextBoundSettingsStore);
             _file.ProcessDescendants(_elementProcessor, consumer);
             committer(new DaemonStageResult(consumer.Highlightings));
         }
