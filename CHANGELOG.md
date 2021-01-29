@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.2.0
+### Added
+- Add highlighting: Warning when method name does not match with the pattern in the attribute.
+- Add quickfix to rename method when name does not match the pattern. 
+
 ## 1.1.1
 ### Fixed
 - Errors were disappearing from _Error in solution_ window

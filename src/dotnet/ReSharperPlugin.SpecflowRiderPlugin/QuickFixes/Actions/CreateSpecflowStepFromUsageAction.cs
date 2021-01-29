@@ -100,7 +100,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions
                     continue;
 
                 var factory = CSharpElementFactory.GetInstance(classDeclaration);
-                var (methodName, pattern, parametersTypes) = SpecflowStepHelper.GetMethodNameAndParameterFromStepText(stepText, classDeclaration.GetPsiServices(), targetFile);
+                var (methodName, pattern, parametersTypes) = SpecflowStepHelper.GetMethodNameAndParameterFromStepText(stepKind, stepText, classDeclaration.GetPsiServices(), targetFile);
                 var attributeType = CSharpTypeFactory.CreateType(SpecflowAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
                 var methodDeclaration = factory.CreateTypeMemberDeclaration($"[$0(@\"{pattern.Replace("\"", "\"\"")}\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}", attributeType) as IMethodDeclaration;
                 if (methodDeclaration == null)

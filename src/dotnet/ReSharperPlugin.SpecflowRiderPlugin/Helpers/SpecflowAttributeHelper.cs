@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
@@ -22,6 +23,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(stepKind), stepKind, null);
             }
+        }
+
+        public static GherkinStepKind? GetAttributeStepKind(IClrTypeName typeName)
+        {
+            if (typeName.Equals(GivenAttribute))
+                return GherkinStepKind.Given;
+            if (typeName.Equals(WhenAttribute))
+                return GherkinStepKind.When;
+            if (typeName.Equals(ThenAttribute))
+                return GherkinStepKind.Then;
+            return null;
         }
     }
 }

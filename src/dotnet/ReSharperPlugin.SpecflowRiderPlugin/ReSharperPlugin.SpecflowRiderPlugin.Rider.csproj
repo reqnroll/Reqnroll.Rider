@@ -14,6 +14,13 @@
     <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" PrivateAssets="All" />
   </ItemGroup>
+  <ItemGroup Label="C#">
+    <ErrorsGen Include="Daemon\Errors\CSharpErrors.xml">
+      <Namespace>JetBrains.ReSharper.Plugins.Unity.CSharp.Daemon.Errors</Namespace>
+      <OutputFile>Daemon\Errors\CSharpErrors.generated.cs</OutputFile>
+      <Mode>ERRORS</Mode>
+    </ErrorsGen>
+  </ItemGroup>
   <!-- TODO: uncomment for xaml icons -->
   <!--<ItemGroup>-->
   <!--<Reference Include="System.Xaml" />-->
