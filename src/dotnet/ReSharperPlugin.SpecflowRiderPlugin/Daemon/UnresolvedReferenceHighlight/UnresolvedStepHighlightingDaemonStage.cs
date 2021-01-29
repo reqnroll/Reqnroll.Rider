@@ -10,16 +10,16 @@ using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
+namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight
 {
     [DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
-    public class SpecflowHighlightingDaemonStage : IDaemonStage
+    public class UnresolvedStepHighlightingDaemonStage : IDaemonStage
     {
         private readonly ResolveHighlighterRegistrar _registrar;
         private readonly SpecflowStepsDefinitionsCache _specflowStepsDefinitionsCache;
         private readonly SpecflowStepsUsagesCache _specflowStepsUsagesCache;
 
-        public SpecflowHighlightingDaemonStage(
+        public UnresolvedStepHighlightingDaemonStage(
             ResolveHighlighterRegistrar registrar,
             SpecflowStepsDefinitionsCache specflowStepsDefinitionsCache,
             SpecflowStepsUsagesCache specflowStepsUsagesCache

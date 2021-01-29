@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
+namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight
 {
     [Language(typeof(GherkinLanguage))]
     public class GherkinResolveProblemHighlighter : IResolveProblemHighlighter

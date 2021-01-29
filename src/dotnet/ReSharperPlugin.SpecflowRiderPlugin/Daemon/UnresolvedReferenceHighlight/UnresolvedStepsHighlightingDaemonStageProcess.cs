@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
+namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight
 {
     public class UnresolvedStepsHighlightingDaemonStageProcess : IDaemonStageProcess
     {

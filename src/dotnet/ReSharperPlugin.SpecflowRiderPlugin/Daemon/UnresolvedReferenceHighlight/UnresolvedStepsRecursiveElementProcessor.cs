@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
+namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight
 {
     public class UnresolvedStepsRecursiveElementProcessor : IRecursiveElementProcessor<IHighlightingConsumer>
     {

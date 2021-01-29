@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
+namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight
 {
     [StaticSeverityHighlighting(
         Severity.ERROR,
