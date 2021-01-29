@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Plugins.Unity.CSharp.Daemon.Errors;
 using JetBrains.ReSharper.Psi;
@@ -62,9 +63,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
                 if (!(constantValue.Value is string stepText))
                     continue;
 
-                var expectedMethodName = SpecflowStepHelper.GetMethodNameAndParameterFromStepPattern(stepKind.Value, stepText, psiServices, _daemonProcess.SourceFile);
+                var expectedMethodName = SpecflowStepHelper.GetMethodNameAndParameterFromStepPattern(stepKind.Value, stepText, psiServices, _daemonProcess.SourceFile, method.Params.ParameterDeclarations.Select(x => x.DeclaredName).ToList());
 
-                if (method.DeclaredName == expectedMethodName)
+                if (string.Equals(method.DeclaredName, expectedMethodName, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
                 if (method.DeclaredName.ToLowerInvariant().StartsWith(stepKind.ToString().ToLowerInvariant()))

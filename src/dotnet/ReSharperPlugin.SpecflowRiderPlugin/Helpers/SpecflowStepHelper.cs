@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Naming.Extentions;
@@ -24,22 +23,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
             return (methodName, cleanPattern, parameterTypes);
         }
 
-        public static string GetMethodNameAndParameterFromStepPattern(GherkinStepKind stepKind, string pattern, IPsiServices psiServices, IPsiSourceFile psiSourceFile)
+        public static string GetMethodNameAndParameterFromStepPattern(GherkinStepKind stepKind, string pattern, IPsiServices psiServices, IPsiSourceFile psiSourceFile, List<string> parameterNames)
         {
             var options = new SuggestionOptions();
-            var cleanPattern = ReplacePatternCaptureWithX(pattern);
+            var cleanPattern = ReplacePatternCaptureWithParameterName(pattern, parameterNames);
             var patternNoSpace = stepKind + TextHelper.ToPascalCase(cleanPattern);
             var methodName = psiServices.Naming.Suggestion.GetDerivedName(patternNoSpace, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance, options, psiSourceFile);
 
             return methodName;
         }
 
-        private static string ReplacePatternCaptureWithX(string pattern)
+        private static string ReplacePatternCaptureWithParameterName(string pattern, List<string> parameterNames)
         {
             var stringBuilder = new StringBuilder();
 
             var inCapture = false;
             var previousChar = '\0';
+            var parameterIndex = 0;
             foreach (var c in pattern)
             {
                 if (c == '(' && previousChar != '\\')
@@ -47,7 +47,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
 
                 if (inCapture && c == ')' && previousChar != '\\')
                 {
-                    stringBuilder.Append('X');
+                    if (parameterNames.Count > parameterIndex)
+                        stringBuilder.Append(TextHelper.ToPascalCaseWord(parameterNames[parameterIndex++]));
                     inCapture = false;
                 }
 

@@ -27,6 +27,10 @@ You can find CI builds in [Actions](https://github.com/Socolin/resharper-specflo
 
 ![Quick fix example](doc/images/QuickFixCreateStep.gif)
 
+## Limitations
+
+- For now, it only supports step definitions using [Regular expressions in attributes](https://docs.specflow.org/projects/specflow/en/latest/Bindings/Step-Definitions.html#step-matching-styles-rules). If you are interested in the other ones, please open an issue.
+
 ## Notes
 
 Thanks to all the people on the `#dotnet-pluginwriters` Slack channel for their help !

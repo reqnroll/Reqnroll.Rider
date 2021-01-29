@@ -1,15 +1,9 @@
 using System;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-using JetBrains.ReSharper.Feature.Services.Refactorings.Specific.Rename;
-using JetBrains.ReSharper.Intentions.Xaml.QuickFixes;
 using JetBrains.ReSharper.Plugins.Unity.CSharp.Daemon.Errors;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
-using JetBrains.ReSharper.Refactorings.CSharp;
-using JetBrains.ReSharper.Refactorings.CSharp.Rename;
 using JetBrains.TextControl;
 using JetBrains.Util;
 

@@ -16,16 +16,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
         public static string ToPascalCase(string input)
         {
             var tokens = TokenizeLower(input);
-            return string.Join("", tokens.Select(x => x[0].ToUpperFast() + x.Substring(1)));
+            return string.Join("", tokens.Select(ToPascalCaseWord));
+        }
+        public static string ToPascalCaseWord(string word)
+        {
+            if (string.IsNullOrEmpty(word))
+                return word;
+            return word[0].ToUpperFast() + word.Substring(1);
         }
 
         public static List<string> TokenizeLower(string input)
         {
             var tokens = new List<string>();
             var sb = new StringBuilder();
+            var previous = '\0';
             foreach (var c in input)
             {
-                if (c.IsLetterFast() && c.IsUpperFast())
+                if (c.IsLetterFast() && c.IsUpperFast() && !previous.IsUpperFast())
                     AddToken(tokens, sb);
 
                 if (c == '-' || c == '_' || c == ' ')
@@ -35,6 +42,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
                     sb.Append(c.ToLowerFast());
                 else if (c.IsDigit())
                     sb.Append(c);
+                previous = c;
             }
 
             AddToken(tokens, sb);
