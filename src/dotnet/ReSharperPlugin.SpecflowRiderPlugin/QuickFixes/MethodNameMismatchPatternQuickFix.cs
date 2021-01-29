@@ -12,11 +12,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes
     [QuickFix]
     public class MethodNameMismatchPatternQuickFix : QuickFixBase
     {
-        private readonly MethodNameMismatchPatternWarning _warning;
+        private readonly MethodNameMismatchPatternInfo _warning;
 
         public override string Text => "Rename to " + _warning.ExpectedName;
 
-        public MethodNameMismatchPatternQuickFix(MethodNameMismatchPatternWarning warning)
+        public MethodNameMismatchPatternQuickFix(MethodNameMismatchPatternInfo warning)
         {
             _warning = warning;
         }

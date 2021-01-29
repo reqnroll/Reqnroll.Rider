@@ -77,7 +77,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
             if (invalidNames.Count > 0)
             {
                 var expectedName = invalidNames.FirstOrDefault();
-                context.AddHighlighting(new MethodNameMismatchPatternWarning(method, expectedName));
+                context.AddHighlighting(new MethodNameMismatchPatternInfo(method, expectedName));
             }
         }
 

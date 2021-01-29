@@ -33,8 +33,8 @@
 		 -->
 	<SeverityConfiguration>
 		<Group name="SpecflowHighlightingGroupIds.Specflow">
-			<Tag externalName="MethodNameMismatchPatternWarning.HIGHLIGHTING_ID"
-				 default="WARNING">
+			<Tag externalName="MethodNameMismatchPatternInfo.HIGHLIGHTING_ID"
+				 default="HINT">
 				<Title>Method name and specflow step pattern does not match</Title>
 				<Description>Method name and specflow step pattern does not match.</Description>
 			</Tag>
@@ -59,11 +59,11 @@
 		   for this highlight. Only used when the file is processed in QUICKFIX mode (default is
 		   to use ERROR mode)
 		 -->
-	<Warning name="MethodNameMismatchPattern" configurableSeverity="Unity.InefficientPropertyAccess">
+	<Info name="MethodNameMismatchPattern" configurableSeverity="Unity.InefficientPropertyAccess">
 		<Parameter type="IMethodDeclaration" name="method"/>
 		<Parameter type="string" name="expectedName" />
 		<Message value="Method name does not match pattern in attribute" />
 		<Range>Method.NameIdentifier.GetDocumentRange()</Range>
 		<Behavour overlapResolvePolicy="NONE" />
-	</Warning>
+	</Info>
 </Errors>
