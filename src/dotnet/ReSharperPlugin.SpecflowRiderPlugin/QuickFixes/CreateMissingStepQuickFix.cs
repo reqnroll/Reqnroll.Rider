@@ -3,7 +3,6 @@ using JetBrains.ReSharper.Feature.Services.Intentions;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Feature.Services.Resources;
 using JetBrains.Util;
-using ReSharperPlugin.SpecflowRiderPlugin.Daemon;
 using ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight;
 using ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions;
 

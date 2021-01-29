@@ -8,6 +8,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
     public class GherkinProjectFileType : KnownProjectFileType
     {
         public new const string Name = "GHERKIN";
+        // ReSharper disable once InconsistentNaming
         public const string FEATURE_EXTENSION = ".feature";
         
         [CanBeNull]

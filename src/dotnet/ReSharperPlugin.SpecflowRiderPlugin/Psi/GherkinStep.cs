@@ -1,9 +1,7 @@
 using System.Text;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
-using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
-using ReSharperPlugin.SpecflowRiderPlugin.Caching;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
 

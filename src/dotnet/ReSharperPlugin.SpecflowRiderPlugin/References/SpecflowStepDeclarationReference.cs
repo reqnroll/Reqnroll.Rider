@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using JetBrains.Annotations;
-using JetBrains.Application.UI.BindableLinq.Extensions;
 using JetBrains.Collections;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Impl;
@@ -10,7 +9,6 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Compiled;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util.Dotnet.TargetFrameworkIds;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
@@ -31,7 +29,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
             var projectReferences = myOwner.GetProject()?.GetAllModuleReferences().OfType<SimpleProjectToProjectReference>().ToList();
             foreach (var (sourceFile, cacheEntries) in specflowStepsDefinitionsCache.AllStepsPerFiles)
             {
-                if (sourceFile.GetProject() != myOwner.GetProject())
+                if (!ReferenceEquals(sourceFile.GetProject(), myOwner.GetProject()))
                     if (projectReferences?.Any(x => x.Name == sourceFile.GetProject()?.Name) != true)
                         continue;
                 foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
