@@ -4,6 +4,7 @@ using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
@@ -151,6 +152,24 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public override ReferenceCollection GetFirstClassReferences()
         {
             return new ReferenceCollection(_reference);
+        }
+
+        public string GetFirstLineText()
+        {
+            var sb = new StringBuilder();
+            for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
+            {
+                if (te.GetTokenType() == GherkinTokenTypes.NEW_LINE)
+                    break;
+
+                sb.Append(te.GetText());
+            }
+            return sb.ToString().Trim();
+        }
+
+        public bool Match(StepTestOutput failedStepStepsOutput)
+        {
+            return GetFirstLineText() == failedStepStepsOutput.FirstLine;
         }
     }
 }

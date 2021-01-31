@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Collections;
@@ -88,6 +89,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
 
             return result.ToString();
+        }
+
+        public IEnumerable<string> GetStepKeywords()
+        {
+            return _translationsPerKeyword["Given"]
+                .Concat(_translationsPerKeyword["When"])
+                .Concat(_translationsPerKeyword["Then"]).Distinct();
         }
 
         public IReadOnlyCollection<string> GetAllKeywords()
