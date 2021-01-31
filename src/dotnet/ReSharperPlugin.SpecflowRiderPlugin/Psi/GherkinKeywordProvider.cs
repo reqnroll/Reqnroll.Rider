@@ -69,6 +69,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             if (_allKeywords.TryGetValue(language, out var keywordsList))
                 return keywordsList;
 
+            if (_allKeywords.TryGetValue(language.Substring(0, 2), out var keywordsListLang))
+                return keywordsListLang;
+
             return _allKeywords["en"];
         }
     }
