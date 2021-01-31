@@ -15,6 +15,8 @@ You can find CI builds in [Actions](https://github.com/Socolin/resharper-specflo
 
 ## Features
 
+All those feature should work out of the box for existing projects. If something is not working, please report it with a sample of code (step / step definition) of what is not working. Also check for error notification in the bottom status bar of Rider.
+
 ### Syntax highlight
 
 ![Syntax highlight](doc/images/SpecflowSyntaxHighlight.png)
