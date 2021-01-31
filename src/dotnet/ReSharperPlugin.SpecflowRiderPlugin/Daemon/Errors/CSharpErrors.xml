@@ -59,7 +59,7 @@
 		   for this highlight. Only used when the file is processed in QUICKFIX mode (default is
 		   to use ERROR mode)
 		 -->
-	<Info name="MethodNameMismatchPattern" configurableSeverity="Unity.InefficientPropertyAccess">
+	<Info name="MethodNameMismatchPattern" configurableSeverity="SpecFlow.MethodNameMismatchPattern">
 		<Parameter type="IMethodDeclaration" name="method"/>
 		<Parameter type="string" name="expectedName" />
 		<Message value="Method name does not match pattern in attribute" />
