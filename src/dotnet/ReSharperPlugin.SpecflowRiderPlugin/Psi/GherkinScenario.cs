@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using JetBrains.ReSharper.Psi.Tree;
+
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
     public class GherkinScenario : GherkinElement
@@ -11,13 +14,22 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return FirstChild?.NodeType == GherkinTokenTypes.BACKGROUND_KEYWORD;
         }
 
+        public string GetScenarioText()
+        {
+            return this.FindChild<GherkinToken>(o => o.NodeType == GherkinTokenTypes.TEXT)?.GetText();
+        }
+
+        public IEnumerable<GherkinStep> GetSteps()
+        {
+            return this.Children<GherkinStep>();
+        }
+
         public override string ToString()
         {
             if (IsBackground())
                 return "GherkinScenario(Background):";
 
-            var textToken = this.FindChild<GherkinToken>(o => o.NodeType == GherkinTokenTypes.TEXT);
-            return $"GherkinScenario: {textToken?.GetText()}";
+            return $"GherkinScenario: {GetScenarioText()}";
         }
     }
 }
