@@ -23,10 +23,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages
         public IDictionary<GherkinStepKind, OneToSetMap<IPsiSourceFile, string>> StepUsages => _mergeData.StepsUsages;
 
         private readonly SpecflowStepsUsagesMergeData _mergeData = new SpecflowStepsUsagesMergeData();
+        private readonly ILogger _logger;
 
-        public SpecflowStepsUsagesCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager)
+        public SpecflowStepsUsagesCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager, ILogger logger)
             : base(lifetime, locks, persistentIndexManager, new SpecflowStepUsagesEntriesMarshaller(), VersionInt)
         {
+            _logger = logger;
         }
 
         public override object Build(IPsiSourceFile sourceFile, bool isStartup)
@@ -69,6 +71,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages
 
             foreach (var stepUsages in cacheItems)
             {
+                if (!_mergeData.StepsUsages.ContainsKey(stepUsages.StepKind))
+                {
+                    _logger.Error("Failed to determine the kind of step the step {0} in {1}.", stepUsages.StepText, sourceFile);
+                    continue;
+                }
+
                 _mergeData.StepsUsages[stepUsages.StepKind].Add(sourceFile, stepUsages.StepText);
             }
         }
