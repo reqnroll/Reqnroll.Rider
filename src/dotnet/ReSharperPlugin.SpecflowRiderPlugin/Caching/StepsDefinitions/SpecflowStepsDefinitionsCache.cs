@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
@@ -22,7 +23,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     [PsiComponent]
     public class SpecflowStepsDefinitionsCache : SimpleICache<SpecflowStepsDefinitionsCacheEntries>
     {
-        private const int VersionInt = 5;
+        private const int VersionInt = 6;
         public override string Version => VersionInt.ToString();
 
         // FIXME: per step kind
@@ -40,38 +41,53 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             var file = sourceFile.GetPrimaryPsiFile().NotNull();
             if (!file.Language.Is<CSharpLanguage>())
                 return null;
-            if (!(file is ICSharpFile cSharpFile))
-                return null;
-            if (!cSharpFile.Imports.Any(x => x.ImportedSymbolName.QualifiedName == "TechTalk.SpecFlow"))
-                return null;
 
             var stepDefinitions = new SpecflowStepsDefinitionsCacheEntries();
             foreach (var type in GetTypeDeclarations(file))
             {
                 if (!(type is IClassDeclaration classDeclaration))
                     continue;
-                if (classDeclaration.Attributes.Count == 0)
+                if (HasSpecflowBindingAttribute(classDeclaration))
                     continue;
-
-                // Optimization: do not resolve all attribute. We are looking for `TechTalk.SpecFlow.BindingAttribute` only
-                var potentialBindingAttributes = classDeclaration.Attributes.Where(x => x.Arguments.Count == 0).ToList();
-                if (potentialBindingAttributes.Count == 0)
-                    continue;
-
-                var bindingAttributeFound = false;
-                foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
-                {
-                    if (potentialBindingAttribute.GetClrName().FullName == "TechTalk.SpecFlow.BindingAttribute")
-                        bindingAttributeFound = true;
-                }
-                if (bindingAttributeFound)
-                {
-                   stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration));
-                }
-
+                stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration));
             }
 
             return stepDefinitions;
+        }
+
+        private static bool HasSpecflowBindingAttribute(IClassDeclaration classDeclaration)
+        {
+            if (classDeclaration.IsPartial)
+            {
+                foreach (var firstClassReference in classDeclaration.GetFirstClassReferences())
+                {
+                    var resolve = firstClassReference.Resolve();
+                    if (resolve.ResolveErrorType == ResolveErrorType.OK)
+                    {
+                        if (resolve.DeclaredElement is IClass @class)
+                        {
+                            if (@class.GetAttributeInstances(true).Any(x => x.GetAttributeType().GetClrName().FullName == "TechTalk.SpecFlow.BindingAttribute"))
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            if (classDeclaration.Attributes.Count == 0)
+                return false;
+
+            // Optimization: do not resolve all attribute. We are looking for `TechTalk.SpecFlow.BindingAttribute` only
+            var potentialBindingAttributes = classDeclaration.Attributes.Where(x => x.Arguments.Count == 0).ToList();
+            if (potentialBindingAttributes.Count == 0)
+                return true;
+
+            var bindingAttributeFound = false;
+            foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
+            {
+                if (potentialBindingAttribute.GetClrName().FullName == "TechTalk.SpecFlow.BindingAttribute")
+                    bindingAttributeFound = true;
+            }
+            return bindingAttributeFound;
         }
 
         public override void MergeLoaded(object data)

@@ -33,7 +33,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
             var gherkinStepKind = gherkinKeywordProvider.GetStepKind(specflowSettingsLanguage, stepKeyword.GetText());
             if (gherkinStepKind == GherkinStepKind.And)
-                return GetPreviousGherkinStepKind();
+            {
+                gherkinStepKind = GetPreviousGherkinStepKind();
+                if (gherkinStepKind == GherkinStepKind.Unknown)
+                    return GherkinStepKind.Given;
+            }
 
             return gherkinStepKind;
         }
