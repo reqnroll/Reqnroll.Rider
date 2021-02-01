@@ -8,9 +8,11 @@ using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -46,12 +48,27 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             var stepDefinitions = new SpecflowStepsDefinitionsCacheEntries();
             foreach (var type in GetTypeDeclarations(file))
             {
-                if (!(type.DeclaredElement is IClass @class))
+                if (!(type is IClassDeclaration classDeclaration))
                     continue;
-                if (@class.GetAttributeInstances(AttributesSource.Self).All(x => x.GetAttributeType().GetClrName().FullName != "TechTalk.SpecFlow.BindingAttribute"))
+                if (classDeclaration.Attributes.Count == 0)
                     continue;
 
-                stepDefinitions.Add(BuildBindingClassCacheEntry(@class));
+                // Optimization: do not resolve all attribute. We are looking for `TechTalk.SpecFlow.BindingAttribute` only
+                var potentialBindingAttributes = classDeclaration.Attributes.Where(x => x.Arguments.Count == 0).ToList();
+                if (potentialBindingAttributes.Count == 0)
+                    continue;
+
+                var bindingAttributeFound = false;
+                foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
+                {
+                    if (potentialBindingAttribute.GetClrName().FullName == "TechTalk.SpecFlow.BindingAttribute")
+                        bindingAttributeFound = true;
+                }
+                if (bindingAttributeFound)
+                {
+                   stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration));
+                }
+
             }
 
             return stepDefinitions;
@@ -110,19 +127,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                     yield return typeDeclaration;
         }
 
-        private SpecflowStepDefinitionCacheClassEntry BuildBindingClassCacheEntry(IClass @class)
+        private SpecflowStepDefinitionCacheClassEntry BuildBindingClassCacheEntry(IClassDeclaration classDeclaration)
         {
-            var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(@class.GetClrName().FullName);
+            var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(classDeclaration.CLRName);
 
-            foreach (var member in @class.GetMembers())
+            foreach (var member in classDeclaration.MemberDeclarations)
             {
-                if (!(member is IMethod method))
+                if (!(member is IMethodDeclaration methodDeclaration))
                     continue;
 
-                var methodCacheEntry = classCacheEntry.AddMethod(method.ShortName);
+                var methodCacheEntry = classCacheEntry.AddMethod(methodDeclaration.DeclaredName);
 
-                var attributeInstances = method.GetAttributeInstances(AttributesSource.All);
-                foreach (var attributeInstance in attributeInstances)
+                foreach (var attributeInstance in methodDeclaration.Attributes.Select(x => x.GetAttributeInstance()))
                 {
                     if (attributeInstance.PositionParameterCount == 0)
                         continue;
