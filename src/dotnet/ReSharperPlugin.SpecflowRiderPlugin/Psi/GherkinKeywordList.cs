@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using JetBrains.Annotations;
 using JetBrains.Collections;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Util;
@@ -99,9 +100,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return _translatedTokenTypes[keyword];
         }
 
+        [CanBeNull]
         public string GetEnglishTokenKeyword(string keyword)
         {
-            return _translatedKeywords[keyword];
+            if (_translatedKeywords.TryGetValue(keyword, out var englishVersion))
+                return englishVersion;
+            return null;
         }
 
         private class DescendingComparer<T> : IComparer<T> where T : IComparable<T>
