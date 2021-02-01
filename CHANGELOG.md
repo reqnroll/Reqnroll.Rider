@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.2.2
+### Fixed
+- Cache was not built in some scenario the first time the project is open with the plugin.
+- The cache process was crashing when using specflow with other locales
+- Fix a bug when specialized locales was used and not found in locales list
+
 ## 1.2.0
 ### Added
 - Add highlighting: Warning when method name does not match with the pattern in the attribute.
