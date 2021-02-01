@@ -1,4 +1,6 @@
 ![GitHub](https://img.shields.io/github/license/Socolin/resharper-specflow)
+[![Gitter](https://badges.gitter.im/Rider-Specflow/community.svg)](https://gitter.im/Rider-Specflow/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 
 # SpecFlow Support for ReSharper and Rider
 The "SpecFlow Support" plugin adds specific functionality for the [SpecFlow](https://specflow.org/) to [Rider](https://www.jetbrains.com/rider/). (Resharper will come if requested enough)
