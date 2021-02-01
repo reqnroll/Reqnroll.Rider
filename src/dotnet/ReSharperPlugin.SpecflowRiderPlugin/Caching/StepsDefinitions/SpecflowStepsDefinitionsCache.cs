@@ -11,9 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
-using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -47,7 +45,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             {
                 if (!(type is IClassDeclaration classDeclaration))
                     continue;
-                if (HasSpecflowBindingAttribute(classDeclaration))
+                if (!HasSpecflowBindingAttribute(classDeclaration))
                     continue;
                 stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration));
             }
@@ -59,18 +57,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         {
             if (classDeclaration.IsPartial)
             {
-                foreach (var firstClassReference in classDeclaration.GetFirstClassReferences())
+                if (classDeclaration.DeclaredElement == null)
                 {
-                    var resolve = firstClassReference.Resolve();
-                    if (resolve.ResolveErrorType == ResolveErrorType.OK)
-                    {
-                        if (resolve.DeclaredElement is IClass @class)
-                        {
-                            if (@class.GetAttributeInstances(true).Any(x => x.GetAttributeType().GetClrName().FullName == "TechTalk.SpecFlow.BindingAttribute"))
-                                return true;
-                        }
-                    }
+                    // FIXME: I did not find a way to check for the attribute here so let's parse this file as if it's a [Binding] class
+                    // Maybe those should be stored somewhere and when the other cached complete it works and DeclaredElement element this
+                    // file should be marked as dirty
+                    return true;
                 }
+                if (classDeclaration.DeclaredElement?.GetAttributeInstances(true).Any(x => x.GetAttributeType().GetClrName().FullName == "TechTalk.SpecFlow.BindingAttribute") == true)
+                    return true;
             }
 
             if (classDeclaration.Attributes.Count == 0)
