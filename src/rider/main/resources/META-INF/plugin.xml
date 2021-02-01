@@ -23,8 +23,7 @@
     <backend.autoPopup.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.completion.BackendAndGenericRider" />
     <rider.debuggerSupportPolicy language="GherkinDotnet" implementationClass="com.jetbrains.rider.debugger.RiderDebuggerSupportPolicy" />
     <lang.altEnter language="GherkinDotnet" implementationClass="com.jetbrains.rider.intentions.altEnter.ReSharperBulbMenuModelFactory" />
-    <postStartupActivity implementation="com.jetbrains.rider.plugins.specflowriderplugin.DetectIncompatiblePlugins"/>
-
+    <lang.substitutor language="Gherkin" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.SpecflowLanguageSubstitutor" />
     <!--    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.specflowriderplugin.SampleOptionsPage" id="SampleOptionsPage" />-->
   </extensions>
   
