@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.2.3
+### Fixed
+- Step definitions were not found when `using` were inside namsepace
+- Step definitions were not found when they were inside a `partial class`
+
 ## 1.2.2
 ### Fixed
 - Cache was not built in some scenario the first time the project is open with the plugin.
