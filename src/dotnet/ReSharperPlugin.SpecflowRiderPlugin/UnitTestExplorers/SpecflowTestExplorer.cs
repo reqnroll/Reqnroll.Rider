@@ -57,7 +57,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                 }
                 testIdPrefix += ToUnitTestName(feature.GetFeatureText());
 
-                var featureTests = projectTests.Where(x => x.Id.Id.StartsWith(testIdPrefix, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                var testIdPrefixWithSolution = project.GetSolution().Name + "." + testIdPrefix;
+
+                var featureTests = projectTests.Where(x =>
+                                                      {
+                                                          if (x.Id.ProviderId == "xUnit")
+                                                              return x.Id.Id.StartsWith(testIdPrefixWithSolution, StringComparison.InvariantCultureIgnoreCase);
+                                                          return x.Id.Id.StartsWith(testIdPrefix, StringComparison.InvariantCultureIgnoreCase);
+                                                      }).ToList();
                 if (featureTests.Count == 0)
                     continue;
 
