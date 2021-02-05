@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.3.1
+### Fixed
+- "Run test" button was not displayed in gutter for XUnit test
+- "Create step" quick fix now handle partial class correctly and file with multiple classes.
+
 ## 1.3.0
 ### Added
 - Add buttons to run tests in gutter of specflow files
