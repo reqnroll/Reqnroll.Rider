@@ -31,6 +31,16 @@ All those feature should work out of the box for existing projects. If something
 
 ![Quick fix example](doc/images/QuickFixCreateStep.gif)
 
+### Run tests from SpecFlow files
+
+![Run test in gutter example](doc/images/RunTestInGutter.png)
+
+### Rename step definition to match with their pattern
+
+![Rename step definition example](doc/images/RenameStepDefinitionToMatchPattern.gif)
+
+
+
 ## Limitations
 
 - For now, it only supports step definitions using [Regular expressions in attributes](https://docs.specflow.org/projects/specflow/en/latest/Bindings/Step-Definitions.html#step-matching-styles-rules). If you are interested in the other ones, please open an issue.
