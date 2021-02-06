@@ -12,6 +12,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             foreach (var cacheClass in value)
             {
                 writer.Write(cacheClass.ClassName);
+                writer.Write(cacheClass.HasSpecflowBindingAttribute);
                 writer.Write(cacheClass.Methods.Count);
                 foreach (var cacheMethod in cacheClass.Methods)
                 {
@@ -33,7 +34,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             for (var i = 0; i < classCount; i++)
             {
                 var className = reader.ReadString();
-                var cacheClassEntry = new SpecflowStepDefinitionCacheClassEntry(className);
+                var hasSpecflowBindingAttribute = reader.ReadBool();
+                var cacheClassEntry = new SpecflowStepDefinitionCacheClassEntry(className, hasSpecflowBindingAttribute);
 
                 var methodCount = reader.ReadInt();
                 for (var j = 0; j < methodCount; j++)

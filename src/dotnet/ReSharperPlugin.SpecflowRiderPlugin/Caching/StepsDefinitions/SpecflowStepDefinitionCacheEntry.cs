@@ -6,11 +6,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     public class SpecflowStepDefinitionCacheClassEntry
     {
         public string ClassName { get; }
+        public bool HasSpecflowBindingAttribute { get; }
         public IList<SpecflowStepDefinitionCacheMethodEntry> Methods { get; } = new List<SpecflowStepDefinitionCacheMethodEntry>();
 
-        public SpecflowStepDefinitionCacheClassEntry(string className)
+        public SpecflowStepDefinitionCacheClassEntry(string className, bool hasSpecflowBindingAttribute)
         {
             ClassName = className;
+            HasSpecflowBindingAttribute = hasSpecflowBindingAttribute;
         }
 
         public SpecflowStepDefinitionCacheMethodEntry AddMethod(string methodName)

@@ -11,6 +11,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     {
         public readonly OneToSetMap<IPsiSourceFile, SpecflowStepInfo> StepsDefinitionsPerFiles = new OneToSetMap<IPsiSourceFile, SpecflowStepInfo>();
         public readonly OneToSetMap<string, IPsiSourceFile> SpecflowBindingTypes = new OneToSetMap<string, IPsiSourceFile>();
+        public readonly OneToSetMap<string, IPsiSourceFile> PotentialSpecflowBindingTypes = new OneToSetMap<string, IPsiSourceFile>();
     }
 
     public class SpecflowStepInfo

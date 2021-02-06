@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -11,6 +12,8 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
+using JetBrains.ReSharper.Psi.Impl.Types;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
@@ -21,17 +24,46 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     [PsiComponent]
     public class SpecflowStepsDefinitionsCache : SimpleICache<SpecflowStepsDefinitionsCacheEntries>
     {
-        private const int VersionInt = 6;
+        private const int VersionInt = 8;
         public override string Version => VersionInt.ToString();
 
         // FIXME: per step kind
         public OneToSetMap<IPsiSourceFile, SpecflowStepInfo> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
-        public OneToSetMap<string, IPsiSourceFile> AllBindingTypes => _mergeData.SpecflowBindingTypes;
         private readonly SpecflowStepsDefinitionMergeData _mergeData = new SpecflowStepsDefinitionMergeData();
 
         public SpecflowStepsDefinitionsCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager)
             : base(lifetime, locks, persistentIndexManager, new SpecflowStepDefinitionsEntriesMarshaller(), VersionInt)
         {
+        }
+
+        public IEnumerable<AvailableBindingClass> GetBindingTypes(IPsiModule module)
+        {
+            foreach (var (fullClassName, sourceFile) in _mergeData.SpecflowBindingTypes.SelectMany(e => e.Value.Select(v => (fullClassName: e.Key, sourceFile: v))))
+            {
+                if (!module.Equals(sourceFile.PsiModule) && !module.References(sourceFile.PsiModule))
+                    continue;
+                yield return new AvailableBindingClass(sourceFile, fullClassName);
+            }
+
+            // Since we cannot know when cache are built if a partial class in a given file has an attribute or not.
+            // This is due to the fact that `DeclaredElement` are resolved using cache and we cannot depends ond cache when building a cache.
+            // The check need to be done at this time.
+            foreach (var (fullClassName, sourceFile) in _mergeData.PotentialSpecflowBindingTypes.SelectMany(e => e.Value.Select(v => (fullClassName: e.Key, sourceFile: v))))
+            {
+                if (!module.Equals(sourceFile.PsiModule) && !module.References(sourceFile.PsiModule))
+                    continue;
+                var type = CSharpTypeFactory.CreateType(fullClassName, sourceFile.PsiModule);
+                if (!(type is DeclaredTypeFromCLRName declaredTypeFromClrName))
+                    continue;
+                var resolveResult = declaredTypeFromClrName.Resolve();
+                if (!resolveResult.IsValid())
+                    continue;
+                if (!(resolveResult.DeclaredElement is IClass @class))
+                    continue;
+                if (@class.GetAttributeInstances(AttributesSource.Self).All(x => x.GetAttributeType().GetClrName().FullName != "TechTalk.SpecFlow.BindingAttribute"))
+                    continue;
+                yield return new AvailableBindingClass(sourceFile, fullClassName);
+            }
         }
 
         public override object Build(IPsiSourceFile sourceFile, bool isStartup)
@@ -45,9 +77,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             {
                 if (!(type is IClassDeclaration classDeclaration))
                     continue;
-                if (!HasSpecflowBindingAttribute(classDeclaration))
+                var hasSpecflowBindingAttribute = HasSpecflowBindingAttribute(classDeclaration);
+                if (!hasSpecflowBindingAttribute && !classDeclaration.IsPartial)
                     continue;
-                stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration));
+                stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration, hasSpecflowBindingAttribute));
             }
 
             return stepDefinitions;
@@ -55,26 +88,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 
         private static bool HasSpecflowBindingAttribute(IClassDeclaration classDeclaration)
         {
-            if (classDeclaration.IsPartial)
-            {
-                if (classDeclaration.DeclaredElement == null)
-                {
-                    // FIXME: I did not find a way to check for the attribute here so let's parse this file as if it's a [Binding] class
-                    // Maybe those should be stored somewhere and when the other cached complete it works and DeclaredElement element this
-                    // file should be marked as dirty
-                    return true;
-                }
-                if (classDeclaration.DeclaredElement?.GetAttributeInstances(true).Any(x => x.GetAttributeType().GetClrName().FullName == "TechTalk.SpecFlow.BindingAttribute") == true)
-                    return true;
-            }
-
             if (classDeclaration.Attributes.Count == 0)
                 return false;
 
             // Optimization: do not resolve all attribute. We are looking for `TechTalk.SpecFlow.BindingAttribute` only
             var potentialBindingAttributes = classDeclaration.Attributes.Where(x => x.Arguments.Count == 0).ToList();
             if (potentialBindingAttributes.Count == 0)
-                return true;
+                return false;
 
             var bindingAttributeFound = false;
             foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
@@ -111,7 +131,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 
             foreach (var classEntry in cacheItems)
             {
-                _mergeData.SpecflowBindingTypes.Add(classEntry.ClassName, sourceFile);
+                if (classEntry.HasSpecflowBindingAttribute)
+                    _mergeData.SpecflowBindingTypes.Add(classEntry.ClassName, sourceFile);
+                else
+                    _mergeData.PotentialSpecflowBindingTypes.Add(classEntry.ClassName, sourceFile);
                 foreach (var method in classEntry.Methods)
                 foreach (var step in method.Steps)
                     _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, new SpecflowStepInfo(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern));
@@ -122,7 +145,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         {
             var fileSteps = _mergeData.StepsDefinitionsPerFiles[sourceFile];
             foreach (var classNameInFile in fileSteps.Select(x => x.ClassFullName).Distinct())
+            {
                 _mergeData.SpecflowBindingTypes.Remove(classNameInFile, sourceFile);
+                _mergeData.PotentialSpecflowBindingTypes.Remove(classNameInFile, sourceFile);
+            }
 
             _mergeData.StepsDefinitionsPerFiles.RemoveKey(sourceFile);
         }
@@ -138,9 +164,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                     yield return typeDeclaration;
         }
 
-        private SpecflowStepDefinitionCacheClassEntry BuildBindingClassCacheEntry(IClassDeclaration classDeclaration)
+        private SpecflowStepDefinitionCacheClassEntry BuildBindingClassCacheEntry(IClassDeclaration classDeclaration, bool hasSpecflowBindingAttribute)
         {
-            var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(classDeclaration.CLRName);
+            var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(classDeclaration.CLRName, hasSpecflowBindingAttribute);
 
             foreach (var member in classDeclaration.MemberDeclarations)
             {
@@ -169,5 +195,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             }
             return classCacheEntry;
         }
+
+        public class AvailableBindingClass
+        {
+            public IPsiSourceFile SourceFile { get; }
+            public string ClassClrName { get; }
+
+            public AvailableBindingClass(IPsiSourceFile sourceFile, string classClrName)
+            {
+                SourceFile = sourceFile;
+                ClassClrName = classClrName;
+            }
+        }
     }
-}
+    }
