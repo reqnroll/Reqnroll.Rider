@@ -3,10 +3,10 @@ using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Collections;
 using JetBrains.ProjectModel;
-using JetBrains.ProjectModel.Impl;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Compiled;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
@@ -26,12 +26,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
             var specflowStepsDefinitionsCache = psiServices.GetComponent<SpecflowStepsDefinitionsCache>();
             var stepKind = myOwner.GetStepKind();
             var stepText = myOwner.GetStepText();
-            var projectReferences = myOwner.GetProject()?.GetAllModuleReferences().OfType<SimpleProjectToProjectReference>().ToList();
+            var psiModule = myOwner.GetPsiModule();
             foreach (var (sourceFile, cacheEntries) in specflowStepsDefinitionsCache.AllStepsPerFiles)
             {
-                if (!ReferenceEquals(sourceFile.GetProject(), myOwner.GetProject()))
-                    if (projectReferences?.Any(x => x.Name == sourceFile.GetProject()?.Name) != true)
-                        continue;
+                if (!psiModule.Equals(sourceFile.PsiModule) && !psiModule.References(sourceFile.PsiModule))
+                    continue;
+
                 foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
                 {
                      if (cacheEntry.Regex?.IsMatch(stepText) == true)
