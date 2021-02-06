@@ -54,13 +54,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions
                     menu.ItemKeys.AddRange(filesPerClasses);
                     menu.DescribeItem.Advise(lifetime, e =>
                                                        {
-                                                           var (classClrFullName, availableBindingClasses) = (KeyValuePair<string, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass>>) e.Key;
+                                                           var (classClrFullName, _) = (KeyValuePair<string, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass>>) e.Key;
 
                                                            e.Descriptor.Icon = PsiSymbolsThemedIcons.Class.Id;
                                                            e.Descriptor.Style = MenuItemStyle.Enabled;
-                                                           // FIXME: Use submenu instead of a second popup ? (I did not find how to get this working)
-                                                           /*if (availableBindingClasses.Count > 1)
-                                                               e.Descriptor.Style |= MenuItemStyle.CanExpand;*/
 
                                                            var clrTypeName = new ClrTypeName(classClrFullName);
                                                            e.Descriptor.Text = new RichText(clrTypeName.ShortName, DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type));
@@ -69,15 +66,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions
                     menu.ItemClicked.Advise(lifetime, key =>
                                                       {
                                                           var (_, availableBindingClasses) = (KeyValuePair<string, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass>>) key;
-                                                          if (availableBindingClasses.Count == 1)
-                                                          {
-                                                              var availableBindingClass = availableBindingClasses.First();
-                                                              AddSpecflowStep(availableBindingClass.SourceFile, availableBindingClass.ClassClrName, _reference.GetStepKind(), _reference.GetStepText());
-                                                          }
-                                                          else
-                                                          {
-                                                              OpenFileSelectionModal(jetPopupMenus, textControl, availableBindingClasses, _reference.GetStepKind(), _reference.GetStepText());
-                                                          }
+                                                          OpenFileSelectionModal(jetPopupMenus, textControl, availableBindingClasses, _reference.GetStepKind(), _reference.GetStepText());
                                                       });
                     menu.PopupWindowContextSource = textControl.PopupWindowContextFactory.ForCaret();
                 });
