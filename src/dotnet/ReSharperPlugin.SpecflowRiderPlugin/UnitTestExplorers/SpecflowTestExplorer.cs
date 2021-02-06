@@ -101,7 +101,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
 
         private string ToUnitTestName(string text)
         {
-            return text.Replace(" ", "").Replace("-", "_");
+            return text.Replace(" ", "").Replace("-", "_").Replace("(", "").Replace(")", "");
         }
     }
 }
