@@ -5,7 +5,7 @@ using JetBrains.Application;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings
+namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings
 {
     [ShellComponent]
     public class SpecflowSettingsProvider

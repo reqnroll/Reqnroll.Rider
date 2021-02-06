@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Text;
 using JetBrains.Util;
-using ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings;
+using ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {

@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Impl;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
-using ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings;
+using ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {

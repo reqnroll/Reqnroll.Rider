@@ -83,8 +83,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                         scenario.GetDocumentRange().TextRange,
                         scenario.GetDocumentRange().TextRange
                     ));
-
-                    Console.WriteLine(matchingTest);
                 }
 
                 if (parent != null)

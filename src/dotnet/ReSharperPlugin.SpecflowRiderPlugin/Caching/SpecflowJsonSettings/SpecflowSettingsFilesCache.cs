@@ -7,8 +7,9 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using Newtonsoft.Json;
+using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings
+namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings
 {
     [PsiComponent]
     public class SpecflowSettingsFilesCache : SimpleICache<SpecflowSettings>

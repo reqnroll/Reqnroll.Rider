@@ -1,4 +1,4 @@
-namespace ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings
+namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings
 {
     public class SpecflowSettings
     {

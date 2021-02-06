@@ -2,7 +2,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.Serialization;
 using JetBrains.Util.PersistentMap;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings
+namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings
 {
     [PsiComponent]
     public class SpecflowSettingsMarshaller : IUnsafeMarshaller<SpecflowSettings>

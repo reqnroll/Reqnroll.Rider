@@ -1,6 +1,6 @@
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Text;
-using ReSharperPlugin.SpecflowRiderPlugin.Psi.SpecflowJsonSettings;
+using ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
