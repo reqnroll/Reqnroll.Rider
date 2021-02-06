@@ -1,7 +1,6 @@
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Paths;
 using JetBrains.Util;

@@ -7,7 +7,7 @@ using JetBrains.UI.Icons;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
-    [ProjectFileType(typeof (GherkinProjectFileType))]
+    [ProjectFileType(typeof(GherkinProjectFileType))]
     public class GherkinProjectFileLanguageService : ProjectFileLanguageService
     {
         public GherkinProjectFileLanguageService(GherkinProjectFileType projectFileType) : base(projectFileType)
@@ -16,11 +16,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         public override ILexerFactory GetMixedLexerFactory(ISolution solution, IBuffer buffer, IPsiSourceFile sourceFile = null)
         {
-            return GherkinLanguage.Instance.LanguageService().GetPrimaryLexerFactory();
+            return GherkinLanguage.Instance.LanguageService().NotNull().GetPrimaryLexerFactory();
         }
-        
+
         protected override PsiLanguageType PsiLanguageType => GherkinLanguage.Instance.NotNull();
-        
+
         public override IconId Icon { get; }
     }
 }
