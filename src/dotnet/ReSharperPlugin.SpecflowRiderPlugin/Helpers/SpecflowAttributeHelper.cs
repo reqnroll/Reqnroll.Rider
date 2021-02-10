@@ -8,9 +8,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
     public class SpecflowAttributeHelper
     {
         public static readonly ClrTypeName BindingAttribute = new ClrTypeName("TechTalk.SpecFlow.BindingAttribute");
+        public static readonly ClrTypeName StepDefinitionAttribute = new ClrTypeName("TechTalk.SpecFlow.StepDefinitionAttribute");
         public static readonly ClrTypeName GivenAttribute = new ClrTypeName("TechTalk.SpecFlow.GivenAttribute");
         public static readonly ClrTypeName WhenAttribute = new ClrTypeName("TechTalk.SpecFlow.WhenAttribute");
         public static readonly ClrTypeName ThenAttribute = new ClrTypeName("TechTalk.SpecFlow.ThenAttribute");
+
         public static string GetAttributeClrName(GherkinStepKind stepKind)
         {
             switch (stepKind)
@@ -35,6 +37,31 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
             if (typeName.Equals(ThenAttribute))
                 return GherkinStepKind.Then;
             return null;
+        }
+
+        public static bool IsAttributeForKind(GherkinStepKind stepKind, IClrTypeName typeName)
+        {
+            if (typeName.Equals(StepDefinitionAttribute))
+                return true;
+            if (stepKind == GherkinStepKind.Given && typeName.Equals(GivenAttribute))
+                return true;
+            if (stepKind == GherkinStepKind.When && typeName.Equals(WhenAttribute))
+                return true;
+            if (stepKind == GherkinStepKind.Then && typeName.Equals(ThenAttribute))
+                return true;
+            return false;
+        }
+        public static bool IsAttributeForKind(GherkinStepKind stepKind, string fullName)
+        {
+            if (StepDefinitionAttribute.FullName == fullName)
+                return true;
+            if (stepKind == GherkinStepKind.Given && GivenAttribute.FullName == fullName)
+                return true;
+            if (stepKind == GherkinStepKind.When && WhenAttribute.FullName == fullName)
+                return true;
+            if (stepKind == GherkinStepKind.Then && ThenAttribute.FullName == fullName)
+                return true;
+            return false;
         }
     }
 }

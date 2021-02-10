@@ -23,7 +23,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     [PsiComponent]
     public class SpecflowStepsDefinitionsCache : SimpleICache<SpecflowStepsDefinitionsCacheEntries>
     {
-        private const int VersionInt = 8;
+        private const int VersionInt = 9;
         public override string Version => VersionInt.ToString();
 
         // FIXME: per step kind
@@ -184,11 +184,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                     if (regex == null)
                         continue;
 
-                    if (attributeInstance.GetAttributeType().GetClrName().Equals(SpecflowAttributeHelper.GivenAttribute))
+                    if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.Given, attributeInstance.GetAttributeType().GetClrName()))
                         methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
-                    if (attributeInstance.GetAttributeType().GetClrName().Equals(SpecflowAttributeHelper.WhenAttribute))
+                    if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.When, attributeInstance.GetAttributeType().GetClrName()))
                         methodCacheEntry.AddStep(GherkinStepKind.When, regex);
-                    if (attributeInstance.GetAttributeType().GetClrName().Equals(SpecflowAttributeHelper.ThenAttribute))
+                    if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.Then, attributeInstance.GetAttributeType().GetClrName()))
                         methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
                 }
             }
@@ -207,4 +207,4 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             }
         }
     }
-    }
+}

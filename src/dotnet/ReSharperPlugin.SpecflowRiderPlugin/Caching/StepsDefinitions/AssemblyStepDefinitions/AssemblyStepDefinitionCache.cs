@@ -68,12 +68,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                             if (regex == null)
                                 continue;
 
+
                             var attributeTypeName = method.CustomAttributesTypeNames[index].FullName.ToString();
-                            if (attributeTypeName.Equals(SpecflowAttributeHelper.GivenAttribute.FullName))
+                            if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.Given, attributeTypeName))
                                 methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
-                            if (attributeTypeName.Equals(SpecflowAttributeHelper.WhenAttribute.FullName))
+                            if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.When, attributeTypeName))
                                 methodCacheEntry.AddStep(GherkinStepKind.When, regex);
-                            if (attributeTypeName.Equals(SpecflowAttributeHelper.ThenAttribute.FullName))
+                            if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.Then, attributeTypeName))
                                 methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
                         }
                     }
