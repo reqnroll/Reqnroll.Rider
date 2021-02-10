@@ -5,7 +5,7 @@
 # SpecFlow Support for ReSharper and Rider
 The "SpecFlow Support" plugin adds specific functionality for the [SpecFlow](https://specflow.org/) to [Rider](https://www.jetbrains.com/rider/). (Resharper will come if requested enough)
 
-**IMPORTANT**: This plugin is still at it's begining, It may be still buggy. Don't hesitate to report any bug or cool feature to add and don't forget to :+1: any feature you want to help prioritize them.
+**IMPORTANT**: This plugin is still at it's begining, It may be still buggy. Don't hesitate to report any bug or cool feature to add and don't forget to :+1: any feature you want to help prioritize.
 
 ## Build plugin
 
