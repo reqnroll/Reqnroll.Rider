@@ -12,6 +12,9 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Resources;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Naming.Extentions;
+using JetBrains.ReSharper.Psi.Naming.Impl;
+using JetBrains.ReSharper.Psi.Naming.Settings;
 using JetBrains.ReSharper.Psi.Resources;
 using JetBrains.ReSharper.Psi.Transactions;
 using JetBrains.RiderTutorials.Utils;
@@ -22,20 +25,25 @@ using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions
+namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 {
     public class CreateSpecflowStepFromUsageAction : IBulbAction
     {
         public string Text { get; } = "Create step";
         private readonly SpecflowStepDeclarationReference _reference;
+        private readonly IStepDefinitionBuilder _stepDefinitionBuilder;
 
         public CreateSpecflowStepFromUsageAction(
-            SpecflowStepDeclarationReference reference
+            SpecflowStepDeclarationReference reference,
+            IStepDefinitionBuilder stepDefinitionBuilder
         )
         {
             _reference = reference;
+            _stepDefinitionBuilder = stepDefinitionBuilder;
         }
+
         public void Execute(ISolution solution, ITextControl textControl)
         {
             var jetPopupMenus = solution.GetPsiServices().GetComponent<JetPopupMenus>();
@@ -94,7 +102,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions
                 });
         }
 
-        private static void AddSpecflowStep(IPsiSourceFile targetFile, string classClrName, GherkinStepKind stepKind, string stepText)
+        private void AddSpecflowStep(IPsiSourceFile targetFile, string classClrName, GherkinStepKind stepKind, string stepText)
         {
             var cSharpFile = targetFile.GetProject().GetCSharpFile(targetFile.DisplayName.Substring(targetFile.DisplayName.LastIndexOf('>') + 2));
             if (cSharpFile == null)
@@ -110,14 +118,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions
                     continue;
 
                 var factory = CSharpElementFactory.GetInstance(classDeclaration);
-                var (methodName, pattern, parametersTypes) = SpecflowStepHelper.GetMethodNameAndParameterFromStepText(stepKind, stepText, classDeclaration.GetPsiServices(), targetFile);
+                var methodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, _reference.IsInsideScenarioOutline());
+                methodName = cSharpFile.GetPsiServices().Naming.Suggestion.GetDerivedName(methodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance, new SuggestionOptions(), targetFile);
+                var parameters = _stepDefinitionBuilder.GetStepDefinitionParameters(stepText, _reference.IsInsideScenarioOutline());
+                var pattern = _stepDefinitionBuilder.GetPattern(stepText, _reference.IsInsideScenarioOutline());
+
                 var attributeType = CSharpTypeFactory.CreateType(SpecflowAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
                 var methodDeclaration = factory.CreateTypeMemberDeclaration($"[$0(@\"{pattern.Replace("\"", "\"\"")}\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}", attributeType) as IMethodDeclaration;
                 if (methodDeclaration == null)
                     continue;
                 var psiModule = classDeclaration.GetPsiModule();
-                for (var i = parametersTypes.Length - 1; i >= 0; i--)
-                    methodDeclaration.AddParameterDeclarationAfter(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parametersTypes[i], psiModule), "p" + i, null);
+                foreach (var (parameterName, parameterType) in parameters)
+                    methodDeclaration.AddParameterDeclarationAfter(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
 
                 IClassMemberDeclaration insertedDeclaration;
                 using (new PsiTransactionCookie(type.GetPsiServices(), DefaultAction.Commit, "Generate specflow step"))

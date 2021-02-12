@@ -4,9 +4,9 @@ using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Feature.Services.Resources;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight;
-using ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.Actions;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
-namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes
+namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 {
     [QuickFix]
     public class CreateMissingStepQuickFix : IQuickFix
@@ -22,7 +22,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes
         {
             return new List<IntentionAction>
             {
-                new IntentionAction(new CreateSpecflowStepFromUsageAction(_error.GherkinStep.GetStepReference()), BulbThemedIcons.RedBulb.Id, IntentionsAnchors.QuickFixesAnchor)
+                new IntentionAction(new CreateSpecflowStepFromUsageAction(_error.GherkinStep.GetStepReference(), _error.GherkinStep.GetPsiServices().GetComponent<IStepDefinitionBuilder>()), BulbThemedIcons.RedBulb.Id, IntentionsAnchors.QuickFixesAnchor)
             };
         }
 

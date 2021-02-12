@@ -147,5 +147,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
         {
             return new ElementAccessContext(myOwner);
         }
+
+        public bool IsInsideScenarioOutline()
+        {
+            return myOwner.Parent is GherkinScenarioOutline;
+        }
     }
 }

@@ -9,6 +9,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
 {
@@ -16,13 +17,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
     public class MethodNameMismatchPatternHighlightingDaemonStage : IDaemonStage
     {
         private readonly SpecflowStepsDefinitionsCache _specflowStepsDefinitionsCache;
+        private readonly IStepDefinitionBuilder _stepDefinitionBuilder;
 
         public MethodNameMismatchPatternHighlightingDaemonStage(
             ResolveHighlighterRegistrar registrar,
-            SpecflowStepsDefinitionsCache specflowStepsDefinitionsCache
+            SpecflowStepsDefinitionsCache specflowStepsDefinitionsCache,
+            IStepDefinitionBuilder stepDefinitionBuilder
         )
         {
             _specflowStepsDefinitionsCache = specflowStepsDefinitionsCache;
+            _stepDefinitionBuilder = stepDefinitionBuilder;
         }
 
         public IEnumerable<IDaemonStageProcess> CreateProcess(
@@ -38,7 +42,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
                 return Enumerable.Empty<IDaemonStageProcess>();
 
             return process.SourceFile.GetPsiFiles<CSharpLanguage>()
-                .SelectNotNull(file => new MethodNameMismatchPatternHighlightingDaemonStageProcess(process, (ICSharpFile) file));
+                .SelectNotNull(file => new MethodNameMismatchPatternHighlightingDaemonStageProcess(process, (ICSharpFile) file, _stepDefinitionBuilder));
         }
     }
 

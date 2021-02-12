@@ -3,21 +3,30 @@ using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Plugins.Unity.CSharp.Daemon.Errors;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Naming.Extentions;
+using JetBrains.ReSharper.Psi.Naming.Impl;
+using JetBrains.ReSharper.Psi.Naming.Settings;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.TestRunner.Abstractions.Extensions;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
+using ReSharperPlugin.SpecflowRiderPlugin.Psi;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
 {
     internal class MethodNameMismatchPatternHighlightingRecursiveElementProcessor : IRecursiveElementProcessor<FilteringHighlightingConsumer>
     {
         private readonly IDaemonProcess _daemonProcess;
+        private readonly IStepDefinitionBuilder _stepDefinitionBuilder;
 
-        public MethodNameMismatchPatternHighlightingRecursiveElementProcessor(IDaemonProcess daemonProcess)
+        public MethodNameMismatchPatternHighlightingRecursiveElementProcessor(IDaemonProcess daemonProcess, IStepDefinitionBuilder stepDefinitionBuilder)
         {
             _daemonProcess = daemonProcess;
+            _stepDefinitionBuilder = stepDefinitionBuilder;
         }
 
         public bool InteriorShouldBeProcessed(ITreeNode element, FilteringHighlightingConsumer context)
@@ -63,7 +72,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
                 if (!(constantValue.Value is string stepText))
                     continue;
 
-                var expectedMethodName = SpecflowStepHelper.GetMethodNameAndParameterFromStepPattern(stepKind.Value, stepText, psiServices, _daemonProcess.SourceFile, method.Params.ParameterDeclarations.Select(x => x.DeclaredName).ToList());
+                if (method.DeclaredElement == null)
+                    continue;
+
+                var expectedMethodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromPattern(stepKind.Value, stepText, method.DeclaredElement.Parameters.SelectNotNull(x => x.ShortName).ToArray());
+                expectedMethodName = psiServices.Naming.Suggestion.GetDerivedName(expectedMethodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance.NotNull(), new SuggestionOptions(), _daemonProcess.SourceFile);
 
                 if (string.Equals(method.DeclaredName, expectedMethodName, StringComparison.InvariantCultureIgnoreCase))
                     return;

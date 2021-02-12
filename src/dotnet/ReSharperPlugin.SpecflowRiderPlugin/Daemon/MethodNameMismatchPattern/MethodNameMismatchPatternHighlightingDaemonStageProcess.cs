@@ -2,6 +2,7 @@ using System;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
 {
@@ -13,12 +14,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
 
         public MethodNameMismatchPatternHighlightingDaemonStageProcess(
             IDaemonProcess process,
-            ICSharpFile file
+            ICSharpFile file,
+            IStepDefinitionBuilder stepDefinitionBuilder
         )
         {
             _file = file;
             DaemonProcess = process;
-            _elementProcessor = new MethodNameMismatchPatternHighlightingRecursiveElementProcessor(DaemonProcess);
+            _elementProcessor = new MethodNameMismatchPatternHighlightingRecursiveElementProcessor(DaemonProcess, stepDefinitionBuilder);
         }
 
         public void Execute(Action<DaemonStageResult> committer)
