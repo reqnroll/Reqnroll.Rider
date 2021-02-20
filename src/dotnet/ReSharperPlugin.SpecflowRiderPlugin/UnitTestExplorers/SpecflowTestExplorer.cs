@@ -8,7 +8,6 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.UnitTestFramework;
 using JetBrains.ReSharper.UnitTestFramework.Exploration;
 using JetBrains.ReSharper.UnitTestProvider.nUnit.v30;
-using JetBrains.ReSharper.UnitTestProvider.Xunit;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
@@ -125,11 +124,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                 .FirstOrDefault(f => f.Location.Parent == fileLocation.Parent && f.Name == expectedFeatureCsFileName);
 
             return file;
-        }
-
-        private string ToUnitTestName(string text)
-        {
-            return text.Replace(" ", "").Replace("-", "_").Replace("(", "").Replace(")", "");
         }
     }
 }
