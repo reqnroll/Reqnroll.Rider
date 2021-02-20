@@ -3,7 +3,14 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
-    public class GherkinScenario : GherkinElement
+    public interface IGherkinScenario : ITreeNode
+    {
+        bool IsBackground();
+        string GetScenarioText();
+        IEnumerable<GherkinStep> GetSteps();
+    }
+
+    public class GherkinScenario : GherkinElement, IGherkinScenario
     {
         public GherkinScenario() : base(GherkinNodeTypes.SCENARIO)
         {

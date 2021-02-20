@@ -1,10 +1,14 @@
 using System;
 using System.Linq;
+using JetBrains.Diagnostics;
+using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.UnitTestFramework;
 using JetBrains.ReSharper.UnitTestFramework.Exploration;
+using JetBrains.ReSharper.UnitTestProvider.nUnit.v30;
+using JetBrains.ReSharper.UnitTestProvider.Xunit;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
@@ -44,38 +48,35 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                 .Where(t => t.Id.Project.Guid == project.Guid)
                 .ToList();
 
+            var featureCsFile = GetRelatedFeatureFile(psiFile);
+            if (featureCsFile == null)
+                return;
+
+            var relatedTests = projectTests.Where(t => t.GetProjectFiles()?.Contains(featureCsFile) == true).ToList();
+            if (relatedTests.Count == 0)
+                return;
+
+            var featureTests = relatedTests.Where(x => x.IsOfKind(UnitTestElementKind.TestContainer)).ToList();
             foreach (var feature in gherkinFile.GetFeatures())
             {
-                var folder = projectFile.ParentFolder;
-                var testIdPrefix = project.Name + ".";
-                while (folder != null && !ReferenceEquals(folder, project))
-                {
-                    if (folder.Path != null)
-                        testIdPrefix += folder.Path.ShortName + ".";
-                    folder = folder.ParentFolder;
-                }
-                testIdPrefix += ToUnitTestName(feature.GetFeatureText());
-
-                var testIdPrefixWithSolution = project.GetSolution().Name + "." + testIdPrefix;
-
-                var featureTests = projectTests.Where(x =>
-                                                      {
-                                                          if (x.Id.ProviderId == "xUnit")
-                                                              return x.Id.Id.StartsWith(testIdPrefixWithSolution, StringComparison.InvariantCultureIgnoreCase);
-                                                          return x.Id.Id.StartsWith(testIdPrefix, StringComparison.InvariantCultureIgnoreCase);
-                                                      }).ToList();
-                if (featureTests.Count == 0)
+                var featureText = feature.GetFeatureText();
+                var featureTest = featureTests.FirstOrDefault(t => GetDescription(t) == featureText) ?? featureTests.FirstOrDefault();
+                if (featureTest == null)
                     continue;
 
-                IUnitTestElement parent = null;
+                observer.OnUnitTestElementDisposition(new UnitTestElementDisposition(
+                    featureTest,
+                    projectFile,
+                    feature.GetDocumentRange().TextRange,
+                    feature.GetDocumentRange().TextRange
+                ));
 
                 foreach (var scenario in feature.GetScenarios())
                 {
-                    var matchingTest = featureTests.FirstOrDefault(t => t.Id.Id.EndsWith("." + ToUnitTestName(scenario.GetScenarioText()), StringComparison.InvariantCultureIgnoreCase));
+                    var scenarioText = scenario.GetScenarioText();
+                    var matchingTest = featureTest.Children.FirstOrDefault(t => GetDescription(t) == scenarioText);
                     if (matchingTest == null)
                         continue;
-
-                    parent = matchingTest.Parent;
 
                     observer.OnUnitTestElementDisposition(new UnitTestElementDisposition(
                         matchingTest,
@@ -84,17 +85,46 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                         scenario.GetDocumentRange().TextRange
                     ));
                 }
+            }
+        }
 
-                if (parent != null)
+        public static readonly ClrTypeName NUnitDescriptionAttribute = new ClrTypeName("NUnit.Framework.DescriptionAttribute");
+        public static readonly ClrTypeName XUnitTraitAttribute = new ClrTypeName("Xunit.TraitAttribute");
+        private string GetDescription(IUnitTestElement relatedTest)
+        {
+            switch (relatedTest.Id.ProviderId)
+            {
+                case NUnitTestProvider.PROVIDER_ID:
                 {
-                    observer.OnUnitTestElementDisposition(new UnitTestElementDisposition(
-                        parent,
-                        projectFile,
-                        feature.GetDocumentRange().TextRange,
-                        feature.GetDocumentRange().TextRange
-                    ));
+                    if (relatedTest.GetDeclaredElement() is IAttributesOwner c)
+                        return c.GetAttributeInstances(NUnitDescriptionAttribute, false)
+                            .FirstOrDefault()
+                            ?.PositionParameter(0).ConstantValue.Value as string;
+                    break;
+                }
+                case "xUnit":
+                {
+                    if (relatedTest.GetDeclaredElement() is IAttributesOwner c)
+                        return c.GetAttributeInstances(XUnitTraitAttribute, false)
+                            .FirstOrDefault(x => x.PositionParameter(0).ConstantValue.Value as string == "Description")
+                            ?.PositionParameter(1).ConstantValue.Value as string;
+                    break;
                 }
             }
+            return null;
+        }
+
+        private IProjectFile GetRelatedFeatureFile(IFile psiFile)
+        {
+            var fileLocation = psiFile.GetSourceFile().NotNull().ToProjectFile()?.Location;
+            if (fileLocation == null)
+                return null;
+            var expectedFeatureCsFileName = fileLocation.Name.Replace(".feature", ".feature.cs");
+            var file = psiFile.GetProject()
+                .GetAllProjectFiles()
+                .FirstOrDefault(f => f.Location.Parent == fileLocation.Parent && f.Name == expectedFeatureCsFileName);
+
+            return file;
         }
 
         private string ToUnitTestName(string text)
