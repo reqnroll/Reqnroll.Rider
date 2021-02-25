@@ -15,7 +15,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps
 
     public interface IStepTextTokenizer
     {
-        IEnumerable<(StepTokenType, string)> TokenizeStepText(string text, bool isInScenarioOutline);
+        IEnumerable<(StepTokenType, string)> TokenizeStepText(string text, bool isInScenarioOutline, bool ignoreSpecialCharacters = true);
         IEnumerable<(StepTokenType, string)> TokenizeStepPattern(string pattern);
     }
 
@@ -26,7 +26,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps
         private const char OutlineParameterStart = '<';
         private const char OutlineParameterEnd = '>';
 
-        public IEnumerable<(StepTokenType, string)> TokenizeStepText(string text, bool isInScenarioOutline)
+        public IEnumerable<(StepTokenType, string)> TokenizeStepText(string text, bool isInScenarioOutline, bool ignoreSpecialCharacters = true)
         {
             var sb = new StringBuilder();
 
@@ -60,8 +60,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps
                     }
                     default:
                     {
-                        if (c.IsLetterOrDigitFast())
+                        if (ignoreSpecialCharacters)
+                        {
+                            if (c.IsLetterOrDigitFast())
+                                sb.Append(c);
+                        }
+                        else
+                        {
                             sb.Append(c);
+                        }
                         break;
                     }
                 }

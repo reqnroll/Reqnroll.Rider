@@ -97,7 +97,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps
         {
             var patternSb = new StringBuilder();
 
-            foreach (var (tokenType, tokenText) in _stepTextTokenizer.TokenizeStepText(stepText, isInsideScenarioOutline))
+            foreach (var (tokenType, tokenText) in _stepTextTokenizer.TokenizeStepText(stepText, isInsideScenarioOutline, false))
             {
                 switch (tokenType)
                 {
