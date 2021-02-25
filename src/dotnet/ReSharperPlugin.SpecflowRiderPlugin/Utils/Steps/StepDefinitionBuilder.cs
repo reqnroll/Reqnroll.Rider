@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using JetBrains.Application;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -102,7 +103,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps
                 switch (tokenType)
                 {
                     case StepTokenType.Text:
-                        patternSb.Append(tokenText);
+                        patternSb.Append(Regex.Escape(tokenText));
                         break;
                     case StepTokenType.OutlineParameter:
                     case StepTokenType.Parameter:

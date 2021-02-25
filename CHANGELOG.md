@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 1.3.5
 ### Fixed
 - Fix: Check reference for steps inside `Rule:`
-
+- Fix: Escape step before using them as pattern when creating a step with the quick fix.
+- Fix: Keep special character in pattern when creating a step with the quick fix
 
 ## 1.3.4
 ### Fixed
