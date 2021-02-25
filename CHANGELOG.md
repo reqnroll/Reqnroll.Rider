@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.3.4
+### Fixed
+- Correctly detect steps from assemblies (#14)
+- Improve how tests are detected for NUnit / XUnit to display run test icon in the gutter
+
 ## 1.3.3
 ### Fixed
 - Fix reference / find usage for step inside `Scenario Outline`

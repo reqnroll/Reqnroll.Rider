@@ -44,12 +44,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
             SpecflowStepsDefinitionsCacheEntries stepDefinitions = null;
             _psiAssemblyFileLoader.GetOrLoadAssembly(assembly, true, (psiAssembly, assemblyFile, metadataAssembly) =>
             {
+                stepDefinitions = new SpecflowStepsDefinitionsCacheEntries();
+
                 foreach (var type in metadataAssembly.GetTypes())
                 {
                     if (type.CustomAttributesTypeNames.All(a => a.FullName.GetText() != SpecflowAttributeHelper.BindingAttribute.FullName))
                         continue;
-
-                    stepDefinitions = new SpecflowStepsDefinitionsCacheEntries();
 
                     var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(type.FullyQualifiedName, true);
 
