@@ -25,7 +25,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         public IEnumerable<IGherkinScenario> GetScenarios()
         {
-            return this.Children<GherkinScenario>().Cast<IGherkinScenario>().Concat(this.Children<GherkinScenarioOutline>());
+            return this.Children<GherkinScenario>().Cast<IGherkinScenario>()
+                .Concat(this.Children<GherkinScenarioOutline>())
+                .Concat(this.Children<GherkinRule>().SelectMany(x => x.Children<GherkinScenario>()));
         }
     }
 }
