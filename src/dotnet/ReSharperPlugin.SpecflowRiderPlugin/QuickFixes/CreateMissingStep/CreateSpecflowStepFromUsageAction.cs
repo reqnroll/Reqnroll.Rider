@@ -126,7 +126,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 var pattern = _stepDefinitionBuilder.GetPattern(stepText, _reference.IsInsideScenarioOutline());
 
                 var attributeType = CSharpTypeFactory.CreateType(SpecflowAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
-                var methodDeclaration = CreateStepDeclaration(factory, pattern, methodName, attributeType);
+                var formatString = $"[$0(@\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
+                var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern.Replace("\"", "\"\"")) as IMethodDeclaration;
                 if (methodDeclaration == null)
                     continue;
                 var psiModule = classDeclaration.GetPsiModule();
@@ -145,53 +146,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 else
                     insertedDeclaration.NavigateToNode(true);
             }
-        }
-
-        private static IMethodDeclaration CreateStepDeclaration(CSharpElementFactory factory, string pattern, string methodName, IType attributeType)
-        {
-            // Since $0 $1 $2 are interpreted as parameter of the format given to `CreateTypeMemberDeclaration` when the step contains a $
-            // we need to remove it and pass it again. Example: `Peter requests a wire transfer of $5000 to Tracy`
-            // the `$5000` need to be replaced with $1 with the parameter value "$5000"
-            var (patternWithDollarExtracted, values) = ExtractDollarSymbols(pattern);
-            var formatString = $"[$0(@\"{patternWithDollarExtracted.Replace("\"", "\"\"")}\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
-
-            return factory.CreateTypeMemberDeclaration(formatString, new object[] {attributeType}.Concat(values).ToArray()) as IMethodDeclaration;
-        }
-
-        private static (string, IEnumerable<string>) ExtractDollarSymbols(string pattern)
-        {
-            var patternWithDollarExtracted = new StringBuilder();
-            var values = new List<string>();
-
-            for (var i = 0; i < pattern.Length; i++)
-            {
-                var c = pattern[i];
-                if (c == '$' && i + 1 < pattern.Length && pattern[i + 1].IsDigit())
-                {
-                    i++;
-                    values.Add("$" + ReadUntilNotDigit(pattern, ref i));
-                    patternWithDollarExtracted.Append('$').Append(values.Count.ToString());
-                }
-
-                patternWithDollarExtracted.Append(pattern[i]);
-            }
-            return (patternWithDollarExtracted.ToString(), values);
-        }
-
-        private static string ReadUntilNotDigit(string text, ref int index)
-        {
-            var parameter = new StringBuilder();
-            while (index < text.Length)
-            {
-                var c = text[index];
-                if (!c.IsDigit())
-                    break;
-
-                index++;
-                parameter.Append(c);
-            }
-
-            return parameter.ToString();
         }
     }
 }
