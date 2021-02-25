@@ -27,6 +27,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighligh
                 return true;
             if (element is GherkinFeature)
                 return true;
+            if (element is GherkinRule)
+                return true;
 
             return false;
         }
