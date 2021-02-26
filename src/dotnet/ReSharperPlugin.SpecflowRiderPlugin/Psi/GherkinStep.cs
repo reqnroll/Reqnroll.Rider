@@ -59,7 +59,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return GherkinStepKind.Unknown;
         }
 
-        public string GetStepText(bool withStepKeyWord = false)
+        public string GetKeywordText()
+        {
+            if (FirstChild?.NodeType == GherkinTokenTypes.STEP_KEYWORD)
+                return FirstChild?.GetText();
+            return string.Empty;
+        }
+
+        public string GetStepText()
         {
             var sb = new StringBuilder();
             for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
