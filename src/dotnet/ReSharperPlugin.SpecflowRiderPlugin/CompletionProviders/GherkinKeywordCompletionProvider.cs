@@ -1,13 +1,7 @@
-using System.Linq;
-using JetBrains.Application.UI.BindableLinq.Extensions;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Modules;
-using JetBrains.Util.PaternMatching;
-using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders

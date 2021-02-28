@@ -3,13 +3,11 @@ using JetBrains.Application.UI.Icons.CommonThemedIcons;
 using JetBrains.Collections;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.Behaviors;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Modules;
-using JetBrains.Util;
-using RE;
+using JetBrains.UI.ThemedIcons;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
@@ -30,6 +28,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 return false;
 
             var specflowStepsDefinitionsCache = context.BasicContext.PsiServices.GetComponent<SpecflowStepsDefinitionsCache>();
+            var stepPatternUtil = context.BasicContext.PsiServices.GetComponent<IStepPatternUtil>();
+
             foreach (var (stepSourceFile, stepDefinitions) in specflowStepsDefinitionsCache.AllStepsPerFiles)
             {
                 if (!ReferenceEquals(context.BasicContext.File.GetPsiModule(), stepSourceFile.PsiModule) && !context.BasicContext.File.GetPsiModule().References(stepSourceFile.PsiModule))
@@ -39,18 +39,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                     if (stepDefinitionInfo.RegexForPartialMatch == null)
                         continue;
 
-                    var stepText = selectedStep.GetStepTextBeforeCaret(context.BasicContext.CaretDocumentOffset);
-                    if (!stepText.IsEmpty())
-                    {
-                        var result = stepDefinitionInfo.RegexForPartialMatch.Match(ParseContext.Create(stepText), successOnAnyState: true);
-                        if (result == null || result.Position != 0)
-                            continue;
-                    }
+                    var partialStepText = selectedStep.GetStepTextBeforeCaret(context.BasicContext.CaretDocumentOffset);
 
-                    // FIXME: Use specflow icon
-                    var lookupItem = new TextLookupItem(stepDefinitionInfo.Pattern, CommonThemedIcons.Document.Id);
-                    lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
-                    collector.Add(lookupItem);
+                    foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText))
+                    {
+                        var lookupItem = new TextLookupItem(stepVariation, SpecFlowThemedIcons.Specflow.Id);
+                        lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
+                        collector.Add(lookupItem);
+                    }
                 }
             }
 

@@ -1,8 +1,6 @@
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
-using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 {
