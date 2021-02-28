@@ -5,8 +5,4 @@
     <RootNamespace>RE</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.CodeDom" Version="4.7.0-preview3.19551.4" />
-  </ItemGroup>
-
 </Project>
