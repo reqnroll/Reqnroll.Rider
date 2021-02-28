@@ -20,6 +20,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         {
             var nodeUnderCursor = TextControlToPsi.GetElement<ITreeNode>(context.Solution, context.TextControl);
             var ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange());
+            var step = nodeUnderCursor?.GetContainingNode<GherkinStep>() ?? nodeUnderCursor?.PrevSibling as GherkinStep;
+            if (step != null)
+            {
+                nodeUnderCursor = step;
+                var stepRange = step.GetDocumentRange();
+                if (stepRange.EndOffset < context.CaretDocumentOffset)
+                    stepRange = stepRange.ExtendRight(context.CaretDocumentOffset.Offset - stepRange.EndOffset.Offset);
+                var replaceRange = stepRange.TrimLeft(step.GetKeywordText().Length + 1);
+                var insertRange = new DocumentRange(replaceRange.StartOffset, context.SelectedRange.EndOffset);
+                ranges = new TextLookupRanges(insertRange, replaceRange);
+            }
             return new GherkinSpecificCodeCompletionContext(context, ranges, nodeUnderCursor);
         }
     }

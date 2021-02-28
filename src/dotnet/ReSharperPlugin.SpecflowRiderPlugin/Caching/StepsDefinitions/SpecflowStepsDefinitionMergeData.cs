@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.Util;
+using RE;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
@@ -30,6 +31,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         public string Pattern { get; }
         [CanBeNull]
         public Regex Regex { get; }
+        [CanBeNull]
+        public CharFA<string> RegexForPartialMatch { get; }
 
         public SpecflowStepInfo(string classFullName, string methodName, GherkinStepKind stepKind, string pattern)
         {
@@ -37,6 +40,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             MethodName = methodName;
             StepKind = stepKind;
             Pattern = pattern;
+
+            try
+            {
+                RegexForPartialMatch = RegexExpression.Parse(Pattern).ToFA<string>();
+            }
+            catch (Exception)
+            {
+                RegexForPartialMatch = null;
+            }
 
             try
             {
