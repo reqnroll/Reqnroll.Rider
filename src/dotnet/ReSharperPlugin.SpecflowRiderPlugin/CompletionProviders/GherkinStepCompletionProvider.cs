@@ -1,7 +1,9 @@
 using System.Linq;
+using JetBrains.Application.UI.Icons.CommonThemedIcons;
 using JetBrains.Collections;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.Behaviors;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
 using JetBrains.ReSharper.Psi;
@@ -37,7 +39,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                     if (stepDefinitionInfo.RegexForPartialMatch == null)
                         continue;
 
-                    var stepText = selectedStep.GetStepText();
+                    var stepText = selectedStep.GetStepTextBeforeCaret(context.BasicContext.CaretDocumentOffset);
                     if (!stepText.IsEmpty())
                     {
                         var result = stepDefinitionInfo.RegexForPartialMatch.Match(ParseContext.Create(stepText), successOnAnyState: true);
@@ -45,7 +47,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                             continue;
                     }
 
-                    var lookupItem = new TextLookupItem(stepDefinitionInfo.Pattern);
+                    // FIXME: Use specflow icon
+                    var lookupItem = new TextLookupItem(stepDefinitionInfo.Pattern, CommonThemedIcons.Document.Id);
                     lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
                     collector.Add(lookupItem);
                 }

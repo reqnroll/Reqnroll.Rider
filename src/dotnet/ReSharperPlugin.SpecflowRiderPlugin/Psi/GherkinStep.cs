@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -66,7 +67,34 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return string.Empty;
         }
 
-        public string GetStepText()
+        public string GetStepTextBeforeCaret(DocumentOffset caretLocation)
+        {
+            var sb = new StringBuilder();
+            for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
+            {
+                if (te.GetDocumentStartOffset() > caretLocation)
+                    break;
+                var truncateTextSize = 0;
+                if (te.GetDocumentEndOffset() > caretLocation)
+                {
+                    truncateTextSize = te.GetDocumentEndOffset().Offset - caretLocation.Offset;
+                }
+                switch (te)
+                {
+                    case GherkinStepParameter p:
+                        sb.Append(p.GetText());
+                        break;
+                    case GherkinToken token:
+                        if (token.NodeType != GherkinTokenTypes.STEP_KEYWORD)
+                            sb.Append(token.GetText());
+                        break;
+                }
+                sb.Length -= truncateTextSize;
+            }
+            return sb.ToString().Trim();
+        }
+
+        public string GetStepText(bool withStepKeyWord = false)
         {
             var sb = new StringBuilder();
             for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
