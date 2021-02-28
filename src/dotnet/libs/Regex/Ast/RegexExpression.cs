@@ -593,6 +593,25 @@ namespace RE
 					case '(':
 						pc.Advance();
 						pc.Expecting();
+						if (pc.Current == '?')
+						{
+							pc.Advance();
+							pc.Expecting();
+							if (pc.Current == ':') // Ignore capture
+							{
+								pc.Advance();
+								pc.Expecting();
+							}
+							else if (pc.Current == '<')
+							{
+								// FIXME: Named capture group
+								while (pc.Current != '>')
+								{
+									pc.Advance();
+									pc.Expecting();
+								}
+							}
+						}
 						next = Parse(pc);
 						pc.Expecting(')');
 						pc.Advance();
