@@ -163,8 +163,10 @@ prepareSandbox {
 
 publishPlugin {
     dependsOn buildPlugin
+    if (hasProperty('intellijPublishToken')) {
+        token intellijPublishToken
+    }
 
-    token intellijPublishToken
     channels(!version.contains("-") ? 'Stable' : 'EAP')
 
 /*     doLast {
