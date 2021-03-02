@@ -51,6 +51,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             switch (englishKeyword)
             {
                 case "And":
+                case "But":
                     return GherkinStepKind.And;
                 case "Given":
                     return GherkinStepKind.Given;
