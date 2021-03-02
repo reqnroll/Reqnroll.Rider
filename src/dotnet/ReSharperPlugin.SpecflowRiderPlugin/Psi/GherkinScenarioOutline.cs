@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
@@ -30,6 +33,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 return "GherkinScenarioOutline(Background):";
 
             return $"GherkinScenarioOutline: {GetScenarioText()}";
+        }
+
+        public GherkinExamplesBlock GetExamplesBlock()
+        {
+            return this.Children<GherkinExamplesBlock>().FirstOrDefault();
+        }
+
+        public IDictionary<string, string> GetExampleData(int exampleIndex)
+        {
+            return GetExamplesBlock()?.GetExampleData(exampleIndex) ?? ImmutableDictionary<string, string>.Empty;
         }
     }
 }

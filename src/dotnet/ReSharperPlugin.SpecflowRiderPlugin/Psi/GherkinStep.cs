@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
@@ -65,9 +66,39 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     case GherkinStepParameter p:
                         sb.Append(p.GetText());
                         break;
-                    case GherkinToken token:
-                        if (token.NodeType != GherkinTokenTypes.STEP_KEYWORD)
-                            sb.Append(token.GetText());
+                    case GherkinToken token when token.NodeType != GherkinTokenTypes.STEP_KEYWORD:
+                        sb.Append(token.GetText());
+                        break;
+                }
+            }
+            return sb.ToString().Trim();
+        }
+
+        public string GetStepTextForExample(IDictionary<string, string> exampleData)
+        {
+            var sb = new StringBuilder();
+            var previousTokenWasAParameter = false;
+            for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
+            {
+                switch (te)
+                {
+                    case GherkinStepParameter p:
+                        previousTokenWasAParameter = true;
+                        sb.Length--; // Remove `<`
+
+                        if (exampleData.TryGetValue(p.GetParameterName(), out var value))
+                            sb.Append(value);
+                        else
+                            sb.Append(p.GetText());
+
+                        break;
+                    case GherkinToken token when token.NodeType != GherkinTokenTypes.STEP_KEYWORD:
+                        sb.Append(token.GetText());
+
+                        // Remove `>`
+                        if (previousTokenWasAParameter)
+                            sb.Length--;
+                        previousTokenWasAParameter = false;
                         break;
                 }
             }

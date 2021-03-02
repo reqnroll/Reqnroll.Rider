@@ -29,6 +29,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
             var stepKind = myOwner.GetStepKind();
             var stepText = myOwner.GetStepText();
             var psiModule = myOwner.GetPsiModule();
+
+            var containingScenario = myOwner.GetContainingNode<IGherkinScenario>();
+            if (containingScenario is GherkinScenarioOutline scenarioOutline)
+                stepText = myOwner.GetStepTextForExample(scenarioOutline.GetExampleData(0));
+
             foreach (var (sourceFile, cacheEntries) in specflowStepsDefinitionsCache.AllStepsPerFiles)
             {
                 if (!psiModule.Equals(sourceFile.PsiModule) && !psiModule.References(sourceFile.PsiModule))

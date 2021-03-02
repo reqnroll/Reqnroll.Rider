@@ -11,5 +11,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             var textToken = this.FindChild<GherkinToken>(o => o.NodeType == GherkinTokenTypes.STEP_PARAMETER_TEXT);
             return textToken?.GetText();
         }
+
+        public string GetParameterName()
+        {
+            var textToken = this.FindChild<GherkinToken>(o => o.NodeType == GherkinTokenTypes.STEP_PARAMETER_TEXT);
+            return textToken?.GetText();
+        }
     }
 }

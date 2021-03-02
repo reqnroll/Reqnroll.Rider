@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fix: Create steps when pattern contains a $ with a number like `Given someone pays $50`
 - Support `But` (#26) and `*`(#25) step keyword
+- When resolving reference from a step to its definition, and the step use example parameters, replace the text with the first example (#24)
 
 ## 1.3.5
 ### Fixed
