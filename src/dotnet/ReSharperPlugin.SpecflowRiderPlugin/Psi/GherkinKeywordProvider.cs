@@ -46,6 +46,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         public GherkinStepKind GetStepKind(string language, string keyword)
         {
+            if (keyword == "*")
+                return GherkinStepKind.And;
+
             var keywordsList = GetKeywordsList(language);
             var englishKeyword = keywordsList.GetEnglishTokenKeyword(keyword);
             switch (englishKeyword)
