@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using JetBrains.Collections;
 using JetBrains.ProjectModel;
@@ -21,6 +22,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
         public SpecflowStepDeclarationReference([NotNull] GherkinStep owner) : base(owner)
         {
         }
+
+        public Regex RegexPattern { get; private set; }
 
         public override ResolveResultWithInfo ResolveWithoutCache()
         {
@@ -56,6 +59,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                              var symbolInfo = new SymbolInfo(method);
                              var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
 
+                             RegexPattern = cacheEntry.Regex;
                              return new ResolveResultWithInfo(resolveResult, ResolveErrorType.OK);
                          }
                      }
@@ -90,6 +94,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                             var symbolInfo = new SymbolInfo(method);
                             var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
 
+                            RegexPattern = cacheEntry.Regex;
                             return new ResolveResultWithInfo(resolveResult, ResolveErrorType.OK);
                         }
                     }

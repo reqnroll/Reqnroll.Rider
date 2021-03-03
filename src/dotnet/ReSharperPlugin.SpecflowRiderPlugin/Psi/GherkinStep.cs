@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Text;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings;
+using ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
@@ -11,6 +13,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
     public class GherkinStep : GherkinElement
     {
         private SpecflowStepDeclarationReference _reference;
+
         public GherkinStep() : base(GherkinNodeTypes.STEP)
         {
         }
@@ -56,7 +59,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return GherkinStepKind.Unknown;
         }
 
-        public string GetStepText()
+        public string GetStepText(bool withStepKeyWord = false)
         {
             var sb = new StringBuilder();
             for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
@@ -66,9 +69,22 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     case GherkinStepParameter p:
                         sb.Append(p.GetText());
                         break;
-                    case GherkinToken token when token.NodeType != GherkinTokenTypes.STEP_KEYWORD:
-                        sb.Append(token.GetText());
+                    case GherkinToken token:
+                    {
+                        if (withStepKeyWord)
+                        {
+                            sb.Append(token.GetText());
+                        }
+                        else
+                        {
+                            if (token.NodeType != GherkinTokenTypes.STEP_KEYWORD)
+                            {
+                                sb.Append(token.GetText());
+                            }
+                        }
+
                         break;
+                    }
                 }
             }
             return sb.ToString().Trim();
@@ -113,6 +129,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public override ReferenceCollection GetFirstClassReferences()
         {
             return new ReferenceCollection(_reference);
+        }
+
+        public void Accept(ParameterHighlightingProcessor parameterHighlighterProcess, IHighlightingConsumer consumer)
+        {
+            parameterHighlighterProcess.VisitNode(this, consumer);
         }
     }
 }
