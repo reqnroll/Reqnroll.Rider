@@ -15,6 +15,7 @@ using JetBrains.ReSharper.Psi.Impl.Types;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
@@ -29,10 +30,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         // FIXME: per step kind
         public OneToSetMap<IPsiSourceFile, SpecflowStepInfo> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
         private readonly SpecflowStepsDefinitionMergeData _mergeData = new SpecflowStepsDefinitionMergeData();
+        private readonly ISpecflowStepInfoFactory _specflowStepInfoFactory;
 
-        public SpecflowStepsDefinitionsCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager)
+        public SpecflowStepsDefinitionsCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager, ISpecflowStepInfoFactory specflowStepInfoFactory)
             : base(lifetime, locks, persistentIndexManager, new SpecflowStepDefinitionsEntriesMarshaller(), VersionInt)
         {
+            _specflowStepInfoFactory = specflowStepInfoFactory;
         }
 
         public IEnumerable<AvailableBindingClass> GetBindingTypes(IPsiModule module)
@@ -136,7 +139,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                     _mergeData.PotentialSpecflowBindingTypes.Add(classEntry.ClassName, sourceFile);
                 foreach (var method in classEntry.Methods)
                 foreach (var step in method.Steps)
-                    _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, new SpecflowStepInfo(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern));
+                    _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern));
             }
         }
 

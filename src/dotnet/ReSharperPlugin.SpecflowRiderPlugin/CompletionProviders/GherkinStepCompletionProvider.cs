@@ -1,5 +1,4 @@
 using System.Linq;
-using JetBrains.Application.UI.Icons.CommonThemedIcons;
 using JetBrains.Collections;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
@@ -40,8 +39,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                         continue;
 
                     var partialStepText = selectedStep.GetStepTextBeforeCaret(context.BasicContext.CaretDocumentOffset);
+                    var fullStepText = selectedStep.GetStepText();
 
-                    foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText))
+                    foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText, fullStepText))
                     {
                         var lookupItem = new TextLookupItem(stepVariation, SpecFlowThemedIcons.Specflow.Id);
                         lookupItem.InitializeRanges(context.Ranges, context.BasicContext);

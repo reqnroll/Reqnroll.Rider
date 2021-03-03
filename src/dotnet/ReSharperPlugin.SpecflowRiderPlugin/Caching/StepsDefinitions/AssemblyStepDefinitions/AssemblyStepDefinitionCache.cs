@@ -17,13 +17,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
     {
         private readonly IPsiAssemblyFileLoader _psiAssemblyFileLoader;
         private readonly SpecflowAssemblyStepsDefinitionMergeData _mergeData = new SpecflowAssemblyStepsDefinitionMergeData();
+        private readonly ISpecflowStepInfoFactory _specflowStepInfoFactory;
 
         // FIXME: per step kind
         public OneToSetMap<IPsiAssembly, SpecflowStepInfo> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
 
-        public AssemblyStepDefinitionCache(IPsiAssemblyFileLoader psiAssemblyFileLoader)
+        public AssemblyStepDefinitionCache(IPsiAssemblyFileLoader psiAssemblyFileLoader, ISpecflowStepInfoFactory specflowStepInfoFactory)
         {
             _psiAssemblyFileLoader = psiAssemblyFileLoader;
+            _specflowStepInfoFactory = specflowStepInfoFactory;
         }
 
         public object Load(IProgressIndicator progress, bool enablePersistence)
@@ -108,7 +110,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     _mergeData.PotentialSpecflowBindingTypes.Add(classEntry.ClassName, assembly);
                 foreach (var method in classEntry.Methods)
                 foreach (var step in method.Steps)
-                    _mergeData.StepsDefinitionsPerFiles.Add(assembly, new SpecflowStepInfo(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern));
+                    _mergeData.StepsDefinitionsPerFiles.Add(assembly, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern));
             }
         }
 

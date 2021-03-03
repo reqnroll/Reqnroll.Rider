@@ -11,7 +11,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 {
     public interface IStepPatternUtil
     {
-        IEnumerable<string> ExpandMatchingStepPatternWithAllPossibleParameter(SpecflowStepInfo pattern, string partialStepText);
+        IEnumerable<string> ExpandMatchingStepPatternWithAllPossibleParameter(SpecflowStepInfo pattern, string partialStepText, string fullStepText);
+        IEnumerable<(StepPatternUtil.StepPatternTokenType tokenType, string text)> TokenizeStepPattern(string pattern);
     }
 
     [PsiSharedComponent]
@@ -23,7 +24,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             Capture
         }
 
-        public IEnumerable<string> ExpandMatchingStepPatternWithAllPossibleParameter(SpecflowStepInfo stepDefinitionInfo, string partialStepText)
+        public IEnumerable<string> ExpandMatchingStepPatternWithAllPossibleParameter(SpecflowStepInfo stepDefinitionInfo, string partialStepText, string fullStepText)
         {
             var matchedText = string.Empty;
             if (partialStepText.Length > 0)
@@ -35,13 +36,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             }
 
             var tokenizedStepPattern = TokenizeStepPattern(stepDefinitionInfo.Pattern).ToList();
-            var captureValues = new List<List<string>>();
-            foreach (var (tokenType, text) in tokenizedStepPattern)
-            {
-                // FIXME: Replace capture values with the value from partialStepText when given. TODO: need to handle capture group with Regex for that
-                if (tokenType == StepPatternTokenType.Capture)
-                    captureValues.Add(ListPossibleValues(text).ToList());
-            }
+            var captureValues = RetrieveParameterValues(stepDefinitionInfo, partialStepText, fullStepText, tokenizedStepPattern);
 
             var stringBuilder = new StringBuilder();
             var results = new List<string>();
@@ -53,6 +48,40 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             }
             // End Workaround
             return results;
+        }
+
+        private List<List<string>> RetrieveParameterValues(SpecflowStepInfo stepDefinitionInfo, string partialStepText, string fullStepText, List<(StepPatternTokenType tokenType, string text)> tokenizedStepPattern)
+        {
+            var captureValues = new List<List<string>>();
+            var captureIndex = 0;
+
+            foreach (var (tokenType, text) in tokenizedStepPattern)
+            {
+                if (tokenType == StepPatternTokenType.Capture)
+                {
+                    string capturedValue = null;
+                    bool preferPossibleValues = false;
+                    if (stepDefinitionInfo.RegexesPerCapture.Count > captureIndex)
+                    {
+                        var partialRegex = stepDefinitionInfo.RegexesPerCapture[captureIndex++];
+                        var match = partialRegex.Match(fullStepText);
+                        var matchGroup = match.Groups[captureIndex];
+                        if (match.Success && matchGroup.Success)
+                        {
+                            capturedValue = matchGroup.Value;
+                            if (matchGroup.Index > partialStepText.Length)
+                                preferPossibleValues = true;
+                        }
+                    }
+                    var possibleValues = ListPossibleValues(text).ToList();
+                    if (capturedValue != null && (possibleValues.Count == 1 || !preferPossibleValues))
+                        captureValues.Add(new List<string> {capturedValue});
+                    else
+                        captureValues.Add(possibleValues);
+                }
+            }
+
+            return captureValues;
         }
 
         private void BuildAllPossibleSteps(string matchedText, StringBuilder stringBuilder, List<string> results, (StepPatternTokenType tokenType, string text)[] tokenizedStepPattern, List<List<string>> captureValues, int elementIndex, int captureIndex)

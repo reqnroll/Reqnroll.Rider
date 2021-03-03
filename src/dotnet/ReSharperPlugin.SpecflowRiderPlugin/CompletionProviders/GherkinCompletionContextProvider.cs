@@ -26,8 +26,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 var stepRange = step.GetDocumentRange();
                 if (stepRange.EndOffset < context.CaretDocumentOffset)
                     stepRange = stepRange.ExtendRight(context.CaretDocumentOffset.Offset - stepRange.EndOffset.Offset);
+
                 var replaceRange = stepRange.TrimLeft(step.GetKeywordText().Length + 1);
-                var insertRange = new DocumentRange(replaceRange.StartOffset, context.SelectedRange.EndOffset);
+                var lineEndOffsetNoLineBreak = context.Document.GetLineEndOffsetNoLineBreak(context.TextControl.Caret.Position.GetValue().ToDocLineColumn().Line);
+                replaceRange = replaceRange.SetEndTo(new DocumentOffset(stepRange.Document, lineEndOffsetNoLineBreak));
+                var insertRange = replaceRange.SetEndTo(context.SelectedRange.EndOffset);
+
                 ranges = new TextLookupRanges(insertRange, replaceRange);
             }
             return new GherkinSpecificCodeCompletionContext(context, ranges, nodeUnderCursor);
