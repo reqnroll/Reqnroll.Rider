@@ -54,6 +54,27 @@ This daemon adds highlighting on C# methods when the method name does not match 
 
 Since this highlighting has its severity configurable, it's been declared in `CSharpErrors.xml` and the associated C# file is generated during build. See [resharper-unity](https://github.com/JetBrains/resharper-unity/blob/net211/resharper/resharper-unity/src/CSharp/Daemon/Errors/CSharpErrors.xml)  for more examples.
 
+### ParameterHighlighting
+
+This daemon adds highlighting on parameters when the parameter matches the regexp pattern on the step definition in the C# code.
+`ParameterHighlightingProcessor` class responsible for trying to find all the parameters based on the regexp pattern and if it finds them, adds the highlighting.
+
+#### Example
+
+Gherkin step:
+
+`Given the first number is "50"`
+
+Step binding:
+
+`[Given("the first number is (.*)")]`
+
+`public void GivenTheFirstNumberIs(int number)`
+
+`{}`
+
+In this case **"50"** matches the **(.\*)** pattern.
+
 ## Reference
 
 The references systems in resharper allow to link a declaration with its usage.
