@@ -68,7 +68,7 @@ in order to craft an excellent pull request:
 
 6. Newly added tests should pass and be green:
 
-   ![unittestsrider](https://raw.githubusercontent.com/SpecFlowOSS/SpecFlow.Rider/master/doc/images/testsrider.png)
+   ![unittestsrider](https://raw.githubusercontent.com/SpecFlowOSS/SpecFlow/master/docs/_static/images/testsrider.png)
 
 7. Push your topic branch up to your fork.
 
@@ -96,7 +96,7 @@ CLI:
 
 - Execute buildPlugin.ps1 in [PowerShell](https://github.com/powershell/powershell)
 
-![buildps1](https://raw.githubusercontent.com/SpecFlowOSS/SpecFlow.Rider/master/doc/images/clirider.png)
+![buildpluginps1](https://raw.githubusercontent.com/SpecFlowOSS/SpecFlow/master/docs/_static/images/clirider.png)
 
 ## Building documentation
 
