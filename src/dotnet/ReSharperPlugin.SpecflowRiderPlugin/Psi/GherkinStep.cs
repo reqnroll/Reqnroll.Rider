@@ -130,10 +130,5 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         {
             return new ReferenceCollection(_reference);
         }
-
-        public void Accept(ParameterHighlightingProcessor parameterHighlighterProcess, IHighlightingConsumer consumer)
-        {
-            parameterHighlighterProcess.VisitNode(this, consumer);
-        }
     }
 }

@@ -12,7 +12,7 @@ using ReSharperPlugin.SpecflowRiderPlugin.SyntaxHighlighting;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting
 {
-    public class ParameterHighlightingProcessor : TreeNodeVisitor<IHighlightingConsumer>,
+    public class ParameterHighlightingProcessor :
         IRecursiveElementProcessor<IHighlightingConsumer>
     {
 
@@ -29,31 +29,27 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting
         {
             if (!(element is GherkinStep gherkinStep))
                 return;
-            gherkinStep.Accept(this, consumer);
+            HighlightStep(gherkinStep, consumer);
         }
 
         public void ProcessAfterInterior(ITreeNode element, IHighlightingConsumer context)
         {
         }
 
-        public override void VisitNode(ITreeNode node, IHighlightingConsumer consumer)
+        private void HighlightStep(GherkinStep step, IHighlightingConsumer consumer)
         {
-            if (node is GherkinStep step)
+            var references = step.GetFirstClassReferences();
+            if (references.Count != 1 || !(references[0] is SpecflowStepDeclarationReference)) return;
+
+            SpecflowStepDeclarationReference reference = (SpecflowStepDeclarationReference) references[0];
+            
+            var document = step.GetDocumentRange().Document;
+            var parameterRanges = GherkinPsiUtil.BuildParameterRanges(step, reference, reference.GetDocumentRange());
+
+            foreach (var range in parameterRanges)
             {
-                var references = step.GetFirstClassReferences();
-                if (references.Count != 1 || !(references[0] is SpecflowStepDeclarationReference)) return;
-
-                SpecflowStepDeclarationReference reference = (SpecflowStepDeclarationReference) references[0];
-                
-                var document = step.GetDocumentRange().Document;
-                var parameterRanges = GherkinPsiUtil.BuildParameterRanges(step, reference, reference.GetDocumentRange());
-
-                foreach (var range in parameterRanges)
-                {
-                    var documentRange = new DocumentRange(document, range);
-                    consumer.AddHighlighting(new ReSharperSyntaxHighlighting(GherkinHighlightingAttributeIds.REGEXP_PARAMETER, null, documentRange));
-                }
-                base.VisitNode(node, consumer);
+                var documentRange = new DocumentRange(document, range);
+                consumer.AddHighlighting(new ReSharperSyntaxHighlighting(GherkinHighlightingAttributeIds.REGEXP_PARAMETER, null, documentRange));
             }
         }
 
