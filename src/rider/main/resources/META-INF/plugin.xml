@@ -1,6 +1,6 @@
 <idea-plugin>
   <id>com.settler.rider.specflow</id>
-  <name>SpecFlow Support</name>
+  <name>SpecFlow for Rider</name>
   <version>_PLACEHOLDER_</version>
   <vendor url="https://specflow.org/">SpecFlow</vendor>
   <idea-version since-build="_PLACEHOLDER_" until-build="_PLACEHOLDER_" />
