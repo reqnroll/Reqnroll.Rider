@@ -41,12 +41,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             var stringBuilder = new StringBuilder();
             var results = new List<string>();
             BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern.ToArray(), captureValues, 0, 0);
-            // Workaround: Until the FIXME above is fixed
-            if (results.Count == 0)
-            {
-                results.Add(stepDefinitionInfo.Pattern);
-            }
-            // End Workaround
             return results;
         }
 
