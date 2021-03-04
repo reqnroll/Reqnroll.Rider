@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.UI.ThemedIcons;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
+using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
@@ -27,26 +28,24 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 return false;
 
             var specflowStepsDefinitionsCache = context.BasicContext.PsiServices.GetComponent<SpecflowStepsDefinitionsCache>();
+            var assemblyStepDefinitionCache = context.BasicContext.PsiServices.GetComponent<AssemblyStepDefinitionCache>();
             var stepPatternUtil = context.BasicContext.PsiServices.GetComponent<IStepPatternUtil>();
 
-            foreach (var (stepSourceFile, stepDefinitions) in specflowStepsDefinitionsCache.AllStepsPerFiles)
+            var psiModule = context.BasicContext.File.GetPsiModule();
+            var selectedStepKind = selectedStep.GetStepKind();
+            foreach (var stepDefinitionInfo in specflowStepsDefinitionsCache.GetStepAccessibleForModule(psiModule, selectedStepKind).Concat(assemblyStepDefinitionCache.GetStepAccessibleForModule(psiModule, selectedStepKind)))
             {
-                if (!ReferenceEquals(context.BasicContext.File.GetPsiModule(), stepSourceFile.PsiModule) && !context.BasicContext.File.GetPsiModule().References(stepSourceFile.PsiModule))
+                if (stepDefinitionInfo.RegexForPartialMatch == null)
                     continue;
-                foreach (var stepDefinitionInfo in stepDefinitions.Where(x => x.StepKind == selectedStep.GetStepKind()))
+
+                var partialStepText = selectedStep.GetStepTextBeforeCaret(context.BasicContext.CaretDocumentOffset);
+                var fullStepText = selectedStep.GetStepText();
+
+                foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText, fullStepText))
                 {
-                    if (stepDefinitionInfo.RegexForPartialMatch == null)
-                        continue;
-
-                    var partialStepText = selectedStep.GetStepTextBeforeCaret(context.BasicContext.CaretDocumentOffset);
-                    var fullStepText = selectedStep.GetStepText();
-
-                    foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText, fullStepText))
-                    {
-                        var lookupItem = new TextLookupItem(stepVariation, SpecFlowThemedIcons.Specflow.Id);
-                        lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
-                        collector.Add(lookupItem);
-                    }
+                    var lookupItem = new TextLookupItem(stepVariation, SpecFlowThemedIcons.Specflow.Id);
+                    lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
+                    collector.Add(lookupItem);
                 }
             }
 

@@ -69,7 +69,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
 
             var assemblyStepDefinitionCache = psiServices.GetComponent<AssemblyStepDefinitionCache>();
             var psiAssemblyFileLoader = psiServices.GetComponent<IPsiAssemblyFileLoader>();
-            foreach (var (psiAssembly, cacheEntries) in assemblyStepDefinitionCache.AllStepsPerFiles)
+            foreach (var (psiAssembly, cacheEntries) in assemblyStepDefinitionCache.AllStepsPerAssembly)
             {
                 // FIXME: Should use `assembly` from specflow.json instead
                 if (!psiModule.Equals(psiAssembly.PsiModule) && !psiModule.References(psiAssembly.PsiModule))

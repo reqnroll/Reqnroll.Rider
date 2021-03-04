@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
+using JetBrains.Collections;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.Impl.Reflection2;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -20,12 +23,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
         private readonly ISpecflowStepInfoFactory _specflowStepInfoFactory;
 
         // FIXME: per step kind
-        public OneToSetMap<IPsiAssembly, SpecflowStepInfo> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
+        public OneToSetMap<IPsiAssembly, SpecflowStepInfo> AllStepsPerAssembly => _mergeData.StepsDefinitionsPerFiles;
 
         public AssemblyStepDefinitionCache(IPsiAssemblyFileLoader psiAssemblyFileLoader, ISpecflowStepInfoFactory specflowStepInfoFactory)
         {
             _psiAssemblyFileLoader = psiAssemblyFileLoader;
             _specflowStepInfoFactory = specflowStepInfoFactory;
+        }
+
+        public IEnumerable<SpecflowStepInfo> GetStepAccessibleForModule(IPsiModule module, GherkinStepKind stepKind)
+        {
+            foreach (var (stepSourceFile, stepDefinitions) in _mergeData.StepsDefinitionsPerFiles)
+            {
+                if (!ReferenceEquals(module, stepSourceFile.PsiModule) && !module.References(stepSourceFile.PsiModule))
+                    continue;
+                foreach (var stepDefinitionInfo in stepDefinitions.Where(s => s.StepKind == stepKind))
+                    yield return stepDefinitionInfo;
+            }
         }
 
         public object Load(IProgressIndicator progress, bool enablePersistence)

@@ -38,6 +38,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             _specflowStepInfoFactory = specflowStepInfoFactory;
         }
 
+        public IEnumerable<SpecflowStepInfo> GetStepAccessibleForModule(IPsiModule module, GherkinStepKind stepKind)
+        {
+            foreach (var (stepSourceFile, stepDefinitions) in _mergeData.StepsDefinitionsPerFiles)
+            {
+                if (!ReferenceEquals(module, stepSourceFile.PsiModule) && !module.References(stepSourceFile.PsiModule))
+                    continue;
+                foreach (var stepDefinitionInfo in stepDefinitions.Where(s => s.StepKind == stepKind))
+                    yield return stepDefinitionInfo;
+            }
+        }
+
         public IEnumerable<AvailableBindingClass> GetBindingTypes(IPsiModule module)
         {
             foreach (var (fullClassName, sourceFile) in _mergeData.SpecflowBindingTypes.SelectMany(e => e.Value.Select(v => (fullClassName: e.Key, sourceFile: v))))
