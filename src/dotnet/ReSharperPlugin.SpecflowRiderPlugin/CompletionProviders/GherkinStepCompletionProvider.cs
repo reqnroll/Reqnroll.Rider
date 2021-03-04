@@ -43,8 +43,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
                 foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText, fullStepText))
                 {
-                    var lookupItem = new TextLookupItem(stepVariation, SpecFlowThemedIcons.Specflow.Id);
+                    var lookupItem = new CompletionStepLookupItem(stepVariation, SpecFlowThemedIcons.Specflow.Id);
                     lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
+
                     collector.Add(lookupItem);
                 }
             }

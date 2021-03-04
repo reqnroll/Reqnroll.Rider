@@ -96,12 +96,6 @@ This work by parsing the steps and splitting on each capture group, then either 
 
 #### Hotspots
 
-/!\ Not done yet
+When an autocompleting a step with parameters, the parameters the user need to specified are highlighted and he can switch from one to another. This is done using `Hotspots` in `CompletionStepLookupItem.Accept`. The method `Accept` is called when the user select an autocomplete in the list.
 
-When an autocomplete contains capture that needs values like `(.+)` it would be nice to replace each `(.+)` (and other things like this) with a hotspot so they can be filled simply by using `[TAB]` to go from one parameter to another.
-
-https://jetbrains.slack.com/archives/CBZ36NH7C/p1614545652030200?thread_ts=1614541901.027000&cid=CBZ36NH7C
-
-Hotspots look like this in Rider
-
-![Hotstpot example](images/hotspot.png)
+![Hotstop example](images/completion-hotstop.gif)
