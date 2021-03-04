@@ -3,11 +3,8 @@
 		baseClass="SpecflowHighlightingBase">
 
 	<Usings>
-		JetBrains.DocumentModel;
-		JetBrains.ReSharper.Feature.Services.Daemon;
 		JetBrains.ReSharper.Psi.CSharp;
 		JetBrains.ReSharper.Psi.CSharp.Tree;
-		JetBrains.ReSharper.Psi.Tree;
 		ReSharperPlugin.SpecflowRiderPlugin.Daemon;
 	</Usings>
 
