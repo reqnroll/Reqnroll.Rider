@@ -33,13 +33,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
             var psiModule = context.BasicContext.File.GetPsiModule();
             var selectedStepKind = selectedStep.GetStepKind();
+            var partialStepText = selectedStep.GetStepTextBeforeCaret(context.BasicContext.CaretDocumentOffset);
+            var fullStepText = selectedStep.GetStepText();
+
             foreach (var stepDefinitionInfo in specflowStepsDefinitionsCache.GetStepAccessibleForModule(psiModule, selectedStepKind).Concat(assemblyStepDefinitionCache.GetStepAccessibleForModule(psiModule, selectedStepKind)))
             {
                 if (stepDefinitionInfo.RegexForPartialMatch == null)
                     continue;
-
-                var partialStepText = selectedStep.GetStepTextBeforeCaret(context.BasicContext.CaretDocumentOffset);
-                var fullStepText = selectedStep.GetStepText();
 
                 foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText, fullStepText))
                 {
