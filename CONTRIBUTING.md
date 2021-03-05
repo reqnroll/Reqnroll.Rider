@@ -17,7 +17,7 @@ and of course **C# knowledge** if you are looking to contribute by coding.
 
 ## Types of contributions
 
-You can contribute by working on an  [existing bug/issue](https://github.com/SpecFlowOSS/SpecFlow.Rider/search?type=Issues) or report a new one, build a new functionality based on [feature requests](https://support.specflow.org/hc/en-us/community/topics/360000519178-Feature-Requests) reported by SpecFlow community or if do not wish to code you can always contribute to [writing documentation](##Building-documentation).
+You can contribute by working on an  [existing bug/issue](https://github.com/SpecFlowOSS/SpecFlow.Rider/search?type=Issues) or report a new one, build a new functionality based on [feature requests](https://support.specflow.org/hc/en-us/community/topics/360000519178-Feature-Requests) reported by SpecFlow community or if do not wish to code you can always contribute to [writing documentation](https://github.com/SpecFlowOSS/SpecFlow/blob/master/CONTRIBUTING.md#building-documentation).
 
 ### Ground rules & expectations
 
@@ -72,7 +72,7 @@ in order to craft an excellent pull request:
 
 7. Push your topic branch up to your fork.
 
-8. [Open a Pull Request ](https://help.github.com/articles/using-pull-requests/) with a clear title and description.
+8. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/) with a clear title and description.
 
 9. If you haven't updated your pull request for a while, you should consider rebasing on master and resolving any conflicts.
 
@@ -97,37 +97,6 @@ CLI:
 - Execute buildPlugin.ps1 in [PowerShell](https://github.com/powershell/powershell)
 
 ![buildpluginps1](https://raw.githubusercontent.com/SpecFlowOSS/SpecFlow/master/docs/_static/images/clirider.png)
-
-## Building documentation
-
-If you do not wish to contribute by coding you can help us in documentation.
-
-To build local documentation:
-
-- Install Python:
-
-  - https://www.python.org/downloads/windows/
-
-    > Note: Make sure to add python to your PATH env variable
-    >
-    > ![python](https://raw.githubusercontent.com/SpecFlowOSS/SpecFlow/master/docs/_static/images/python.png)
-
-  
-
-- Install sphinx:
-
-  - pip install sphinx
-    
-
-- Install dependencies in the working directory
-
-  - pip install -r docs/requirements.txt (Path to requirements can vary)
-
-
-- Run (PS or CMD) from the working directory
-     - ./make html
-   - Result: html pages are generated in the working directory
-        - _build/html/index.html
 
 ## Where can I go for help?
 
