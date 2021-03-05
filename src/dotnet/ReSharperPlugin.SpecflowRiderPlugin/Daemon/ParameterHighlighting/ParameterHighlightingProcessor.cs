@@ -16,10 +16,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting
         IRecursiveElementProcessor<IHighlightingConsumer>
     {
 
-        public ParameterHighlightingProcessor(IDaemonProcess daemonProcess, ResolveHighlighterRegistrar resolveHighlighterRegistrar)
-        {
-        }
-
         public bool InteriorShouldBeProcessed(ITreeNode element, IHighlightingConsumer context) => true;
  
 

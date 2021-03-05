@@ -3,7 +3,6 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
-using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting
 {
@@ -13,12 +12,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting
         private readonly ParameterHighlightingProcessor _elementProcessor;
         public IDaemonProcess DaemonProcess { get; }
 
-        public ParameterHighlightingDaemonStageProcess(IDaemonProcess daemonProcess, GherkinFile file, ResolveHighlighterRegistrar resolveHighlighterRegistrar,
-                                                       IStepDefinitionBuilder stepDefinitionBuilder)
+        public ParameterHighlightingDaemonStageProcess(IDaemonProcess daemonProcess, GherkinFile file)
         {
             DaemonProcess = daemonProcess;
             _file = file;
-            _elementProcessor = new ParameterHighlightingProcessor(DaemonProcess, resolveHighlighterRegistrar);
+            _elementProcessor = new ParameterHighlightingProcessor();
         }
 
         public void Execute(Action<DaemonStageResult> committer)
