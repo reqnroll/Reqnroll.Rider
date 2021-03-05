@@ -65,7 +65,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                         var captureText = text;
                         if (text == ".+")
                             captureText = ".+?";
-                        else ;if (text == ".*")
+                        else if (text == ".*")
                             captureText = ".*?";
                         partialPattern.Append('(').Append(captureText).Append(")");
                         try
