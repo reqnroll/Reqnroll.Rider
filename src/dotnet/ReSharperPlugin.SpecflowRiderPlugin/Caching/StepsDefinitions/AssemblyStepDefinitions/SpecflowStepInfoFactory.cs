@@ -70,7 +70,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                         partialPattern.Append('(').Append(captureText).Append(")");
                         try
                         {
-                            regexesPerCapture.Add(new Regex("^" + partialPattern + "(?:(?:[ \">])|$)", RegexOptions.Compiled));
+                            regexesPerCapture.Add(new Regex("^" + partialPattern + "(?:(?:[ \"])|$)", RegexOptions.Compiled));
                         }
                         catch (ArgumentException)
                         {

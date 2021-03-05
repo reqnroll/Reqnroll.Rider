@@ -82,7 +82,7 @@ Then to match `I roll 2 times 3 and` we would try to match this text with all th
 Since this not perfect yet due to the (.+) at the end that may catch something we don't want.
 With the example, the regex `I roll (.+) times (.+)`, will catch `3 and` as the second parameter value. So the autocomplete will show `I roll 2 times 3 and and (.+)` (note the double `and`). To fix this, some transformations are done those Regex:
 - The greedy capture like `.+` or `.*` are converted to a non-greedy mode `.+` => `.+?`.
-- The following string `(?:(?:[ \">])|$)` is appended to the regexes.
+- The following string `(?:(?:[ \"])|$)` is appended to the regexes.
 
 #### Step Pattern Expansion
 
