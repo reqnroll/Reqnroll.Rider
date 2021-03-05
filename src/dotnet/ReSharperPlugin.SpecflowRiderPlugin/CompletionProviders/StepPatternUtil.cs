@@ -132,11 +132,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         public IEnumerable<(StepPatternTokenType tokenType, string text)> TokenizeStepPattern(string pattern)
         {
             var i = 0;
+            var previousChar = '\0';
             var buffer = new StringBuilder();
             while (i < pattern.Length)
             {
                 var c = pattern[i++];
-                if (c == '(')
+                if (c == '(' && previousChar != '\\')
                 {
                     if (buffer.Length > 0)
                     {
@@ -153,6 +154,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 {
                     buffer.Append(c);
                 }
+                previousChar = c;
             }
             if (buffer.Length > 0)
                 yield return (StepPatternTokenType.Text, buffer.ToString());
