@@ -31,7 +31,7 @@
   </ItemGroup>
   <ItemGroup Label="C#">
     <ErrorsGen Include="Daemon\Errors\CSharpErrors.xml">
-      <Namespace>JetBrains.ReSharper.Plugins.Unity.CSharp.Daemon.Errors</Namespace>
+      <Namespace>ReSharperPlugin.SpecflowRiderPlugin.Daemon.Errors</Namespace>
       <OutputFile>Daemon\Errors\CSharpErrors.generated.cs</OutputFile>
       <Mode>ERRORS</Mode>
     </ErrorsGen>

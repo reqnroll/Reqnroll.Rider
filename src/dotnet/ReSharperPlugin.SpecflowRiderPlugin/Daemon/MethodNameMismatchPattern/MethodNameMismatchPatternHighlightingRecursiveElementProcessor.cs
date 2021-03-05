@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Plugins.Unity.CSharp.Daemon.Errors;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
@@ -12,8 +11,8 @@ using JetBrains.ReSharper.Psi.Naming.Settings;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.TestRunner.Abstractions.Extensions;
 using JetBrains.Util;
+using ReSharperPlugin.SpecflowRiderPlugin.Daemon.Errors;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
-using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
