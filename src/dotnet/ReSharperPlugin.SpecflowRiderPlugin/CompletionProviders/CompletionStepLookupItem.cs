@@ -46,11 +46,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
             var templatesManager = LiveTemplatesManager.Instance;
             var endCaretPosition = insertType == LookupItemInsertType.Insert ? Ranges.InsertRange.EndOffset : Ranges.ReplaceRange.EndOffset;
-            var hotspotInfos = BuildHotspotInfos();
-            templatesManager
-                .CreateHotspotSessionAtopExistingText(solution, endCaretPosition, textControl, LiveTemplatesManager.EscapeAction.LeaveTextAndCaret, hotspotInfos.ToArray())
-                .ExecuteAndForget();
-
+            var hotspotInfos = BuildHotspotInfos().ToArray();
+            if (hotspotInfos.Length > 0)
+            {
+                templatesManager
+                    .CreateHotspotSessionAtopExistingText(solution, endCaretPosition, textControl, LiveTemplatesManager.EscapeAction.LeaveTextAndCaret, hotspotInfos)
+                    .ExecuteAndForget();
+            }
         }
 
         public IEnumerable<HotspotInfo> BuildHotspotInfos()
