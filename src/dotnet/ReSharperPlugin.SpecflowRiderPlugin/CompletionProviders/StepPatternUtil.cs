@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.Util;
 using RE;
@@ -12,7 +13,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
     public interface IStepPatternUtil
     {
         IEnumerable<string> ExpandMatchingStepPatternWithAllPossibleParameter(SpecflowStepInfo pattern, string partialStepText, string fullStepText);
-        IEnumerable<(StepPatternUtil.StepPatternTokenType tokenType, string text)> TokenizeStepPattern(string pattern);
+        IEnumerable<(StepPatternUtil.StepPatternTokenType tokenType, string text, bool optional)> TokenizeStepPattern(string pattern);
     }
 
     [PsiSharedComponent]
@@ -44,12 +45,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             return results;
         }
 
-        private List<List<string>> RetrieveParameterValues(SpecflowStepInfo stepDefinitionInfo, string partialStepText, string fullStepText, List<(StepPatternTokenType tokenType, string text)> tokenizedStepPattern)
+        private List<List<string>> RetrieveParameterValues(SpecflowStepInfo stepDefinitionInfo, string partialStepText, string fullStepText, List<(StepPatternTokenType tokenType, string text, bool optional)> tokenizedStepPattern)
         {
             var captureValues = new List<List<string>>();
             var captureIndex = 0;
 
-            foreach (var (tokenType, text) in tokenizedStepPattern)
+            foreach (var (tokenType, text, _) in tokenizedStepPattern)
             {
                 if (tokenType == StepPatternTokenType.Capture)
                 {
@@ -78,21 +79,27 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             return captureValues;
         }
 
-        private void BuildAllPossibleSteps(string matchedText, StringBuilder stringBuilder, List<string> results, (StepPatternTokenType tokenType, string text)[] tokenizedStepPattern, List<List<string>> captureValues, int elementIndex, int captureIndex)
+        private void BuildAllPossibleSteps(string matchedText, StringBuilder stringBuilder, List<string> results, (StepPatternTokenType tokenType, string text, bool optional)[] tokenizedStepPattern, List<List<string>> captureValues, int elementIndex, int captureIndex)
         {
             var saveStringBuilderPosition = stringBuilder.Length;
             if (tokenizedStepPattern[elementIndex].tokenType == StepPatternTokenType.Text)
             {
-                stringBuilder.Append(tokenizedStepPattern[elementIndex].text);
+                foreach (var variant in ExpandAllOptionalVariant(tokenizedStepPattern[elementIndex].text))
+                {
+                    stringBuilder.Length = saveStringBuilderPosition;
+                    stringBuilder.Append(variant);
 
-                if (elementIndex + 1 == tokenizedStepPattern.Length)
-                    results.Add(stringBuilder.ToString());
-                else
-                    BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex);
+                    if (elementIndex + 1 == tokenizedStepPattern.Length)
+                        results.Add(stringBuilder.ToString());
+                    else
+                        BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex);
+                }
                 stringBuilder.Length = saveStringBuilderPosition;
             }
             else if (tokenizedStepPattern[elementIndex].tokenType == StepPatternTokenType.Capture)
             {
+                if (tokenizedStepPattern[elementIndex].optional)
+                    BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex + 1);
                 foreach (var captureValue in captureValues[captureIndex])
                 {
                     stringBuilder.Length = saveStringBuilderPosition;
@@ -118,6 +125,34 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             }
         }
 
+        private List<string> ExpandAllOptionalVariant(string text, StringBuilder buffer = null, List<string> result = null, int startPos = 0)
+        {
+            result = result ?? new List<string>();
+            buffer = buffer ?? new StringBuilder();
+
+            var i = startPos;
+            var nextChar = '\0';
+            while (i < text.Length)
+            {
+                var c = text[i++];
+                if (i < text.Length) nextChar = text[i];
+                if (c == '\\' || nextChar != '?')
+                    buffer.Append(c);
+                else
+                {
+                    var position = buffer.Length;
+                    ExpandAllOptionalVariant(text, buffer, result, i + 1);
+                    buffer.Length = position;
+                    buffer.Append(c);
+                    ExpandAllOptionalVariant(text, buffer, result, i + 1);
+                    buffer.Length = position;
+                    return result;
+                }
+            }
+            result.Add(buffer.ToString());
+            return result;
+        }
+
         private IEnumerable<string> ListPossibleValues(string captureText)
         {
             if (captureText.IndexOf('|') == -1)
@@ -129,7 +164,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             }
         }
 
-        public IEnumerable<(StepPatternTokenType tokenType, string text)> TokenizeStepPattern(string pattern)
+        public IEnumerable<(StepPatternTokenType tokenType, string text, bool optional)> TokenizeStepPattern(string pattern)
         {
             var i = 0;
             var previousChar = '\0';
@@ -141,14 +176,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 {
                     if (buffer.Length > 0)
                     {
-                        yield return (StepPatternTokenType.Text, buffer.ToString());
+                        yield return (StepPatternTokenType.Text, buffer.ToString(), false);
                         buffer.Clear();
                     }
 
                     var captureContent = ReadUntilChar(pattern, ref i, ')');
                     if (captureContent.StartsWith("?:"))
                         captureContent = captureContent.Substring(2);
-                    yield return (StepPatternTokenType.Capture, captureContent);
+                    var isOptional = i < pattern.Length && pattern[i] == '?';
+                    if (isOptional)
+                        i++;
+                    yield return (StepPatternTokenType.Capture, captureContent, isOptional);
                 }
                 else
                 {
@@ -157,7 +195,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 previousChar = c;
             }
             if (buffer.Length > 0)
-                yield return (StepPatternTokenType.Text, buffer.ToString());
+                yield return (StepPatternTokenType.Text, buffer.ToString(), false);
         }
 
         private string ReadUntilChar(string text, ref int index, char endCharacter)

@@ -54,7 +54,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
             var regexesPerCapture = new List<Regex>();
             var partialPattern = new StringBuilder();
             var error = false;
-            foreach (var (type, text) in _stepPatternUtil.TokenizeStepPattern(pattern))
+            foreach (var (type, text, optional) in _stepPatternUtil.TokenizeStepPattern(pattern))
             {
                 switch (type)
                 {
