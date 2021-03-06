@@ -1,11 +1,9 @@
 using System.Linq;
-using JetBrains.Collections;
+using System.Text.RegularExpressions;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.UI.ThemedIcons;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
@@ -43,7 +41,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
                 foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText, fullStepText))
                 {
-                    var lookupItem = new CompletionStepLookupItem(stepVariation, SpecFlowThemedIcons.Specflow.Id);
+                    var lookupItem = new CompletionStepLookupItem(Regex.Unescape(stepVariation), SpecFlowThemedIcons.Specflow.Id);
                     lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
 
                     collector.Add(lookupItem);
