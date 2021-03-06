@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RE
+﻿namespace RE
 {
 	/// <summary>
 	/// Represents the current status of the operation
@@ -13,10 +9,6 @@ namespace RE
 		/// The status is unknown
 		/// </summary>
 		Unknown,
-		/// <summary>
-		/// Performing a DFA transform
-		/// </summary>
-		DfaTransform,
 		/// <summary>
 		/// Trimming duplicate states
 		/// </summary>

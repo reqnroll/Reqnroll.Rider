@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace RE
 {
@@ -17,7 +18,7 @@ namespace RE
 				return result;
 			result.Add(this);
 			// use a cast to get the optimized internal input mapping by FA state
-			foreach (var trns in InputTransitions as IDictionary<CharFA<TAccept>,ICollection<char>>)
+			foreach (var trns in InputTransitions.CharactersByState)
 				trns.Key.FillClosure(result);
 			foreach (var fa in EpsilonTransitions)
 				fa.FillClosure(result);
@@ -36,7 +37,7 @@ namespace RE
 			if (visited.Add(this))
 			{
 				yield return this;
-				foreach (var trns in InputTransitions as IDictionary<CharFA<TAccept>, ICollection<char>>)
+				foreach (var trns in InputTransitions.CharactersByState)
 					foreach (var fa in trns.Key._EnumClosure(visited))
 						yield return fa;
 				foreach (var fa in EpsilonTransitions)
@@ -98,7 +99,7 @@ namespace RE
 		{
 			if(null==result)
 				result = new List<CharFA<TAccept>>();
-			foreach(var trns in InputTransitions as IDictionary<CharFA<TAccept>,ICollection<char>>)
+			foreach(var trns in InputTransitions.CharactersByState)
 				trns.Key.FillClosure(result);
 			foreach (var fa in EpsilonTransitions)
 				fa.FillClosure(result);
@@ -114,7 +115,7 @@ namespace RE
 		// lazy closure implementation
 		IEnumerable<CharFA<TAccept>> _EnumDescendants(HashSet<CharFA<TAccept>> visited)
 		{
-			foreach (var trns in InputTransitions as IDictionary<CharFA<TAccept>, ICollection<char>>)
+			foreach (var trns in InputTransitions.CharactersByState)
 				foreach (var fa in trns.Key._EnumClosure(visited))
 					yield return fa;
 			foreach (var fa in EpsilonTransitions)
@@ -152,51 +153,6 @@ namespace RE
 			return result;
 		}
 		/// <summary>
-		/// Moves from the specified state to a destination state in a DFA by moving along the specified input.
-		/// </summary>
-		/// <param name="input">The input to move on</param>
-		/// <returns>The state which the machine moved to or null if no state could be found.</returns>
-		public CharFA<TAccept> MoveDfa(char input)
-		{
-			CharFA<TAccept> fa;
-			if (InputTransitions.TryGetValue(input, out fa))
-				return fa;
-			return null;
-		}
-		/// <summary>
-		/// Moves from the specified state to a destination state in a DFA by moving along the specified input.
-		/// </summary>
-		/// <param name="dfaTable">The DFA state table to use</param>
-		/// <param name="state">The current state id</param>
-		/// <param name="input">The input to move on</param>
-		/// <returns>The state id which the machine moved to or -1 if no state could be found.</returns>
-		public static int MoveDfa(CharDfaEntry[] dfaTable,int state, char input)
-		{
-			// go through all the transitions
-			for (var i = 0; i < dfaTable[state].Transitions.Length; i++)
-			{
-				var entry = dfaTable[state].Transitions[i];
-				var found = false;
-				// go through all the ranges to see if we matched anything.
-				for (var j = 0; j < entry.PackedRanges.Length; j++)
-				{
-					var first = entry.PackedRanges[j];
-					++j;
-					var last = entry.PackedRanges[j];
-					if (input > last) continue;
-					if (first > input) break;
-					found = true;
-					break;
-				}
-				if (found)
-				{
-					// set the transition destination
-					return entry.Destination;
-				}
-			}
-			return -1;
-		}
-		/// <summary>
 		/// Returns a dictionary keyed by state, that contains all of the outgoing local input transitions, expressed as a series of ranges
 		/// </summary>
 		/// <param name="result">The dictionary to fill, or null to create one.</param>
@@ -206,11 +162,11 @@ namespace RE
 			if (null == result)
 				result = new Dictionary<CharFA<TAccept>, IList<CharRange>>();
 			// using the optimized dictionary we have little to do here.
-			foreach (var trns in (IDictionary<CharFA<TAccept>, ICollection<char>>)InputTransitions)
+			foreach (var trns in InputTransitions.CharactersByState)
 			{
-				var sl = new List<char>(trns.Value);
+				var sl = new List<char>(trns.Value.characters);
 				sl.Sort();
-				result.Add(trns.Key, new List<CharRange>(CharRange.GetRanges(sl)));
+				result.Add(trns.Key, new List<CharRange>(CharRange.GetRanges(sl).Concat(trns.Value.ranges)));
 			}
 			return result;
 		}

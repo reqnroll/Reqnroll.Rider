@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace RE
 {
@@ -82,21 +80,6 @@ namespace RE
 								return false;
 				}
 
-				return true;
-			}
-			public static bool _EqualsInput(ICollection<char> lhs, ICollection<char> rhs)
-			{
-				if (ReferenceEquals(lhs, rhs))
-					return true;
-				else if (ReferenceEquals(null, lhs) || ReferenceEquals(null, rhs))
-					return false;
-				if (lhs.Count != rhs.Count)
-					return false;
-				using (var xe = lhs.GetEnumerator())
-				using (var ye = rhs.GetEnumerator())
-					while (xe.MoveNext() && ye.MoveNext())
-						if (!rhs.Contains(xe.Current) || !lhs.Contains(ye.Current))
-							return false;
 				return true;
 			}
 			public int GetHashCode(IList<CharFA<TAccept>> lhs)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RE
 {
@@ -23,10 +22,17 @@ namespace RE
 			{
 				var t = nclosure[i].InputTransitions;
 				var e = nclosure[i].EpsilonTransitions;
-				foreach (var trns in closure[i].InputTransitions)
+				foreach (var trns in closure[i].InputTransitions.RangesTransitions)
+				{
+					var id = closure.IndexOf(trns.fa);
+					if (id != -1)
+						t.Add(trns.range, nclosure[id]);
+				}
+				foreach (var trns in closure[i].InputTransitions.CharactersTransitions)
 				{
 					var id = closure.IndexOf(trns.Value);
-					t.Add(trns.Key, nclosure[id]);
+					if (id != -1)
+						t.Add(trns.Key, nclosure[id]);
 				}
 				foreach (var trns in closure[i].EpsilonTransitions)
 				{
@@ -56,13 +62,22 @@ namespace RE
 			{
 				var t = nclosure[i].InputTransitions;
 				var e = nclosure[i].EpsilonTransitions;
-				foreach (var trns in closure[i].InputTransitions)
+				foreach (var trns in closure[i].InputTransitions.CharactersTransitions)
 				{
 					if (trns.Value.FillClosure().Contains(to))
 					{
 						var id = closure.IndexOf(trns.Value);
 
 						t.Add(trns.Key, nclosure[id]);
+					}
+				}
+				foreach (var trns in closure[i].InputTransitions.RangesTransitions)
+				{
+					if (trns.fa.FillClosure().Contains(to))
+					{
+						var id = closure.IndexOf(trns.fa);
+
+						t.Add(trns.range, nclosure[id]);
 					}
 				}
 				foreach (var trns in closure[i].EpsilonTransitions)
@@ -94,13 +109,22 @@ namespace RE
 			{
 				var t = nclosure[i].InputTransitions;
 				var e = nclosure[i].EpsilonTransitions;
-				foreach (var trns in closure[i].InputTransitions)
+				foreach (var trns in closure[i].InputTransitions.CharactersTransitions)
 				{
 					if (_ContainsAny(trns.Value.FillClosure(), to))
 					{
 						var id = closure.IndexOf(trns.Value);
 
 						t.Add(trns.Key, nclosure[id]);
+					}
+				}
+				foreach (var trns in closure[i].InputTransitions.RangesTransitions)
+				{
+					if (_ContainsAny(trns.fa.FillClosure(), to))
+					{
+						var id = closure.IndexOf(trns.fa);
+
+						t.Add(trns.range, nclosure[id]);
 					}
 				}
 				foreach (var trns in closure[i].EpsilonTransitions)

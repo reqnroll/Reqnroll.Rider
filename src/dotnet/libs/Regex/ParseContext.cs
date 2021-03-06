@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Text;
 
 namespace RE
@@ -44,7 +43,7 @@ namespace RE
 	/// <summary>
 	/// see https://www.codeproject.com/Articles/5162847/ParseContext-2-0-Easier-Hand-Rolled-Parsers
 	/// </summary>
-	public partial class ParseContext : IDisposable
+	public class ParseContext : IDisposable
 	{
 		/// <summary>
 		/// Attempts to read whitespace from the current input, capturing it
@@ -69,7 +68,9 @@ namespace RE
 			EnsureStarted();
 			if (-1 == Current || !char.IsWhiteSpace((char)Current))
 				return false;
-			while (-1 != Advance() && char.IsWhiteSpace((char)Current)) ;
+			while (-1 != Advance() && char.IsWhiteSpace((char) Current))
+			{
+			}
 			return true;
 		}
 		/// <summary>
@@ -113,7 +114,10 @@ namespace RE
 			if (0 > character) character = -1;
 			if (Current == character)
 				return true;
-			while (-1 != Advance() && Current != character) ;
+			while (-1 != Advance() && Current != character)
+			{
+			}
+
 			if (Current == character)
 			{
 				if (skipCharacter)
@@ -199,133 +203,6 @@ namespace RE
 			}
 			return false;
 		}
-		private static bool _ContainsChar(char[] chars, char ch)
-		{
-			foreach (char cmp in chars)
-				if (cmp == ch)
-					return true;
-			return false;
-		}
-		/// <summary>
-		/// Attempts to read until any of the specified characters, optionally consuming it
-		/// </summary>
-		/// <param name="readCharacter">True if the character should be consumed, otherwise false</param>
-		/// <param name="anyOf">A list of characters that signal the end of the scan</param>
-		/// <returns>True if one of the characters was found, otherwise false</returns>
-		public bool TryReadUntil(bool readCharacter = true, params char[] anyOf)
-		{
-			EnsureStarted();
-			if (null == anyOf)
-				anyOf = Array.Empty<char>();
-			CaptureCurrent();
-			if (-1 != Current && _ContainsChar(anyOf, (char)Current))
-			{
-				if (readCharacter)
-				{
-					CaptureCurrent();
-					Advance();
-				}
-				return true;
-			}
-			while (-1 != Advance() && !_ContainsChar(anyOf, (char)Current))
-				CaptureCurrent();
-			if (-1 != Current && _ContainsChar(anyOf, (char)Current))
-			{
-				if (readCharacter)
-				{
-					CaptureCurrent();
-					Advance();
-				}
-				return true;
-			}
-			return false;
-		}
-		/// <summary>
-		/// Attempts to skip until any of the specified characters, optionally consuming it
-		/// </summary>
-		/// <param name="skipCharacter">True if the character should be consumed, otherwise false</param>
-		/// <param name="anyOf">A list of characters that signal the end of the scan</param>
-		/// <returns>True if one of the characters was found, otherwise false</returns>
-		public bool TrySkipUntil(bool skipCharacter = true, params char[] anyOf)
-		{
-			EnsureStarted();
-			if (null == anyOf)
-				anyOf = Array.Empty<char>();
-			if (-1 != Current && _ContainsChar(anyOf, (char)Current))
-			{
-				if (skipCharacter)
-					Advance();
-				return true;
-			}
-			while (-1 != Advance() && !_ContainsChar(anyOf, (char)Current)) ;
-			if (-1 != Current && _ContainsChar(anyOf, (char)Current))
-			{
-				if (skipCharacter)
-					Advance();
-				return true;
-			}
-			return false;
-		}
-		/// <summary>
-		/// Reads up to the specified text string, consuming it
-		/// </summary>
-		/// <param name="text">The text to read until</param>
-		/// <returns>True if the text was found, otherwise false</returns>
-		public bool TryReadUntil(string text)
-		{
-			EnsureStarted();
-			if (string.IsNullOrEmpty(text))
-				return false;
-			while (-1 != Current && TryReadUntil(text[0], false))
-			{
-				bool found = true;
-				for (int i = 1; i < text.Length; ++i)
-				{
-					if (Advance() != text[i])
-					{
-						found = false;
-						break;
-					}
-					CaptureCurrent();
-				}
-				if (found)
-				{
-					Advance();
-					return true;
-				}
-			}
-
-			return false;
-		}
-		/// <summary>
-		/// Skips up to the specified text string, consuming it
-		/// </summary>
-		/// <param name="text">The text to skip until</param>
-		/// <returns>True if the text was found, otherwise false</returns>
-		public bool TrySkipUntil(string text)
-		{
-			EnsureStarted();
-			if (string.IsNullOrEmpty(text))
-				return false;
-			while (-1 != Current && TrySkipUntil(text[0], false))
-			{
-				bool found = true;
-				for (int i = 1; i < text.Length; ++i)
-				{
-					if (Advance() != text[i])
-					{
-						found = false;
-						break;
-					}
-				}
-				if (found)
-				{
-					Advance();
-					return true;
-				}
-			}
-			return false;
-		}
 
 		/// <summary>
 		/// Attempts to read a series of digits, consuming them
@@ -339,71 +216,6 @@ namespace RE
 			CaptureCurrent();
 			while (-1 != Advance() && char.IsDigit((char)Current))
 				CaptureCurrent();
-			return true;
-		}
-		/// <summary>
-		/// Attempts to skip a series of digits, consuming them
-		/// </summary>
-		/// <returns>True if digits were consumed, otherwise false</returns>
-		public bool TrySkipDigits()
-		{
-			EnsureStarted();
-			if (-1 == Current || !char.IsDigit((char)Current))
-				return false;
-			while (-1 != Advance() && char.IsDigit((char)Current)) ;
-			return true;
-		}
-		/// <summary>
-		/// Attempts to read a series of letters, consuming them
-		/// </summary>
-		/// <returns>True if letters were consumed, otherwise false</returns>
-		public bool TryReadLetters()
-		{
-			EnsureStarted();
-			if (-1 == Current || !char.IsLetter((char)Current))
-				return false;
-			CaptureCurrent();
-			while (-1 != Advance() && char.IsLetter((char)Current))
-				CaptureCurrent();
-			return true;
-		}
-		/// <summary>
-		/// Attempts to skip a series of letters, consuming them
-		/// </summary>
-		/// <returns>True if letters were consumed, otherwise false</returns>
-		public bool TrySkipLetters()
-		{
-			EnsureStarted();
-			if (-1 == Current || !char.IsLetter((char)Current))
-				return false;
-			while (-1 != Advance() && char.IsLetter((char)Current)) ;
-			return true;
-		}
-
-		/// <summary>
-		/// Attempts to read a series of letters or digits, consuming them
-		/// </summary>
-		/// <returns>True if letters or digits were consumed, otherwise false</returns>
-		public bool TryReadLettersOrDigits()
-		{
-			EnsureStarted();
-			if (-1 == Current || !char.IsLetterOrDigit((char)Current))
-				return false;
-			CaptureCurrent();
-			while (-1 != Advance() && char.IsLetterOrDigit((char)Current))
-				CaptureCurrent();
-			return true;
-		}
-		/// <summary>
-		/// Attempts to skip a series of letters or digits, consuming them
-		/// </summary>
-		/// <returns>True if letters or digits were consumed, otherwise false</returns>
-		public bool TrySkipLettersOrDigits()
-		{
-			EnsureStarted();
-			if (-1 == Current || !char.IsLetterOrDigit((char)Current))
-				return false;
-			while (-1 != Advance() && char.IsLetterOrDigit((char)Current)) ;
 			return true;
 		}
 
@@ -804,17 +616,6 @@ namespace RE
 		/// <param name="filename">The filename to use</param>
 		/// <returns>A parse context over the specified file</returns>
 		public static ParseContext CreateFrom(string filename) { return new ParseContext(File.OpenText(filename)); }
-		/// <summary>
-		/// Creates a parse context over the specified url
-		/// </summary>
-		/// <param name="url">The url to use</param>
-		/// <returns>A parse context over the specified file</returns>
-		public static ParseContext CreateFromUrl(string url)
-		{
-			var wreq = WebRequest.Create(url);
-			var wresp = wreq.GetResponse();
-			return CreateFrom(new StreamReader(wresp.GetResponseStream()));
-		}
 
 		class _TextReaderEnumerator : IEnumerator<char>
 		{

@@ -25,20 +25,7 @@ namespace RE
 			}
 			return result;
 		}
-		/// <summary>
-		/// Creates an FA that will match any one of a set of a characters
-		/// </summary>
-		/// <param name="set">The set of characters that will be matched</param>
-		/// <param name="accept">The symbol to accept</param>
-		/// <returns>An FA that will match the specified set</returns>
-		public static CharFA<TAccept> Set(IEnumerable<char> set, TAccept accept = default(TAccept))
-		{
-			var result = new CharFA<TAccept>();
-			var final = new CharFA<TAccept>(true, accept);
-			foreach (var ch in set)
-				result.InputTransitions[ch]= final;
-			return result;
-		}
+
 		/// <summary>
 		/// Creates a new FA that is a concatenation of two other FA expressions
 		/// </summary>
@@ -109,8 +96,9 @@ namespace RE
 			var result = new CharFA<TAccept>();
 			var final = new CharFA<TAccept>(true, accept);
 
-			foreach (var ch in CharRange.ExpandRanges(ranges))
-				result.InputTransitions[ch]= final;
+			foreach (var charRange in ranges)
+				result.InputTransitions.Add(charRange, final);
+
 			return result;
 		}
 		/// <summary>
@@ -208,7 +196,7 @@ namespace RE
 							//Debug.Assert(null != expr.FirstAcceptingState);
 							return expr;
 						default:
-							result = Concat(new CharFA<TAccept>[] { expr, Repeat(expr.Clone(), 0, maxOccurs - 1) }, accept);
+							result = Concat(new[] { expr, Repeat(expr.Clone(), 0, maxOccurs - 1) }, accept);
 							//Debug.Assert(null != result.FirstAcceptingState);
 							return result;
 					}
@@ -217,7 +205,7 @@ namespace RE
 					{
 						case -1:
 						case 0:
-							result = Concat(new CharFA<TAccept>[] { Repeat(expr, minOccurs, minOccurs, accept), Repeat(expr, 0, 0, accept) }, accept);
+							result = Concat(new[] { Repeat(expr, minOccurs, minOccurs, accept), Repeat(expr, 0, 0, accept) }, accept);
 							//Debug.Assert(null != result.FirstAcceptingState);
 							return result;
 						case 1:
@@ -238,15 +226,13 @@ namespace RE
 								//Debug.Assert(null != result.FirstAcceptingState);
 								return result;
 							}
-							result = Concat(new CharFA<TAccept>[] { Repeat(expr.Clone(), minOccurs, minOccurs, accept), Repeat(Optional(expr.Clone()), maxOccurs - minOccurs, maxOccurs - minOccurs, accept) }, accept);
+							result = Concat(new[] { Repeat(expr.Clone(), minOccurs, minOccurs, accept), Repeat(Optional(expr.Clone()), maxOccurs - minOccurs, maxOccurs - minOccurs, accept) }, accept);
 							//Debug.Assert(null != result.FirstAcceptingState);
 							return result;
 
 
 					}
 			}
-			// should never get here
-			throw new NotImplementedException();
 		}
 		/// <summary>
 		/// Creates a new FA that matches the specified FA expression or empty
@@ -261,41 +247,6 @@ namespace RE
 			f.AcceptSymbol = accept;
 			result.EpsilonTransitions.Add(f);
 			return result;
-		}
-		/// <summary>
-		/// Makes the specified expression case insensitive
-		/// </summary>
-		/// <param name="expr">The target expression</param>
-		/// <param name="accept">The accept symbol</param>
-		/// <returns>A new expression that is the case insensitive equivelent of <paramref name="expr"/></returns>
-		public static CharFA<TAccept> CaseInsensitive(CharFA<TAccept> expr,TAccept accept=default(TAccept))
-		{
-			var fa = expr.Clone();
-			var closure = fa.FillClosure();
-			for(int ic=closure.Count,i=0;i<ic;++i)
-			{
-				var ffa = closure[i];
-				if (ffa.IsAccepting)
-					ffa.AcceptSymbol = accept;
-				foreach(var trns in ffa.InputTransitions as IDictionary<CharFA<TAccept>, ICollection<char>>)
-				{
-					foreach(var ch in new List<char>(trns.Value))
-					{
-						if(char.IsLower(ch))
-						{
-							var cch = char.ToUpperInvariant(ch);
-							if(!trns.Value.Contains(cch))
-								ffa.InputTransitions.Add(cch, trns.Key);
-						} else if(char.IsUpper(ch))
-						{
-							var cch = char.ToLowerInvariant(ch);
-							if (!trns.Value.Contains(cch))
-								ffa.InputTransitions.Add(cch, trns.Key);
-						}
-					}
-				}
-			}
-			return fa;
 		}
 	}
 }

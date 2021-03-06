@@ -12,8 +12,8 @@ namespace RE
 		/// <summary>
 		/// Indicates the input transitions. These are the states that will be transitioned to on the specified input key.
 		/// </summary>
-		public IDictionary<char, CharFA<TAccept>> InputTransitions { get; }
-			= new _InputTransitionDictionary();
+		public InputTransitionsDictionary InputTransitions { get; }
+			= new InputTransitionsDictionary();
 		/// <summary>
 		/// Indicates the epsilon transitions. These are the states that are transitioned to without consuming input.
 		/// </summary>
