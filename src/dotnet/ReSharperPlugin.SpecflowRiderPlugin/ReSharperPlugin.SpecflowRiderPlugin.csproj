@@ -31,7 +31,7 @@
   </ItemGroup>
   <ItemGroup Label="C#">
     <ErrorsGen Include="Daemon\Errors\CSharpErrors.xml">
-      <Namespace>JetBrains.ReSharper.Plugins.Unity.CSharp.Daemon.Errors</Namespace>
+      <Namespace>ReSharperPlugin.SpecflowRiderPlugin.Daemon.Errors</Namespace>
       <OutputFile>Daemon\Errors\CSharpErrors.generated.cs</OutputFile>
       <Mode>ERRORS</Mode>
     </ErrorsGen>
@@ -60,5 +60,8 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
     <EmbeddedResource Include="Psi/i18n.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libs\Regex\Regex.csproj" />
   </ItemGroup>
 </Project>

@@ -2,10 +2,10 @@ using System;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-using JetBrains.ReSharper.Plugins.Unity.CSharp.Daemon.Errors;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.TextControl;
 using JetBrains.Util;
+using ReSharperPlugin.SpecflowRiderPlugin.Daemon.Errors;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes
 {

@@ -145,6 +145,8 @@ prepareSandbox {
     def dllFiles = [
             "$outputFolder/${DotnetPluginId}.dll",
             "$outputFolder/${DotnetPluginId}.pdb",
+            "$outputFolder/Regex.dll",
+            "$outputFolder/Regex.pdb",
             // TODO: add additional assemblies
     ]
 

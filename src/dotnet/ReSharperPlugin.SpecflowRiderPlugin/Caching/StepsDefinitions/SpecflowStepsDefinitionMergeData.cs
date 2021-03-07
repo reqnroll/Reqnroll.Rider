@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.Util;
+using RE;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
@@ -30,26 +30,27 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         public string Pattern { get; }
         [CanBeNull]
         public Regex Regex { get; }
+        [CanBeNull]
+        public CharFA<string> RegexForPartialMatch { get; }
+        public List<Regex> RegexesPerCapture { get; }
 
-        public SpecflowStepInfo(string classFullName, string methodName, GherkinStepKind stepKind, string pattern)
+        public SpecflowStepInfo(
+            string classFullName,
+            string methodName,
+            GherkinStepKind stepKind,
+            string pattern,
+            [CanBeNull] Regex regex,
+            [CanBeNull] CharFA<string> regexForPartialMatch,
+            List<Regex> regexesPerCapture
+        )
         {
             ClassFullName = classFullName;
             MethodName = methodName;
             StepKind = stepKind;
             Pattern = pattern;
-
-            try
-            {
-                if (!pattern.StartsWith("^"))
-                    pattern = "^" + pattern;
-                if (!pattern.EndsWith("$"))
-                    pattern += "$";
-                Regex = new Regex(pattern, RegexOptions.Compiled, TimeSpan.FromSeconds(2));
-            }
-            catch (ArgumentException)
-            {
-                Regex = null;
-            }
+            Regex = regex;
+            RegexForPartialMatch = regexForPartialMatch;
+            RegexesPerCapture = regexesPerCapture;
         }
     }
 }
