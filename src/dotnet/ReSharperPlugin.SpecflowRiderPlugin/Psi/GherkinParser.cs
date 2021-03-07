@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Psi;
@@ -5,11 +6,13 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.TreeBuilder;
+using ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
     public class GherkinParser : IParser
     {
+        private const string LanguageCommentPrefix = "#language:";
         // ReSharper disable once InconsistentNaming
         private static readonly NodeTypeSet SCENARIO_END_TOKENS = new NodeTypeSet(GherkinTokenTypes.BACKGROUND_KEYWORD,
                                                                                   GherkinTokenTypes.SCENARIO_KEYWORD,
@@ -19,11 +22,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         private readonly ILexer _lexer;
         private readonly IPsiSourceFile _sourceFile;
+        private readonly GherkinKeywordProvider _keywordProvider;
+        private GherkinStepKind _lastStepKind = GherkinStepKind.Given;
+        [CanBeNull] private string _lang;
 
-        public GherkinParser(ILexer lexer, IPsiSourceFile sourceFile)
+        public GherkinParser(ILexer lexer, IPsiSourceFile sourceFile, SpecflowSettingsProvider settingsProvider, GherkinKeywordProvider keywordProvider)
         {
+            var settings = settingsProvider.GetDefaultSettings();
+            _lang = settings.Language.NeutralFeature;
             _lexer = lexer;
             _sourceFile = sourceFile;
+            _keywordProvider = keywordProvider;
         }
 
         public IFile ParseFile()
@@ -41,14 +50,36 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                         ParseFeature(builder);
                     else if (tokenType == GherkinTokenTypes.TAG)
                         ParseTags(builder);
+                    else if (tokenType == GherkinTokenTypes.COMMENT)
+                        ParseComments(builder);
                     else
                         builder.AdvanceLexer();
                 }
 
-                builder.Done(fileMarker, GherkinNodeTypes.FILE, _sourceFile.Name);
+                builder.Done(fileMarker, GherkinNodeTypes.FILE, new GherkinFile.FileMetadata(_sourceFile.Name, _lang));
                 var resultTree = (GherkinFile) builder.BuildTree();
 
                 return resultTree;
+            }
+        }
+
+        private void ParseComments(PsiBuilder builder)
+        {
+            while (builder.GetTokenType() == GherkinTokenTypes.COMMENT)
+            {
+                var commentMarker = builder.Mark();
+                var commentText = builder.GetTokenText();
+                builder.AdvanceLexer();
+                if (commentText.StartsWith(LanguageCommentPrefix))
+                {
+                    _lang = commentText.Substring(LanguageCommentPrefix.Length).Trim();
+                    builder.Done(commentMarker, GherkinNodeTypes.LANGUAGE_COMMENT, _lang);
+                }
+                else
+                    builder.Drop(commentMarker);
+
+                if (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+                    builder.AdvanceLexer();
             }
         }
 
@@ -65,7 +96,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
         }
 
-        private static void ParseFeature(PsiBuilder builder)
+        private void ParseFeature(PsiBuilder builder)
         {
             var featureMarker = builder.Mark();
 
@@ -108,7 +139,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             builder.Done(featureMarker, GherkinNodeTypes.FEATURE, null);
         }
 
-        private static void ParseFeatureElements(PsiBuilder builder)
+        private void ParseFeatureElements(PsiBuilder builder)
         {
             int? ruleMarker = null;
             while (builder.GetTokenType() != GherkinTokenTypes.FEATURE_KEYWORD && !builder.Eof())
@@ -149,7 +180,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return ruleMarker;
         }
 
-        private static void ParseScenario(PsiBuilder builder)
+        private void ParseScenario(PsiBuilder builder)
         {
             var scenarioMarker = builder.Mark();
             ParseTags(builder);
@@ -177,9 +208,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             builder.Done(scenarioMarker, outline ? GherkinNodeTypes.SCENARIO_OUTLINE : GherkinNodeTypes.SCENARIO, null);
         }
 
-        private static void ParseStep(PsiBuilder builder)
+        private void ParseStep(PsiBuilder builder)
         {
             var marker = builder.Mark();
+            var keywordText = builder.GetTokenText();
             builder.AdvanceLexer();
             while (builder.GetTokenType() == GherkinTokenTypes.TEXT ||
                    builder.GetTokenType() == GherkinTokenTypes.STEP_PARAMETER_BRACE ||
@@ -205,7 +237,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 ParsePystring(builder);
             }
 
-            builder.Done(marker, GherkinNodeTypes.STEP, null);
+            var stepKind = _keywordProvider.GetStepKind(_lang, keywordText);
+            if (stepKind == GherkinStepKind.And)
+                stepKind = _lastStepKind;
+            else if (stepKind == GherkinStepKind.Given || stepKind == GherkinStepKind.When || stepKind == GherkinStepKind.Then)
+                _lastStepKind = stepKind;
+            builder.Done(marker, GherkinNodeTypes.STEP, stepKind);
         }
 
         private static void ParseExamplesBlock(PsiBuilder builder)

@@ -9,14 +9,29 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
     public class GherkinFile : FileElementBase
     {
+        public class FileMetadata
+        {
+            public FileMetadata(string filename, string lang)
+            {
+                Filename = filename;
+                Lang = lang;
+            }
+
+            public string Filename { get; set; }
+            public string Lang { get; set; }
+        }
+
         public override NodeType NodeType => GherkinNodeTypes.FILE;
         public override PsiLanguageType Language => GherkinLanguage.Instance.NotNull();
 
-        public string FileName { get; }
+        private readonly FileMetadata _metadata;
 
-        public GherkinFile(string fileName)
+        public string FileName => _metadata.Filename;
+        public string Lang => _metadata.Lang;
+
+        public GherkinFile(FileMetadata metadata)
         {
-            FileName = fileName;
+            _metadata = metadata;
         }
 
         [CanBeNull]
