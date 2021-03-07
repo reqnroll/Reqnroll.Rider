@@ -94,6 +94,10 @@ This step consists of generating all possible values for a given step pattern. F
 
 This work by parsing the steps and splitting on each capture group, then either the capture group have a match from an existing parameter in the `partialStepText` or we try to list all possible values when it's a capture group with `|`, then all text and capture groups are assembled as long as it matches the beginning of `partialStepText`
 
+This step also handle `?` so `(\d+) cucumbers?` will be expanded to:
+- `(\d+) cucumbers`
+- `(\d+) cucumber`
+
 #### Hotspots
 
 When an autocompleting a step with parameters, the parameters the user need to specified are highlighted and he can switch from one to another. This is done using `Hotspots` in `CompletionStepLookupItem.Accept`. The method `Accept` is called when the user select an autocomplete in the list.
