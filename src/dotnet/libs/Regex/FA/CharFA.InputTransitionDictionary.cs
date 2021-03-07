@@ -84,7 +84,7 @@ namespace RE
 				foreach (var key in keys)
 					_charactersTransitions.Remove(key.Key);
 				var rangeKeys = _rangeTransitions.Where(x => x.fa == fa).Select((x, i) => i).ToList();
-				foreach (var i in rangeKeys)
+				foreach (var i in rangeKeys.OrderByDescending(x => x))
 					_rangeTransitions.RemoveAt(i);
 			}
 
