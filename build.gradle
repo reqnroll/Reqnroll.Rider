@@ -63,22 +63,10 @@ task compileDotNet {
 }
 
 buildPlugin {
-    outputs.upToDateWhen { false }
     doLast {
         copy {
             from "${buildDir}/distributions/${rootProject.name}-${version}.zip"
             into "${rootDir}/output"
-        }
-
-        def changelogText = file("${rootDir}/CHANGELOG.md").text
-        def changelogMatches = changelogText =~ /(?s)(-.+?)(?=##|$)/
-        def changeNotes = changelogMatches.collect {
-            it[1].replaceAll(/(?s)- /, "\u2022 ").replaceAll(/`/, "").replaceAll(/,/, "%2C").replaceAll(/;/, "%3B").replaceAll(/"/, "%22")
-        }.take(1).join("")
-
-        exec {
-            executable "dotnet"
-            args "msbuild","/t:Pack","${DotnetSolution}","/p:Configuration=${BuildConfiguration}","/p:HostFullIdentifier=","/p:PackageOutputPath=${rootDir}/output","/p:PackageReleaseNotes=${changeNotes}","/p:PackageVersion=${version}"
         }
     }
 }
@@ -170,12 +158,4 @@ publishPlugin {
     }
 
     channels(!version.contains("-") ? 'Stable' : 'EAP')
-
-/*     doLast {
-        exec {
-            executable "dotnet"
-            args "nuget","push","output/${DotnetPluginId}.${version}.nupkg","--api-key",token,"--source","https://plugins.jetbrains.com"
-            workingDir rootDir
-        }
-    } */
 }
