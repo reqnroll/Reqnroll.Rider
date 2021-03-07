@@ -16,7 +16,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
 {
     [PsiComponent]
     // FIXME: Save this cache, see SolutionCaches and SimpleCache and implements ICacheWithVersion
-    public class AssemblyStepDefinitionCache : IAssemblyCache, ICache
+    public class AssemblyStepDefinitionCache : IAssemblyCache
     {
         private readonly IPsiAssemblyFileLoader _psiAssemblyFileLoader;
         private readonly SpecflowAssemblyStepsDefinitionMergeData _mergeData = new SpecflowAssemblyStepsDefinitionMergeData();

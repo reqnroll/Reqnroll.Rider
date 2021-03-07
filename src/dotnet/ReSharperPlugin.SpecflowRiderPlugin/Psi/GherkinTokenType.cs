@@ -16,6 +16,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return new GherkinToken(this, buffer, startOffset, endOffset);
         }
 
+        // ReSharper disable UnassignedGetOnlyAutoProperty
         public override bool IsWhitespace { get; }
         public override bool IsComment { get; }
         public override bool IsStringLiteral { get; }
@@ -23,5 +24,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public override bool IsIdentifier { get; }
         public override bool IsKeyword { get; }
         public override string TokenRepresentation { get; }
+        // ReSharper restore UnassignedGetOnlyAutoProperty
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
-using ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting

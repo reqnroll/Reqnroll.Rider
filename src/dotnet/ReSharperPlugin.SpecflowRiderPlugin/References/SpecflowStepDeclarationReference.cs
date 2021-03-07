@@ -141,7 +141,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
 
         public override IReference BindTo(IDeclaredElement element, ISubstitution substitution)
         {
-            if (!(element is Method method))
+            if (!(element is Method))
                 return this;
             /*var selector = CssElementFactory.GetInstance(myOwner).CreateSelector<ISimpleSelector>(".$0", (object) classDeclaredElement.ShortName);
             if (selector.FirstChild != selector.LastChild)

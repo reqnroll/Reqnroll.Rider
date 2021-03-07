@@ -1,9 +1,7 @@
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon.SyntaxHighlighting;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Feature.Services.ParameterNameHints.ManagedLanguage;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;

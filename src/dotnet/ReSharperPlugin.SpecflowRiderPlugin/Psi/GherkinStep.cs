@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Text;
-using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings;
-using ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi

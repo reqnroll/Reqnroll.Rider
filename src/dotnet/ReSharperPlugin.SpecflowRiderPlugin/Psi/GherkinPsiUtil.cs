@@ -1,10 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using JetBrains.Application.changes;
 using JetBrains.DocumentModel;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
 

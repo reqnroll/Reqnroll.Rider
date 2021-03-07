@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Diagnostics;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
@@ -7,23 +8,14 @@ using JetBrains.ReSharper.Feature.Services.LiveTemplates.Hotspots;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.LiveTemplates;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Templates;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.Rider.Model;
 using JetBrains.TextControl;
 using JetBrains.UI.Icons;
-using JetBrains.Util;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 {
     public sealed class CompletionStepLookupItem : TextLookupItemBase
     {
-        private readonly bool _emphasize;
-
         public override IconId Image { get; }
-
-        public CompletionStepLookupItem(string text, bool isDynamic = false)
-            : this(text, string.Empty, isDynamic)
-        {
-        }
 
         public CompletionStepLookupItem(string text, string typeText, bool isDynamic = false)
             : base(isDynamic)
@@ -36,15 +28,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             : this(text, string.Empty, isDynamic)
             => Image = image;
 
-        public CompletionStepLookupItem(string text, string typeText, bool emphasize, bool isDynamic = false)
-            : this(text, typeText, isDynamic)
-            => _emphasize = emphasize;
-
         public override void Accept(ITextControl textControl, DocumentRange nameRange, LookupItemInsertType insertType, Suffix suffix, ISolution solution, bool keepCaretStill)
         {
             base.Accept(textControl, nameRange, insertType, suffix, solution, keepCaretStill);
 
             var templatesManager = LiveTemplatesManager.Instance;
+            Ranges.NotNull();
             var endCaretPosition = insertType == LookupItemInsertType.Insert ? Ranges.InsertRange.EndOffset : Ranges.ReplaceRange.EndOffset;
             var hotspotInfos = BuildHotspotInfos().ToArray();
             if (hotspotInfos.Length > 0)

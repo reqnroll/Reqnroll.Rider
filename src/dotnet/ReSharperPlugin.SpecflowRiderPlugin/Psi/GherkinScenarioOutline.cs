@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {

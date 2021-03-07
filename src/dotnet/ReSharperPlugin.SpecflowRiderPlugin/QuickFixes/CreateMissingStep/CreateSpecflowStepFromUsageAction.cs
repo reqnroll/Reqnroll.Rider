@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using JetBrains.Application.UI.Controls;
 using JetBrains.Application.UI.Controls.JetPopupMenu;
 using JetBrains.Collections;
@@ -13,7 +12,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Resources;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.JavaScript.Util.Literals;
 using JetBrains.ReSharper.Psi.Naming.Extentions;
 using JetBrains.ReSharper.Psi.Naming.Impl;
 using JetBrains.ReSharper.Psi.Naming.Settings;
