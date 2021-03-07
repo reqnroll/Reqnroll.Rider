@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
@@ -12,13 +13,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
     public class GherkinParser : IParser
     {
-        private const string LanguageCommentPrefix = "#language:";
         // ReSharper disable once InconsistentNaming
         private static readonly NodeTypeSet SCENARIO_END_TOKENS = new NodeTypeSet(GherkinTokenTypes.BACKGROUND_KEYWORD,
                                                                                   GherkinTokenTypes.SCENARIO_KEYWORD,
                                                                                   GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD,
                                                                                   GherkinTokenTypes.RULE_KEYWORD,
                                                                                   GherkinTokenTypes.FEATURE_KEYWORD);
+        private static readonly Regex LanguagePattern = new Regex ("^\\s*#\\s*language\\s*:\\s*(?<lang>[a-zA-Z\\-_]+)\\s*$", RegexOptions.Compiled);
 
         private readonly ILexer _lexer;
         private readonly IPsiSourceFile _sourceFile;
@@ -70,9 +71,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 var commentMarker = builder.Mark();
                 var commentText = builder.GetTokenText();
                 builder.AdvanceLexer();
-                if (commentText.StartsWith(LanguageCommentPrefix))
+                var match = LanguagePattern.Match(commentText);
+                if (match.Success)
                 {
-                    _lang = commentText.Substring(LanguageCommentPrefix.Length).Trim();
+                    _lang = match.Groups["lang"].Value;
                     builder.Done(commentMarker, GherkinNodeTypes.LANGUAGE_COMMENT, _lang);
                 }
                 else
