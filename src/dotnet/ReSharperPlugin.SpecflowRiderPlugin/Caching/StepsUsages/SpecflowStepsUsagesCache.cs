@@ -8,8 +8,8 @@ using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.Files;
-using JetBrains.RiderTutorials.Utils;
 using JetBrains.Util;
+using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages
