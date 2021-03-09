@@ -93,8 +93,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 builder.AdvanceLexer();
                 builder.Done(tagMarker, GherkinNodeTypes.TAG, null);
 
-                if (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
-                    builder.AdvanceLexer();
+                SkipWhitespace(builder);
             }
         }
 
@@ -133,6 +132,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 }
 
                 wasLineBreak = IsLineBreak(builder);
+                if (wasLineBreak)
+                    SkipGroupedWhiteSpaces(builder);
             } while (builder.GetTokenType() != GherkinTokenTypes.FEATURE_KEYWORD && !builder.Eof());
 
             if (descMarker != null)
@@ -184,6 +185,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         private void ParseScenario(PsiBuilder builder)
         {
+            SkipWhitespace(builder);
             var scenarioMarker = builder.Mark();
             ParseTags(builder);
 
@@ -194,6 +196,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
             while (!AtScenarioEnd(builder))
             {
+                SkipWhitespace(builder);
                 ParseTags(builder);
 
                 if (ParseStepParameter(builder))
@@ -227,6 +230,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     builder.AdvanceLexer();
             }
 
+            SkipGroupedWhiteSpaces(builder);
+
             var nextToken = builder.GetTokenType(1);
             if (nextToken == GherkinTokenTypes.PIPE)
             {
@@ -246,7 +251,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 _lastStepKind = stepKind;
             builder.Done(marker, GherkinNodeTypes.STEP, stepKind);
         }
-
         private static void ParseExamplesBlock(PsiBuilder builder)
         {
             var marker = builder.Mark();
@@ -284,7 +288,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 }
                 else if (tokenType != GherkinTokenTypes.TABLE_CELL && cellMarker != null)
                 {
-                    builder.Done(cellMarker.Value, GherkinNodeTypes.TABLE_CELL, null);
+                    builder.DoneBeforeWhitespaces(cellMarker.Value, GherkinNodeTypes.TABLE_CELL, null);
                     cellMarker = null;
                     possibleEmptyCell = false;
                 }
@@ -294,7 +298,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     if (wasLineBreak)
                     {
                         possibleEmptyCell = true;
-                        builder.Done(rowMarker, headerNodeType, null);
+                        builder.DoneBeforeWhitespaces(rowMarker, headerNodeType, null);
                         headerNodeType = GherkinNodeTypes.TABLE_ROW;
                         rowMarker = builder.Mark();
                     }
@@ -312,6 +316,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 }
 
                 wasLineBreak = IsLineBreak(builder);
+                if (wasLineBreak)
+                    SkipGroupedWhiteSpaces(builder);
                 builder.AdvanceLexer();
             }
 
@@ -369,6 +375,22 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 return false;
 
             return builder.GetTokenText()?.Contains("\n") == true;
+        }
+
+        private static void SkipGroupedWhiteSpaces(PsiBuilder builder)
+        {
+            while (builder.GetTokenType(1) == GherkinTokenTypes.WHITE_SPACE)
+            {
+                builder.AdvanceLexer();
+            }
+        }
+
+        private static void SkipWhitespace(PsiBuilder builder)
+        {
+            while (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+            {
+                builder.AdvanceLexer();
+            }
         }
     }
 }

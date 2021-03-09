@@ -5,13 +5,16 @@ GherkinFile: ScenarioOutlineTable.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,22): TEXT('Cucumber stock keeping')
-    GherkinToken(31,6): WHITE_SPACE('\n\n  ')
+    GherkinToken(31,2): WHITE_SPACE('\n')
+    GherkinToken(33,2): WHITE_SPACE('\n')
+    GherkinToken(35,2): WHITE_SPACE('  ')
     GherkinScenarioOutline: eating
       GherkinToken(37,16): SCENARIO_OUTLINE_KEYWORD('Scenario Outline')
       GherkinToken(53,1): COLON(':')
       GherkinToken(54,1): WHITE_SPACE(' ')
       GherkinToken(55,6): TEXT('eating')
-      GherkinToken(61,6): WHITE_SPACE('\n    ')
+      GherkinToken(61,2): WHITE_SPACE('\n')
+      GherkinToken(63,4): WHITE_SPACE('    ')
       GherkinStep: there are cucumbers
         GherkinToken(67,5): STEP_KEYWORD('Given')
         GherkinToken(72,1): WHITE_SPACE(' ')
@@ -23,7 +26,8 @@ GherkinFile: ScenarioOutlineTable.feature
         GherkinToken(89,1): STEP_PARAMETER_BRACE('>')
         GherkinToken(90,1): WHITE_SPACE(' ')
         GherkinToken(91,9): TEXT('cucumbers')
-      GherkinToken(100,6): WHITE_SPACE('\n    ')
+        GherkinToken(100,2): WHITE_SPACE('\n')
+      GherkinToken(102,4): WHITE_SPACE('    ')
       GherkinStep: there are cucumbers
         GherkinToken(106,4): STEP_KEYWORD('Then')
         GherkinToken(110,1): WHITE_SPACE(' ')
@@ -35,11 +39,14 @@ GherkinFile: ScenarioOutlineTable.feature
         GherkinToken(127,1): STEP_PARAMETER_BRACE('>')
         GherkinToken(128,1): WHITE_SPACE(' ')
         GherkinToken(129,9): TEXT('cucumbers')
-      GherkinToken(138,8): WHITE_SPACE('\n\n    ')
+        GherkinToken(138,2): WHITE_SPACE('\n')
+        GherkinToken(140,2): WHITE_SPACE('\n')
+      GherkinToken(142,4): WHITE_SPACE('    ')
       GherkinExamplesBlock
         GherkinToken(146,8): EXAMPLES_KEYWORD('Examples')
         GherkinToken(154,1): COLON(':')
-        GherkinToken(155,8): WHITE_SPACE('\n      ')
+        GherkinToken(155,2): WHITE_SPACE('\n')
+        GherkinToken(157,6): WHITE_SPACE('      ')
         GherkinTable
           GherkinTableHeaderRow
             GherkinToken(163,1): PIPE('|')
@@ -53,7 +60,8 @@ GherkinFile: ScenarioOutlineTable.feature
               GherkinToken(173,5): TABLE_CELL('total')
             GherkinToken(178,2): WHITE_SPACE('  ')
             GherkinToken(180,1): PIPE('|')
-            GherkinToken(181,8): WHITE_SPACE('\n      ')
+          GherkinToken(181,2): WHITE_SPACE('\n')
+          GherkinToken(183,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(189,1): PIPE('|')
             GherkinToken(190,1): WHITE_SPACE(' ')
@@ -66,7 +74,8 @@ GherkinFile: ScenarioOutlineTable.feature
               GherkinToken(199,6): TABLE_CELL('13  56')
             GherkinToken(205,1): WHITE_SPACE(' ')
             GherkinToken(206,1): PIPE('|')
-            GherkinToken(207,8): WHITE_SPACE('\n      ')
+          GherkinToken(207,2): WHITE_SPACE('\n')
+          GherkinToken(209,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(215,1): PIPE('|')
             GherkinToken(216,1): WHITE_SPACE(' ')
@@ -79,7 +88,8 @@ GherkinFile: ScenarioOutlineTable.feature
               GherkinToken(225,2): TABLE_CELL('20')
             GherkinToken(227,5): WHITE_SPACE('     ')
             GherkinToken(232,1): PIPE('|')
-            GherkinToken(233,8): WHITE_SPACE('\n      ')
+          GherkinToken(233,2): WHITE_SPACE('\n')
+          GherkinToken(235,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(241,1): PIPE('|')
             GherkinToken(242,7): WHITE_SPACE('       ')
@@ -90,7 +100,8 @@ GherkinFile: ScenarioOutlineTable.feature
               GherkinToken(251,1): TABLE_CELL('1')
             GherkinToken(252,6): WHITE_SPACE('      ')
             GherkinToken(258,1): PIPE('|')
-            GherkinToken(259,8): WHITE_SPACE('\n      ')
+          GherkinToken(259,2): WHITE_SPACE('\n')
+          GherkinToken(261,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(267,1): PIPE('|')
             GherkinToken(268,7): WHITE_SPACE('       ')

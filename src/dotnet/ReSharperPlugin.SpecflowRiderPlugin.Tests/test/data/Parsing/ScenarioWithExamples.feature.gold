@@ -5,22 +5,26 @@ GherkinFile: ScenarioWithExamples.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,4): TEXT('test')
-    GherkinToken(13,4): WHITE_SPACE('\n  ')
+    GherkinToken(13,2): WHITE_SPACE('\n')
+    GherkinToken(15,2): WHITE_SPACE('  ')
     GherkinScenario: with Examples
       GherkinToken(17,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(25,1): COLON(':')
       GherkinToken(26,1): WHITE_SPACE(' ')
       GherkinToken(27,13): TEXT('with Examples')
-      GherkinToken(40,6): WHITE_SPACE('\n    ')
+      GherkinToken(40,2): WHITE_SPACE('\n')
+      GherkinToken(42,4): WHITE_SPACE('    ')
       GherkinStep: step
         GherkinToken(46,5): STEP_KEYWORD('Given')
         GherkinToken(51,1): WHITE_SPACE(' ')
         GherkinToken(52,4): TEXT('step')
-      GherkinToken(56,6): WHITE_SPACE('\n    ')
+        GherkinToken(56,2): WHITE_SPACE('\n')
+      GherkinToken(58,4): WHITE_SPACE('    ')
       GherkinExamplesBlock
         GherkinToken(62,8): EXAMPLES_KEYWORD('Examples')
         GherkinToken(70,1): COLON(':')
-        GherkinToken(71,8): WHITE_SPACE('\n      ')
+        GherkinToken(71,2): WHITE_SPACE('\n')
+        GherkinToken(73,6): WHITE_SPACE('      ')
         GherkinTable
           GherkinTableHeaderRow
             GherkinToken(79,1): PIPE('|')
@@ -29,7 +33,8 @@ GherkinFile: ScenarioWithExamples.feature
               GherkinToken(81,4): TABLE_CELL('name')
             GherkinToken(85,2): WHITE_SPACE('  ')
             GherkinToken(87,1): PIPE('|')
-            GherkinToken(88,8): WHITE_SPACE('\n      ')
+          GherkinToken(88,2): WHITE_SPACE('\n')
+          GherkinToken(90,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(96,1): PIPE('|')
             GherkinToken(97,1): WHITE_SPACE(' ')

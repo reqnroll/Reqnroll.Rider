@@ -5,7 +5,8 @@ GherkinFile: NoSteps.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,8): TEXT('No steps')
-    GherkinToken(17,4): WHITE_SPACE('\n  ')
+    GherkinToken(17,2): WHITE_SPACE('\n')
+    GherkinToken(19,2): WHITE_SPACE('  ')
     GherkinFeatureHeader
       GherkinToken(21,26): TEXT('Some description goes here')
 

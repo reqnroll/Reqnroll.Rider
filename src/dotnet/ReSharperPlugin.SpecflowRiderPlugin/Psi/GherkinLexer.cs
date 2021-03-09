@@ -66,11 +66,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             char c = Buffer[_currentPosition];
             if (_myState != STATE_INSIDE_PYSTRING && char.IsWhiteSpace(c))
             {
-                AdvanceOverWhitespace();
                 TokenType = GherkinTokenTypes.WHITE_SPACE;
+                AdvanceOverWhitespace();
+                if (c == '\n')
+                    return;
                 while (_currentPosition < _myEndOffset && char.IsWhiteSpace(Buffer[_currentPosition]))
                 {
                     AdvanceOverWhitespace();
+                    if (Buffer[_currentPosition - 1] == '\n')
+                        return;
                 }
             }
             else if (c == '|' && _myState != STATE_INSIDE_PYSTRING)

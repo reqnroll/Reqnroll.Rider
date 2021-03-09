@@ -5,18 +5,21 @@ GherkinFile: PystringWithParams.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,8): TEXT('Pystring')
-    GherkinToken(17,4): WHITE_SPACE('\n  ')
+    GherkinToken(17,2): WHITE_SPACE('\n')
+    GherkinToken(19,2): WHITE_SPACE('  ')
     GherkinScenarioOutline: Pystring
       GherkinToken(21,16): SCENARIO_OUTLINE_KEYWORD('Scenario Outline')
       GherkinToken(37,1): COLON(':')
       GherkinToken(38,1): WHITE_SPACE(' ')
       GherkinToken(39,8): TEXT('Pystring')
-      GherkinToken(47,6): WHITE_SPACE('\n    ')
+      GherkinToken(47,2): WHITE_SPACE('\n')
+      GherkinToken(49,4): WHITE_SPACE('    ')
       GherkinStep: text with
         GherkinToken(53,5): STEP_KEYWORD('Given')
         GherkinToken(58,1): WHITE_SPACE(' ')
         GherkinToken(59,9): TEXT('text with')
-        GherkinToken(68,6): WHITE_SPACE('\n    ')
+        GherkinToken(68,2): WHITE_SPACE('\n')
+        GherkinToken(70,4): WHITE_SPACE('    ')
         GherkinPystring
           GherkinToken(74,3): PYSTRING_QUOTES('"""')
           GherkinToken(77,20): PYSTRING_TEXT('\n    pystring with ')
@@ -26,11 +29,13 @@ GherkinFile: PystringWithParams.feature
           GherkinToken(103,1): STEP_PARAMETER_BRACE('>')
           GherkinToken(104,20): PYSTRING_TEXT(' of some sort \n    ')
           GherkinToken(124,3): PYSTRING_QUOTES('"""')
-      GherkinToken(127,6): WHITE_SPACE('\n    ')
+      GherkinToken(127,2): WHITE_SPACE('\n')
+      GherkinToken(129,4): WHITE_SPACE('    ')
       GherkinExamplesBlock
         GherkinToken(133,8): EXAMPLES_KEYWORD('Examples')
         GherkinToken(141,1): COLON(':')
-        GherkinToken(142,7): WHITE_SPACE(' \n    ')
+        GherkinToken(142,3): WHITE_SPACE(' \n')
+        GherkinToken(145,4): WHITE_SPACE('    ')
         GherkinTable
           GherkinTableHeaderRow
             GherkinToken(149,1): PIPE('|')
@@ -39,7 +44,8 @@ GherkinFile: PystringWithParams.feature
               GherkinToken(151,5): TABLE_CELL('param')
             GherkinToken(156,1): WHITE_SPACE(' ')
             GherkinToken(157,1): PIPE('|')
-            GherkinToken(158,6): WHITE_SPACE('\n    ')
+          GherkinToken(158,2): WHITE_SPACE('\n')
+          GherkinToken(160,4): WHITE_SPACE('    ')
           GherkinTableRow
             GherkinToken(164,1): PIPE('|')
             GherkinToken(165,1): WHITE_SPACE(' ')
@@ -47,5 +53,6 @@ GherkinFile: PystringWithParams.feature
               GherkinToken(166,1): TABLE_CELL('1')
             GherkinToken(167,5): WHITE_SPACE('     ')
             GherkinToken(172,1): PIPE('|')
-            GherkinToken(173,6): WHITE_SPACE('\n    ')
+            GherkinToken(173,2): WHITE_SPACE('\n')
+            GherkinToken(175,4): WHITE_SPACE('    ')
 

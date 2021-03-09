@@ -5,34 +5,42 @@ GherkinFile: MultilineArgs.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,24): TEXT('undefined multiline args')
-    GherkinToken(33,6): WHITE_SPACE('\n\n  ')
+    GherkinToken(33,2): WHITE_SPACE('\n')
+    GherkinToken(35,2): WHITE_SPACE('\n')
+    GherkinToken(37,2): WHITE_SPACE('  ')
     GherkinScenario: pystring
       GherkinToken(39,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(47,1): COLON(':')
       GherkinToken(48,1): WHITE_SPACE(' ')
       GherkinToken(49,8): TEXT('pystring')
-      GherkinToken(57,6): WHITE_SPACE('\n    ')
+      GherkinToken(57,2): WHITE_SPACE('\n')
+      GherkinToken(59,4): WHITE_SPACE('    ')
       GherkinStep: a pystring
         GherkinToken(63,5): STEP_KEYWORD('Given')
         GherkinToken(68,1): WHITE_SPACE(' ')
         GherkinToken(69,10): TEXT('a pystring')
-        GherkinToken(79,6): WHITE_SPACE('\n    ')
+        GherkinToken(79,2): WHITE_SPACE('\n')
+        GherkinToken(81,4): WHITE_SPACE('    ')
         GherkinPystring
           GherkinToken(85,3): PYSTRING_QUOTES('"""')
           GherkinToken(88,21): PYSTRING_TEXT('\n      example\n    ')
           GherkinToken(109,3): PYSTRING_QUOTES('"""')
-    GherkinToken(112,6): WHITE_SPACE('\n\n  ')
+    GherkinToken(112,2): WHITE_SPACE('\n')
+    GherkinToken(114,2): WHITE_SPACE('\n')
+    GherkinToken(116,2): WHITE_SPACE('  ')
     GherkinScenario: table
       GherkinToken(118,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(126,1): COLON(':')
       GherkinToken(127,1): WHITE_SPACE(' ')
       GherkinToken(128,5): TEXT('table')
-      GherkinToken(133,6): WHITE_SPACE('\n    ')
+      GherkinToken(133,2): WHITE_SPACE('\n')
+      GherkinToken(135,4): WHITE_SPACE('    ')
       GherkinStep: a table
         GherkinToken(139,5): STEP_KEYWORD('Given')
         GherkinToken(144,1): WHITE_SPACE(' ')
         GherkinToken(145,7): TEXT('a table')
-        GherkinToken(152,8): WHITE_SPACE('\n      ')
+        GherkinToken(152,2): WHITE_SPACE('\n')
+        GherkinToken(154,6): WHITE_SPACE('      ')
         GherkinTable
           GherkinTableHeaderRow
             GherkinToken(160,1): PIPE('|')
@@ -41,7 +49,8 @@ GherkinFile: MultilineArgs.feature
               GherkinToken(162,5): TABLE_CELL('table')
             GherkinToken(167,1): WHITE_SPACE(' ')
             GherkinToken(168,1): PIPE('|')
-            GherkinToken(169,8): WHITE_SPACE('\n      ')
+          GherkinToken(169,2): WHITE_SPACE('\n')
+          GherkinToken(171,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(177,1): PIPE('|')
             GherkinTableCell: example
