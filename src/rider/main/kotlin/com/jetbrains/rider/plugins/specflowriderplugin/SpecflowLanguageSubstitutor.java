@@ -20,7 +20,7 @@ public class SpecflowLanguageSubstitutor extends LanguageSubstitutor {
             var parent = virtualFile.getParent();
             while (parent != null) {
                 for (VirtualFile child : parent.getChildren()) {
-                    if (child.getName().endsWith("proj")) {
+                    if (child.getName().endsWith("proj") || child.getName().endsWith(".cs")) {
                         if (findCsharpFile(parent)) {
                             return GherkinLanguage.INSTANCE;
                         }
