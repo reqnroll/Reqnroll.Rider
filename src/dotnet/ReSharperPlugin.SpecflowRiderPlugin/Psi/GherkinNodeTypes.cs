@@ -23,6 +23,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public static readonly GherkinNodeType TABLE_ROW = new GherkinTableRowNodeType("TABLE_ROW", NextId);
         public static readonly GherkinNodeType TABLE = new GherkinTableNodeType("TABLE", NextId);
         public static readonly GherkinNodeType RULE = new GherkinRuleNodeType("RULE", NextId);
+        public static readonly GherkinNodeType LANGUAGE_COMMENT = new GherkinLanguageCommentNodeType("LANGUAGE_COMMENT", NextId);
 
         private class GherkinFileNodeType : GherkinNodeType
         {
@@ -32,7 +33,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
             public override CompositeElement Create(object userData)
             {
-                return new GherkinFile((string) userData);
+                return new GherkinFile((GherkinFile.FileMetadata) userData);
             }
         }
         
@@ -71,10 +72,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
         }
         
-        private class GherkinStepNodeType : GherkinNodeType<GherkinStep>
+        private class GherkinStepNodeType : GherkinNodeType
         {
             public GherkinStepNodeType(string name, int index) : base(name, index)
             {
+            }
+
+            public override CompositeElement Create(object userData)
+            {
+                return new GherkinStep((GherkinStepKind) userData);
             }
         }
         
@@ -133,6 +139,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             {
             }
         }
-        
+
+        private class GherkinLanguageCommentNodeType : GherkinNodeType
+        {
+            public GherkinLanguageCommentNodeType(string name, int index) : base(name, index)
+            {
+            }
+
+            public override CompositeElement Create(object userData)
+            {
+                return new GherkinLanguageComment(userData as string);
+            }
+        }
     }
 }
