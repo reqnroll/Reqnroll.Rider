@@ -1,6 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <LanguageTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
+    <Configurations>Debug;Release;DebugTest</Configurations>
   </PropertyGroup>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
@@ -20,6 +21,12 @@
       <OutputFile>Daemon\Errors\CSharpErrors.generated.cs</OutputFile>
       <Mode>ERRORS</Mode>
     </ErrorsGen>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'DebugTest'">
+    <Compile Remove="**\Rider\**\*" />
+    <None Remove="**\Rider\**\*" />
+    <EmbeddedResource Remove="**\Rider\**\*" />
+    <Content Remove="**\Rider\**\*" />
   </ItemGroup>
   <!-- TODO: uncomment for xaml icons -->
   <ItemGroup>
