@@ -56,6 +56,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
 
         private void Aligning()
         {
+            Describe<IntAlignRule>()
+                .Name("AlignTableCells")
+                .Where(
+                    Node().HasType(GherkinNodeTypes.TABLE_CELL))
+                .Calculate((o, context) => new IntAlignOptionValue("pipe", 1))
+                .Build();
         }
 
         private void Formatting()

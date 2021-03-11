@@ -14,6 +14,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Service
 
         [TestCase("Indent - Basics")]
         [TestCase("Indent - MultipleScenario")]
+        [TestCase("Formatting - Table 1")]
         public void TestFormat(string name) { DoOneTest(name); }
     }
 }
