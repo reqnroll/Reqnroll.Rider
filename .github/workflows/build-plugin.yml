@@ -2,7 +2,7 @@ name: Build Plugin
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, 2021.1 ]
   pull_request:
     branches: [ master ]
 
