@@ -110,6 +110,32 @@ TODO: Use rename refactoring instead so other reference can be updated at the sa
 
 This test explorer find matching tests from the test repository for each Scenario and Feature. This is what is behind the `Run unit test` icon in the gutter.
 
+## Analytics
+
+The AppInsights REST api is used to collect anonymous usage data similarly to SpecFlow. 
+The official AppInsights SDK collects and sends more data than what we need so we are controlling
+what data do we send.
+
+The users can opt out by setting the `SPECFLOW_TELEMETRY_ENABLED` environment variable to `0`
+
+The users are identified by the SpecFlowUserId stored in the `SpecFlow\.userid` in the `SpecialFolder.ApplicationData` 
+
+The main parts of the Rider specific implementation:
+
+- `AnalyticsTransmitter` this class is responsible to collect the generic information included in every event
+- `SolutionTracker` this class is responsible to check if the opened solution contains a reference to SpecFlow and fire the solution loaded event
+- `PluginTracker` is created for each Shell instance and fires the extension loaded/installed events
+
+### Setting the InstrumentationKey
+
+The Rider project includes the `AppInsightsConfiguration.template.cs` which is ignored from the build.
+During the build an `AppInsightsConfiguration.cs` file is generated with the InstrumentationKey provided by MSBuild.
+
+For development a testing key is present in the csproj file.
+
+For production deployments the key can be overwritten using the environment variable `APPINSIGHTSINSTRUMENTATIONKEY`  
+The `compileDotNet` task is configured in the `build.grade` to take this parameter and pass in to MSBuild.
+
 ## Tips
 
 - When running rider (using gradle `:runIde`) You can attach the process `dotnet exec --runtimeconfig` to debug the extensions and explore rider code.
