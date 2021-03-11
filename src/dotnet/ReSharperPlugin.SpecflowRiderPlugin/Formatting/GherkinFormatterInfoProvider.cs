@@ -31,6 +31,27 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
 
         private void Indenting()
         {
+            var indentBetweenNodeAndChild = new List<(string name, GherkinNodeType parent, GherkinNodeType child)>
+            {
+                ("FeatureScenario", GherkinNodeTypes.FEATURE, GherkinNodeTypes.SCENARIO),
+                ("FeatureScenarioOutline", GherkinNodeTypes.FEATURE, GherkinNodeTypes.SCENARIO_OUTLINE),
+                ("FeatureRule", GherkinNodeTypes.FEATURE, GherkinNodeTypes.RULE),
+                ("ScenarioStep", GherkinNodeTypes.SCENARIO, GherkinNodeTypes.STEP),
+                ("ScenarioOutlineStep", GherkinNodeTypes.SCENARIO_OUTLINE, GherkinNodeTypes.STEP),
+                ("RuleScenario", GherkinNodeTypes.RULE, GherkinNodeTypes.SCENARIO),
+                ("ScenarioOutlineExampleBlob", GherkinNodeTypes.SCENARIO_OUTLINE, GherkinNodeTypes.EXAMPLES_BLOCK),
+            };
+
+            foreach (var rule in indentBetweenNodeAndChild)
+            {
+                Describe<IndentingRule>()
+                    .Name(rule.name + "Indent")
+                    .Where(
+                        Parent().HasType(rule.parent),
+                        Node().HasType(rule.child))
+                    .Return(IndentType.External)
+                    .Build();
+            }
         }
 
         private void Aligning()
