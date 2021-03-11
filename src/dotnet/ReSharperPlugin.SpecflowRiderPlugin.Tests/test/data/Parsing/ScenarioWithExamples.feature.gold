@@ -18,7 +18,7 @@ GherkinFile: ScenarioWithExamples.feature
         GherkinToken(46,5): STEP_KEYWORD('Given')
         GherkinToken(51,1): WHITE_SPACE(' ')
         GherkinToken(52,4): TEXT('step')
-        GherkinToken(56,2): WHITE_SPACE('\n')
+      GherkinToken(56,2): WHITE_SPACE('\n')
       GherkinToken(58,4): WHITE_SPACE('    ')
       GherkinExamplesBlock
         GherkinToken(62,8): EXAMPLES_KEYWORD('Examples')

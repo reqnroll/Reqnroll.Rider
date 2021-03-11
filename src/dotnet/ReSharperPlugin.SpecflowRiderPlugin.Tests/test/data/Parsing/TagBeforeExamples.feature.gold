@@ -28,8 +28,8 @@ GherkinFile: TagBeforeExamples.feature
         GherkinStepParameter: value
           GherkinToken(85,5): STEP_PARAMETER_TEXT('value')
         GherkinToken(90,1): STEP_PARAMETER_BRACE('>')
-        GherkinToken(91,2): WHITE_SPACE('\n')
-        GherkinToken(93,2): WHITE_SPACE('\n')
+      GherkinToken(91,2): WHITE_SPACE('\n')
+      GherkinToken(93,2): WHITE_SPACE('\n')
       GherkinToken(95,4): WHITE_SPACE('    ')
       GherkinTag: @tag2
         GherkinToken(99,5): TAG('@tag2')

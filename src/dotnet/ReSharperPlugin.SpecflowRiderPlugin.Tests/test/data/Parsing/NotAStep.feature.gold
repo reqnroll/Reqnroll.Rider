@@ -18,7 +18,7 @@ GherkinFile: NotAStep.feature
         GherkinToken(35,5): STEP_KEYWORD('Given')
         GherkinToken(40,1): WHITE_SPACE(' ')
         GherkinToken(41,3): TEXT('baz')
-        GherkinToken(44,2): WHITE_SPACE('\n')
+      GherkinToken(44,2): WHITE_SPACE('\n')
       GherkinToken(46,2): WHITE_SPACE('  ')
       GherkinToken(48,19): TEXT('IntelliJIdeaRulezzz')
 

@@ -4,8 +4,8 @@ GherkinFile: Features.feature
     GherkinToken(0,7): FEATURE_KEYWORD('Feature')
     GherkinToken(7,1): WHITE_SPACE(' ')
     GherkinToken(8,18): TEXT('First feature name')
-    GherkinToken(26,2): WHITE_SPACE('\n')
-    GherkinToken(28,4): WHITE_SPACE('  \n')
+  GherkinToken(26,2): WHITE_SPACE('\n')
+  GherkinToken(28,4): WHITE_SPACE('  \n')
   GherkinFeature: Second feature name
     GherkinToken(32,7): FEATURE_KEYWORD('Feature')
     GherkinToken(39,1): WHITE_SPACE(' ')
@@ -18,8 +18,8 @@ GherkinFile: Features.feature
       GherkinToken(74,3): WHITE_SPACE(' \n')
       GherkinToken(77,2): WHITE_SPACE('  ')
       GherkinToken(79,11): TEXT('Description')
-      GherkinToken(90,2): WHITE_SPACE('\n')
-      GherkinToken(92,2): WHITE_SPACE('\n')
+  GherkinToken(90,2): WHITE_SPACE('\n')
+  GherkinToken(92,2): WHITE_SPACE('\n')
   GherkinFeature: Third feature name
     GherkinToken(94,7): FEATURE_KEYWORD('Feature')
     GherkinToken(101,1): COLON(':')

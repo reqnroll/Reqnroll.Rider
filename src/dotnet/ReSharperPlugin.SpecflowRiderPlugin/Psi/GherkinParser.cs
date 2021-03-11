@@ -75,7 +75,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 if (match.Success)
                 {
                     _lang = match.Groups["lang"].Value;
-                    builder.Done(commentMarker, GherkinNodeTypes.LANGUAGE_COMMENT, _lang);
+                    builder.DoneBeforeWhitespaces(commentMarker, GherkinNodeTypes.LANGUAGE_COMMENT, _lang);
                 }
                 else
                     builder.Drop(commentMarker);
@@ -91,7 +91,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             {
                 var tagMarker = builder.Mark();
                 builder.AdvanceLexer();
-                builder.Done(tagMarker, GherkinNodeTypes.TAG, null);
+                builder.DoneBeforeWhitespaces(tagMarker, GherkinNodeTypes.TAG, null);
 
                 SkipWhitespace(builder);
             }
@@ -124,7 +124,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 {
                     if (descMarker != null)
                     {
-                        builder.Done(descMarker.Value, GherkinNodeTypes.FEATURE_HEADER, null);
+                        builder.DoneBeforeWhitespaces(descMarker.Value, GherkinNodeTypes.FEATURE_HEADER, null);
                         descMarker = null;
                     }
 
@@ -137,9 +137,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             } while (builder.GetTokenType() != GherkinTokenTypes.FEATURE_KEYWORD && !builder.Eof());
 
             if (descMarker != null)
-                builder.Done(descMarker.Value, GherkinNodeTypes.FEATURE_HEADER, null);
+                builder.DoneBeforeWhitespaces(descMarker.Value, GherkinNodeTypes.FEATURE_HEADER, null);
 
-            builder.Done(featureMarker, GherkinNodeTypes.FEATURE, null);
+            builder.DoneBeforeWhitespaces(featureMarker, GherkinNodeTypes.FEATURE, null);
         }
 
         private void ParseFeatureElements(PsiBuilder builder)
@@ -158,7 +158,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
 
             if (ruleMarker.HasValue)
-                builder.Done(ruleMarker.Value, GherkinNodeTypes.RULE, null);
+                builder.DoneBeforeWhitespaces(ruleMarker.Value, GherkinNodeTypes.RULE, null);
         }
 
         private static int? ParseRule(PsiBuilder builder, int? ruleMarker)
@@ -166,7 +166,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             if (builder.GetTokenType() == GherkinTokenTypes.RULE_KEYWORD)
             {
                 if (ruleMarker != null)
-                    builder.Done(ruleMarker.Value, GherkinNodeTypes.RULE, null);
+                    builder.DoneBeforeWhitespaces(ruleMarker.Value, GherkinNodeTypes.RULE, null);
 
                 ruleMarker = builder.Mark();
                 builder.AdvanceLexer();
@@ -210,7 +210,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     builder.AdvanceLexer();
             }
 
-            builder.Done(scenarioMarker, outline ? GherkinNodeTypes.SCENARIO_OUTLINE : GherkinNodeTypes.SCENARIO, null);
+            builder.DoneBeforeWhitespaces(scenarioMarker, outline ? GherkinNodeTypes.SCENARIO_OUTLINE : GherkinNodeTypes.SCENARIO, null);
         }
 
         private void ParseStep(PsiBuilder builder)
@@ -249,7 +249,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 stepKind = _lastStepKind;
             else if (stepKind == GherkinStepKind.Given || stepKind == GherkinStepKind.When || stepKind == GherkinStepKind.Then)
                 _lastStepKind = stepKind;
-            builder.Done(marker, GherkinNodeTypes.STEP, stepKind);
+            builder.DoneBeforeWhitespaces(marker, GherkinNodeTypes.STEP, stepKind);
         }
         private static void ParseExamplesBlock(PsiBuilder builder)
         {
@@ -265,7 +265,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             if (builder.GetTokenType() == GherkinTokenTypes.PIPE)
                 ParseTable(builder);
 
-            builder.Done(marker, GherkinNodeTypes.EXAMPLES_BLOCK, null);
+            builder.DoneBeforeWhitespaces(marker, GherkinNodeTypes.EXAMPLES_BLOCK, null);
         }
 
         private static void ParseTable(PsiBuilder builder)
@@ -307,7 +307,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                         if (possibleEmptyCell)
                         {
                             cellMarker = builder.Mark();
-                            builder.Done(cellMarker.Value, GherkinNodeTypes.TABLE_CELL, null);
+                            builder.DoneBeforeWhitespaces(cellMarker.Value, GherkinNodeTypes.TABLE_CELL, null);
                             cellMarker = null;
                         }
 
@@ -322,10 +322,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
 
             if (cellMarker.HasValue)
-                builder.Done(cellMarker.Value, GherkinNodeTypes.TABLE_CELL, null);
+                builder.DoneBeforeWhitespaces(cellMarker.Value, GherkinNodeTypes.TABLE_CELL, null);
 
-            builder.Done(rowMarker, headerNodeType, null);
-            builder.Done(marker, GherkinNodeTypes.TABLE, null);
+            builder.DoneBeforeWhitespaces(rowMarker, headerNodeType, null);
+            builder.DoneBeforeWhitespaces(marker, GherkinNodeTypes.TABLE, null);
         }
 
         private static void ParsePystring(PsiBuilder builder)

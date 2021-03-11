@@ -25,8 +25,8 @@ GherkinFile: ScenarioOutline.feature
         GherkinToken(87,1): STEP_PARAMETER_BRACE('>')
         GherkinToken(88,1): WHITE_SPACE(' ')
         GherkinToken(89,9): TEXT('cucumbers')
-        GherkinToken(98,2): WHITE_SPACE('\n')
-        GherkinToken(100,2): WHITE_SPACE('\n')
+      GherkinToken(98,2): WHITE_SPACE('\n')
+      GherkinToken(100,2): WHITE_SPACE('\n')
       GherkinToken(102,4): WHITE_SPACE('    ')
       GherkinExamplesBlock: Good
         GherkinToken(106,8): EXAMPLES_KEYWORD('Examples')
@@ -61,9 +61,9 @@ GherkinFile: ScenarioOutline.feature
               GherkinToken(167,2): TABLE_CELL('20')
             GherkinToken(169,4): WHITE_SPACE('    ')
             GherkinToken(173,1): PIPE('|')
-            GherkinToken(174,2): WHITE_SPACE('\n')
-            GherkinToken(176,2): WHITE_SPACE('\n')
-            GherkinToken(178,4): WHITE_SPACE('    ')
+      GherkinToken(174,2): WHITE_SPACE('\n')
+      GherkinToken(176,2): WHITE_SPACE('\n')
+      GherkinToken(178,4): WHITE_SPACE('    ')
       GherkinExamplesBlock: Bad
         GherkinToken(182,8): EXAMPLES_KEYWORD('Examples')
         GherkinToken(190,1): COLON(':')

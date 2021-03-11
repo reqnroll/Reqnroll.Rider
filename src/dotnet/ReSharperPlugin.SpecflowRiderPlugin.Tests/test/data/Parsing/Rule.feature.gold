@@ -16,8 +16,8 @@ GherkinFile: Rule.feature
         GherkinToken(43,5): STEP_KEYWORD('Given')
         GherkinToken(48,1): WHITE_SPACE(' ')
         GherkinToken(49,16): TEXT('a sample project')
-        GherkinToken(65,2): WHITE_SPACE('\n')
-        GherkinToken(67,2): WHITE_SPACE('\n')
+    GherkinToken(65,2): WHITE_SPACE('\n')
+    GherkinToken(67,2): WHITE_SPACE('\n')
     GherkinToken(69,2): WHITE_SPACE('  ')
     GherkinRule: the first rule in the project
       GherkinToken(71,4): RULE_KEYWORD('Rule')
@@ -38,14 +38,14 @@ GherkinFile: Rule.feature
           GherkinToken(160,5): STEP_KEYWORD('Given')
           GherkinToken(165,1): WHITE_SPACE(' ')
           GherkinToken(166,8): TEXT('step one')
-          GherkinToken(174,2): WHITE_SPACE('\n')
+        GherkinToken(174,2): WHITE_SPACE('\n')
         GherkinToken(176,6): WHITE_SPACE('      ')
         GherkinStep: step two
           GherkinToken(182,3): STEP_KEYWORD('And')
           GherkinToken(185,1): WHITE_SPACE(' ')
           GherkinToken(186,8): TEXT('step two')
-          GherkinToken(194,2): WHITE_SPACE('\n')
-          GherkinToken(196,2): WHITE_SPACE('\n')
+      GherkinToken(194,2): WHITE_SPACE('\n')
+      GherkinToken(196,2): WHITE_SPACE('\n')
       GherkinToken(198,4): WHITE_SPACE('    ')
       GherkinScenario: the second example in the Rule
         GherkinToken(202,7): SCENARIO_KEYWORD('Example')
@@ -58,7 +58,7 @@ GherkinFile: Rule.feature
           GherkinToken(249,5): STEP_KEYWORD('Given')
           GherkinToken(254,1): WHITE_SPACE(' ')
           GherkinToken(255,10): TEXT('step three')
-          GherkinToken(265,2): WHITE_SPACE('\n')
+        GherkinToken(265,2): WHITE_SPACE('\n')
         GherkinToken(267,6): WHITE_SPACE('      ')
         GherkinStep: step four
           GherkinToken(273,3): STEP_KEYWORD('And')

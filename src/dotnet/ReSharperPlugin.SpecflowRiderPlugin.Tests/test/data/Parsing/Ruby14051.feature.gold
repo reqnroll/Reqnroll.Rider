@@ -28,17 +28,17 @@ GherkinFile: Ruby14051.feature
       GherkinToken(59,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(61,5): STEP_KEYWORD('Given')
-        GherkinToken(66,2): WHITE_SPACE('\n')
+      GherkinToken(66,2): WHITE_SPACE('\n')
       GherkinToken(68,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(70,3): STEP_KEYWORD('And')
-        GherkinToken(73,2): WHITE_SPACE('\n')
+      GherkinToken(73,2): WHITE_SPACE('\n')
       GherkinToken(75,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(77,4): STEP_KEYWORD('Then')
-        GherkinToken(81,2): WHITE_SPACE('\n')
-        GherkinToken(83,2): WHITE_SPACE('\n')
-        GherkinToken(85,2): WHITE_SPACE('\n')
+    GherkinToken(81,2): WHITE_SPACE('\n')
+    GherkinToken(83,2): WHITE_SPACE('\n')
+    GherkinToken(85,2): WHITE_SPACE('\n')
     GherkinToken(87,2): WHITE_SPACE('  ')
     GherkinScenario: scenario 2.
       GherkinTag: @s
@@ -60,14 +60,14 @@ GherkinFile: Ruby14051.feature
       GherkinToken(127,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(129,5): STEP_KEYWORD('Given')
-        GherkinToken(134,2): WHITE_SPACE('\n')
+      GherkinToken(134,2): WHITE_SPACE('\n')
       GherkinToken(136,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(138,3): STEP_KEYWORD('And')
-        GherkinToken(141,2): WHITE_SPACE('\n')
+      GherkinToken(141,2): WHITE_SPACE('\n')
       GherkinToken(143,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(145,4): STEP_KEYWORD('Then')
-        GherkinToken(149,2): WHITE_SPACE('\n')
-    GherkinToken(151,4): WHITE_SPACE('    ')
+  GherkinToken(149,2): WHITE_SPACE('\n')
+  GherkinToken(151,4): WHITE_SPACE('    ')
 

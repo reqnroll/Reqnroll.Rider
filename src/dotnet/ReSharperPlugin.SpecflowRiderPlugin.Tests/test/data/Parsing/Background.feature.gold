@@ -14,7 +14,7 @@ GherkinFile: Background.feature
         GherkinToken(29,5): STEP_KEYWORD('Given')
         GherkinToken(34,1): WHITE_SPACE(' ')
         GherkinToken(35,4): TEXT('this')
-        GherkinToken(39,2): WHITE_SPACE('\n')
+    GherkinToken(39,2): WHITE_SPACE('\n')
     GherkinToken(41,2): WHITE_SPACE('  ')
     GherkinScenario: Foo
       GherkinToken(43,8): SCENARIO_KEYWORD('Scenario')

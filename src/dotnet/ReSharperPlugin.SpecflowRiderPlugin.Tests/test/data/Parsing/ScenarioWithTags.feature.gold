@@ -26,13 +26,13 @@ GherkinFile: ScenarioWithTags.feature
         GherkinToken(68,5): STEP_KEYWORD('Given')
         GherkinToken(73,1): WHITE_SPACE(' ')
         GherkinToken(74,9): TEXT('something')
-        GherkinToken(83,2): WHITE_SPACE('\n')
+      GherkinToken(83,2): WHITE_SPACE('\n')
       GherkinToken(85,4): WHITE_SPACE('    ')
       GherkinStep: something else
         GherkinToken(89,3): STEP_KEYWORD('And')
         GherkinToken(92,1): WHITE_SPACE(' ')
         GherkinToken(93,14): TEXT('something else')
-        GherkinToken(107,2): WHITE_SPACE('\n')
+    GherkinToken(107,2): WHITE_SPACE('\n')
     GherkinToken(109,2): WHITE_SPACE('  ')
     GherkinScenario: My second scenario
       GherkinTag: @tag1
@@ -52,7 +52,7 @@ GherkinFile: ScenarioWithTags.feature
         GherkinToken(161,5): STEP_KEYWORD('Given')
         GherkinToken(166,1): WHITE_SPACE(' ')
         GherkinToken(167,9): TEXT('something')
-        GherkinToken(176,2): WHITE_SPACE('\n')
+      GherkinToken(176,2): WHITE_SPACE('\n')
       GherkinToken(178,4): WHITE_SPACE('    ')
       GherkinStep: something else
         GherkinToken(182,3): STEP_KEYWORD('And')

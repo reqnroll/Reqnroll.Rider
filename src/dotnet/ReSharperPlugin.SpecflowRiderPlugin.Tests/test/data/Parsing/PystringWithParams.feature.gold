@@ -53,6 +53,6 @@ GherkinFile: PystringWithParams.feature
               GherkinToken(166,1): TABLE_CELL('1')
             GherkinToken(167,5): WHITE_SPACE('     ')
             GherkinToken(172,1): PIPE('|')
-            GherkinToken(173,2): WHITE_SPACE('\n')
-            GherkinToken(175,4): WHITE_SPACE('    ')
+  GherkinToken(173,2): WHITE_SPACE('\n')
+  GherkinToken(175,4): WHITE_SPACE('    ')
 

@@ -10,9 +10,9 @@ GherkinFile: MultilineFeatureDescription.feature
       GherkinToken(22,2): WHITE_SPACE('\n')
       GherkinToken(24,2): WHITE_SPACE('  ')
       GherkinToken(26,21): TEXT('I want something else')
-      GherkinToken(47,2): WHITE_SPACE('\n')
-      GherkinToken(49,2): WHITE_SPACE('\n')
-      GherkinToken(51,2): WHITE_SPACE('  ')
+    GherkinToken(47,2): WHITE_SPACE('\n')
+    GherkinToken(49,2): WHITE_SPACE('\n')
+    GherkinToken(51,2): WHITE_SPACE('  ')
     GherkinScenario: Foo
       GherkinToken(53,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(61,1): COLON(':')
