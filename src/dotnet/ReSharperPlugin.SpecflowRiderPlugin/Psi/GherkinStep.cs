@@ -57,6 +57,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                             sb.Append(token.GetText());
                         break;
                 }
+                if (truncateTextSize >= sb.Length)
+                    return string.Empty;
                 sb.Length -= truncateTextSize;
             }
             return sb.ToString().Trim();

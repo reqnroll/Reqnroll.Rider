@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
@@ -41,7 +42,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
                 foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText, fullStepText))
                 {
-                    var lookupItem = new CompletionStepLookupItem(Regex.Unescape(stepVariation), SpecFlowThemedIcons.Specflow.Id);
+                    var completionText = stepVariation;
+                    try
+                    {
+                        completionText = Regex.Unescape(stepVariation);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignored
+                    }
+                    var lookupItem = new CompletionStepLookupItem(completionText, SpecFlowThemedIcons.Specflow.Id);
                     lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
 
                     collector.Add(lookupItem);
