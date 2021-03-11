@@ -52,6 +52,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                     .Return(IndentType.External)
                     .Build();
             }
+
+            Describe<IndentingRule>()
+                .Name("TableIndent")
+                .Where(
+                    Parent().HasType(GherkinNodeTypes.EXAMPLES_BLOCK).Or().HasType(GherkinNodeTypes.STEP),
+                    Node().HasType(GherkinNodeTypes.TABLE))
+                .Return(IndentType.External)
+                .Calculate((o, context) => new IndentOptionValue(IndentType.External, 0, "  "))
+                .Build();
         }
 
         private void Aligning()
