@@ -12,6 +12,7 @@
     <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="MSBuild.AdditionalTasks" Version="0.1.20" />
     <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" PrivateAssets="All" />
@@ -51,4 +52,25 @@
   <ItemGroup>
     <ProjectReference Include="..\libs\Regex\Regex.csproj" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(AppInsightsInstrumentationKey)' == ''">
+    <!-- This is only the testing instance's instrumentation key -->
+    <AppInsightsInstrumentationKey>27cfb992-6c29-4bc8-8093-78d95e275b3a</AppInsightsInstrumentationKey>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Analytics\AppInsightsConfiguration.template.cs" />
+    <None Include="Analytics\AppInsightsConfiguration.template.cs" />
+  </ItemGroup>
+  
+  <Target Name="RunTokenReplace">
+    <ReplaceTextInFileTask InputFile="$(SolutionDir)src\dotnet\ReSharperPlugin.SpecflowRiderPlugin\Analytics\AppInsightsConfiguration.template.cs" OutputFile="$(SolutionDir)src\dotnet\ReSharperPlugin.SpecflowRiderPlugin\Analytics\AppInsightsConfiguration.cs" TextToReplace="&lt;InstrumentationKeyGoesHere&gt;" TextToReplaceWith="$(AppInsightsInstrumentationKey)" />
+    <ItemGroup>
+      <Compile Include="$(SolutionDir)src\dotnet\ReSharperPlugin.SpecflowRiderPlugin\Analytics\AppInsightsConfiguration.cs" />
+    </ItemGroup>       
+  </Target>
+
+  <PropertyGroup>
+    <PrepareResourcesDependsOn>RunTokenReplace;$(PrepareResourcesDependsOn)</PrepareResourcesDependsOn>
+  </PropertyGroup>
 </Project>
