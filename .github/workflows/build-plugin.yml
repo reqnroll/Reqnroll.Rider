@@ -10,6 +10,8 @@ jobs:
   build:
     runs-on: windows-latest
 
+    environment: buildPlugin
+    
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -22,6 +24,8 @@ jobs:
         java-version: 1.11
     - name: Build plugin
       uses: eskatos/gradle-command-action@v1.3.3
+      env:
+        APPINSIGHTSINSTRUMENTATIONKEY: ${{ secrets.APPINSIGHTSINSTRUMENTATIONKEY }}
       with:
         arguments: buildPlugin --stacktrace -PintellijPublishToken=none
     - name: dotnet-tests-report
