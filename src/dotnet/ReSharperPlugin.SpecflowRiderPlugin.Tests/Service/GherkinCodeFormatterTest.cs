@@ -14,6 +14,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Service
 
         [TestCase("BlankLines - BetweenScenario")]
         [TestCase("BlankLines - BetweenStepAndExamplesBlock")]
+        [TestCase("Indent - Background")]
         [TestCase("Indent - Basics")]
         [TestCase("Indent - MultipleScenario")]
         [TestCase("Formatting - Table 1")]
