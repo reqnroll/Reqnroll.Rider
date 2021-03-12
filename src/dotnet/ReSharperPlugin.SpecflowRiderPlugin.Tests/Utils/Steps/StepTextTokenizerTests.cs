@@ -30,10 +30,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Utils.Steps
             yield return new TestCaseData("<>", new[] {(StepTokenType.OutlineParameter, "")});
             yield return new TestCaseData("<Param", new[] {(StepTokenType.OutlineParameter, "Param")});
             yield return new TestCaseData("Some <Param>", new[] {(StepTokenType.Text, "Some"), (StepTokenType.OutlineParameter, "Param")});
-            yield return new TestCaseData("Some \"Param\"", new[] {(StepTokenType.Text, "Some"), (StepTokenType.OutlineParameter, "Param")});
+            yield return new TestCaseData("Some \"Param\"", new[] {(StepTokenType.Text, "Some"), (StepTokenType.Parameter, "Param")});
         }
 
-        // FIXME: can't run on linux :(
         [Test]
         [TestCaseSource(nameof(TestCases))]
         public void TokenizeStepText_ShouldSplitWords(string stepText, (StepTokenType, string)[] expected)
