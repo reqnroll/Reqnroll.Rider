@@ -3,15 +3,15 @@ GherkinFile: MultilineFeatureDescription.feature
   GherkinFeature
     GherkinToken(0,7): FEATURE_KEYWORD('Feature')
     GherkinToken(7,1): COLON(':')
-    GherkinToken(8,2): WHITE_SPACE('\n')
+    GherkinToken(8,2): NEW_LINE('\n')
     GherkinToken(10,2): WHITE_SPACE('  ')
     GherkinFeatureHeader
       GherkinToken(12,10): TEXT('As someone')
-      GherkinToken(22,2): WHITE_SPACE('\n')
+      GherkinToken(22,2): NEW_LINE('\n')
       GherkinToken(24,2): WHITE_SPACE('  ')
       GherkinToken(26,21): TEXT('I want something else')
-    GherkinToken(47,2): WHITE_SPACE('\n')
-    GherkinToken(49,2): WHITE_SPACE('\n')
+    GherkinToken(47,2): NEW_LINE('\n')
+    GherkinToken(49,2): NEW_LINE('\n')
     GherkinToken(51,2): WHITE_SPACE('  ')
     GherkinScenario: Foo
       GherkinToken(53,8): SCENARIO_KEYWORD('Scenario')

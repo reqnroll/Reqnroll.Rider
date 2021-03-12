@@ -2,22 +2,22 @@ Language: PsiLanguageType:GHERKIN
 GherkinFile: TagBeforeExamples.feature
   GherkinTag: @javascript
     GherkinToken(0,11): TAG('@javascript')
-  GherkinToken(11,2): WHITE_SPACE('\n')
+  GherkinToken(11,2): NEW_LINE('\n')
   GherkinFeature: Autocompletion
     GherkinToken(13,7): FEATURE_KEYWORD('Feature')
     GherkinToken(20,1): COLON(':')
     GherkinToken(21,1): WHITE_SPACE(' ')
     GherkinToken(22,14): TEXT('Autocompletion')
-    GherkinToken(36,2): WHITE_SPACE('\n')
-    GherkinToken(38,2): WHITE_SPACE('\n')
+    GherkinToken(36,2): NEW_LINE('\n')
+    GherkinToken(38,2): NEW_LINE('\n')
     GherkinToken(40,2): WHITE_SPACE('  ')
     GherkinScenarioOutline: 
       GherkinTag: @tag1
         GherkinToken(42,5): TAG('@tag1')
-      GherkinToken(47,2): WHITE_SPACE('\n')
+      GherkinToken(47,2): NEW_LINE('\n')
       GherkinToken(49,2): WHITE_SPACE('  ')
       GherkinToken(51,16): SCENARIO_OUTLINE_KEYWORD('Scenario Outline')
-      GherkinToken(67,2): WHITE_SPACE('\n')
+      GherkinToken(67,2): NEW_LINE('\n')
       GherkinToken(69,4): WHITE_SPACE('    ')
       GherkinStep: some
         GherkinToken(73,5): STEP_KEYWORD('Given')
@@ -28,17 +28,17 @@ GherkinFile: TagBeforeExamples.feature
         GherkinStepParameter: value
           GherkinToken(85,5): STEP_PARAMETER_TEXT('value')
         GherkinToken(90,1): STEP_PARAMETER_BRACE('>')
-      GherkinToken(91,2): WHITE_SPACE('\n')
-      GherkinToken(93,2): WHITE_SPACE('\n')
+      GherkinToken(91,2): NEW_LINE('\n')
+      GherkinToken(93,2): NEW_LINE('\n')
       GherkinToken(95,4): WHITE_SPACE('    ')
       GherkinTag: @tag2
         GherkinToken(99,5): TAG('@tag2')
-      GherkinToken(104,2): WHITE_SPACE('\n')
+      GherkinToken(104,2): NEW_LINE('\n')
       GherkinToken(106,4): WHITE_SPACE('    ')
       GherkinExamplesBlock
         GherkinToken(110,8): EXAMPLES_KEYWORD('Examples')
         GherkinToken(118,1): COLON(':')
-        GherkinToken(119,2): WHITE_SPACE('\n')
+        GherkinToken(119,2): NEW_LINE('\n')
         GherkinToken(121,6): WHITE_SPACE('      ')
         GherkinTable
           GherkinTableHeaderRow

@@ -5,8 +5,8 @@ GherkinFile: Ruby14051.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,7): TEXT('feature')
-    GherkinToken(16,2): WHITE_SPACE('\n')
-    GherkinToken(18,2): WHITE_SPACE('\n')
+    GherkinToken(16,2): NEW_LINE('\n')
+    GherkinToken(18,2): NEW_LINE('\n')
     GherkinToken(20,2): WHITE_SPACE('  ')
     GherkinScenario: scenario 1
       GherkinTag: @s
@@ -17,28 +17,28 @@ GherkinFile: Ruby14051.feature
       GherkinToken(28,1): WHITE_SPACE(' ')
       GherkinTag: @A
         GherkinToken(29,2): TAG('@A')
-      GherkinToken(31,2): WHITE_SPACE('\n')
+      GherkinToken(31,2): NEW_LINE('\n')
       GherkinToken(33,2): WHITE_SPACE('  ')
       GherkinToken(35,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(43,1): COLON(':')
       GherkinToken(44,1): WHITE_SPACE(' ')
       GherkinToken(45,10): TEXT('scenario 1')
-      GherkinToken(55,2): WHITE_SPACE('\n')
-      GherkinToken(57,2): WHITE_SPACE('\n')
+      GherkinToken(55,2): NEW_LINE('\n')
+      GherkinToken(57,2): NEW_LINE('\n')
       GherkinToken(59,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(61,5): STEP_KEYWORD('Given')
-      GherkinToken(66,2): WHITE_SPACE('\n')
+      GherkinToken(66,2): NEW_LINE('\n')
       GherkinToken(68,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(70,3): STEP_KEYWORD('And')
-      GherkinToken(73,2): WHITE_SPACE('\n')
+      GherkinToken(73,2): NEW_LINE('\n')
       GherkinToken(75,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(77,4): STEP_KEYWORD('Then')
-    GherkinToken(81,2): WHITE_SPACE('\n')
-    GherkinToken(83,2): WHITE_SPACE('\n')
-    GherkinToken(85,2): WHITE_SPACE('\n')
+    GherkinToken(81,2): NEW_LINE('\n')
+    GherkinToken(83,2): NEW_LINE('\n')
+    GherkinToken(85,2): NEW_LINE('\n')
     GherkinToken(87,2): WHITE_SPACE('  ')
     GherkinScenario: scenario 2.
       GherkinTag: @s
@@ -49,25 +49,25 @@ GherkinFile: Ruby14051.feature
       GherkinToken(95,1): WHITE_SPACE(' ')
       GherkinTag: @A
         GherkinToken(96,2): TAG('@A')
-      GherkinToken(98,2): WHITE_SPACE('\n')
+      GherkinToken(98,2): NEW_LINE('\n')
       GherkinToken(100,2): WHITE_SPACE('  ')
       GherkinToken(102,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(110,1): COLON(':')
       GherkinToken(111,1): WHITE_SPACE(' ')
       GherkinToken(112,11): TEXT('scenario 2.')
-      GherkinToken(123,2): WHITE_SPACE('\n')
-      GherkinToken(125,2): WHITE_SPACE('\n')
+      GherkinToken(123,2): NEW_LINE('\n')
+      GherkinToken(125,2): NEW_LINE('\n')
       GherkinToken(127,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(129,5): STEP_KEYWORD('Given')
-      GherkinToken(134,2): WHITE_SPACE('\n')
+      GherkinToken(134,2): NEW_LINE('\n')
       GherkinToken(136,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(138,3): STEP_KEYWORD('And')
-      GherkinToken(141,2): WHITE_SPACE('\n')
+      GherkinToken(141,2): NEW_LINE('\n')
       GherkinToken(143,2): WHITE_SPACE('  ')
       GherkinStep
         GherkinToken(145,4): STEP_KEYWORD('Then')
-  GherkinToken(149,2): WHITE_SPACE('\n')
+  GherkinToken(149,2): NEW_LINE('\n')
   GherkinToken(151,4): WHITE_SPACE('    ')
 

@@ -5,7 +5,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
     public static class GherkinTokenTypes
     {
-        public static readonly GherkinTokenType WHITE_SPACE = new GherkinTokenType("WHITE_SPACE", 1001);
+        public static readonly GherkinTokenType WHITE_SPACE = new GherkinWhitespaceTokenType("WHITE_SPACE", 1001);
         public static readonly GherkinTokenType COMMENT = new GherkinTokenType("COMMENT", 1002);
         public static readonly GherkinTokenType TEXT = new GherkinTokenType("TEXT", 1003);
         public static readonly GherkinTokenType EXAMPLES_KEYWORD = new GherkinTokenType("EXAMPLES_KEYWORD", 1004);
@@ -24,6 +24,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public static readonly GherkinTokenType PYSTRING_TEXT = new GherkinTokenType("PYSTRING_TEXT", 1017);
         public static readonly GherkinTokenType PIPE = new GherkinTokenType("PIPE", 1018);
         public static readonly GherkinTokenType TABLE_CELL = new GherkinTokenType("TABLE_CELL", 1019);
+        public static readonly GherkinTokenType NEW_LINE = new GherkinWhitespaceTokenType("NEW_LINE", 1020);
 
         public static readonly NodeTypeSet KEYWORDS = new NodeTypeSet(FEATURE_KEYWORD, RULE_KEYWORD, EXAMPLE_KEYWORD,
                                                                       BACKGROUND_KEYWORD, SCENARIO_KEYWORD, SCENARIO_OUTLINE_KEYWORD,
@@ -31,5 +32,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                                                                       STEP_KEYWORD);
 
         public static readonly NodeTypeSet SCENARIOS_KEYWORDS = new NodeTypeSet(SCENARIO_KEYWORD, SCENARIO_OUTLINE_KEYWORD, EXAMPLE_KEYWORD);
+
+        public class GherkinWhitespaceTokenType : GherkinTokenType
+        {
+            public GherkinWhitespaceTokenType(string s, int index) : base(s, index)
+            {
+            }
+
+            public override bool IsWhitespace => true;
+        }
     }
 }

@@ -3,25 +3,25 @@ GherkinFile: Background.feature
   GherkinFeature
     GherkinToken(0,7): FEATURE_KEYWORD('Feature')
     GherkinToken(7,1): COLON(':')
-    GherkinToken(8,2): WHITE_SPACE('\n')
+    GherkinToken(8,2): NEW_LINE('\n')
     GherkinToken(10,2): WHITE_SPACE('  ')
     GherkinScenario(Background):
       GherkinToken(12,10): BACKGROUND_KEYWORD('Background')
       GherkinToken(22,1): COLON(':')
-      GherkinToken(23,2): WHITE_SPACE('\n')
+      GherkinToken(23,2): NEW_LINE('\n')
       GherkinToken(25,4): WHITE_SPACE('    ')
       GherkinStep: this
         GherkinToken(29,5): STEP_KEYWORD('Given')
         GherkinToken(34,1): WHITE_SPACE(' ')
         GherkinToken(35,4): TEXT('this')
-    GherkinToken(39,2): WHITE_SPACE('\n')
+    GherkinToken(39,2): NEW_LINE('\n')
     GherkinToken(41,2): WHITE_SPACE('  ')
     GherkinScenario: Foo
       GherkinToken(43,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(51,1): COLON(':')
       GherkinToken(52,1): WHITE_SPACE(' ')
       GherkinToken(53,3): TEXT('Foo')
-      GherkinToken(56,2): WHITE_SPACE('\n')
+      GherkinToken(56,2): NEW_LINE('\n')
       GherkinToken(58,4): WHITE_SPACE('    ')
       GherkinStep: that
         GherkinToken(62,5): STEP_KEYWORD('Given')

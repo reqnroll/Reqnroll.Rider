@@ -67,15 +67,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             if (_myState != STATE_INSIDE_PYSTRING && char.IsWhiteSpace(c))
             {
                 TokenType = GherkinTokenTypes.WHITE_SPACE;
-                AdvanceOverWhitespace();
-                if (c == '\n')
+                if (AdvanceNewLine())
                     return;
-                while (_currentPosition < _myEndOffset && char.IsWhiteSpace(Buffer[_currentPosition]))
-                {
-                    AdvanceOverWhitespace();
-                    if (Buffer[_currentPosition - 1] == '\n')
-                        return;
-                }
+                _currentPosition++;
+
+                while (_currentPosition < _myEndOffset && char.IsWhiteSpace(Buffer[_currentPosition]) && !IsNewLine(out _))
+                    _currentPosition++;
             }
             else if (c == '|' && _myState != STATE_INSIDE_PYSTRING)
             {
@@ -274,19 +271,40 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 AdvanceToEol();
             }
         }
-        
+
+        private bool IsNewLine(out int newLineLength)
+        {
+            newLineLength = 0;
+            if (Buffer[_currentPosition] == '\n')
+            {
+                newLineLength = 1;
+                return true;
+            }
+            if (Buffer[_currentPosition] == '\r' && _currentPosition + 1 < Buffer.Length && Buffer[_currentPosition + 1] == '\n')
+            {
+                newLineLength = 2;
+                return true;
+            }
+            return false;
+        }
+
+        private bool AdvanceNewLine()
+        {
+            if (IsNewLine(out var len))
+            {
+                TokenType = GherkinTokenTypes.NEW_LINE;
+                _currentPosition += len;
+                _myState = STATE_DEFAULT;
+                return true;
+            }
+            return false;
+        }
+
         private static string FetchLocationLanguage(string commentText)
         {
             return commentText.StartsWith("language:") ? commentText.Substring(9).Trim() : null;
         }
-        
-        private void AdvanceOverWhitespace() {
-            if (Buffer[_currentPosition] == '\n')
-                _myState = STATE_DEFAULT;
 
-            _currentPosition++;
-        }
-        
         private bool IsStringAtPosition(string keyword) {
             int length = keyword.Length;
             return _myEndOffset - _currentPosition >= length && Buffer.GetText(new TextRange(_currentPosition, _currentPosition + length)).Equals(keyword, StringComparison.Ordinal);

@@ -5,20 +5,20 @@ GherkinFile: NotAStep.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,3): TEXT('Foo')
-    GherkinToken(12,2): WHITE_SPACE('\n')
+    GherkinToken(12,2): NEW_LINE('\n')
     GherkinToken(14,2): WHITE_SPACE('  ')
     GherkinScenario: Bar
       GherkinToken(16,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(24,1): COLON(':')
       GherkinToken(25,1): WHITE_SPACE(' ')
       GherkinToken(26,3): TEXT('Bar')
-      GherkinToken(29,2): WHITE_SPACE('\n')
+      GherkinToken(29,2): NEW_LINE('\n')
       GherkinToken(31,4): WHITE_SPACE('    ')
       GherkinStep: baz
         GherkinToken(35,5): STEP_KEYWORD('Given')
         GherkinToken(40,1): WHITE_SPACE(' ')
         GherkinToken(41,3): TEXT('baz')
-      GherkinToken(44,2): WHITE_SPACE('\n')
+      GherkinToken(44,2): NEW_LINE('\n')
       GherkinToken(46,2): WHITE_SPACE('  ')
       GherkinToken(48,19): TEXT('IntelliJIdeaRulezzz')
 

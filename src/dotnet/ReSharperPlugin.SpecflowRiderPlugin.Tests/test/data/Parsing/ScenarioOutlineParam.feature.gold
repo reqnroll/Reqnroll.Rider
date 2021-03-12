@@ -5,8 +5,8 @@ GherkinFile: ScenarioOutlineParam.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,4): TEXT('test')
-    GherkinToken(13,2): WHITE_SPACE('\n')
-    GherkinToken(15,2): WHITE_SPACE('\n')
+    GherkinToken(13,2): NEW_LINE('\n')
+    GherkinToken(15,2): NEW_LINE('\n')
     GherkinToken(17,2): WHITE_SPACE('  ')
     GherkinScenarioOutline: Opening
       GherkinToken(19,16): SCENARIO_OUTLINE_KEYWORD('Scenario Outline')
@@ -20,19 +20,19 @@ GherkinFile: ScenarioOutlineParam.feature
       GherkinToken(50,1): STEP_PARAMETER_BRACE('>')
       GherkinToken(51,1): WHITE_SPACE(' ')
       GherkinToken(52,13): TEXT('Scan Settings')
-      GherkinToken(65,2): WHITE_SPACE('\n')
+      GherkinToken(65,2): NEW_LINE('\n')
       GherkinToken(67,4): WHITE_SPACE('    ')
       GherkinStep: I am on Antivirus page
         GherkinToken(71,5): STEP_KEYWORD('Given')
         GherkinToken(76,1): WHITE_SPACE(' ')
         GherkinToken(77,22): TEXT('I am on Antivirus page')
-      GherkinToken(99,2): WHITE_SPACE('\n')
+      GherkinToken(99,2): NEW_LINE('\n')
       GherkinToken(101,4): WHITE_SPACE('    ')
       GherkinStep: I go to other scans section
         GherkinToken(105,4): STEP_KEYWORD('When')
         GherkinToken(109,2): WHITE_SPACE('  ')
         GherkinToken(111,27): TEXT('I go to other scans section')
-      GherkinToken(138,2): WHITE_SPACE('\n')
+      GherkinToken(138,2): NEW_LINE('\n')
       GherkinToken(140,4): WHITE_SPACE('    ')
       GherkinStep: Open Scan settings
         GherkinToken(144,3): STEP_KEYWORD('And')
@@ -45,7 +45,7 @@ GherkinFile: ScenarioOutlineParam.feature
         GherkinToken(158,1): STEP_PARAMETER_BRACE('>')
         GherkinToken(159,1): WHITE_SPACE(' ')
         GherkinToken(160,13): TEXT('Scan settings')
-      GherkinToken(173,2): WHITE_SPACE('\n')
+      GherkinToken(173,2): NEW_LINE('\n')
       GherkinToken(175,4): WHITE_SPACE('    ')
       GherkinStep: I can see Scan settings window
         GherkinToken(179,4): STEP_KEYWORD('Then')
@@ -58,12 +58,12 @@ GherkinFile: ScenarioOutlineParam.feature
         GherkinToken(199,1): STEP_PARAMETER_BRACE('>')
         GherkinToken(200,1): WHITE_SPACE(' ')
         GherkinToken(201,20): TEXT('Scan settings window')
-      GherkinToken(221,2): WHITE_SPACE('\n')
+      GherkinToken(221,2): NEW_LINE('\n')
       GherkinToken(223,4): WHITE_SPACE('    ')
       GherkinExamplesBlock
         GherkinToken(227,8): EXAMPLES_KEYWORD('Examples')
         GherkinToken(235,1): COLON(':')
-        GherkinToken(236,2): WHITE_SPACE('\n')
+        GherkinToken(236,2): NEW_LINE('\n')
         GherkinToken(238,6): WHITE_SPACE('      ')
         GherkinTable
           GherkinTableHeaderRow
@@ -73,7 +73,7 @@ GherkinFile: ScenarioOutlineParam.feature
               GherkinToken(246,4): TABLE_CELL('scan')
             GherkinToken(250,12): WHITE_SPACE('            ')
             GherkinToken(262,1): PIPE('|')
-          GherkinToken(263,2): WHITE_SPACE('\n')
+          GherkinToken(263,2): NEW_LINE('\n')
           GherkinToken(265,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(271,1): PIPE('|')
@@ -82,7 +82,7 @@ GherkinFile: ScenarioOutlineParam.feature
               GherkinToken(273,5): TABLE_CELL('Quick')
             GherkinToken(278,11): WHITE_SPACE('           ')
             GherkinToken(289,1): PIPE('|')
-          GherkinToken(290,2): WHITE_SPACE('\n')
+          GherkinToken(290,2): NEW_LINE('\n')
           GherkinToken(292,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(298,1): PIPE('|')
@@ -91,7 +91,7 @@ GherkinFile: ScenarioOutlineParam.feature
               GherkinToken(300,9): TABLE_CELL('Boot time')
             GherkinToken(309,7): WHITE_SPACE('       ')
             GherkinToken(316,1): PIPE('|')
-          GherkinToken(317,2): WHITE_SPACE('\n')
+          GherkinToken(317,2): NEW_LINE('\n')
           GherkinToken(319,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(325,1): PIPE('|')
@@ -100,7 +100,7 @@ GherkinFile: ScenarioOutlineParam.feature
               GherkinToken(327,15): TABLE_CELL('Removable media')
             GherkinToken(342,1): WHITE_SPACE(' ')
             GherkinToken(343,1): PIPE('|')
-          GherkinToken(344,2): WHITE_SPACE('\n')
+          GherkinToken(344,2): NEW_LINE('\n')
           GherkinToken(346,6): WHITE_SPACE('      ')
           GherkinTableRow
             GherkinToken(352,1): PIPE('|')

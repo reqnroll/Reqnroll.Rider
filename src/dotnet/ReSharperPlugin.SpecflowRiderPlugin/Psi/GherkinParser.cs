@@ -80,7 +80,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 else
                     builder.Drop(commentMarker);
 
-                if (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+                if (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE
+                    || builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
                     builder.AdvanceLexer();
             }
         }
@@ -147,7 +148,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             int? ruleMarker = null;
             while (builder.GetTokenType() != GherkinTokenTypes.FEATURE_KEYWORD && !builder.Eof())
             {
-                if (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+                if (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE
+                    || builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
                 {
                     builder.AdvanceLexer();
                     continue;
@@ -176,7 +178,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     return ruleMarker;
 
                 while (builder.GetTokenType() == GherkinTokenTypes.TEXT ||
-                       builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+                       builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE ||
+                       builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
                     builder.AdvanceLexer();
             }
 
@@ -221,7 +224,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             while (builder.GetTokenType() == GherkinTokenTypes.TEXT ||
                    builder.GetTokenType() == GherkinTokenTypes.STEP_PARAMETER_BRACE ||
                    builder.GetTokenType() == GherkinTokenTypes.STEP_PARAMETER_TEXT ||
-                   builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+                   builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE ||
+                   builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
             {
                 if (IsLineBreak(builder))
                     break;
@@ -259,7 +263,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 builder.AdvanceLexer();
 
             while (builder.GetTokenType() == GherkinTokenTypes.TEXT ||
-                   builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+                   builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE ||
+                   builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
                 builder.AdvanceLexer();
 
             if (builder.GetTokenType() == GherkinTokenTypes.PIPE)
@@ -279,7 +284,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             var possibleEmptyCell = false;
             while (builder.GetTokenType() == GherkinTokenTypes.PIPE ||
                    builder.GetTokenType() == GherkinTokenTypes.TABLE_CELL ||
-                   builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+                   builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE ||
+                   builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
             {
                 var tokenType = builder.GetTokenType();
                 if (tokenType == GherkinTokenTypes.TABLE_CELL && cellMarker == null)
@@ -362,7 +368,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         {
             var i = 0;
             while (builder.GetTokenType(i) == GherkinTokenTypes.TAG ||
-                   builder.GetTokenType(i) == GherkinTokenTypes.WHITE_SPACE)
+                   builder.GetTokenType(i) == GherkinTokenTypes.WHITE_SPACE ||
+                   builder.GetTokenType(i) == GherkinTokenTypes.NEW_LINE)
                 i++;
 
             var tokenType = builder.GetTokenType(i);
@@ -371,15 +378,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         private static bool IsLineBreak(PsiBuilder builder)
         {
-            if (builder.GetTokenType() != GherkinTokenTypes.WHITE_SPACE)
-                return false;
-
-            return builder.GetTokenText()?.Contains("\n") == true;
+            return builder.GetTokenType() == GherkinTokenTypes.NEW_LINE;
         }
 
         private static void SkipGroupedWhiteSpaces(PsiBuilder builder)
         {
-            while (builder.GetTokenType(1) == GherkinTokenTypes.WHITE_SPACE)
+            while (builder.GetTokenType(1) == GherkinTokenTypes.WHITE_SPACE
+                   || builder.GetTokenType(1) == GherkinTokenTypes.NEW_LINE)
             {
                 builder.AdvanceLexer();
             }
@@ -387,7 +392,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         private static void SkipWhitespace(PsiBuilder builder)
         {
-            while (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE)
+            while (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE
+                   || builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
             {
                 builder.AdvanceLexer();
             }

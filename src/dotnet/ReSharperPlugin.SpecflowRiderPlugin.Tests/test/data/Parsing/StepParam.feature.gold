@@ -5,14 +5,14 @@ GherkinFile: StepParam.feature
     GherkinToken(7,1): COLON(':')
     GherkinToken(8,1): WHITE_SPACE(' ')
     GherkinToken(9,8): TEXT('Do stuff')
-    GherkinToken(17,2): WHITE_SPACE('\n')
+    GherkinToken(17,2): NEW_LINE('\n')
     GherkinToken(19,2): WHITE_SPACE('  ')
     GherkinScenario: My scenario
       GherkinToken(21,8): SCENARIO_KEYWORD('Scenario')
       GherkinToken(29,1): COLON(':')
       GherkinToken(30,1): WHITE_SPACE(' ')
       GherkinToken(31,11): TEXT('My scenario')
-      GherkinToken(42,2): WHITE_SPACE('\n')
+      GherkinToken(42,2): NEW_LINE('\n')
       GherkinToken(44,4): WHITE_SPACE('    ')
       GherkinStep: test step test
         GherkinToken(48,5): STEP_KEYWORD('Given')
