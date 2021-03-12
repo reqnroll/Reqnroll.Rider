@@ -76,6 +76,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         private void Formatting()
         {
             Describe<BlankLinesRule>()
+                .Name("LineBetweenScenarios")
+                .Group(ExtendedLineBreakGroup)
+                .Where(
+                    Left().HasType(GherkinNodeTypes.SCENARIO).Or().HasType(GherkinNodeTypes.SCENARIO_OUTLINE),
+                    Right().HasType(GherkinNodeTypes.SCENARIO).Or().HasType(GherkinNodeTypes.SCENARIO_OUTLINE))
+                .Return(1, 1, 2, false)
+                .Build();
+
+            Describe<BlankLinesRule>()
                 .Name("LineBetweenStepAndExamples")
                 .Group(ExtendedLineBreakGroup)
                 .Where(
