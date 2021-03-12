@@ -12,6 +12,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Service
     {
         protected override string RelativeTestDataPath => "Formatting";
 
+        [TestCase("BlankLines - BetweenStepAndExamplesBlock")]
         [TestCase("Indent - Basics")]
         [TestCase("Indent - MultipleScenario")]
         [TestCase("Formatting - Table 1")]

@@ -1,0 +1,7 @@
+Feature: Cucumber stock keeping
+
+  Scenario Outline: eating
+    Given there are <start> cucumbers
+    Examples: Good
+      | start |
+      | 12 23 |
