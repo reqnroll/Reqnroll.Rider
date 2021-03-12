@@ -79,6 +79,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
         private void BuildAllPossibleSteps(string matchedText, StringBuilder stringBuilder, List<string> results, (StepPatternTokenType tokenType, string text, bool optional)[] tokenizedStepPattern, List<List<string>> captureValues, int elementIndex, int captureIndex)
         {
+            if (elementIndex == tokenizedStepPattern.Length)
+            {
+                results.Add(stringBuilder.ToString());
+                return;
+            }
+
             var saveStringBuilderPosition = stringBuilder.Length;
             if (tokenizedStepPattern[elementIndex].tokenType == StepPatternTokenType.Text)
             {
@@ -86,11 +92,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 {
                     stringBuilder.Length = saveStringBuilderPosition;
                     stringBuilder.Append(variant);
-
-                    if (elementIndex + 1 == tokenizedStepPattern.Length)
-                        results.Add(stringBuilder.ToString());
-                    else
-                        BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex);
+                    BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex);
                 }
                 stringBuilder.Length = saveStringBuilderPosition;
             }
@@ -114,10 +116,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                             continue;
                     }
 
-                    if (elementIndex + 1 == tokenizedStepPattern.Length)
-                        results.Add(stringBuilder.ToString());
-                    else
-                        BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex + 1);
+                    BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex + 1);
                 }
                 stringBuilder.Length = saveStringBuilderPosition;
             }
