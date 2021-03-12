@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Next
+### Feature
+- "Comment Line" action now works
+
+
 ## 1.3.6
 ### Fixed
 - Fix: Create steps when pattern contains a $ with a number like `Given someone pays $50`
