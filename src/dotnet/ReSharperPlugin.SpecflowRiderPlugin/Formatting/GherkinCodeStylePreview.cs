@@ -11,13 +11,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
   [CodePreviewPreparatorComponent]
   public class GherkinCodeStylePreview : CodePreviewPreparator
   {
+    public override KnownLanguage Language => GherkinLanguage.Instance;
+    public override ProjectFileType ProjectFileType => GherkinProjectFileType.Instance;
+
     protected override ITreeNode Parse(IParser parser, PreviewParseType parseType)
     {
-      var shaderLabParser = (GherkinParser)parser;
+      var gherkinParser = (GherkinParser)parser;
       switch (parseType)
       {
         case PreviewParseType.File:
-          return shaderLabParser.ParseFile();
+          return gherkinParser.ParseFile();
 
         case PreviewParseType.None:
           return null;
@@ -25,16 +28,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         default:
           throw new NotImplementedException();
       }
-    }
-
-    public override KnownLanguage Language
-    {
-      get { return GherkinLanguage.Instance; }
-    }
-
-    public override ProjectFileType ProjectFileType
-    {
-      get { return GherkinProjectFileType.Instance; }
     }
   }
 }
