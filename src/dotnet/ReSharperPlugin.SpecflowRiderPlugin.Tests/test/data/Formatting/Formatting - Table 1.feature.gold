@@ -1,4 +1,5 @@
 Feature: test
+
   Scenario: Some scenario
     Given Some table
       | header1          | header2         | long-header3 |

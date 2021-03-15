@@ -57,6 +57,22 @@ Describe<IndentingRule>()
 - `Swith` allow to define a condition if the rule should be apply based on the formatting settings from `GherkinFormatSettingsKey`
 - `Group` this is used, for example, when 2 rules want to modify the same things, like add a newline. When rules are grouped the one with the highest `.Priority()` will win
 
+### Configuration
+
+It's possible to configure a rule depending on the settings with a code like
+
+
+`.Switch(key => key.SOME_BOOLEAN,
+    When(true).Return(IntervalFormatType.NewLine),
+    When(false).Return(IntervalFormatType.None)
+)`
+
+
+Node:
+- `.Switch` can be chained if we have a rule that need to be configured using multiple settings.
+- `When()` arguments are a list of valid values for the match
+- To configure indent size we need multiple `When()` for each size (see `ContinuousIndentOptions`)
+
 ### `IndentingRule`
 
 This rules will ident the node
