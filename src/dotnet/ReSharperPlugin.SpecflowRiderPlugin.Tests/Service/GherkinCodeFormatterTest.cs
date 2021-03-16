@@ -28,6 +28,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Service
         [TestCase("Indent - Configuration - SmallTableIndent")]
         [TestCase("Indent - Configuration - StepIndentSize")]
         [TestCase("Indent - MultipleScenario")]
+        [TestCase("Indent - Rule")]
         public void TestFormat(string name) { DoOneTest(name); }
     }
 }
