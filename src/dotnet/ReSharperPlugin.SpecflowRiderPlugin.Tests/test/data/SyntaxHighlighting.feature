@@ -1,7 +1,7 @@
 
 Feature: Syntax highlighting
 
-  Description of the syntax highlighting feature. The default colors are based on the JetBrains Rider "Classic Light" color scheme.
+  Description of the syntax highlighting feature. The default colors are based on the JetBrains Rider "Rider Light" color scheme.
 
   Scenario: Feature keyword should be highlighted as keyword (default: blue)
 
@@ -11,10 +11,10 @@ Feature: Syntax highlighting
     
   Scenario: Comments should be highlighted as comments (default:green)
     #this is a comment
- 
-  Scenario: Rule keyword should be highlighted as keyword (default: blue)
-    Rule: This is a rule
 
+  Rule: This is a rule
+  Scenario: Rule keyword should be highlighted as keyword (default: blue)
+   
   Scenario: Gherkin step keywords should be highlighted as keyword (default: blue)
     Given this is a Given step
     When this is a When step
@@ -23,8 +23,8 @@ Feature: Syntax highlighting
     But this is a But step
       * this a step
 
-  Scenario: Tags should be highlighted as tag (default: purple)
-    @ThisIsATag
+  @ThisIsATag
+  Scenario: Tags should be highlighted as tag (default: purple) 
 
   Scenario Outline: Scenario Outline parameters should be highlighted (default: light blue)
     Given this is a step with <parameter>
