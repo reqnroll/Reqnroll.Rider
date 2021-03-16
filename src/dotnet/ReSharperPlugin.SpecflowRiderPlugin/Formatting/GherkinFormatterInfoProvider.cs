@@ -44,7 +44,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 .Name("RuleScenario")
                 .Where(
                     Parent().HasType(GherkinNodeTypes.RULE),
-                    Node().HasType(GherkinNodeTypes.SCENARIO))
+                    Node().HasType(GherkinNodeTypes.SCENARIO).Or().HasType(GherkinNodeTypes.SCENARIO_OUTLINE))
                 .Switch(s => s.ScenarioIndentSize, ContinuousIndentOptions(this, IndentType.External))
                 .Build();
 
