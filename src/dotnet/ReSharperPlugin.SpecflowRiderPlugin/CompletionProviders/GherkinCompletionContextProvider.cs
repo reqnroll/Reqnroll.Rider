@@ -31,6 +31,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 var lineEndOffsetNoLineBreak = context.Document.GetLineEndOffsetNoLineBreak(context.TextControl.Caret.Position.GetValue().ToDocLineColumn().Line);
                 replaceRange = replaceRange.SetEndTo(new DocumentOffset(stepRange.Document, lineEndOffsetNoLineBreak));
                 var insertRange = replaceRange.SetEndTo(context.SelectedRange.EndOffset);
+                if (!insertRange.IsNormalized)
+                    insertRange = context.SelectedRange;
 
                 ranges = new TextLookupRanges(insertRange, replaceRange);
             }
