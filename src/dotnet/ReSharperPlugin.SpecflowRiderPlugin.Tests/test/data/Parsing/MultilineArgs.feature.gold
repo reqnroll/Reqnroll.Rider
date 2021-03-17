@@ -23,7 +23,11 @@ GherkinFile: MultilineArgs.feature
         GherkinToken(81,4): WHITE_SPACE('    ')
         GherkinPystring
           GherkinToken(85,3): PYSTRING_QUOTES('"""')
-          GherkinToken(88,21): PYSTRING_TEXT('\n      example\n    ')
+          GherkinToken(88,2): NEW_LINE('\n')
+          GherkinToken(90,4): WHITE_SPACE('    ')
+          GherkinToken(94,9): PYSTRING_TEXT('  example')
+          GherkinToken(103,2): NEW_LINE('\n')
+          GherkinToken(105,4): WHITE_SPACE('    ')
           GherkinToken(109,3): PYSTRING_QUOTES('"""')
     GherkinToken(112,2): NEW_LINE('\n')
     GherkinToken(114,2): NEW_LINE('\n')
