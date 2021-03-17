@@ -21,7 +21,7 @@
     <completion.completionSessionStrategy language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.completion.GherkinCompletionStrategy" />
     <backend.markup.adapterFactory language="GherkinDotnet" implementationClass="com.jetbrains.rdclient.daemon.FrontendMarkupAdapterFactory" />
     <backend.typedHandler language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes.GherkinTypedHandler" />
-    <backend.actions.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.actions.RiderActionSupportPolicy" />
+    <backend.actions.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes.GherkinActionSupportPolicy" />
     <backend.autoPopup.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.completion.BackendAndGenericRider" />
     <rider.debuggerSupportPolicy language="GherkinDotnet" implementationClass="com.jetbrains.rider.debugger.RiderDebuggerSupportPolicy" />
     <lang.altEnter language="GherkinDotnet" implementationClass="com.jetbrains.rider.intentions.altEnter.ReSharperBulbMenuModelFactory" />
