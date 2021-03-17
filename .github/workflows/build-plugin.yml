@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -24,6 +24,14 @@ jobs:
       uses: eskatos/gradle-command-action@v1.3.3
       with:
         arguments: buildPlugin --stacktrace -PintellijPublishToken=none
+    - name: dotnet-tests-report
+      uses: zyborg/dotnet-tests-report@v1.3.0
+      with:
+        report_name: plugin_tests
+        report_title: Plugin Tests
+        set_check_status_from_test_outcome: true
+        project_path: src/dotnet/ReSharperPlugin.SpecflowRiderPlugin.Tests/ReSharperPlugin.SpecflowRiderPlugin.Tests.csproj
+        github_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
