@@ -6,8 +6,8 @@ using Newtonsoft.Json;
 namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
 {
     /// <summary>
-    /// For property names, check: https://github.com/microsoft/ApplicationInsights-Home/tree/master/EndpointSpecs/Schemas/Bond
-    /// For tags, check: https://github.com/microsoft/ApplicationInsights-Home/blob/master/EndpointSpecs/Schemas/Bond/ContextTagKeys.bond
+    /// For property names, check: https://github.com/microsoft/ApplicationInsights-dotnet/tree/develop/BASE/Schema/PublicSchema
+    /// For tags, check: https://github.com/microsoft/ApplicationInsights-dotnet/blob/develop/BASE/Schema/PublicSchema/ContextTagKeys.bond
     /// </summary>
     public class AppInsightsEventTelemetry
     {
