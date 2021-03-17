@@ -13,6 +13,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private int _myCurrentTokenStart;
         private uint _myState;
         private int _myEndOffset;
+        private int _myPystringIdent;
+        private int _lastNewLineOffset;
         private string _myCurLanguage;
         
         private IReadOnlyCollection<string> _myKeywords;
@@ -64,14 +66,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
             _myCurrentTokenStart = _currentPosition;
             char c = Buffer[_currentPosition];
-            if (_myState != STATE_INSIDE_PYSTRING && char.IsWhiteSpace(c))
+            if (char.IsWhiteSpace(c) && (IsNewLine(out _) ||  !InPyStringText()))
             {
                 TokenType = GherkinTokenTypes.WHITE_SPACE;
                 if (AdvanceNewLine())
                     return;
                 _currentPosition++;
 
-                while (_currentPosition < _myEndOffset && char.IsWhiteSpace(Buffer[_currentPosition]) && !IsNewLine(out _))
+                while (_currentPosition < _myEndOffset && char.IsWhiteSpace(Buffer[_currentPosition]) && !IsNewLine(out _) && !InPyStringText())
                     _currentPosition++;
             }
             else if (c == '|' && _myState != STATE_INSIDE_PYSTRING)
@@ -115,13 +117,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                         else
                         {
                             _currentPosition++;
-                            AdvanceToParameterOrSymbol(PYSTRING_MARKER, STATE_INSIDE_PYSTRING, false);
+                            AdvancePystring();
                             TokenType = GherkinTokenTypes.PYSTRING_TEXT;
                         }
                     }
                     else
                     {
-                        AdvanceToParameterOrSymbol(PYSTRING_MARKER, STATE_INSIDE_PYSTRING, false);
+                        AdvancePystring();
                         TokenType = GherkinTokenTypes.PYSTRING_TEXT;
                     }
                 }
@@ -190,6 +192,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             {
                 TokenType = GherkinTokenTypes.PYSTRING;
                 _myState = STATE_INSIDE_PYSTRING;
+                _myPystringIdent = _currentPosition - _lastNewLineOffset;
                 _currentPosition += 3;
             }
             else
@@ -272,6 +275,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
         }
 
+        private bool InPyStringText()
+        {
+            if (_myState != STATE_INSIDE_PYSTRING)
+                return false;
+            return _currentPosition - _lastNewLineOffset >= _myPystringIdent;
+        }
+
         private bool IsNewLine(out int newLineLength)
         {
             newLineLength = 0;
@@ -294,7 +304,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             {
                 TokenType = GherkinTokenTypes.NEW_LINE;
                 _currentPosition += len;
-                _myState = STATE_DEFAULT;
+                _lastNewLineOffset = _currentPosition;
+                if (_myState != STATE_INSIDE_PYSTRING)
+                    _myState = STATE_DEFAULT;
                 return true;
             }
             return false;
@@ -349,6 +361,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
             ReturnWhitespace(mark);
             _myState = STATE_DEFAULT;
+        }
+
+        private void AdvancePystring() {
+            while (_currentPosition < _myEndOffset
+                   && !IsStringAtPosition(PYSTRING_MARKER)
+                   && !IsStepParameter(PYSTRING_MARKER)
+                   && !IsNewLine(out _)) {
+                _currentPosition++;
+            }
         }
 
         private void AdvanceToParameterOrSymbol(string s, uint parameterState, bool shouldReturnWhitespace) {

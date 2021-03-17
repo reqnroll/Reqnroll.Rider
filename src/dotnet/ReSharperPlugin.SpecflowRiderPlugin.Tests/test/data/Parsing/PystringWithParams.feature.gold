@@ -22,12 +22,16 @@ GherkinFile: PystringWithParams.feature
         GherkinToken(70,4): WHITE_SPACE('    ')
         GherkinPystring
           GherkinToken(74,3): PYSTRING_QUOTES('"""')
-          GherkinToken(77,20): PYSTRING_TEXT('\n    pystring with ')
+          GherkinToken(77,2): NEW_LINE('\n')
+          GherkinToken(79,4): WHITE_SPACE('    ')
+          GherkinToken(83,14): PYSTRING_TEXT('pystring with ')
           GherkinToken(97,1): STEP_PARAMETER_BRACE('<')
           GherkinStepParameter: param
             GherkinToken(98,5): STEP_PARAMETER_TEXT('param')
           GherkinToken(103,1): STEP_PARAMETER_BRACE('>')
-          GherkinToken(104,20): PYSTRING_TEXT(' of some sort \n    ')
+          GherkinToken(104,14): PYSTRING_TEXT(' of some sort ')
+          GherkinToken(118,2): NEW_LINE('\n')
+          GherkinToken(120,4): WHITE_SPACE('    ')
           GherkinToken(124,3): PYSTRING_QUOTES('"""')
       GherkinToken(127,2): NEW_LINE('\n')
       GherkinToken(129,4): WHITE_SPACE('    ')

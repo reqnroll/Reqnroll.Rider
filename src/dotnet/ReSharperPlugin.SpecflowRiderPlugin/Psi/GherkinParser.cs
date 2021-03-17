@@ -57,7 +57,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                         builder.AdvanceLexer();
                 }
 
-                builder.Done(fileMarker, GherkinNodeTypes.FILE, new GherkinFile.FileMetadata(_sourceFile.Name, _lang));
+                builder.Done(fileMarker, GherkinNodeTypes.FILE, new GherkinFile.FileMetadata(_sourceFile?.Name, _lang));
                 var resultTree = (GherkinFile) builder.BuildTree();
 
                 return resultTree;

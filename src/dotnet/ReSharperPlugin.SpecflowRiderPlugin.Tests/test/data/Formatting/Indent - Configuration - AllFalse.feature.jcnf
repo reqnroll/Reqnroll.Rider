@@ -1,0 +1,9 @@
+{
+ExampleIndentSize: 0
+FeatureIndentSize: 0
+PyStringIndentSize: 0
+ScenarioIndentSize: 0
+StepIndentSize: 0
+TableIndentSize: 0
+SmallTableIndent: false
+}

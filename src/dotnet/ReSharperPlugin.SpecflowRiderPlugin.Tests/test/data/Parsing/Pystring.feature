@@ -3,4 +3,5 @@ Feature: Pystring
     Given text with
     """
     pystring
+      some text
     """

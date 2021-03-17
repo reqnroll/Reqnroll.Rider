@@ -26,6 +26,8 @@
     <rider.debuggerSupportPolicy language="GherkinDotnet" implementationClass="com.jetbrains.rider.debugger.RiderDebuggerSupportPolicy" />
     <lang.altEnter language="GherkinDotnet" implementationClass="com.jetbrains.rider.intentions.altEnter.ReSharperBulbMenuModelFactory" />
     <lang.substitutor language="Gherkin" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.SpecflowLanguageSubstitutor" />
+    <langCodeStyleSettingsProvider implementation="com.jetbrains.rider.plugins.specflowriderplugin.settings.GherkinStyleSettingsProvider"/>
+
     <!--    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.specflowriderplugin.SampleOptionsPage" id="SampleOptionsPage" />-->
   </extensions>
   

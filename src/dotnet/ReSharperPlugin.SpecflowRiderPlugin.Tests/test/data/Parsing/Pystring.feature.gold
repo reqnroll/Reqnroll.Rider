@@ -22,6 +22,13 @@ GherkinFile: Pystring.feature
         GherkinToken(62,4): WHITE_SPACE('    ')
         GherkinPystring
           GherkinToken(66,3): PYSTRING_QUOTES('"""')
-          GherkinToken(69,20): PYSTRING_TEXT('\n    pystring\n    ')
-          GherkinToken(89,3): PYSTRING_QUOTES('"""')
+          GherkinToken(69,2): NEW_LINE('\n')
+          GherkinToken(71,4): WHITE_SPACE('    ')
+          GherkinToken(75,8): PYSTRING_TEXT('pystring')
+          GherkinToken(83,2): NEW_LINE('\n')
+          GherkinToken(85,4): WHITE_SPACE('    ')
+          GherkinToken(89,11): PYSTRING_TEXT('  some text')
+          GherkinToken(100,2): NEW_LINE('\n')
+          GherkinToken(102,4): WHITE_SPACE('    ')
+          GherkinToken(106,3): PYSTRING_QUOTES('"""')
 
