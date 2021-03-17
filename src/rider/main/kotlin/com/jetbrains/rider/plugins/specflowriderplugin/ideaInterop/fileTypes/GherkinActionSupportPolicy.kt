@@ -39,13 +39,7 @@ class GherkinActionSupportPolicy : RiderActionSupportPolicy() {
         if (backendActionId == "GotoBase") return false;
 
 
-        var result = super.isAvailable(psiElement, backendActionId)
-
-        if (result) {
-            val os: OutputStream = FileOutputStream(File("/tmp/b.txt"), true)
-            os.write((backendActionId + "\n").toByteArray(), 0, backendActionId.length + 1)
-            os.close()
-        }
+        var result = super.isAvailable(psiElement, backendActionId);
         return result;
     }
 }
