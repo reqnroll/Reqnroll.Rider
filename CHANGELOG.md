@@ -5,9 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Next
-### Feature
-- "Comment Line" action now works
 
+## 1.3.7
+### Added
+- "Comment Line" action now works [#20](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/20)
+- Add syntax highlighting for step arguments [#30](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/30)
+- Support for formatting in feature files [#10](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/10) and [#31](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/31)
+- Add autocompletion for steps [#36](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/36)
+### Fixed
+- Fix step navigation for non english feature files [#27](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/27)
+- Remove unused actions in 'Go to' menu [#5](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/5)
 
 ## 1.3.6
 ### Fixed
