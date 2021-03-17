@@ -23,6 +23,7 @@ ext {
     rdLibDirectory = {
         new File(intellij.ideaDependency.classes, "lib/rd")
     }
+    aiKey = System.getenv('APPINSIGHTSINSTRUMENTATIONKEY')
 }
 
 repositories {
@@ -54,9 +55,11 @@ compileKotlin {
 
 task compileDotNet {
     doLast {
-        exec {
+        def arguments = ["msbuild","/t:Restore;Rebuild","${DotnetSolution}","/p:Configuration=${BuildConfiguration}","/p:HostFullIdentifier=","/p:AssemblyVersion=${version}"]
+        if (aiKey) arguments << "/p:AppInsightsInstrumentationKey=${aiKey}";
+        exec {            
             executable "dotnet"
-            args "msbuild","/t:Restore;Rebuild","${DotnetSolution}","/p:Configuration=${BuildConfiguration}","/p:HostFullIdentifier="
+            args arguments
             workingDir rootDir
         }
     }
