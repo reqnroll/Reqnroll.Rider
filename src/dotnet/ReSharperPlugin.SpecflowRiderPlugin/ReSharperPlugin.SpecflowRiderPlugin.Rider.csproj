@@ -64,9 +64,9 @@
   </ItemGroup>
   
   <Target Name="RunTokenReplace">
-    <ReplaceTextInFileTask InputFile="$(SolutionDir)src\dotnet\ReSharperPlugin.SpecflowRiderPlugin\Analytics\AppInsightsConfiguration.template.cs" OutputFile="$(SolutionDir)src\dotnet\ReSharperPlugin.SpecflowRiderPlugin\Analytics\AppInsightsConfiguration.cs" TextToReplace="&lt;InstrumentationKeyGoesHere&gt;" TextToReplaceWith="$(AppInsightsInstrumentationKey)" />
+    <ReplaceTextInFileTask InputFile="Analytics\AppInsightsConfiguration.template.cs" OutputFile="Analytics\AppInsightsConfiguration.cs" TextToReplace="&lt;InstrumentationKeyGoesHere&gt;" TextToReplaceWith="$(AppInsightsInstrumentationKey)" />
     <ItemGroup>
-      <Compile Include="$(SolutionDir)src\dotnet\ReSharperPlugin.SpecflowRiderPlugin\Analytics\AppInsightsConfiguration.cs" />
+      <Compile Include="Analytics\AppInsightsConfiguration.cs" />
     </ItemGroup>       
   </Target>
 
