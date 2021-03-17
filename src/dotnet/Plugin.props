@@ -2,15 +2,15 @@
   <PropertyGroup>
     <SdkVersion>2020.3.2</SdkVersion>
     
-    <Title>SpecFlow Support</Title>
+    <Title>SpecFlow for Rider</Title>
     <Description>Description</Description>
   
     <Authors>Valentin Livkin;Bertrand Provost (Socolin)</Authors>
     <Copyright>Copyright 2021 Maintainers of SpecflowRiderPlugin</Copyright>
     <PackageTags>resharper plugin</PackageTags>
   
-    <PackageProjectUrl>https://github.com/Socolin/resharper-specflow</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Socolin/resharper-specflow/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/SpecFlowOSS/SpecFlow.Rider</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/SpecFlowOSS/SpecFlow.Rider/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl></PackageIconUrl>
   </PropertyGroup>
 </Project>

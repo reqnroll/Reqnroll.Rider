@@ -8,7 +8,7 @@
 
   <description>
 <![CDATA[
-<p>Add syntax highlighting, Go To Reference / Find usages on steps, and various refactorings when working with SpecFlow</p>
+<p>Adds support for syntax highlighting, smart navigation, and auto-completion to help you write better Gherkin feature files and automation code.</p>
 ]]>
   </description>
 
