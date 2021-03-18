@@ -249,11 +249,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
 
             var stepKind = _keywordProvider.GetStepKind(_lang, keywordText);
+            var effectiveStepKind = stepKind;
             if (stepKind == GherkinStepKind.And)
-                stepKind = _lastStepKind;
+                effectiveStepKind = _lastStepKind;
             else if (stepKind == GherkinStepKind.Given || stepKind == GherkinStepKind.When || stepKind == GherkinStepKind.Then)
-                _lastStepKind = stepKind;
-            builder.DoneBeforeWhitespaces(marker, GherkinNodeTypes.STEP, stepKind);
+                _lastStepKind = effectiveStepKind;
+            builder.DoneBeforeWhitespaces(marker, GherkinNodeTypes.STEP, (stepKind, effectiveStepKind));
         }
         private static void ParseExamplesBlock(PsiBuilder builder)
         {

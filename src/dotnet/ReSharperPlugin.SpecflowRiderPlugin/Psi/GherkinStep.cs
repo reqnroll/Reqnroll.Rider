@@ -10,22 +10,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
     public class GherkinStep : GherkinElement
     {
         public GherkinStepKind StepKind { get; }
+        public GherkinStepKind EffectiveStepKind { get; }
         private SpecflowStepDeclarationReference _reference;
 
-        public GherkinStep(GherkinStepKind stepKind) : base(GherkinNodeTypes.STEP)
+        public GherkinStep(GherkinStepKind stepKind, GherkinStepKind effectiveStepKind) : base(GherkinNodeTypes.STEP)
         {
             StepKind = stepKind;
+            EffectiveStepKind = effectiveStepKind;
         }
 
         protected override void PreInit()
         {
             base.PreInit();
             _reference = new SpecflowStepDeclarationReference(this);
-        }
-
-        public GherkinStepKind GetStepKind()
-        {
-            return StepKind;
         }
 
         public DocumentRange GetStepTextRange()

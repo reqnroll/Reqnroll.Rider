@@ -41,7 +41,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages
 
             var stepUsages = new SpecflowStepsUsagesCacheEntries();
             var steps = gherkinFile.GetChildrenInSubtrees<GherkinStep>();
-            stepUsages.AddRange(steps.Select(step => new SpecflowStepUsageCacheEntry(step.GetStepKind(), step.GetStepText())));
+            stepUsages.AddRange(steps.Select(step => new SpecflowStepUsageCacheEntry(step.EffectiveStepKind, step.GetStepText())));
             return stepUsages;
         }
 

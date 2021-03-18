@@ -80,7 +80,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
             public override CompositeElement Create(object userData)
             {
-                return new GherkinStep((GherkinStepKind) userData);
+                var (stepKind, effectiveStepKind) = ((GherkinStepKind stepKind, GherkinStepKind effectiveStepKind)) userData;
+                return new GherkinStep(stepKind, effectiveStepKind);
             }
         }
         

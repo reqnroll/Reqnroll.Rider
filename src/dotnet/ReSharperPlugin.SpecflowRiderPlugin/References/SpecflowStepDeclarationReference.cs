@@ -29,7 +29,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
         {
             var psiServices = myOwner.GetPsiServices();
             var specflowStepsDefinitionsCache = psiServices.GetComponent<SpecflowStepsDefinitionsCache>();
-            var stepKind = myOwner.GetStepKind();
+            var stepKind = myOwner.EffectiveStepKind;
             var stepText = myOwner.GetStepText();
             var psiModule = myOwner.GetPsiModule();
 
@@ -111,7 +111,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
 
         public GherkinStepKind GetStepKind()
         {
-            return myOwner.GetStepKind();
+            return myOwner.EffectiveStepKind;
         }
 
         public string GetStepText()
