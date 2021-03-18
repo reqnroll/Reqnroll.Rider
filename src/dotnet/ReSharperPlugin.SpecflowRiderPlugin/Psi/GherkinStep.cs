@@ -55,7 +55,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public string GetStepTextBeforeCaret(DocumentOffset caretLocation)
         {
             var sb = new StringBuilder();
-            for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
+            for (var te = GetFirstTextToken(); te != null; te = te.NextSibling)
             {
                 if (te.GetDocumentStartOffset() > caretLocation)
                     break;

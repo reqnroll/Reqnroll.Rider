@@ -17,6 +17,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
         public override ISpecificCodeCompletionContext GetCompletionContext(CodeCompletionContext context)
         {
+            var relatedText = string.Empty;
             var nodeUnderCursor = TextControlToPsi.GetElement<ITreeNode>(context.Solution, context.TextControl);
 
             var interestingNode = GetInterestingNode(nodeUnderCursor);
@@ -30,15 +31,20 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 var stepTextRange = step.GetStepTextRange();
                 if (IsCursorBeforeNode(context, stepTextRange))
                     return null;
+
+                relatedText = step.GetStepTextBeforeCaret(context.CaretDocumentOffset);
                 if (IsCursorAfterNode(context, stepTextRange))
+                {
                     stepTextRange = stepTextRange.ExtendRight(context.CaretDocumentOffset.Offset - stepTextRange.EndOffset.Offset);
+                    relatedText += " ";
+                }
 
                 var replaceRange = stepTextRange;
                 var insertRange = stepTextRange.SetEndTo(context.SelectedRange.EndOffset);
 
                 ranges = new TextLookupRanges(insertRange, replaceRange);
             }
-            return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode);
+            return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode, relatedText);
         }
 
         // This occurs when cursor is at the end of line with a space before it. In this case the node ends up a bit sooner

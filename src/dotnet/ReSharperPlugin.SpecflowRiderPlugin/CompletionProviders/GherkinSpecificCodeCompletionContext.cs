@@ -9,15 +9,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         public GherkinSpecificCodeCompletionContext(
             [NotNull] CodeCompletionContext context,
             TextLookupRanges ranges,
-            ITreeNode nodeUnderCursor)
+            ITreeNode nodeUnderCursor,
+            string relatedText)
             : base(context)
         {
             Ranges = ranges;
             NodeUnderCursor = nodeUnderCursor;
+            RelatedText = relatedText;
         }
 
         public override string ContextId => "GherkinCodeCompletionContext";
         public TextLookupRanges Ranges { get; }
         public ITreeNode NodeUnderCursor { get; }
+        public string RelatedText { get; }
     }
 }
