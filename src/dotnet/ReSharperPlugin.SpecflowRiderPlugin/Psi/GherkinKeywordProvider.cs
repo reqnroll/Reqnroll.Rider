@@ -68,7 +68,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         }
 
 
-        private GherkinKeywordList GetKeywordsList(string language)
+        public GherkinKeywordList GetKeywordsList(string language)
         {
             if (_allKeywords.TryGetValue(language, out var keywordsList))
                 return keywordsList;

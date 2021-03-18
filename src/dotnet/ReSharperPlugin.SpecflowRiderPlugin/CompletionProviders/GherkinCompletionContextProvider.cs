@@ -20,6 +20,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             var relatedText = string.Empty;
             var nodeUnderCursor = TextControlToPsi.GetElement<ITreeNode>(context.Solution, context.TextControl);
 
+            if (nodeUnderCursor?.GetTokenType() == GherkinTokenTypes.NEW_LINE && nodeUnderCursor?.NextSibling != null)
+                nodeUnderCursor = nodeUnderCursor.NextSibling;
+
             var interestingNode = GetInterestingNode(nodeUnderCursor);
             if (interestingNode == null)
                 return null;

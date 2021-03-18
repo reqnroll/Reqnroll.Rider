@@ -35,6 +35,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         private readonly HashSet<string> _spaceAfterKeywords = new HashSet<string>();
         private readonly Dictionary<string, string> _translatedKeywords = new  Dictionary<string, string>();
+        private readonly Dictionary<string, List<string>> _translationsPerKeyword = new  Dictionary<string, List<string>>();
         private readonly Dictionary<string, GherkinTokenType> _translatedTokenTypes = new  Dictionary<string, GherkinTokenType>();
 
         // Need to use Descending comparer, because long keywords should be first.
@@ -51,6 +52,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 var keyword = CapitalizeAndFixSpace(key);
                 var tokenType = TokenTypes[keyword];
 
+                var translations = new List<string>();
+                _translationsPerKeyword[keyword] = translations;
+
                 foreach (var jToken in values)
                 {
                     var translatedKeyword = jToken.Value<string>();
@@ -63,6 +67,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     _translatedKeywords[translatedKeyword] = keyword;
                     _translatedTokenTypes[translatedKeyword] = tokenType;
                     _allKeywords.Add(translatedKeyword);
+                    translations.Add(translatedKeyword);
                 }
             }
         }
@@ -98,6 +103,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public TokenNodeType GetTokenType(string keyword)
         {
             return _translatedTokenTypes[keyword];
+        }
+
+        public List<string> GetTranslations(string englishKeyword)
+        {
+            return _translationsPerKeyword[englishKeyword];
         }
 
         [CanBeNull]

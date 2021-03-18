@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.Tree;
+using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 {
@@ -22,5 +23,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         public TextLookupRanges Ranges { get; }
         public ITreeNode NodeUnderCursor { get; }
         public string RelatedText { get; }
+        public GherkinFile GherkinFile => (GherkinFile) BasicContext.File;
     }
 }
