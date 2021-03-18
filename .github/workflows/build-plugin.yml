@@ -27,11 +27,14 @@ jobs:
     - name: Build plugin
       uses: eskatos/gradle-command-action@v1.3.3
       env:
+        SPECFLOW_TELEMETRY_ENABLED: 0
         APPINSIGHTSINSTRUMENTATIONKEY: ${{ secrets.APPINSIGHTSINSTRUMENTATIONKEY }}
       with:
         arguments: buildPlugin --stacktrace -PintellijPublishToken=none
     - name: dotnet-tests-report
       uses: zyborg/dotnet-tests-report@v1.3.0
+      env:
+        SPECFLOW_TELEMETRY_ENABLED: 0
       with:
         report_name: plugin_tests
         report_title: Plugin Tests
