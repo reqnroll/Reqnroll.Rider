@@ -28,11 +28,28 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return StepKind;
         }
 
-        public string GetKeywordText()
+        public DocumentRange GetStepTextRange()
         {
-            if (FirstChild?.NodeType == GherkinTokenTypes.STEP_KEYWORD)
-                return FirstChild?.GetText();
-            return string.Empty;
+            var token = GetFirstTextToken();
+            if (token == null)
+                return new DocumentRange(LastChild.GetDocumentEndOffset(), LastChild.GetDocumentEndOffset());
+            return new DocumentRange(token.GetDocumentStartOffset(), LastChild.GetDocumentEndOffset());
+        }
+
+        private ITreeNode GetFirstTextToken()
+        {
+            for (var node = FirstChild; node != null; node = node.NextSibling)
+            {
+                if (node is GherkinToken token)
+                {
+                    if (token.NodeType == GherkinTokenTypes.STEP_KEYWORD)
+                        continue;
+                    if (token.NodeType == GherkinTokenTypes.WHITE_SPACE)
+                        continue;
+                }
+                return node;
+            }
+            return null;
         }
 
         public string GetStepTextBeforeCaret(DocumentOffset caretLocation)

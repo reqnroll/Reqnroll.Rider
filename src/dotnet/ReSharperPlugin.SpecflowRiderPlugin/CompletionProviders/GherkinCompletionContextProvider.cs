@@ -18,25 +18,60 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         public override ISpecificCodeCompletionContext GetCompletionContext(CodeCompletionContext context)
         {
             var nodeUnderCursor = TextControlToPsi.GetElement<ITreeNode>(context.Solution, context.TextControl);
-            var ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange());
-            var step = nodeUnderCursor?.GetContainingNode<GherkinStep>() ?? nodeUnderCursor?.PrevSibling as GherkinStep;
-            if (step != null)
-            {
-                nodeUnderCursor = step;
-                var stepRange = step.GetDocumentRange();
-                if (stepRange.EndOffset < context.CaretDocumentOffset)
-                    stepRange = stepRange.ExtendRight(context.CaretDocumentOffset.Offset - stepRange.EndOffset.Offset);
 
-                var replaceRange = stepRange.TrimLeft(step.GetKeywordText().Length + 1);
-                var lineEndOffsetNoLineBreak = context.Document.GetLineEndOffsetNoLineBreak(context.TextControl.Caret.Position.GetValue().ToDocLineColumn().Line);
-                replaceRange = replaceRange.SetEndTo(new DocumentOffset(stepRange.Document, lineEndOffsetNoLineBreak));
-                var insertRange = replaceRange.SetEndTo(context.SelectedRange.EndOffset);
-                if (!insertRange.IsNormalized)
-                    insertRange = context.SelectedRange;
+            var interestingNode = GetInterestingNode(nodeUnderCursor);
+            if (interestingNode == null)
+                return null;
+
+            var ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange());
+
+            if (interestingNode is GherkinStep step)
+            {
+                var stepTextRange = step.GetStepTextRange();
+                if (IsCursorBeforeNode(context, stepTextRange))
+                    return null;
+                if (IsCursorAfterNode(context, stepTextRange))
+                    stepTextRange = stepTextRange.ExtendRight(context.CaretDocumentOffset.Offset - stepTextRange.EndOffset.Offset);
+
+                var replaceRange = stepTextRange;
+                var insertRange = stepTextRange.SetEndTo(context.SelectedRange.EndOffset);
 
                 ranges = new TextLookupRanges(insertRange, replaceRange);
             }
-            return new GherkinSpecificCodeCompletionContext(context, ranges, nodeUnderCursor);
+            return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode);
+        }
+
+        // This occurs when cursor is at the end of line with a space before it. In this case the node ends up a bit sooner
+        // example: Given some <caret>
+        //          ^========^^
+        //          |- Step   |- Whitespace token (outside the step)
+        private static bool IsCursorAfterNode(CodeCompletionContext context, DocumentRange nodeRange)
+        {
+            return nodeRange.EndOffset < context.CaretDocumentOffset;
+        }
+
+        private static bool IsCursorBeforeNode(CodeCompletionContext context, DocumentRange nodeRange)
+        {
+            return context.CaretDocumentOffset < nodeRange.StartOffset;
+        }
+
+        private ITreeNode GetInterestingNode(ITreeNode node)
+        {
+            if (node.GetTokenType() == GherkinTokenTypes.WHITE_SPACE && node.PrevSibling != null)
+                node = node.PrevSibling;
+
+            while (node != null)
+            {
+                if (node is GherkinStep)
+                    return node;
+                if (node is IGherkinScenario)
+                    return node;
+                if (node is GherkinFeature)
+                    return node;
+                node = node.Parent;
+            }
+
+            return null;
         }
     }
 }
