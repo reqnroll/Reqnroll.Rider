@@ -18,6 +18,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Service
         [TestCase("Indent - Background")]
         [TestCase("Indent - Basics")]
         [TestCase("Indent - Configuration - AllFalse")]
+        [TestCase("Indent - Configuration - AndStepIndentSize")]
         [TestCase("Indent - Configuration - BlankLinesBeforeExamples")]
         [TestCase("Indent - Configuration - BlankLinesBeforeScenario")]
         [TestCase("Indent - Configuration - ExampleIndentSize")]

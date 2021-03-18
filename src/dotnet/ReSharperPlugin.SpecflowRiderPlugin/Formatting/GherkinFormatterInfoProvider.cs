@@ -57,6 +57,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 .Build();
 
             Describe<IndentingRule>()
+                .Name("AndIndent")
+                .Where(
+                    Left().HasType(GherkinNodeTypes.STEP).Satisfies2((node, context) => node is GherkinStep {StepKind: GherkinStepKind.And})
+                )
+                .Switch(s => s.AndStepIndentSize, ContinuousIndentOptions(this, IndentType.External))
+                .Build();
+
+            Describe<IndentingRule>()
                 .Name("StepPyString")
                 .Where(
                     Parent().HasType(GherkinNodeTypes.STEP),

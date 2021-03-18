@@ -19,6 +19,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         public int ScenarioIndentSize;
         [SettingsEntry(1, "Indent size for step")]
         public int StepIndentSize;
+        [SettingsEntry(0, "Indent size for 'And' step")]
+        public int AndStepIndentSize;
         [SettingsEntry(0, "Indent size for table")]
         public int TableIndentSize;
         [SettingsEntry(true, "Indent size for table")]
