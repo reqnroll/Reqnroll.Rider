@@ -31,7 +31,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             var stepPatternUtil = context.BasicContext.PsiServices.GetComponent<IStepPatternUtil>();
 
             var psiModule = context.BasicContext.File.GetPsiModule();
-            var selectedStepKind = selectedStep.GetStepKind();
+            var selectedStepKind = selectedStep.EffectiveStepKind;
             var partialStepText = context.RelatedText;
             var fullStepText = selectedStep.GetStepText();
 

@@ -109,6 +109,7 @@ Scenario Outline: eating
                 .ItemFor(key => key.PyStringIndentSize,indentationExample)
                 .ItemFor(key => key.ScenarioIndentSize,indentationExample)
                 .ItemFor(key => key.StepIndentSize,indentationExample)
+                .ItemFor(key => key.AndStepIndentSize,indentationExample)
                 .ItemFor(key => key.TableIndentSize,indentationExample)
                 .ItemFor(key => key.SmallTableIndent,indentationExample)
                 .EndCategory();
