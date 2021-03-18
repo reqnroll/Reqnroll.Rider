@@ -22,6 +22,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
+    - name: Install .NET dependencies
+      run: dotnet restore
     - name: Build plugin
       uses: eskatos/gradle-command-action@v1.3.3
       env:
