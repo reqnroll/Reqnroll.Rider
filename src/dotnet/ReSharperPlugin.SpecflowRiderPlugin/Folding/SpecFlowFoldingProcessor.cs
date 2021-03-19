@@ -1,11 +1,11 @@
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon.CodeFolding;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Folding
 {
-    public class SpecFlowFoldingProcessor : TreeNodeVisitor<FoldingHighlightingConsumer>, ICodeFoldingProcessor
+    public class SpecFlowFoldingProcessor : ICodeFoldingProcessor
     {
 
         public bool InteriorShouldBeProcessed(ITreeNode element, FoldingHighlightingConsumer context) => true;
@@ -40,8 +40,26 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Folding
 
             var range = node.GetDocumentRange();
 
-            var newRange = range.TrimLeft((textRange?.EndOffset ?? keywordRange.EndOffset+1) - range.StartOffset);
-            consumer.AddDefaultPriorityFolding(CodeFoldingAttributes.DEFAULT_FOLDING_ATTRIBUTE, newRange, "...");
+            var length = CalculateLength(textRange, keywordRange, range);
+            if (length > 0)
+            {
+                var newRange = range.TrimLeft(length);
+                consumer.AddDefaultPriorityFolding(CodeFoldingAttributes.DEFAULT_FOLDING_ATTRIBUTE, newRange, "...");
+            }
+        }
+
+        private static int CalculateLength(DocumentRange? textRange, DocumentRange keywordRange, DocumentRange range)
+        {
+            if (keywordRange == range)
+                return 0;
+
+            var startOffset = range.StartOffset;
+            var endOffset = (textRange?.EndOffset ?? keywordRange.EndOffset+1);
+            
+            if (startOffset > endOffset)
+                return 0;
+            
+            return endOffset - startOffset;
         }
 
         public void ProcessAfterInterior(ITreeNode element, FoldingHighlightingConsumer consumer)
