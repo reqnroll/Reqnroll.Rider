@@ -57,6 +57,7 @@ mono_crash*.json
 packages
 
 *.generated.cs
+*.generated.props
 /src/dotnet/ReSharperPlugin.SpecflowRiderPlugin/Analytics/AppInsightsConfiguration.cs
 
 *.orig

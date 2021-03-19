@@ -23,6 +23,9 @@ ext {
     rdLibDirectory = {
         new File(intellij.ideaDependency.classes, "lib/rd")
     }
+    resharperHostLibDirectory = {
+        new File(intellij.ideaDependency.classes, "lib/ReSharperHost")
+    }
     aiKey = System.getenv('APPINSIGHTSINSTRUMENTATIONKEY')
 }
 
@@ -53,7 +56,23 @@ compileKotlin {
     kotlinOptions { jvmTarget = "1.8" }
 }
 
+task prepareCompileDotNet {
+    def generatedPropsFile = file("${rootDir}/src/dotnet/SdkProperties.generated.props")
+    outputs.files generatedPropsFile
+    doLast {
+        generatedPropsFile.text = """<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <ReSharperHostPath>${resharperHostLibDirectory()}</ReSharperHostPath>
+    </PropertyGroup>
+</Project>
+"""
+    }
+}
+
 task compileDotNet {
+    dependsOn prepareCompileDotNet
+
     doLast {
         def arguments = ["msbuild","/t:Restore;Rebuild","${DotnetSolution}","/p:Configuration=${BuildConfiguration}","/p:HostFullIdentifier=","/p:AssemblyVersion=${version}"]
         if (aiKey) arguments << "/p:AppInsightsInstrumentationKey=${aiKey}";

@@ -15,10 +15,32 @@
   </PropertyGroup>
 
   <Import Project="Plugin.props" />
+  <Import Project="SdkProperties.generated.props" />
 
   <PropertyGroup>
     <WaveVersionBase>$(SdkVersion.Substring(2,2))$(SdkVersion.Substring(5,1))</WaveVersionBase>
     <WaveVersion>$(WaveVersionBase).0.0$(SdkVersion.Substring(8))</WaveVersion>
   </PropertyGroup>
 
+  <!-- Running tests on a Mac requires PresentationCore/PresentationFramework, which isn't part of the standard Mono/netcore
+       distro. We need to copy them from the SDK. Note that the IsOsPlatform function requires msbuild 15.3+
+       Note that this works, even though JetTestProject is defined AFTER this file is imported, because properties and
+       imports are evaluated before ItemGroups -->
+  <ItemGroup Condition=" '$(JetTestProject)' == 'True' AND '$([MSBuild]::IsOsPlatform(OSX))' == 'True' ">
+    <JetContent Include="$(ReSharperHostPath)\NetCore\runtimes\unix\lib\netcoreapp3.0\PresentationFramework.dll">
+      <TargetPath>PresentationFramework.dll</TargetPath>
+    </JetContent>
+    <JetContent Include="$(ReSharperHostPath)\NetCore\runtimes\unix\lib\netcoreapp3.0\PresentationCore.dll">
+      <TargetPath>PresentationCore.dll</TargetPath>
+    </JetContent>
+  </ItemGroup>
+  <!-- This is untested -->
+  <ItemGroup Condition=" '$(JetTestProject)' == 'True' AND '$([MSBuild]::IsOsPlatform(Linux))' == 'True' ">
+    <JetContent Include="$(ReSharperHostPath)\NetCore\runtimes\unix\lib\netcoreapp3.0\PresentationFramework.dll">
+      <TargetPath>PresentationFramework.dll</TargetPath>
+    </JetContent>
+    <JetContent Include="$(ReSharperHostPath)\NetCore\runtimes\unix\lib\netcoreapp3.0\PresentationCore.dll">
+      <TargetPath>PresentationCore.dll</TargetPath>
+    </JetContent>
+  </ItemGroup>
 </Project>
