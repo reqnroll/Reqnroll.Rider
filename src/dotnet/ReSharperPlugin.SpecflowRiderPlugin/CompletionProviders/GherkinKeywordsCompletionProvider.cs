@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Resources;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -15,28 +16,28 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
     [Language(typeof(GherkinLanguage))]
     public class GherkinKeywordsCompletionProvider : ItemsProviderOfSpecificContext<GherkinSpecificCodeCompletionContext>
     {
-        private static readonly List<string> ValidKeywordsInFeature = new List<string>
+        private static readonly List<(string keyword, bool addColon)> ValidKeywordsInFeature = new List<(string keyword, bool addColon)>
         {
-            "Background",
-            "Feature",
-            "Rule",
-            "Scenario",
-            "Scenario Outline",
+            ("Background", true),
+            ("Feature", true),
+            ("Rule", true),
+            ("Scenario", true),
+            ("Scenario Outline", true),
         };
 
-        private static readonly List<string> ValidKeywordsInScenario = new List<string>
+        private static readonly List<(string keyword, bool addColon)> ValidKeywordsInScenario = new List<(string keyword, bool addColon)>
         {
-            "And",
-            "Background",
-            "But",
-            "Examples",
-            "Feature",
-            "Given",
-            "Rule",
-            "Scenario",
-            "Scenario Outline",
-            "Then",
-            "When",
+            ("And", false),
+            ("Background", true),
+            ("But", false),
+            ("Examples", true),
+            ("Feature", true),
+            ("Given", false),
+            ("Rule", true),
+            ("Scenario", true),
+            ("Scenario Outline", true),
+            ("Then", false),
+            ("When", false),
         };
 
         protected override bool IsAvailable(GherkinSpecificCodeCompletionContext context)
@@ -61,25 +62,34 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
         private bool AddKeywordsLookupItemsForFeature(GherkinKeywordList keywordList, GherkinSpecificCodeCompletionContext context, IItemsCollector collector)
         {
-            foreach (var keyword in ValidKeywordsInFeature.SelectMany(keywordList.GetTranslations).Distinct())
+            foreach (var (keyword, addColon) in ValidKeywordsInFeature
+                .SelectMany(k => keywordList.GetTranslations(k.keyword).Select(keyword => (keyword, k.addColon)))
+                .Distinct(x => x.keyword))
             {
-                var lookupItem = new TextLookupItem(keyword);
-                lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
-                collector.Add(lookupItem);
+                AddKeywordItem(context, collector, keyword, addColon);
             }
             return true;
         }
 
         private bool AddKeywordsLookupItemsForScenario(GherkinKeywordList keywordList, GherkinSpecificCodeCompletionContext context, IItemsCollector collector)
         {
-            foreach (var keyword in ValidKeywordsInScenario.SelectMany(keywordList.GetTranslations).Distinct())
+            foreach (var (keyword, addColon) in ValidKeywordsInScenario
+                .SelectMany(k => keywordList.GetTranslations(k.keyword).Select(keyword => (keyword, k.addColon)))
+                .Distinct(x => x.keyword))
             {
-                var lookupItem = new TextLookupItem(keyword);
-                lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
-                collector.Add(lookupItem);
+                AddKeywordItem(context, collector, keyword, addColon);
             }
             return true;
         }
 
+        private static void AddKeywordItem(GherkinSpecificCodeCompletionContext context, IItemsCollector collector, string keyword, bool addColon)
+        {
+            var completionText = keyword;
+            if (addColon)
+                completionText += ":";
+            var lookupItem = new TextLookupItem(completionText + " ", PsiSymbolsThemedIcons.Keyword.Id);
+            lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
+            collector.Add(lookupItem);
+        }
     }
 }
