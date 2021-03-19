@@ -32,7 +32,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 return MinimalSeparatorType.NewLine;
             if (rightToken == GherkinTokenTypes.TAG)
                 return MinimalSeparatorType.NewLine;
-            if (leftToken == GherkinTokenTypes.TABLE_CELL || rightToken == GherkinTokenTypes.PIPE)
+            if (leftToken == GherkinTokenTypes.TABLE_CELL && rightToken == GherkinTokenTypes.PIPE)
+                return MinimalSeparatorType.Space;
+            if (rightToken == GherkinTokenTypes.TABLE_CELL && leftToken == GherkinTokenTypes.PIPE)
                 return MinimalSeparatorType.Space;
 
             return MinimalSeparatorType.NotRequired;
