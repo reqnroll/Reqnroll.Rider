@@ -189,6 +189,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private void ParseScenario(PsiBuilder builder)
         {
             SkipWhitespace(builder);
+            if (builder.Eof())
+                return;
             var scenarioMarker = builder.Mark();
             ParseTags(builder);
 
