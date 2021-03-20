@@ -28,6 +28,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 return null;
 
             var ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange());
+            if (nodeUnderCursor is GherkinToken token && token.IsWhitespaceToken() && token?.PrevSibling?.GetTokenType() == GherkinTokenTypes.NEW_LINE)
+                ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange().SetStartTo(context.CaretDocumentOffset));
 
             if (interestingNode is GherkinStep step)
             {
