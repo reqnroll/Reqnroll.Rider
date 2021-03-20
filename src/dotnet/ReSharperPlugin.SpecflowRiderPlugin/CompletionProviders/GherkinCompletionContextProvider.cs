@@ -42,6 +42,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 {
                     stepTextRange = stepTextRange.ExtendRight(context.CaretDocumentOffset.Offset - stepTextRange.EndOffset.Offset);
                     relatedText += " ";
+                    if (string.IsNullOrWhiteSpace(relatedText))
+                    {
+                        relatedText = string.Empty;
+                        stepTextRange = stepTextRange.Shift(1);
+                    }
                 }
 
                 var replaceRange = stepTextRange;
