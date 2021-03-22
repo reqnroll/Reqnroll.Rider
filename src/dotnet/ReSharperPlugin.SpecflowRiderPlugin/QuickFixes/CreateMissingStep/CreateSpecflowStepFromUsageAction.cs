@@ -1,165 +1,99 @@
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Application.UI.Controls;
-using JetBrains.Application.UI.Controls.JetPopupMenu;
-using JetBrains.Collections;
+using JetBrains.Application.UI.Icons.CommonThemedIcons;
+using JetBrains.Diagnostics;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.Navigation.NavigationExtensions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Resources;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Naming.Extentions;
-using JetBrains.ReSharper.Psi.Naming.Impl;
-using JetBrains.ReSharper.Psi.Naming.Settings;
 using JetBrains.ReSharper.Psi.Resources;
-using JetBrains.ReSharper.Psi.Transactions;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
-using ReSharperPlugin.SpecflowRiderPlugin.Analytics;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
-using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
-using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 {
     public class CreateSpecflowStepFromUsageAction : IBulbAction
     {
-        public string Text { get; } = "Create step";
+        public string Text => "Create step";
         private readonly SpecflowStepDeclarationReference _reference;
-        private readonly IStepDefinitionBuilder _stepDefinitionBuilder;
+        private readonly IMenuModalUtil _menuModalUtil;
+        private readonly SpecflowStepsDefinitionsCache _specflowStepsDefinitionsCache;
+        private readonly ICreateSpecFlowStepUtil _createSpecFlowStepUtil;
 
         public CreateSpecflowStepFromUsageAction(
             SpecflowStepDeclarationReference reference,
-            IStepDefinitionBuilder stepDefinitionBuilder
-        )
+            IMenuModalUtil menuModalUtil,
+            SpecflowStepsDefinitionsCache specflowStepsDefinitionsCache,
+            ICreateSpecFlowStepUtil createSpecFlowStepUtil)
         {
             _reference = reference;
-            _stepDefinitionBuilder = stepDefinitionBuilder;
+            _menuModalUtil = menuModalUtil;
+            _specflowStepsDefinitionsCache = specflowStepsDefinitionsCache;
+            _createSpecFlowStepUtil = createSpecFlowStepUtil;
         }
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            var jetPopupMenus = solution.GetPsiServices().GetComponent<JetPopupMenus>();
-            var cache = solution.GetComponent<SpecflowStepsDefinitionsCache>();
-            jetPopupMenus.ShowModal(JetPopupMenu.ShowWhen.AutoExecuteIfSingleEnabledItem,
-                (lifetime, menu) =>
-                {
-                    menu.Caption.Value = WindowlessControlAutomation.Create("Where to create the step ?");
+            var availableSteps = _specflowStepsDefinitionsCache.GetBindingTypes(_reference.GetElement().GetPsiModule());
 
-                    var availableSteps = cache.GetBindingTypes(_reference.GetElement().GetPsiModule());
-                    var filesPerClasses = new OneToSetMap<string, SpecflowStepsDefinitionsCache.AvailableBindingClass>();
-                    foreach (var availableBindingClass in availableSteps)
-                        filesPerClasses.Add(availableBindingClass.ClassClrName, availableBindingClass);
+            var filesPerClasses = new OneToSetMap<string, SpecflowStepsDefinitionsCache.AvailableBindingClass>();
+            foreach (var availableBindingClass in availableSteps)
+                filesPerClasses.Add(availableBindingClass.ClassClrName, availableBindingClass);
 
-                    menu.ItemKeys.AddRange(filesPerClasses);
-                    menu.DescribeItem.Advise(lifetime, e =>
-                                                       {
-                                                           var (classClrFullName, _) = (KeyValuePair<string, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass>>) e.Key;
+            var actions = new List<CreateStepMenuAction>();
 
-                                                           e.Descriptor.Icon = PsiSymbolsThemedIcons.Class.Id;
-                                                           e.Descriptor.Style = MenuItemStyle.Enabled;
+            actions.AddRange(filesPerClasses.Select(availableBindingClass => new CreateStepMenuAction(
+                new RichText(availableBindingClass.Key, DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type)),
+                PsiSymbolsThemedIcons.Class.Id,
+                () => OpenPartialClassFileSelectionModal(textControl, availableBindingClass.Value, _reference.GetStepKind(), _reference.GetStepText()),
+                new ClrTypeName(availableBindingClass.Key).GetNamespaceName()))
+            );
 
-                                                           var clrTypeName = new ClrTypeName(classClrFullName);
-                                                           e.Descriptor.Text = new RichText(clrTypeName.ShortName, DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type));
-                                                           e.Descriptor.ShortcutText = clrTypeName.GetNamespaceName();
-                                                       });
-                    menu.ItemClicked.Advise(lifetime, key =>
-                                                      {
-                                                          var (_, availableBindingClasses) = (KeyValuePair<string, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass>>) key;
-                                                          OpenFileSelectionModal(jetPopupMenus, textControl, availableBindingClasses, _reference.GetStepKind(), _reference.GetStepText());
-                                                      });
-                    menu.PopupWindowContextSource = textControl.PopupWindowContextFactory.ForCaret();
-                });
+            _menuModalUtil.OpenSelectStepClassMenu(actions, "Where to create the step ?", textControl.PopupWindowContextFactory.ForCaret());
         }
 
-        private void OpenFileSelectionModal(JetPopupMenus jetPopupMenus, ITextControl textControl, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass> availableBindingClasses, GherkinStepKind getStepKind, string getStepText)
+        private void OpenPartialClassFileSelectionModal(ITextControl textControl, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass> availableBindingClasses, GherkinStepKind getStepKind, string getStepText)
         {
-            jetPopupMenus.ShowModal(JetPopupMenu.ShowWhen.AutoExecuteIfSingleEnabledItem,
-                (lifetime, menu) =>
+            var actions = new List<CreateStepMenuAction>();
+
+            actions.AddRange(availableBindingClasses.Select(availableBindingClass => new CreateStepMenuAction(
+                new RichText(availableBindingClass.SourceFile.DisplayName),
+                PsiCSharpThemedIcons.Csharp.Id,
+                () =>
                 {
-                    menu.Caption.Value = WindowlessControlAutomation.Create("Where to create the step ?");
-                    menu.ItemKeys.AddRange(availableBindingClasses);
-                    menu.DescribeItem.Advise(lifetime, e =>
-                                                       {
-                                                           var key = (SpecflowStepsDefinitionsCache.AvailableBindingClass) e.Key;
-                                                           e.Descriptor.Icon = PsiCSharpThemedIcons.Csharp.Id;
-                                                           e.Descriptor.Style = MenuItemStyle.Enabled;
-                                                           e.Descriptor.Text = new RichText(key.SourceFile.DisplayName);
-                                                       });
-                    menu.ItemClicked.Advise(lifetime, e =>
-                                                      {
-                                                          var availableBindingClass = (SpecflowStepsDefinitionsCache.AvailableBindingClass) e;
-                                                          AddSpecflowStep(availableBindingClass.SourceFile, availableBindingClass.ClassClrName, getStepKind, getStepText);
-                                                      });
-                    menu.PopupWindowContextSource = textControl.PopupWindowContextFactory.ForCaret();
-                });
-        }
+                    var addedDeclaration = _createSpecFlowStepUtil.AddSpecflowStep(
+                        availableBindingClass.NotNull().SourceFile,
+                        availableBindingClass.ClassClrName,
+                        getStepKind,
+                        getStepText,
+                        _reference.GetGherkinFileCulture(),
+                        _reference.GetElement().Children<GherkinPystring>().Any(),
+                        _reference.GetElement().Children<GherkinTable>().Any()
+                    );
 
-        private void AddSpecflowStep(IPsiSourceFile targetFile, string classClrName, GherkinStepKind stepKind, string stepText)
-        {
-            var cSharpFile = targetFile.GetProject().GetCSharpFile(targetFile.DisplayName.Substring(targetFile.DisplayName.LastIndexOf('>') + 2));
-            if (cSharpFile == null)
-                return;
-
-            foreach (var type in cSharpFile.GetChildrenInSubtrees<IClassDeclaration>())
-            {
-                if (!(type is IClassDeclaration classDeclaration))
-                    continue;
-                if (classDeclaration.CLRName != classClrName)
-                    continue;
-                if (classDeclaration.DeclaredElement?.GetAttributeInstances(AttributesSource.Self).All(x => x.GetAttributeType().GetClrName().FullName != "TechTalk.SpecFlow.Binding") != true)
-                    continue;
-
-                var factory = CSharpElementFactory.GetInstance(classDeclaration);
-                var methodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, _reference.GetGherkinFileCulture());
-                methodName = cSharpFile.GetPsiServices().Naming.Suggestion.GetDerivedName(methodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance, new SuggestionOptions(), targetFile);
-                var parameters = _stepDefinitionBuilder.GetStepDefinitionParameters(stepText, _reference.GetGherkinFileCulture());
-                var pattern = _stepDefinitionBuilder.GetPattern(stepText, _reference.GetGherkinFileCulture());
-                var attributeType = CSharpTypeFactory.CreateType(SpecflowAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
-                var formatString = $"[$0(@\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
-                var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
-                if (methodDeclaration == null)
-                    continue;
-                var psiModule = classDeclaration.GetPsiModule();
-                
-                foreach (var (parameterName, parameterType) in parameters)
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
-
-                if (_reference.GetElement().Children<GherkinPystring>().FirstOrDefault() != null)
-                {
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("string", psiModule), "multilineText", null);
+                    if (addedDeclaration != null)
+                    {
+                        var invocationExpression = addedDeclaration.GetChildrenInSubtrees<IInvocationExpression>().FirstOrDefault();
+                        if (invocationExpression != null)
+                            invocationExpression.NavigateToNode(true);
+                        else
+                            addedDeclaration.NavigateToNode(true);
+                    }
                 }
+            )));
 
-                if (_reference.GetElement().Children<GherkinTable>().FirstOrDefault() != null)
-                {
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("TechTalk.SpecFlow.Table", psiModule), "table", null);
-                }
-
-                IClassMemberDeclaration insertedDeclaration;
-                using (new PsiTransactionCookie(type.GetPsiServices(), DefaultAction.Commit, "Generate specflow step"))
-                {
-                    insertedDeclaration = classDeclaration.AddClassMemberDeclaration((IClassMemberDeclaration) methodDeclaration);
-                }
-
-                var analyticsTransmitter = targetFile.GetSolution().GetComponent<IAnalyticsTransmitter>();
-                analyticsTransmitter.TransmitRuntimeEvent(new GenericEvent("RiderActionExecuted", new Dictionary<string, string>()
-                    {{"Type", "CreateStepBinding"}}));
-
-                var invocationExpression = insertedDeclaration.GetChildrenInSubtrees<IInvocationExpression>().FirstOrDefault();
-                if (invocationExpression != null)
-                    invocationExpression.NavigateToNode(true);
-                else
-                    insertedDeclaration.NavigateToNode(true);
-            }
+            _menuModalUtil.OpenSelectStepClassMenu(actions, "Where to create the step ?", textControl.PopupWindowContextFactory.ForCaret());
         }
     }
 }
