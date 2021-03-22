@@ -27,6 +27,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             if (interestingNode == null)
                 return null;
 
+            var isStartOfLine = IsStartOfLine(nodeUnderCursor, out var startOfLineText);
+
             var ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange());
             if (nodeUnderCursor is GherkinToken token && token.IsWhitespaceToken() && token?.PrevSibling?.GetTokenType() == GherkinTokenTypes.NEW_LINE)
                 ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange().SetStartTo(context.CaretDocumentOffset));
@@ -54,7 +56,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
                 ranges = new TextLookupRanges(insertRange, replaceRange);
             }
-            return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode, relatedText);
+            return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode, isStartOfLine ? startOfLineText : relatedText, isStartOfLine);
+        }
+
+        private bool IsStartOfLine(ITreeNode nodeUnderCursor, out string text)
+        {
+            text = string.Empty;
+
+            if (nodeUnderCursor.IsWhitespaceToken() && nodeUnderCursor.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
+                return true;
+
+            if (nodeUnderCursor.GetPreviousToken()?.IsWhitespaceToken() == true && nodeUnderCursor.GetPreviousToken()?.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
+            {
+                text = nodeUnderCursor.GetText();
+                return true;
+            }
+
+            return false;
         }
 
         // This occurs when cursor is at the end of line with a space before it. In this case the node ends up a bit sooner

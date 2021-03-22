@@ -43,7 +43,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         protected override bool IsAvailable(GherkinSpecificCodeCompletionContext context)
         {
             var codeCompletionType = context.BasicContext.CodeCompletionType;
-            return codeCompletionType == CodeCompletionType.BasicCompletion || codeCompletionType == CodeCompletionType.SmartCompletion;
+            return codeCompletionType == CodeCompletionType.BasicCompletion || codeCompletionType == CodeCompletionType.SmartCompletion && context.IsStartOfLine;
         }
 
         protected override bool AddLookupItems(GherkinSpecificCodeCompletionContext context, IItemsCollector collector)
@@ -64,6 +64,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         {
             foreach (var (keyword, addColon) in ValidKeywordsInFeature
                 .SelectMany(k => keywordList.GetTranslations(k.keyword).Select(keyword => (keyword, k.addColon)))
+                .Where(x => x.keyword.StartsWith(context.RelatedText))
                 .Distinct(x => x.keyword))
             {
                 AddKeywordItem(context, collector, keyword, addColon);
@@ -73,8 +74,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
         private bool AddKeywordsLookupItemsForScenario(GherkinKeywordList keywordList, GherkinSpecificCodeCompletionContext context, IItemsCollector collector)
         {
-            foreach (var (keyword, addColon) in ValidKeywordsInScenario
+             foreach (var (keyword, addColon) in ValidKeywordsInScenario
                 .SelectMany(k => keywordList.GetTranslations(k.keyword).Select(keyword => (keyword, k.addColon)))
+                .Where(x => x.keyword.StartsWith(context.RelatedText))
                 .Distinct(x => x.keyword))
             {
                 AddKeywordItem(context, collector, keyword, addColon);
@@ -87,7 +89,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             var completionText = keyword;
             if (addColon)
                 completionText += ":";
-            var lookupItem = new TextLookupItem(completionText + " ", PsiSymbolsThemedIcons.Keyword.Id);
+            var lookupItem = new CompletionKeywordLookupItem(completionText, PsiSymbolsThemedIcons.Keyword.Id);
             lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
             collector.Add(lookupItem);
         }
