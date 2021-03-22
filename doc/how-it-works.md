@@ -75,6 +75,21 @@ Step binding:
 
 In this case **"50"** matches the **(.\*)** pattern.
 
+## Folding
+
+The implementation of the folding can be found in the `SpecFlowFoldingProcessor` class.
+The following sections are foldable:
+- Scenarios
+- Scenario Outlines
+- Example blocks
+- Rules
+
+If a section is folded, the keyword and the title are still visible, but the rest of the section is hidden.
+e.g.
+
+![Folding](images/Folding.png)
+
+
 ## Reference
 
 The references systems in resharper allow to link a declaration with its usage.
