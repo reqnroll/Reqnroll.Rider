@@ -164,6 +164,10 @@ prepareSandbox {
         def file = file(f)
         from(file, { into "${intellij.pluginName}/dotnet" })
     })
+    
+    into("${intellij.pluginName}/projectTemplates") {
+                from("projectTemplates")
+            }
 
     doLast {
         dllFiles.forEach({ f ->
