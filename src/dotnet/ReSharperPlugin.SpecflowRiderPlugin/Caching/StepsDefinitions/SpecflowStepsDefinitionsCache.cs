@@ -24,7 +24,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     [PsiComponent]
     public class SpecflowStepsDefinitionsCache : SimpleICache<SpecflowStepsDefinitionsCacheEntries>
     {
-        private const int VersionInt = 9;
+        private const int VersionInt = 11;
         public override string Version => VersionInt.ToString();
 
         // FIXME: per step kind
@@ -93,12 +93,36 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                 var hasSpecflowBindingAttribute = HasSpecflowBindingAttribute(classDeclaration);
                 if (!hasSpecflowBindingAttribute && !classDeclaration.IsPartial)
                     continue;
+                if (IsSpecflowFeatureFile(classDeclaration))
+                    continue;
                 stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration, hasSpecflowBindingAttribute));
             }
 
             if (stepDefinitions.Count == 0)
                 return null;
+
             return stepDefinitions;
+        }
+
+        private bool IsSpecflowFeatureFile(IClassDeclaration classDeclaration)
+        {
+
+            if (classDeclaration.Attributes.Count == 0)
+                return false;
+
+            // Optimization: do not resolve all attribute. We are looking for `System.CodeDom.Compiler.GeneratedCodeAttribute` only
+            var potentialBindingAttributes = classDeclaration.Attributes.Where(x => x.Arguments.Count == 2).ToList();
+            if (potentialBindingAttributes.Count == 0)
+                return false;
+
+            var specflowGeneratedAttribute = false;
+            foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
+            {
+                if (potentialBindingAttribute.GetClrName().FullName == "System.CodeDom.Compiler.GeneratedCodeAttribute"
+                    && potentialBindingAttribute.PositionParameter(0).ConstantValue.Value as string == "TechTalk.SpecFlow")
+                    specflowGeneratedAttribute = true;
+            }
+            return specflowGeneratedAttribute;
         }
 
         private static bool HasSpecflowBindingAttribute(IClassDeclaration classDeclaration)
