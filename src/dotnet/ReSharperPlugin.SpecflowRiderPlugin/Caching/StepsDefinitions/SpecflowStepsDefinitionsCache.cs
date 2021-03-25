@@ -96,6 +96,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                 stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration, hasSpecflowBindingAttribute));
             }
 
+            if (stepDefinitions.Count == 0)
+                return null;
             return stepDefinitions;
         }
 
