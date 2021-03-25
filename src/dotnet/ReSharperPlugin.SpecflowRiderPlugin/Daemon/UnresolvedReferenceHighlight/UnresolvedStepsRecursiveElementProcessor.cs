@@ -3,6 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using ReSharperPlugin.SpecflowRiderPlugin.Daemon.Errors;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight
@@ -68,7 +69,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighligh
                             context.AddHighlighting(highlighting);
                     }
                     else
-                        context.AddHighlighting(new NotResolvedError(gherkinStep));
+                        context.AddHighlighting(new StepNotResolvedError(gherkinStep));
                 }
             }
         }
