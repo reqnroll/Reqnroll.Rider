@@ -47,7 +47,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                     if (string.IsNullOrWhiteSpace(relatedText))
                     {
                         relatedText = string.Empty;
-                        stepTextRange = stepTextRange.Shift(1);
+                        stepTextRange = stepTextRange.ExtendLeft(-1);
                     }
                 }
 
