@@ -92,7 +92,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         private ITreeNode GetInterestingNode(ITreeNode node)
         {
             if (node.GetTokenType() == GherkinTokenTypes.WHITE_SPACE && node.PrevSibling != null)
-                node = node.PrevSibling;
+                node = GetDeepestLastChild(node.PrevSibling);
 
             while (node != null)
             {
@@ -106,6 +106,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             }
 
             return null;
+        }
+
+        private static ITreeNode GetDeepestLastChild(ITreeNode node)
+        {
+            while (node.LastChild != null)
+                node = node.LastChild;
+            return node;
         }
     }
 }
