@@ -20,11 +20,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             var relatedText = string.Empty;
             var nodeUnderCursor = TextControlToPsi.GetElement<ITreeNode>(context.Solution, context.TextControl);
 
+            if (nodeUnderCursor?.GetTokenType() == GherkinTokenTypes.NEW_LINE && nodeUnderCursor?.NextSibling != null)
+                nodeUnderCursor = nodeUnderCursor.NextSibling;
+
             var interestingNode = GetInterestingNode(nodeUnderCursor);
             if (interestingNode == null)
                 return null;
 
+            var isStartOfLine = IsStartOfLine(nodeUnderCursor, out var startOfLineText);
+
             var ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange());
+            if (nodeUnderCursor is GherkinToken token && token.IsWhitespaceToken() && token?.PrevSibling?.GetTokenType() == GherkinTokenTypes.NEW_LINE)
+                ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange().SetStartTo(context.CaretDocumentOffset));
 
             if (interestingNode is GherkinStep step)
             {
@@ -37,6 +44,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 {
                     stepTextRange = stepTextRange.ExtendRight(context.CaretDocumentOffset.Offset - stepTextRange.EndOffset.Offset);
                     relatedText += " ";
+                    if (string.IsNullOrWhiteSpace(relatedText))
+                    {
+                        relatedText = string.Empty;
+                        stepTextRange = stepTextRange.ExtendLeft(-1);
+                    }
                 }
 
                 var replaceRange = stepTextRange;
@@ -44,7 +56,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
                 ranges = new TextLookupRanges(insertRange, replaceRange);
             }
-            return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode, relatedText);
+            return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode, isStartOfLine ? startOfLineText : relatedText, isStartOfLine);
+        }
+
+        private bool IsStartOfLine(ITreeNode nodeUnderCursor, out string text)
+        {
+            text = string.Empty;
+
+            if (nodeUnderCursor.IsWhitespaceToken() && nodeUnderCursor.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
+                return true;
+
+            if (nodeUnderCursor.GetPreviousToken()?.IsWhitespaceToken() == true && nodeUnderCursor.GetPreviousToken()?.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
+            {
+                text = nodeUnderCursor.GetText();
+                return true;
+            }
+
+            return false;
         }
 
         // This occurs when cursor is at the end of line with a space before it. In this case the node ends up a bit sooner
@@ -64,7 +92,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         private ITreeNode GetInterestingNode(ITreeNode node)
         {
             if (node.GetTokenType() == GherkinTokenTypes.WHITE_SPACE && node.PrevSibling != null)
-                node = node.PrevSibling;
+                node = GetDeepestLastChild(node.PrevSibling);
 
             while (node != null)
             {
@@ -78,6 +106,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             }
 
             return null;
+        }
+
+        private static ITreeNode GetDeepestLastChild(ITreeNode node)
+        {
+            while (node.LastChild != null)
+                node = node.LastChild;
+            return node;
         }
     }
 }

@@ -58,3 +58,5 @@ packages
 
 *.generated.cs
 /src/dotnet/ReSharperPlugin.SpecflowRiderPlugin/Analytics/AppInsightsConfiguration.cs
+
+*.orig
