@@ -34,7 +34,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
             var templatesManager = LiveTemplatesManager.Instance;
             Ranges.NotNull();
-            var endCaretPosition = insertType == LookupItemInsertType.Insert ? Ranges.InsertRange.EndOffset : Ranges.ReplaceRange.EndOffset;
+            var endCaretPosition = new DocumentOffset(nameRange.Document, textControl.Caret.Offset());
             var hotspotInfos = BuildHotspotInfos().ToArray();
             if (hotspotInfos.Length > 0)
             {
