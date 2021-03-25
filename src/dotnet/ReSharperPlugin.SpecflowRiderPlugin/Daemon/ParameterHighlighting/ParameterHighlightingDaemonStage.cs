@@ -29,7 +29,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting
             DaemonProcessKind processKind
         )
         {
-            if (processKind != DaemonProcessKind.SOLUTION_ANALYSIS && processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
+            if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
                 return Enumerable.Empty<IDaemonStageProcess>();
 
             var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
