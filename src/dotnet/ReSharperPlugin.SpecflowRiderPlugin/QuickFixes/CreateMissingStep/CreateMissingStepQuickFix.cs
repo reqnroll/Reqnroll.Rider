@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Intentions;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Feature.Services.Resources;
 using JetBrains.Util;
-using ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighlight;
+using ReSharperPlugin.SpecflowRiderPlugin.Daemon.Errors;
 using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
@@ -11,9 +11,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
     [QuickFix]
     public class CreateMissingStepQuickFix : IQuickFix
     {
-        private readonly NotResolvedError _error;
+        private readonly StepNotResolvedError _error;
 
-        public CreateMissingStepQuickFix(NotResolvedError error)
+        public CreateMissingStepQuickFix(StepNotResolvedError error)
         {
             _error = error;
         }

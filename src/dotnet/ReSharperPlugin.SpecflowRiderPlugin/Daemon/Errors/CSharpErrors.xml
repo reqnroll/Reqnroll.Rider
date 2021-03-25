@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Errors language="C#" configurableSeverityImplementationLanguage="CSHARP"
+<Errors language="C#" configurableSeverityImplementationLanguage="GHERKIN"
 		baseClass="SpecflowHighlightingBase">
 
 	<Usings>
@@ -30,6 +30,11 @@
 		 -->
 	<SeverityConfiguration>
 		<Group name="SpecflowHighlightingGroupIds.Specflow">
+			<Tag externalName="StepNotResolvedError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>Unresolved SpecFlow step</Title>
+				<Description>No step definition was found for the step.</Description>
+			</Tag>
 			<Tag externalName="MethodNameMismatchPatternInfo.HIGHLIGHTING_ID"
 				 default="HINT">
 				<Title>Method name and specflow step pattern does not match</Title>
@@ -56,6 +61,12 @@
 		   for this highlight. Only used when the file is processed in QUICKFIX mode (default is
 		   to use ERROR mode)
 		 -->
+	<Error name="StepNotResolved" configurableSeverity="SpecFlow.StepNotResolved">
+		<Parameter type="ReSharperPlugin.SpecflowRiderPlugin.Psi.GherkinStep" name="gherkinStep"/>
+		<Message value="Cannot find a matching step definition" />
+		<Range>GherkinStep.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
 	<Info name="MethodNameMismatchPattern" configurableSeverity="SpecFlow.MethodNameMismatchPattern">
 		<Parameter type="IMethodDeclaration" name="method"/>
 		<Parameter type="string" name="expectedName" />
