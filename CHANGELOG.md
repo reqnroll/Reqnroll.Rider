@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Next
 
+## 1.4.0
+### Added 
+- Add autocompletion for Gherkin keywords [#46](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/49)
+- Add support for Extend Selection in feature files [#56](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/56)
+- Ability to fold Feature/Scenario/Background [#15](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/15)
+- Add support for placing breakpoints in feature files [#2](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/2)
+
+### Fixed
+- Should be able to Configure Inspection of "Undefined step" [#62](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/62)
+- Add separate indentation rule for 'And' steps [#52](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/52)
+
 ## 1.3.7
 ### Added
 - "Comment Line" action now works [#20](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/20)
