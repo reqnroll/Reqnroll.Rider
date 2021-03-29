@@ -9,6 +9,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.Navigation.NavigationExtensions;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Resources;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -128,8 +129,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 if (methodDeclaration == null)
                     continue;
                 var psiModule = classDeclaration.GetPsiModule();
-                foreach (var (parameterName, parameterType) in parameters.Reverse())
-                    methodDeclaration.AddParameterDeclarationAfter(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
+                
+                foreach (var (parameterName, parameterType) in parameters)
+                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
+
+                if (_reference.GetElement().Children<GherkinPystring>().FirstOrDefault() != null)
+                {
+                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("string", psiModule), "multilineText", null);
+                }
+
+                if (_reference.GetElement().Children<GherkinTable>().FirstOrDefault() != null)
+                {
+                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("TechTalk.SpecFlow.Table", psiModule), "table", null);
+                }
 
                 IClassMemberDeclaration insertedDeclaration;
                 using (new PsiTransactionCookie(type.GetPsiServices(), DefaultAction.Commit, "Generate specflow step"))
