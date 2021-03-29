@@ -118,18 +118,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                     continue;
 
                 var factory = CSharpElementFactory.GetInstance(classDeclaration);
-                var methodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, _reference.IsInsideScenarioOutline());
+                var methodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, _reference.GetGherkinFileCulture());
                 methodName = cSharpFile.GetPsiServices().Naming.Suggestion.GetDerivedName(methodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance, new SuggestionOptions(), targetFile);
-                var parameters = _stepDefinitionBuilder.GetStepDefinitionParameters(stepText, _reference.IsInsideScenarioOutline());
-                var pattern = _stepDefinitionBuilder.GetPattern(stepText, _reference.IsInsideScenarioOutline());
-
+                var parameters = _stepDefinitionBuilder.GetStepDefinitionParameters(stepText, _reference.GetGherkinFileCulture());
+                var pattern = _stepDefinitionBuilder.GetPattern(stepText, _reference.GetGherkinFileCulture());
                 var attributeType = CSharpTypeFactory.CreateType(SpecflowAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
                 var formatString = $"[$0(@\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
-                var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern.Replace("\"", "\"\"")) as IMethodDeclaration;
+                var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
                 if (methodDeclaration == null)
                     continue;
                 var psiModule = classDeclaration.GetPsiModule();
-                foreach (var (parameterName, parameterType) in parameters)
+                foreach (var (parameterName, parameterType) in parameters.Reverse())
                     methodDeclaration.AddParameterDeclarationAfter(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
 
                 IClassMemberDeclaration insertedDeclaration;

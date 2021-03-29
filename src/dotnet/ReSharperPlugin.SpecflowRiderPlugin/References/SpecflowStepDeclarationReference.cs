@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
@@ -116,6 +117,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
 
         public string GetStepText()
         {
+            var containingScenario = myOwner.GetContainingNode<IGherkinScenario>();
+            if (containingScenario is GherkinScenarioOutline scenarioOutline)
+                return myOwner.GetStepTextForExample(scenarioOutline.GetExampleData(0));
             return myOwner.GetStepText();
         }
 
@@ -156,6 +160,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
         public override IAccessContext GetAccessContext()
         {
             return new ElementAccessContext(myOwner);
+        }
+        
+        public CultureInfo GetGherkinFileCulture()
+        {
+            return new (myOwner.GetContainingNode<GherkinFile>().Lang);
         }
 
         public bool IsInsideScenarioOutline()
