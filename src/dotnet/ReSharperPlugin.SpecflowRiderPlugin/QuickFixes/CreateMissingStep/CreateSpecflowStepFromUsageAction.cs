@@ -21,6 +21,7 @@ using JetBrains.ReSharper.Psi.Transactions;
 using JetBrains.TextControl;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+using ReSharperPlugin.SpecflowRiderPlugin.Analytics;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
@@ -148,6 +149,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 {
                     insertedDeclaration = classDeclaration.AddClassMemberDeclaration((IClassMemberDeclaration) methodDeclaration);
                 }
+
+                var analyticsTransmitter = targetFile.GetSolution().GetComponent<IAnalyticsTransmitter>();
+                analyticsTransmitter.TransmitRuntimeEvent(new GenericEvent("RiderActionExecuted", new Dictionary<string, string>()
+                    {{"Type", "CreateStepBinding"}}));
 
                 var invocationExpression = insertedDeclaration.GetChildrenInSubtrees<IInvocationExpression>().FirstOrDefault();
                 if (invocationExpression != null)
