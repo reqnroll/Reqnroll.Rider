@@ -1,16 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Application.StdApplicationUI;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Impl;
 using JetBrains.ProjectModel.Tasks;
+using ReSharperPlugin.SpecflowRiderPlugin.Guidance;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
  {
      [SolutionComponent]
      public class SolutionTracker
      {
-         public SolutionTracker(ISolution solution, ISolutionLoadTasksScheduler solutionLoadTasksScheduler, IAnalyticsTransmitter transmitter, IRiderInstallationStatusService riderInstallationStatusService)
+         public SolutionTracker(ISolution solution, 
+                                ISolutionLoadTasksScheduler solutionLoadTasksScheduler, 
+                                IAnalyticsTransmitter transmitter, 
+                                IRiderInstallationStatusService riderInstallationStatusService, 
+                                IGuidanceConfiguration guidanceConfiguration, 
+                                OpensUri opensUri)
          {
              solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask("SpecFlow", SolutionLoadTaskKinds.Done, () =>
                  {
@@ -38,10 +45,34 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
                              statusData.UsageDays++;
                              statusData.LastUsedDate = today;
                          }
+
+                         var guidance = guidanceConfiguration.UsageSequence
+                             .LastOrDefault(i => statusData.UsageDays >= i.UsageDays && statusData.UserLevel < (int)i.UserLevel);
+                
+                         if (guidance?.UsageDays != null)
+                         {
+                             if (guidance.Url == null || ShowNotification(opensUri, guidance))
+                             {
+                                 transmitter.TransmitRuntimeEvent(new GenericEvent($"{guidance.UsageDays.Value} day usage"));
+
+                                 statusData.UserLevel = (int)guidance.UserLevel;
+                             }
+                         }
+                         
                          riderInstallationStatusService.SaveNewStatus(statusData);
+
                      }
                  }
              ));
+         }
+         
+         private static bool ShowNotification(OpensUri opensUri, GuidanceStep guidance)
+         {
+             if (!opensUri.IsInternetConnected())
+                 return false;
+                         
+             opensUri.OpenUri(new Uri(guidance.Url));
+             return true;
          }
      }
 }
