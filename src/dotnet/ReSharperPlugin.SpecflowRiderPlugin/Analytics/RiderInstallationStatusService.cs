@@ -11,7 +11,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
     {
         private readonly IAnalyticsTransmitter _analyticsTransmitter;
         private RiderInstallationStatus currentStatusData;
-        private static readonly string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static readonly string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
         private static readonly string specFlowFolder = Path.Combine(appDataFolder, "SpecFlow");
         private static readonly string specflowRiderPluginFilePath = Path.Combine(specFlowFolder, "specflowriderplugin.json");
 

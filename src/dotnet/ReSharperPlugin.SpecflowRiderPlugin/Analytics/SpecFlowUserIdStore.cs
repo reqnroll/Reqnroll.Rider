@@ -14,7 +14,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
     public class SpecFlowUserIdStore : ISpecFlowUserIdStore
     {
         private static readonly string appDataFolder = Environment.GetFolderPath(
-            Environment.SpecialFolder.ApplicationData);
+            Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
         public static readonly string UserIdFilePath = Path.Combine(appDataFolder, "SpecFlow", "userid");
 
         private readonly Lazy<string> _lazyUniqueUserId;
