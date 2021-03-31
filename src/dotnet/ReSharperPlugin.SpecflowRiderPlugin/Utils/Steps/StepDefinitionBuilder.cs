@@ -1,124 +1,88 @@
-using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Application;
-using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
+using TechTalk.SpecFlow.BindingSkeletons;
+using TechTalk.SpecFlow.Tracing;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps
 {
     public interface IStepDefinitionBuilder
     {
         string GetStepDefinitionMethodNameFromPattern(GherkinStepKind stepKind, string pattern, string[] parameterNames);
-        string GetStepDefinitionMethodNameFromStepText(GherkinStepKind stepKind, string stepText, bool isInsideScenarioOutline);
-        IEnumerable<(string  parameterName, string parameterType)> GetStepDefinitionParameters(string stepText, bool isInsideScenarioOutline);
-        string GetPattern(string stepText, bool isInsideScenarioOutline);
+        string GetStepDefinitionMethodNameFromStepText(GherkinStepKind stepKind, string stepText, CultureInfo cultureInfo);
+        IEnumerable<(string  parameterName, string parameterType)> GetStepDefinitionParameters(string stepText, CultureInfo cultureInfo);
+        string GetPattern(string stepText, CultureInfo cultureInfo);
     }
 
     [ShellComponent]
     public class StepDefinitionBuilder : IStepDefinitionBuilder
     {
-        private readonly IStepTextTokenizer _stepTextTokenizer;
-
-        public StepDefinitionBuilder(IStepTextTokenizer stepTextTokenizer)
-        {
-            _stepTextTokenizer = stepTextTokenizer;
-        }
-
         public string GetStepDefinitionMethodNameFromPattern(GherkinStepKind stepKind, string pattern, string[] parameterNames)
         {
-            var methodNameSb = new StringBuilder(stepKind.ToString());
-            var parameterIndex = 0;
-
-            foreach (var (tokenType, tokenText) in _stepTextTokenizer.TokenizeStepPattern(pattern))
-            {
-                switch (tokenType)
-                {
-                    case StepTokenType.Text:
-                        methodNameSb.Append(tokenText[0].ToUpperFast()).Append(tokenText.Substring(1));
-                        break;
-                    case StepTokenType.OutlineParameter:
-                    case StepTokenType.Parameter:
-                        if (parameterIndex < parameterNames.Length)
-                        {
-                            var parameterName = parameterNames[parameterIndex++];
-                            methodNameSb.Append(parameterName[0].ToUpperFast()).Append(parameterName.Substring(1));
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            return methodNameSb.ToString();
+            var stepTextAnalyzer = new StepTextAnalyzer();
+            var result = stepTextAnalyzer.Analyze(pattern, CultureInfo.CurrentCulture);
+            
+            return stepKind + string.Concat(result.TextParts.ToArray()).ToIdentifier();
         }
 
-        public string GetStepDefinitionMethodNameFromStepText(GherkinStepKind stepKind, string stepText, bool isInsideScenarioOutline)
+        public string GetStepDefinitionMethodNameFromStepText(GherkinStepKind stepKind, string stepText, CultureInfo cultureInfo)
         {
-            var methodNameSb = new StringBuilder(stepKind.ToString());
-
-            foreach (var (tokenType, tokenText) in _stepTextTokenizer.TokenizeStepText(stepText, isInsideScenarioOutline))
-            {
-                switch (tokenType)
-                {
-                    case StepTokenType.Text:
-                    case StepTokenType.OutlineParameter:
-                        methodNameSb.Append(tokenText[0].ToUpperFast()).Append(tokenText.Substring(1));
-                        break;
-                    case StepTokenType.Parameter:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            return methodNameSb.ToString();
+            var stepTextAnalyzer = new StepTextAnalyzer();
+            var result = stepTextAnalyzer.Analyze(stepText, cultureInfo);
+            
+            return stepKind + string.Concat(result.TextParts.ToArray()).ToIdentifier();
         }
 
-        public IEnumerable<(string parameterName, string parameterType)> GetStepDefinitionParameters(string stepText, bool isInsideScenarioOutline)
+        public IEnumerable<(string parameterName, string parameterType)> GetStepDefinitionParameters(string stepText, CultureInfo cultureInfo)
         {
-            var parameterNumber = 1;
+            var stepTextAnalyzer = new StepTextAnalyzer();
+            var result = stepTextAnalyzer.Analyze(stepText, cultureInfo);
 
-            foreach (var (tokenType, tokenText) in _stepTextTokenizer.TokenizeStepText(stepText, isInsideScenarioOutline))
+            return result.Parameters.Select(p => (p.Name, GetCSharpTypeName(p.Type)));
+        }
+        
+        private string GetCSharpTypeName(string type)
+        {
+            switch (type)
             {
-                switch (tokenType)
-                {
-                    case StepTokenType.OutlineParameter:
-                        yield return (tokenText, "System.String");
-                        break;
-                    case StepTokenType.Parameter:
-                        yield return ("p" + parameterNumber++, int.TryParse(tokenText, out _) ? "System.Int32" : "System.String");
-                        break;
-                }
+                case "DateTime":
+                    return "System.DateTime";
+                case "String":
+                    return "string";
+                case "Decimal":
+                    return "decimal";
+                case "Int32":
+                    return "int";
+                default:
+                    return type;
             }
         }
 
-        public string GetPattern(string stepText, bool isInsideScenarioOutline)
+        public string GetPattern(string stepText, CultureInfo cultureInfo)
         {
-            var patternSb = new StringBuilder();
+            var stepTextAnalyzer = new StepTextAnalyzer();
+            var result = stepTextAnalyzer.Analyze(stepText, cultureInfo);
+            
+            var pattern = new StringBuilder();
 
-            foreach (var (tokenType, tokenText) in _stepTextTokenizer.TokenizeStepText(stepText, isInsideScenarioOutline, false))
+            pattern.Append(EscapeRegex(result.TextParts[0]));
+            for (int i = 1; i < result.TextParts.Count; i++)
             {
-                switch (tokenType)
-                {
-                    case StepTokenType.Text:
-                        patternSb.Append(Regex.Escape(tokenText));
-                        break;
-                    case StepTokenType.OutlineParameter:
-                    case StepTokenType.Parameter:
-                        patternSb.Append("(.+)");
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-                patternSb.Append(' ');
+                pattern.AppendFormat("({0})", result.Parameters[i-1].RegexPattern);
+                pattern.Append(EscapeRegex(result.TextParts[i]));
             }
 
-            if (patternSb.Length > 0)
-                patternSb.Length--;
+            return pattern.ToString();
+        }
 
-            return patternSb.ToString();
+        private static string EscapeRegex(string text)
+        {
+            return Regex.Escape(text).Replace("\"", "\"\"").Replace("\\ ", " ");
         }
     }
+
 }

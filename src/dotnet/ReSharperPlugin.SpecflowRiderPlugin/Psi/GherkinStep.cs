@@ -118,13 +118,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 switch (te)
                 {
                     case GherkinStepParameter p:
-                        previousTokenWasAParameter = true;
-                        sb.Length--; // Remove `<`
-
                         if (exampleData.TryGetValue(p.GetParameterName(), out var value))
+                        {
+                            previousTokenWasAParameter = true;
+                            sb.Length--; // Remove `<`
                             sb.Append(value);
+                        }
                         else
+                        {
                             sb.Append(p.GetText());
+                        }
 
                         break;
                     case GherkinToken token when token.NodeType != GherkinTokenTypes.STEP_KEYWORD:
