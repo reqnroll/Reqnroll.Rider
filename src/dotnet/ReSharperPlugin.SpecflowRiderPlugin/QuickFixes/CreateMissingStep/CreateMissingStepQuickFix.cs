@@ -28,6 +28,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 new IntentionAction(new CreateSpecflowStepFromUsageAction(
                     _error.GherkinStep.GetStepReference(),
                     psiServices.GetComponent<IMenuModalUtil>(),
+                    psiServices.GetComponent<ICreateStepClassDialogUtil>(),
+                    psiServices.GetComponent<ICreateStepPartialClassFile>(),
                     psiServices.GetComponent<SpecflowStepsDefinitionsCache>(),
                     psiServices.GetComponent<ICreateSpecFlowStepUtil>()
                 ), BulbThemedIcons.RedBulb.Id, IntentionsAnchors.QuickFixesAnchor)

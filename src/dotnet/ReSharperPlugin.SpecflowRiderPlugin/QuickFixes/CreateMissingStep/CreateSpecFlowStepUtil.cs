@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Diagnostics;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.Navigation.NavigationExtensions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -22,7 +23,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 {
     public interface ICreateSpecFlowStepUtil
     {
-        [CanBeNull] IClassMemberDeclaration AddSpecflowStep(
+        [CanBeNull] IClassMemberDeclaration AddSpecFlowStep(
             IPsiSourceFile targetFile,
             string classClrName,
             GherkinStepKind stepKind,
@@ -43,7 +44,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             _stepDefinitionBuilder = stepDefinitionBuilder;
         }
 
-        public IClassMemberDeclaration AddSpecflowStep(
+        public IClassMemberDeclaration AddSpecFlowStep(
             IPsiSourceFile targetFile,
             string classClrName,
             GherkinStepKind stepKind,
