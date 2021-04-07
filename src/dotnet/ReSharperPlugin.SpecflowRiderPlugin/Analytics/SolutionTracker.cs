@@ -19,15 +19,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
                                 IGuidanceConfiguration guidanceConfiguration, 
                                 OpensUri opensUri)
          {
-             solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask("SpecFlow", SolutionLoadTaskKinds.Done, () =>
+             solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask("SpecFlow", SolutionLoadTaskKinds.AsLateAsPossible, () =>
                  {
                      var projects = ((SolutionElement)solution).GetAllProjects();
                      var isSpecFlowSolution = false;
                      foreach (var project in projects)
                      {
                          var targetFrameworks = project.TargetFrameworkIds;
-                         var assemblies = project.GetModuleReferences(targetFrameworks.First());
-                         if (assemblies.Any(a => a.Name == "TechTalk.SpecFlow"))
+                         var assemblies = project.GetAllReferencedAssemblies();
+                         var nugetPackages = project.GetAllPackagesReferences().ToArray();
+                         if (assemblies.Any(a => a.Name == "TechTalk.SpecFlow") || 
+                             nugetPackages.Any(p =>  p.Name.IndexOf("SpecFlow", StringComparison.OrdinalIgnoreCase) >= 0))
                          {
                              isSpecFlowSolution = true;
                              transmitter.TransmitRuntimeEvent(new GenericEvent("Rider SpecFlow loaded", new Dictionary<string, string>()
