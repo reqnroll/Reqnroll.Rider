@@ -9,6 +9,7 @@ using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 namespace ReSharperPlugin.SpecflowRiderPlugin.ExtendSelection
 {
     [ProjectFileType(typeof(GherkinProjectFileType))]
+    [Language(typeof(GherkinLanguage))]
     public class GherkinSelectEmbracingConstructProvider : ISelectEmbracingConstructProvider
     {
         public bool IsAvailable(IPsiSourceFile sourceFile)
