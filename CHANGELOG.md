@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Next
+## 1.5.0
+
+### Added
+- Support for Rider 2021.1
+
+### Fixed
+- Create step quickfix should generate same code as SpecFlow or the Visual Studio extension.
+- Show onboarding information after opening a SpecFlow solution [#66](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/66)
+
 
 ## 1.4.0
 ### Added 
