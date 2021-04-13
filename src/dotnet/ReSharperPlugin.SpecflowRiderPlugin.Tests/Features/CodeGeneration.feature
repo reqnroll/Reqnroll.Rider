@@ -86,29 +86,29 @@ Scenario: Should generate steps with Table argument
 	Then the following C# snippet should be generated
 		"""
 		[When(@"this step has a table")]
-	    public void WhenThisStepHasATable(Table table)
-	    {
-	        ScenarioContext.StepIsPending();
-	    }
+		public void WhenThisStepHasATable(Table table)
+		{
+		    ScenarioContext.StepIsPending();
+		}
 		"""
 	
 Scenario: Should generate steps with multiline arguments
 	Given the following step text
-	"""
-	When this step has a multiline
-	    """
+		```
+		When this step has a multiline
+		"""
 		multiline text
 		"""
-	"""
+		```
 	When the create step action is executed
 	Then the following C# snippet should be generated
-	"""
-    [When(@"this step has a multiline")]
-    public void WhenThisStepHasAMultiline(string multilineText)
-    { 
-       ScenarioContext.StepIsPending();
-    }
-	"""
+		"""
+		[When(@"this step has a multiline")]
+		public void WhenThisStepHasAMultiline(string multilineText)
+		{ 
+		   ScenarioContext.StepIsPending();
+		}
+		"""
 
 Scenario: Should generate steps with integer argument in double quotes as strings
 	Given the following step text
@@ -148,11 +148,11 @@ Scenario: Should generate steps with string argument in double quotes
 	When the create step action is executed
 	Then the following C# snippet should be generated
 		"""
-		    [When(@"the first number ""(.*)""")]
-		    public void WhenTheFirstNumber(string twelve)
-		    {
-				ScenarioContext.StepIsPending();
-			}
+		[When(@"the first number ""(.*)""")]
+		public void WhenTheFirstNumber(string twelve)
+		{
+		    ScenarioContext.StepIsPending();
+		}
 		"""
 
 Scenario: Should generate steps with string argument in single quotes
@@ -178,10 +178,10 @@ Scenario: Should generate steps with multiple argument
 	When the create step action is executed
 	Then the following C# snippet should be generated
 		"""
-	    [When(@"the first number ""(.*)"" or ""(.*)""")]
-	    public void WhenTheFirstNumberOr(string twelve, string eleven)
-	    {
-			ScenarioContext.StepIsPending();
+		[When(@"the first number ""(.*)"" or ""(.*)""")]
+		public void WhenTheFirstNumberOr(string twelve, string eleven)
+		{
+		    ScenarioContext.StepIsPending();
 		}
 		"""
 
