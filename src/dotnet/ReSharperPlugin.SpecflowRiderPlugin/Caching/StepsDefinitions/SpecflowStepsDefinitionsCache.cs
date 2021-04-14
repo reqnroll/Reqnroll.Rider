@@ -24,7 +24,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     [PsiComponent]
     public class SpecflowStepsDefinitionsCache : SimpleICache<SpecflowStepsDefinitionsCacheEntries>
     {
-        private const int VersionInt = 11;
+        private const int VersionInt = 12;
         public override string Version => VersionInt.ToString();
 
         // FIXME: per step kind
@@ -138,8 +138,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             var bindingAttributeFound = false;
             foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
             {
-                if (potentialBindingAttribute.GetClrName().FullName == "TechTalk.SpecFlow.BindingAttribute")
+                var fullName = potentialBindingAttribute.GetClrName().FullName;
+                if (fullName == "TechTalk.SpecFlow.BindingAttribute")
+                {
                     bindingAttributeFound = true;
+                    break;
+                }
+                // FIXME: Should we check for `using TechTalk.SpecFlow` ?
+                if (fullName.IsEmpty() && potentialBindingAttribute.GetAttributeShortName() == "Binding")
+                {
+                    bindingAttributeFound = true;
+                    break;
+                }
             }
             return bindingAttributeFound;
         }
@@ -214,21 +224,25 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 
                 var methodCacheEntry = classCacheEntry.AddMethod(methodDeclaration.DeclaredName);
 
-                foreach (var attributeInstance in methodDeclaration.Attributes.Select(x => x.GetAttributeInstance()))
+                foreach (var attribute in methodDeclaration.Attributes)
                 {
-                    if (attributeInstance.PositionParameterCount == 0)
+                    if (attribute.Arguments.Count != 1)
                         continue;
 
-                    var parameter = attributeInstance.PositionParameter(0);
-                    var regex = parameter.ConstantValue.Value as string;
+                    var attributeArgument = attribute.Arguments[0];
+
+                    var regex = attributeArgument.Value?.ConstantValue.Value as string;
                     if (regex == null)
                         continue;
 
-                    if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.Given, attributeInstance.GetAttributeType().GetClrName()))
+                    // FIXME: If at some point this is not enought we could check that attribute.Name.QualifiedName contains TechTalk.SpecFlow or that
+                    // TechTalk.SpecFlow is in the `using` list somewhere in a parent
+
+                    if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Given, attribute.Name.ShortName))
                         methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
-                    if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.When, attributeInstance.GetAttributeType().GetClrName()))
+                    if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.When, attribute.Name.ShortName))
                         methodCacheEntry.AddStep(GherkinStepKind.When, regex);
-                    if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.Then, attributeInstance.GetAttributeType().GetClrName()))
+                    if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Then, attribute.Name.ShortName))
                         methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
                 }
             }
