@@ -46,17 +46,22 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
             return Map[sourceFile];
         }
 
-        public void RemoveFailedStep(IPsiSourceFile sourceFile, string featureText, string scenarioText)
+        public bool RemoveFailedStep(IPsiSourceFile sourceFile, string featureText, string scenarioText)
         {
             if (!Map.ContainsKey(sourceFile))
-                return;
+                return false;
 
             var list = Map[sourceFile];
-            list.RemoveRange(list.Where(x => x.FeatureText == featureText && x.ScenarioText == scenarioText));
+            var matchingElements = list.Where(x => x.FeatureText == featureText && x.ScenarioText == scenarioText).ToList();
+            if (matchingElements.Count == 0)
+                return false;
+
+            list.RemoveRange(matchingElements);
             Map[sourceFile] = list;
+            return true;
         }
 
-        public void AddFailedStep(IPsiSourceFile sourceFile, string featureText, string scenarioText, List<StepTestOutput> stepsOutputs)
+        public bool AddFailedStep(IPsiSourceFile sourceFile, string featureText, string scenarioText, List<StepTestOutput> stepsOutputs)
         {
             if (!Map.ContainsKey(sourceFile))
                 Map[sourceFile] = new HashSet<FailedStepCacheEntry>();
@@ -65,7 +70,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
 
             var existingFailedStep = list.FirstOrDefault(x => x.FeatureText == featureText && x.ScenarioText == scenarioText);
             if (existingFailedStep != null)
+            {
+                if (existingFailedStep.StepsOutputs.SequenceEqual(stepsOutputs))
+                    return false;
                 existingFailedStep.StepsOutputs = stepsOutputs;
+
+            }
             else
                 list.Add(new FailedStepCacheEntry
                 {
@@ -73,7 +83,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
                     ScenarioText = scenarioText,
                     StepsOutputs = stepsOutputs
                 });
+
             Map[sourceFile] = list;
+            return true;
         }
     }
 }
