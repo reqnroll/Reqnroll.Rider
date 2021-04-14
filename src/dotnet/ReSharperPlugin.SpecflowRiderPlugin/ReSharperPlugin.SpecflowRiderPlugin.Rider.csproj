@@ -49,6 +49,9 @@
     <EmbeddedResource Include="Psi/i18n.json" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Templates/FileTemplates.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\libs\Regex\Regex.csproj" />
   </ItemGroup>
 
