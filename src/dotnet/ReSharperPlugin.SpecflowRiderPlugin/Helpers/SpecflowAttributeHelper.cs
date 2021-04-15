@@ -12,6 +12,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
         public static readonly ClrTypeName GivenAttribute = new ClrTypeName("TechTalk.SpecFlow.GivenAttribute");
         public static readonly ClrTypeName WhenAttribute = new ClrTypeName("TechTalk.SpecFlow.WhenAttribute");
         public static readonly ClrTypeName ThenAttribute = new ClrTypeName("TechTalk.SpecFlow.ThenAttribute");
+        public const string StepDefinitionAttributeShortName = "StepDefinition";
+        public const string GivenAttributeShortName = "Given";
+        public const string WhenAttributeShortName = "When";
+        public const string ThenAttributeShortName = "Then";
 
         public static string GetAttributeClrName(GherkinStepKind stepKind)
         {
@@ -39,18 +43,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
             return null;
         }
 
-        public static bool IsAttributeForKind(GherkinStepKind stepKind, IClrTypeName typeName)
+        public static bool IsAttributeForKindUsingShortName(GherkinStepKind stepKind, string typeShortName)
         {
-            if (typeName.Equals(StepDefinitionAttribute))
+            if (typeShortName.Equals(StepDefinitionAttributeShortName))
                 return true;
-            if (stepKind == GherkinStepKind.Given && typeName.Equals(GivenAttribute))
+            if (stepKind == GherkinStepKind.Given && typeShortName.Equals(GivenAttributeShortName))
                 return true;
-            if (stepKind == GherkinStepKind.When && typeName.Equals(WhenAttribute))
+            if (stepKind == GherkinStepKind.When && typeShortName.Equals(WhenAttributeShortName))
                 return true;
-            if (stepKind == GherkinStepKind.Then && typeName.Equals(ThenAttribute))
+            if (stepKind == GherkinStepKind.Then && typeShortName.Equals(ThenAttributeShortName))
                 return true;
             return false;
         }
+
         public static bool IsAttributeForKind(GherkinStepKind stepKind, string fullName)
         {
             if (StepDefinitionAttribute.FullName == fullName)
