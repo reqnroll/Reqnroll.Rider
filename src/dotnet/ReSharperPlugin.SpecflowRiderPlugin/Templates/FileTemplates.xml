@@ -22,6 +22,9 @@
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Description/@EntryValue">SpecFlow Json Configuration</s:String>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Image/@EntryValue">SpecFlowFile</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Reformat/@EntryValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=ABDFB0613102DF4DBB59387506ADA616/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=ABDFB0613102DF4DBB59387506ADA616/CustomProperties/=mask/@EntryIndexedValue">techtalk.specflow</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=ABDFB0613102DF4DBB59387506ADA616/Type/@EntryValue">InProjectWithReference</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
@@ -53,6 +56,9 @@
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Reformat/@EntryValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=ABDFB0613102DF4DBB59387506ADA616/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=ABDFB0613102DF4DBB59387506ADA616/CustomProperties/=mask/@EntryIndexedValue">techtalk.specflow</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=ABDFB0613102DF4DBB59387506ADA616/Type/@EntryValue">InProjectWithReference</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Text/@EntryValue">using System;
 using System.Collections.Generic;
@@ -98,6 +104,9 @@ namespace $NAMESPACE$
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Reformat/@EntryValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=ABDFB0613102DF4DBB59387506ADA616/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=ABDFB0613102DF4DBB59387506ADA616/CustomProperties/=mask/@EntryIndexedValue">techtalk.specflow</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=ABDFB0613102DF4DBB59387506ADA616/Type/@EntryValue">InProjectWithReference</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Text/@EntryValue">using System;
 using System.Collections.Generic;
@@ -173,6 +182,9 @@ namespace $NAMESPACE$
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Field/=CLASS/Expression/@EntryValue">getAlphaNumericFileNameWithoutExtension()</s:String>
     <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Field/=CLASS/Order/@EntryValue">0</s:Int64>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Reformat/@EntryValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=ABDFB0613102DF4DBB59387506ADA616/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=ABDFB0613102DF4DBB59387506ADA616/CustomProperties/=mask/@EntryIndexedValue">techtalk.specflow</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=ABDFB0613102DF4DBB59387506ADA616/Type/@EntryValue">InProjectWithReference</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
     <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
     <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
