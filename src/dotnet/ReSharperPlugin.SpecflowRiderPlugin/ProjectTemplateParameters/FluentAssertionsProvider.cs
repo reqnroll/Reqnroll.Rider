@@ -5,13 +5,13 @@ using JetBrains.ReSharper.Host.Features.ProjectModel.ProjectTemplates.DotNetExte
 namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectTemplateParameters
 {
     [ShellComponent]
-    public class UnityPathParameterProvider : IDotNetTemplateParameterProvider
+    public class FluentAssertionsProvider : IDotNetTemplateParameterProvider
     {
-        public int Priority => 50;
+        public int Priority => 60;
 
         public IReadOnlyCollection<DotNetTemplateParameter> Get()
         {
-            return new[] {new UnitTestProviderParameter()};
+            return new[] {new FluentAssertionsProviderParameter()};
         }
     }
 }
