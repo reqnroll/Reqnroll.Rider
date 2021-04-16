@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using JetBrains.Application.Threading;
 using JetBrains.Collections;
 using JetBrains.Diagnostics;
+using JetBrains.DocumentManagers;
 using JetBrains.Lifetimes;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
@@ -82,12 +83,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                     continue;
                 if (!(testElement.GetDeclaredElement() is IMethod methodTestDeclaration))
                     continue;
-                var psiSourceFile = declaredElement.GetSourceFiles().SingleItem;
-                if (psiSourceFile?.Name.EndsWith(".feature.cs") != true)
+                var featureCsPsiSourceFile = declaredElement.GetSourceFiles().SingleItem;
+                if (featureCsPsiSourceFile?.Name.EndsWith(".feature.cs") != true)
                     continue;
 
-                var project = psiSourceFile.GetProject();
-                var gherkinFile = project?.GetGherkinFile(psiSourceFile.Name.Substring(0, psiSourceFile.Name.Length - 3));
+                var project = featureCsPsiSourceFile.GetProject();
+                if (project == null)
+                    continue;
+                var filePath = featureCsPsiSourceFile.Document.TryGetFilePath().MakeRelativeTo(project.Location);
+                var gherkinFile = project.GetGherkinFile(filePath.FullPath.Substring(0, filePath.FullPath.Length - 3));
 
                 var gherkinDocument = gherkinFile?.GetSourceFile()?.Document;
                 if (gherkinDocument == null)
