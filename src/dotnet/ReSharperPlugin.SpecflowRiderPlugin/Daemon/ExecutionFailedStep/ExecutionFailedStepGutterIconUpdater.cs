@@ -7,8 +7,8 @@ using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.ReSharper.UnitTestFramework;
 using JetBrains.ReSharper.UnitTestFramework.Session;
@@ -28,7 +28,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
         private static readonly ClrTypeName NunitDescriptionAttribute = new ClrTypeName("NUnit.Framework.DescriptionAttribute");
         private readonly ILogger _myLogger;
         [NotNull] private readonly FailedStepCache _failedStepCache;
-        [NotNull] private readonly IPsiFiles _psiFiles;
+        [NotNull] private readonly IDaemon _daemon;
         private readonly IDictionary<IUnitTestElement, (IUnitTestSession session, UnitTestResult result)> _updatedUnitTests;
         private readonly GroupingEvent _myResultUpdated;
         private readonly IUnitTestResultManager _unitTestResultManager;
@@ -39,12 +39,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
             [NotNull] IUnitTestResultManager resultManager,
             [NotNull] ILogger logger,
             [NotNull] FailedStepCache failedStepCache,
-            [NotNull] IPsiFiles psiFiles
+            [NotNull] IDaemon daemon
         )
         {
             _myLogger = logger;
             _failedStepCache = failedStepCache;
-            _psiFiles = psiFiles;
+            _daemon = daemon;
             _updatedUnitTests = new Dictionary<IUnitTestElement, (IUnitTestSession session, UnitTestResult result)>(UnitTestElement.EqualityComparer);
             _myResultUpdated = shellLocks.NotNull("shellLocks != null")
                 .CreateGroupingEvent(lifetime, nameof(ExecutionFailedStepGutterIconUpdater) + "::ResultUpdated", 500.Milliseconds(), OnProcessUpdated);
@@ -64,11 +64,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
             {
                 HashSet<IPsiSourceFile> updatedFiles;
                 using (ReadLockCookie.Create())
+                {
                     updatedFiles = UpdateIconsInActiveDocuments(set);
-
-                using (WriteLockCookie.Create())
                     foreach (var psiSourceFile in updatedFiles)
-                        _psiFiles.MarkAsDirty(psiSourceFile);
+                        _daemon.ForceReHighlight(psiSourceFile.Document);
+                }
             }
         }
 
