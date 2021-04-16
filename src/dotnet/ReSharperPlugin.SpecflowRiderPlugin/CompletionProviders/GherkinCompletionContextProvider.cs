@@ -94,6 +94,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             if (node.GetTokenType() == GherkinTokenTypes.WHITE_SPACE && node.PrevSibling != null)
                 node = GetDeepestLastChild(node.PrevSibling);
 
+            if (node.GetTokenType() == GherkinTokenTypes.COMMENT)
+                return null;
+
             while (node != null)
             {
                 if (node is GherkinStep)
