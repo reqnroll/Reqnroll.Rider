@@ -111,7 +111,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                 if (!result.Status.GetResultStatus().Has(UnitTestStatus.Failed) && !result.Status.GetResultStatus().Has(UnitTestStatus.Inconclusive))
                 {
                     if (_failedStepCache.RemoveFailedStep(gherkinFile.GetSourceFile(), featureText, scenarioText))
-                        updatedFiles.Add(psiSourceFile);
+                        updatedFiles.Add(gherkinFile.GetSourceFile());
                     continue;
                 }
 
@@ -131,7 +131,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                     continue;
 
                 if (_failedStepCache.AddFailedStep(gherkinFile.GetSourceFile(), featureText, scenarioText, invalidSteps))
-                    updatedFiles.Add(psiSourceFile);
+                    updatedFiles.Add(gherkinFile.GetSourceFile());
             }
             return updatedFiles;
         }
