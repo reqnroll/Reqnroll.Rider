@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
 {
@@ -47,8 +48,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                 {
                     var stepTestOutput = failedStep.StepsOutputs[i];
                     if (!steps[i].Match(stepTestOutput))
-                        break; // Does not match, maybe the file has changed
-                    if (stepTestOutput.Status != "done" && stepTestOutput.StatusLine != "skipped because of previous errors")
+                        continue; // Does not match, maybe the file has changed
+                    if (stepTestOutput.Status != StepTestOutput.StepStatus.Done && stepTestOutput.Status != StepTestOutput.StepStatus.Skipped)
                         consumer.AddHighlighting(new ExecutionFailedStepHighlighting(steps[i], stepTestOutput));
                 }
             }

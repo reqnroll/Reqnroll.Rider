@@ -76,12 +76,25 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
             };
         }
 
-        private static string GetStatus(string status)
+        private static StepTestOutput.StepStatus GetStatus(string statusLine)
         {
-            var colonIndex = status.IndexOf(':');
+            if (statusLine == "skipped because of previous errors")
+                return StepTestOutput.StepStatus.Skipped;
+            if (statusLine.StartsWith("No matching step definition found for the step"))
+                return StepTestOutput.StepStatus.NotImplemented;
+
+            var colonIndex = statusLine.IndexOf(':');
             if (colonIndex == -1)
-                return status;
-            return status.Substring(0, colonIndex);
+                return StepTestOutput.StepStatus.Done;
+
+            var status = statusLine.Substring(0, colonIndex);
+            return status switch
+            {
+                "done" => StepTestOutput.StepStatus.Done,
+                "duration" => StepTestOutput.StepStatus.Done,
+                "error" => StepTestOutput.StepStatus.Failed,
+                _ => StepTestOutput.StepStatus.Done
+            };
         }
 
         private string ParseMultilineContent()

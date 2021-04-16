@@ -17,7 +17,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
                 writer.Write(failedStep.StepsOutputs.Count);
                 foreach (var stepOutput in failedStep.StepsOutputs)
                 {
-                    writer.Write(stepOutput.Status);
+                    writer.Write((int) stepOutput.Status);
                     writer.Write(stepOutput.StatusLine);
                     writer.Write(stepOutput.FirstLine);
                     writer.Write(stepOutput.MultiLineArgument);
@@ -40,7 +40,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
                 var stepsOutputs = new List<StepTestOutput>(stepOutputCount);
                 for (var j = 0; j < stepOutputCount; j++)
                 {
-                    var status = reader.ReadString();
+                    var status = reader.ReadInt();
                     var statusLine = reader.ReadString();
                     var firstLine = reader.ReadString();
                     var multiLineArgument = reader.ReadString();
@@ -49,7 +49,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
 
                     stepsOutputs.Add(new StepTestOutput
                     {
-                        Status = status,
+                        Status = (StepTestOutput.StepStatus) status,
                         StatusLine = statusLine,
                         Table = table,
                         ErrorOutput = errorOutput,

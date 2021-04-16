@@ -141,7 +141,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
             var parser = new OutputTestParser(GetTestOutputByLine(testResult), gherkinKeywordProvider.GetKeywordsList(lang));
 
             var stepOutputs = parser.ParseOutput().ToList();
-            if (stepOutputs.Any(x => x.Status != "done"))
+            if (stepOutputs.Any(x => x.Status != StepTestOutput.StepStatus.Done))
                 return stepOutputs;
 
             return null;

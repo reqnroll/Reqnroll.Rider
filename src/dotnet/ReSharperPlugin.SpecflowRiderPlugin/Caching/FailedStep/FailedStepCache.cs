@@ -15,7 +15,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
     [PsiComponent]
     public class FailedStepCache : SimpleICache<ISet<FailedStepCacheEntry>>
     {
-        public override string Version => "4";
+        public override string Version => "5";
 
         public FailedStepCache(
             Lifetime lifetime,
