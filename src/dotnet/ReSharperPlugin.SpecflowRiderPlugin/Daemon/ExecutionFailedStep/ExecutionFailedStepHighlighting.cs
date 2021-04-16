@@ -51,9 +51,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
 
             switch (_stepTestOutput.Status)
             {
-                case "error":
-                    richTextBlock.Add(new RichText(_stepTestOutput.Status, TextStyle.FromForeColor(Color.DarkRed))
-                        .Append(_stepTestOutput.StatusLine.Substring(_stepTestOutput.Status.Length)));
+                case StepTestOutput.StepStatus.Failed:
+                    var statusLineText = new RichText(_stepTestOutput.Status.ToString(), new TextStyle(FontStyle.Bold, Color.DarkRed))
+                        .Append(new RichText(" - "))
+                        .Append(new RichText(_stepTestOutput.StatusLine));
+                    richTextBlock.Add(statusLineText);
                     break;
                 default:
                     richTextBlock.Add(new RichText(_stepTestOutput.StatusLine));
