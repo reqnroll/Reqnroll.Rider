@@ -25,6 +25,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
             var stepKeywords = _keywordList.GetStepKeywords().ToList();
             do
             {
+                if (_eof)
+                    break;
                 foreach (var stepKeyword in stepKeywords)
                 {
                     if (_currentLine.StartsWith(stepKeyword))
@@ -34,7 +36,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
                     }
                 }
             }
-            while (!_eof && Advance());
+            while (Advance());
         }
 
         private StepTestOutput ParseStep()
