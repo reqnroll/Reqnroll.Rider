@@ -2,41 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
 {
     public class OutputTestParser : IDisposable
     {
-        private readonly GherkinKeywordList _keywordList;
+        private readonly List<string> _stepKeywords;
         private readonly IEnumerator<string> _enumerator;
         private string _currentLine;
         private bool _eof;
 
         public OutputTestParser(IEnumerable<string> lines, GherkinKeywordList keywordList)
         {
-            _keywordList = keywordList;
             _enumerator = lines.GetEnumerator();
+            _stepKeywords = keywordList.GetStepKeywords().ToList();
         }
 
         public IEnumerable<StepTestOutput> ParseOutput()
         {
             Advance();
-            var stepKeywords = _keywordList.GetStepKeywords().ToList();
-            do
+            while (!_eof)
             {
-                if (_eof)
-                    break;
-                foreach (var stepKeyword in stepKeywords)
-                {
-                    if (_currentLine.StartsWith(stepKeyword))
-                    {
-                        yield return ParseStep();
-                        break;
-                    }
-                }
+                if (LineIsAStep(_currentLine))
+                    yield return ParseStep();
+                else
+                    Advance();
             }
-            while (Advance());
+        }
+
+        private bool LineIsAStep([CanBeNull] string line)
+        {
+            return _stepKeywords.Any(keyword => line?.StartsWith(keyword) == true);
         }
 
         private StepTestOutput ParseStep()
@@ -47,7 +45,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
             var output = new StringBuilder();
             Advance();
 
-            while (!_currentLine.StartsWith("->")  && !_eof)
+            while (!_currentLine.StartsWith("->") && !_eof)
             {
                 if (_currentLine.StartsWith("  --- table step argument ---"))
                     tableContent = ParseMultilineContent();
@@ -64,6 +62,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
                 return null;
 
             var statusLine = _currentLine.Substring(3);
+            Advance();
+
+            while (!_eof && !LineIsAStep(_currentLine) && !_currentLine.StartsWith("-> "))
+            {
+                statusLine += Environment.NewLine + _currentLine;
+                Advance();
+            }
 
             return new StepTestOutput
             {
