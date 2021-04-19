@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.UI.Icons.CommonThemedIcons;
@@ -188,10 +189,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
         [CanBeNull]
         private IProject FindProjectContainingPath(ISolution solution, string path)
         {
-            path += "/";
+            path += Path.DirectorySeparatorChar;
             return solution.GetAllProjects()
                 .Where(p => p.IsOpened)
-                .Where(p => path.Contains(p.Location.FullPath + "/"))
+                .Where(p => path.Contains(p.Location.FullPath + Path.DirectorySeparatorChar))
                 .OrderByDescending(p => p.Location.FullPath.Length)
                 .FirstOrDefault();
         }
