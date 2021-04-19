@@ -1,0 +1,16 @@
+{
+    "symbolInfo": {
+        "unitTestProvider": {
+            "longName": "unittestprovider",
+            "shortName": "t"
+        },
+        "targetFramework": {
+            "longName": "framework",
+            "shortName": "f"
+        },
+        "includeFluentAssertions": {
+            "longName": "includeFluentAssertions",
+            "shortName": "fa"
+        }
+    }
+}
