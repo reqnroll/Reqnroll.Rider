@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.UI.Icons.CommonThemedIcons;
@@ -8,23 +6,22 @@ using JetBrains.Diagnostics;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
-using JetBrains.ProjectModel.Properties;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.Intentions.CreateDeclaration;
 using JetBrains.ReSharper.Feature.Services.Intentions.DataProviders;
 using JetBrains.ReSharper.Feature.Services.Intentions.Impl.DeclarationBuilders;
 using JetBrains.ReSharper.Feature.Services.Navigation.NavigationExtensions;
+using JetBrains.ReSharper.Feature.Services.UI;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Resources;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Resources;
 using JetBrains.ReSharper.Psi.Transactions;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
-using JetBrains.ReSharper.Refactorings.Convert.Type2Partial.Data;
-using JetBrains.ReSharper.Refactorings.CSharp.Type2Partial;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
@@ -75,7 +72,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 
             actions.Add(new CreateStepMenuAction("Create new binding class", CommonThemedIcons.Create.Id, () =>
             {
-                _createStepClassDialogUtil.OpenCreateClassDialog((className, path, isPartial) =>
+                var (project, defaultFolder) = SelectDefaultFolderForNewFile();
+                _createStepClassDialogUtil.OpenCreateClassDialog(solution, project, defaultFolder, (className, path, isPartial) =>
                 {
                     using (ReadLockCookie.Create())
                     {
@@ -97,6 +95,22 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             );
 
             _menuModalUtil.OpenSelectStepClassMenu(actions, "Where to create the step ?", textControl.PopupWindowContextFactory.ForCaret());
+        }
+
+        private (IProject, FileSystemPath) SelectDefaultFolderForNewFile()
+        {
+            var gherkinStep = _reference.GetElement();
+            var nearestStep = TreeNodeHelper.GetPreviousNodeOfType<GherkinStep>(gherkinStep)
+                              ?? TreeNodeHelper.GetNextNodeOfType<GherkinStep>(gherkinStep);
+            var reference = nearestStep?.GetFirstClassReferences().FirstOrDefault();
+            if (reference != null && reference.CheckResolveResult() == ResolveErrorType.OK)
+            {
+                var file = reference.Resolve().Result.DeclaredElement?.GetSourceFiles().FirstOrDefault();
+                if (file != null)
+                    return (file.GetProject(), file.GetLocation().Parent);
+            }
+
+            return (_reference.GetProject(), _reference.GetElement().GetProject()?.Location);
         }
 
         private void OpenPartialClassFileSelectionModal(ITextControl textControl, ISolution solution, string fullClassName, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass> availableBindingClasses)
@@ -140,18 +154,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             bool isPartial
         )
         {
-            var targetFolder = FileSystemPath.Parse(path, FileSystemPathInternStrategy.INTERN);
-            var project = FindProjectContainingPath(solution, targetFolder.FullPath);
-            if (project == null)
+            var projectFolder = ChooseProjectFolderController.ParseFolderName(solution, path);
+            if (projectFolder == null)
                 return null;
 
-            // var nameSpace = ComputeNamespace(project, targetFolder, className, srcFeatureProjectFile, isPartial);
+            var project = projectFolder.GetProject().NotNull("projectFolder.GetProject() != null");
 
             var createNewFileTarget = new CreateNewFileTarget(
                 _reference.GetTreeNode(),
                 project,
-                targetFolder,
-                project.Name,
+                projectFolder.Location,
+                projectFolder.Name,
                 className,
                 CSharpProjectFileType.Instance,
                 null,
@@ -189,17 +202,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 }
                 return classDeclaration;
             }
-        }
-
-        [CanBeNull]
-        private IProject FindProjectContainingPath(ISolution solution, string path)
-        {
-            path += Path.DirectorySeparatorChar;
-            return solution.GetAllProjects()
-                .Where(p => p.IsOpened)
-                .Where(p => path.Contains(p.Location.FullPath + Path.DirectorySeparatorChar))
-                .OrderByDescending(p => p.Location.FullPath.Length)
-                .FirstOrDefault();
         }
 
         private void AddSpecFlowStep(IPsiSourceFile psiSourceFile, string classClrName)
