@@ -26,6 +26,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
     [SolutionComponent]
     public class ExecutionFailedStepGutterIconUpdater
     {
+        private static readonly ClrTypeName XunitTraitAttribute = new ClrTypeName("Xunit.TraitAttribute");
         private static readonly ClrTypeName NunitDescriptionAttribute = new ClrTypeName("NUnit.Framework.DescriptionAttribute");
         private readonly ILogger _myLogger;
         [NotNull] private readonly FailedStepCache _failedStepCache;
@@ -97,20 +98,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                 if (gherkinDocument == null)
                     continue;
 
-                string featureText;
-                string scenarioText;
-
-                using (CompilationContextCookie.GetOrCreate(project.GetResolveContext()))
-                {
-                    var scenarioAttributeDescription = methodTestDeclaration.GetAttributeInstances(NunitDescriptionAttribute, false).FirstOrDefault();
-                    if (scenarioAttributeDescription == null || scenarioAttributeDescription.PositionParameterCount < 1)
-                        continue;
-                    var featureAttributeDescription = methodTestDeclaration.GetContainingType()?.GetAttributeInstances(NunitDescriptionAttribute, false).FirstOrDefault();
-                    if (featureAttributeDescription == null || featureAttributeDescription.PositionParameterCount < 1)
-                        continue;
-                    featureText = featureAttributeDescription.PositionParameter(0).ConstantValue.Value as string;
-                    scenarioText = scenarioAttributeDescription.PositionParameter(0).ConstantValue.Value as string;
-                }
+                if (!ReadFeatureAndScenarioTextFromAttributeInFeatureCs(project, methodTestDeclaration, out var featureText, out var scenarioText))
+                    continue;
 
                 if (!result.Status.GetResultStatus().Has(UnitTestStatus.Failed) && !result.Status.GetResultStatus().Has(UnitTestStatus.Inconclusive))
                 {
@@ -138,6 +127,49 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                     updatedFiles.Add(gherkinFile.GetSourceFile());
             }
             return updatedFiles;
+        }
+
+        private static bool ReadFeatureAndScenarioTextFromAttributeInFeatureCs(IProject project, IMethod methodTestDeclaration, out string featureText, out string scenarioText)
+        {
+            featureText = null;
+            scenarioText = null;
+            using (CompilationContextCookie.GetOrCreate(project.GetResolveContext()))
+            {
+                if (ReadFromNunit(methodTestDeclaration, ref featureText, ref scenarioText))
+                    return true;
+                if (ReadFromXUnit(methodTestDeclaration, ref featureText, ref scenarioText))
+                    return true;
+            }
+            return true;
+        }
+
+        private static bool ReadFromNunit(IMethod methodTestDeclaration, ref string featureText, ref string scenarioText)
+        {
+            var scenarioAttributeDescription = methodTestDeclaration.GetAttributeInstances(NunitDescriptionAttribute, false).FirstOrDefault();
+            if (scenarioAttributeDescription == null || scenarioAttributeDescription.PositionParameterCount < 1)
+                return false;
+            var featureAttributeDescription = methodTestDeclaration.GetContainingType()?.GetAttributeInstances(NunitDescriptionAttribute, false).FirstOrDefault();
+            if (featureAttributeDescription == null || featureAttributeDescription.PositionParameterCount < 1)
+                return false;
+
+            featureText = featureAttributeDescription.PositionParameter(0).ConstantValue.Value as string;
+            scenarioText = scenarioAttributeDescription.PositionParameter(0).ConstantValue.Value as string;
+            return true;
+        }
+
+        private static bool ReadFromXUnit(IMethod methodTestDeclaration, ref string featureText, ref string scenarioText)
+        {
+            var xUnitTraitAttributes = methodTestDeclaration.GetAttributeInstances(XunitTraitAttribute, false);
+            var scenarioAttributeDescription = xUnitTraitAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.Value as string == "Description");
+            if (scenarioAttributeDescription == null || scenarioAttributeDescription.PositionParameterCount < 2)
+                return false;
+            var featureAttributeDescription = xUnitTraitAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.Value as string == "FeatureTitle");
+            if (featureAttributeDescription == null || featureAttributeDescription.PositionParameterCount < 2)
+                return false;
+
+            featureText = featureAttributeDescription.PositionParameter(1).ConstantValue.Value as string;
+            scenarioText = scenarioAttributeDescription.PositionParameter(1).ConstantValue.Value as string;
+            return true;
         }
 
         private List<StepTestOutput> GetFailedTestOutput(string lang, UnitTestResultData testResult, GherkinKeywordProvider gherkinKeywordProvider)
