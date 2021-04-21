@@ -98,6 +98,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
                 "done" => StepTestOutput.StepStatus.Done,
                 "duration" => StepTestOutput.StepStatus.Done,
                 "error" => StepTestOutput.StepStatus.Failed,
+                "binding error" => StepTestOutput.StepStatus.BindingError,
                 _ => StepTestOutput.StepStatus.Done
             };
         }

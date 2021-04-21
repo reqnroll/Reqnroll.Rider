@@ -9,7 +9,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
             Done = 0,
             Failed = 1,
             NotImplemented = 2,
-            Skipped = 3
+            Skipped = 3,
+            BindingError = 4,
         }
 
         public StepStatus Status { get; set; }
