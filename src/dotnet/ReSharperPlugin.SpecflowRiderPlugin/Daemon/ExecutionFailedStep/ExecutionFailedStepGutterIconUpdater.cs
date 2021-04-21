@@ -26,6 +26,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
     [SolutionComponent]
     public class ExecutionFailedStepGutterIconUpdater
     {
+        private static readonly ClrTypeName MsTestPropertyAttribute = new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute");
+        private static readonly ClrTypeName MsTestDescriptionAttribute = new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute");
         private static readonly ClrTypeName XunitTraitAttribute = new ClrTypeName("Xunit.TraitAttribute");
         private static readonly ClrTypeName NunitDescriptionAttribute = new ClrTypeName("NUnit.Framework.DescriptionAttribute");
         private readonly ILogger _myLogger;
@@ -139,6 +141,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                     return true;
                 if (ReadFromXUnit(methodTestDeclaration, ref featureText, ref scenarioText))
                     return true;
+                if (ReadFromMsTest(methodTestDeclaration, ref featureText, ref scenarioText))
+                    return true;
             }
             return true;
         }
@@ -169,6 +173,21 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
 
             featureText = featureAttributeDescription.PositionParameter(1).ConstantValue.Value as string;
             scenarioText = scenarioAttributeDescription.PositionParameter(1).ConstantValue.Value as string;
+            return true;
+        }
+
+        private static bool ReadFromMsTest(IMethod methodTestDeclaration, ref string featureText, ref string scenarioText)
+        {
+            var msTestDescriptionAttribute = methodTestDeclaration.GetAttributeInstances(MsTestDescriptionAttribute, false).FirstOrDefault();
+            if (msTestDescriptionAttribute == null || msTestDescriptionAttribute.PositionParameterCount < 1)
+                return false;
+            var msTestPropertyAttributes = methodTestDeclaration.GetAttributeInstances(MsTestPropertyAttribute, false);
+            var featureAttributeDescription = msTestPropertyAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.Value as string == "FeatureTitle");
+            if (featureAttributeDescription == null || featureAttributeDescription.PositionParameterCount < 2)
+                return false;
+
+            featureText = featureAttributeDescription.PositionParameter(1).ConstantValue.Value as string;
+            scenarioText = msTestDescriptionAttribute.PositionParameter(0).ConstantValue.Value as string;
             return true;
         }
 
