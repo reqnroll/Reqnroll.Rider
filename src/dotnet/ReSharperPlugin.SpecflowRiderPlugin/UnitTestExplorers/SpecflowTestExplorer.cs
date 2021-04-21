@@ -7,6 +7,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.UnitTestFramework;
 using JetBrains.ReSharper.UnitTestFramework.Exploration;
+using JetBrains.ReSharper.UnitTesting.MSTest.Provider;
 using JetBrains.ReSharper.UnitTestProvider.nUnit.v30;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
@@ -89,6 +90,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
 
         public static readonly ClrTypeName NUnitDescriptionAttribute = new ClrTypeName("NUnit.Framework.DescriptionAttribute");
         public static readonly ClrTypeName XUnitTraitAttribute = new ClrTypeName("Xunit.TraitAttribute");
+        public static readonly ClrTypeName MsTestDescriptionAttribute = new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute");
+
         private string GetDescription(IUnitTestElement relatedTest)
         {
             switch (relatedTest.Id.ProviderId)
@@ -97,6 +100,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                 {
                     if (relatedTest.GetDeclaredElement() is IAttributesOwner c)
                         return c.GetAttributeInstances(NUnitDescriptionAttribute, false)
+                            .FirstOrDefault()
+                            ?.PositionParameter(0).ConstantValue.Value as string;
+                    break;
+                }
+                case "MSTest":
+                {
+                    if (relatedTest.GetDeclaredElement() is IAttributesOwner c)
+                        return c.GetAttributeInstances(MsTestDescriptionAttribute, false)
                             .FirstOrDefault()
                             ?.PositionParameter(0).ConstantValue.Value as string;
                     break;
