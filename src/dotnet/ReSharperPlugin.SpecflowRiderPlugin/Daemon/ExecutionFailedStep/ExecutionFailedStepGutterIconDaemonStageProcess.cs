@@ -49,7 +49,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                     var stepTestOutput = failedStep.StepsOutputs[i];
                     if (!steps[i].Match(stepTestOutput))
                         continue; // Does not match, maybe the file has changed
-                    if (stepTestOutput.Status != StepTestOutput.StepStatus.Done && stepTestOutput.Status != StepTestOutput.StepStatus.Skipped)
+                    if (stepTestOutput.Status != StepTestOutput.StepStatus.Done
+                        && stepTestOutput.Status != StepTestOutput.StepStatus.Skipped
+                        && stepTestOutput.Status != StepTestOutput.StepStatus.NotImplemented)
                         consumer.AddHighlighting(new ExecutionFailedStepHighlighting(steps[i], stepTestOutput));
                 }
             }
