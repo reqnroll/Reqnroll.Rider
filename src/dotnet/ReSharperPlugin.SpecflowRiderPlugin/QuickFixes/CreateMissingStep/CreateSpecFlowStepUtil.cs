@@ -4,7 +4,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Diagnostics;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Navigation.NavigationExtensions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -58,45 +57,48 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             if (cSharpFile == null)
                 return null;
 
-            foreach (var classDeclaration in cSharpFile.GetChildrenInSubtrees<IClassDeclaration>())
+            using (CompilationContextCookie.GetOrCreate(targetFile.GetResolveContext()))
             {
-                if (classDeclaration.CLRName != classClrName)
-                    continue;
-                if (classDeclaration.DeclaredElement?.GetAttributeInstances(AttributesSource.Self).All(x => x.GetAttributeType().GetClrName().FullName != "TechTalk.SpecFlow.Binding") != true)
-                    continue;
-
-                var factory = CSharpElementFactory.GetInstance(classDeclaration);
-                var methodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, getGherkinFileCulture);
-                methodName = cSharpFile.GetPsiServices().Naming.Suggestion.GetDerivedName(methodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance.NotNull(), new SuggestionOptions(), targetFile);
-                var parameters = _stepDefinitionBuilder.GetStepDefinitionParameters(stepText, getGherkinFileCulture);
-                var pattern = _stepDefinitionBuilder.GetPattern(stepText, getGherkinFileCulture);
-                var attributeType = CSharpTypeFactory.CreateType(SpecflowAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
-                var formatString = $"[$0(@\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
-                var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
-                if (methodDeclaration == null)
-                    continue;
-                var psiModule = classDeclaration.GetPsiModule();
-
-                foreach (var (parameterName, parameterType) in parameters)
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
-
-                if (hasMultilineParameter)
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("string", psiModule), "multilineText", null);
-
-                if (hasTableParameter)
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("TechTalk.SpecFlow.Table", psiModule), "table", null);
-
-                IClassMemberDeclaration insertedDeclaration;
-                using (new PsiTransactionCookie(classDeclaration.GetPsiServices(), DefaultAction.Commit, "Generate specflow step"))
+                foreach (var classDeclaration in cSharpFile.GetChildrenInSubtrees<IClassDeclaration>())
                 {
-                    insertedDeclaration = classDeclaration.AddClassMemberDeclaration((IClassMemberDeclaration) methodDeclaration);
+                    if (classDeclaration.CLRName != classClrName)
+                        continue;
+                    if (classDeclaration.DeclaredElement?.GetAttributeInstances(AttributesSource.Self).All(x => x.GetAttributeType().GetClrName().FullName != "TechTalk.SpecFlow.Binding") != true)
+                        continue;
+
+                    var factory = CSharpElementFactory.GetInstance(classDeclaration);
+                    var methodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, getGherkinFileCulture);
+                    methodName = cSharpFile.GetPsiServices().Naming.Suggestion.GetDerivedName(methodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance.NotNull(), new SuggestionOptions(), targetFile);
+                    var parameters = _stepDefinitionBuilder.GetStepDefinitionParameters(stepText, getGherkinFileCulture);
+                    var pattern = _stepDefinitionBuilder.GetPattern(stepText, getGherkinFileCulture);
+                    var attributeType = CSharpTypeFactory.CreateType(SpecflowAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
+                    var formatString = $"[$0(@\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
+                    var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
+                    if (methodDeclaration == null)
+                        continue;
+                    var psiModule = classDeclaration.GetPsiModule();
+
+                    foreach (var (parameterName, parameterType) in parameters)
+                        methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
+
+                    if (hasMultilineParameter)
+                        methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("string", psiModule), "multilineText", null);
+
+                    if (hasTableParameter)
+                        methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("TechTalk.SpecFlow.Table", psiModule), "table", null);
+
+                    IClassMemberDeclaration insertedDeclaration;
+                    using (new PsiTransactionCookie(classDeclaration.GetPsiServices(), DefaultAction.Commit, "Generate specflow step"))
+                    {
+                        insertedDeclaration = classDeclaration.AddClassMemberDeclaration((IClassMemberDeclaration) methodDeclaration);
+                    }
+
+                    var analyticsTransmitter = targetFile.GetSolution().GetComponent<IAnalyticsTransmitter>();
+                    analyticsTransmitter.TransmitRuntimeEvent(new GenericEvent("RiderActionExecuted", new Dictionary<string, string>
+                        {{"Type", "CreateStepBinding"}}));
+
+                    return insertedDeclaration;
                 }
-
-                var analyticsTransmitter = targetFile.GetSolution().GetComponent<IAnalyticsTransmitter>();
-                analyticsTransmitter.TransmitRuntimeEvent(new GenericEvent("RiderActionExecuted", new Dictionary<string, string>
-                    {{"Type", "CreateStepBinding"}}));
-
-                return insertedDeclaration;
             }
 
             return null;

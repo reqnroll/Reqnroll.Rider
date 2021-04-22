@@ -24,18 +24,21 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
     public class CreateStepClassDialogUtil : ICreateStepClassDialogUtil
     {
         private readonly IDialogHost _dialogHost;
+        private readonly IThreading _threading;
         private readonly IconHostBase _iconHost;
         private readonly ICommonFileDialogs _commonFileDialogs;
         private readonly SpecflowStepsDefinitionsCache _specflowStepsDefinitionsCache;
 
         public CreateStepClassDialogUtil(
             IDialogHost dialogHost,
+            IThreading threading
             IconHostBase iconHost,
             ICommonFileDialogs commonFileDialogs,
             SpecflowStepsDefinitionsCache specflowStepsDefinitionsCache
         )
         {
             _dialogHost = dialogHost;
+            _threading = threading;
             _iconHost = iconHost;
             _commonFileDialogs = commonFileDialogs;
             _specflowStepsDefinitionsCache = specflowStepsDefinitionsCache;
@@ -43,12 +46,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 
         public void OpenCreateClassDialog(ICreateStepClassDialogUtil.CreateStepClass onValidation)
         {
-            var lifetimeDefinition = new LifetimeDefinition();
-            var panel = CreateControl(lifetimeDefinition.Lifetime, _specflowStepsDefinitionsCache.AllStepsPerFiles.Keys.FirstOrDefault());
-            _dialogHost.Show(lifetime => CreateDialog(lifetime, onValidation, panel, lifetimeDefinition), onDialogDispose: () => { lifetimeDefinition.Terminate(); });
+            _threading.ReentrancyGuard.Queue("Open Create Specflow Steps Class dialog", () =>
+            {
+                _dialogHost.Show(lifetime =>
+                {
+                    var panel = CreateControl(lifetime, solution, project, defaultFolder);
+                    return CreateDialog(lifetime, onValidation, panel);
+                });
+            });
         }
 
-        private static BeDialog CreateDialog(Lifetime lifetime, ICreateStepClassDialogUtil.CreateStepClass onValidation, BeControl panel, LifetimeDefinition lifetimeDefinition)
+        private static BeDialog CreateDialog(Lifetime lifetime, ICreateStepClassDialogUtil.CreateStepClass onValidation, BeControl panel)
         {
             return panel.InDialog(
                     "Create new binding class",
@@ -66,7 +74,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                         );
                     },
                     disableWhenInvalid: false)
-                .WithCancelButton(lifetimeDefinition.Lifetime);
+                .WithCancelButton(lifetime);
         }
 
         private BeControl CreateControl(Lifetime lifetime, IPsiSourceFile sourceFile)

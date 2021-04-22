@@ -77,9 +77,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             {
                 _createStepClassDialogUtil.OpenCreateClassDialog((className, path, isPartial) =>
                 {
-                    var classDeclaration = CreateCSharpFile(solution, textControl.Document.GetPsiSourceFile(solution), className, path, isPartial);
-                    if (classDeclaration != null)
-                        AddSpecFlowStep(classDeclaration.GetSourceFile(), classDeclaration.CLRName);
+                    using (ReadLockCookie.Create())
+                    {
+                        var classDeclaration = CreateCSharpFile(solution, className, path, isPartial);
+                        if (classDeclaration != null)
+                            AddSpecFlowStep(classDeclaration.GetSourceFile(), classDeclaration.CLRName);
+                    }
                 });
             }));
 
@@ -132,7 +135,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
         [CanBeNull]
         protected IClassDeclaration CreateCSharpFile(
             ISolution solution,
-            IPsiSourceFile srcFeatureProjectFile,
             string className,
             string path,
             bool isPartial
@@ -157,7 +159,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             );
             createNewFileTarget.PreExecute();
 
-            using (new PsiTransactionCookie(srcFeatureProjectFile.GetPsiServices(), DefaultAction.Commit, "Creating new step class"))
+            using (new PsiTransactionCookie(solution.GetPsiServices(), DefaultAction.Commit, "Creating new step class"))
             {
                 var result = ClassDeclarationBuilder.CreateClass(new CreateClassDeclarationContext
                 {
@@ -171,9 +173,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 if (result?.ResultDeclaration is not IClassDeclaration classDeclaration)
                     return null;
 
-                var bindingAttributeType = TypeFactory.CreateTypeByCLRName(SpecflowAttributeHelper.BindingAttribute.FullName, _reference.GetTreeNode().GetPsiModule());
-                var specFlowBindingAttribute = CSharpElementFactory.GetInstance(_reference.GetElement()).CreateAttribute(bindingAttributeType.GetTypeElement());
-                classDeclaration.AddAttributeAfter(specFlowBindingAttribute, null);
+                using (CompilationContextCookie.GetOrCreate(project.GetResolveContext()))
+                {
+                    var bindingAttributeType = TypeFactory.CreateTypeByCLRName(SpecflowAttributeHelper.BindingAttribute.FullName, _reference.GetTreeNode().GetPsiModule());
+                    var specFlowBindingAttribute = CSharpElementFactory.GetInstance(_reference.GetElement()).CreateAttribute(bindingAttributeType.GetTypeElement());
+                    classDeclaration.AddAttributeAfter(specFlowBindingAttribute, null);
+                }
 
                 var expectedNamespace = classDeclaration.GetSourceFile().ToProjectFile()?.CalculateExpectedNamespace(CSharpLanguage.Instance.NotNull());
                 if (expectedNamespace != null)
