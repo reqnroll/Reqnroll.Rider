@@ -81,6 +81,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 
         public override object Build(IPsiSourceFile sourceFile, bool isStartup)
         {
+            if (!sourceFile.IsValid())
+                return null;
             var file = sourceFile.GetPrimaryPsiFile().NotNull();
             if (!file.Language.Is<CSharpLanguage>())
                 return null;
@@ -200,6 +202,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             }
 
             _mergeData.StepsDefinitionsPerFiles.RemoveKey(sourceFile);
+        }
+
+        public override void Drop(IPsiSourceFile sourceFile)
+        {
+            RemoveFromLocalCache(sourceFile);
+            base.Drop(sourceFile);
         }
 
         private IEnumerable<ITypeDeclaration> GetTypeDeclarations(ITreeNode node)

@@ -33,6 +33,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages
 
         public override object Build(IPsiSourceFile sourceFile, bool isStartup)
         {
+            if (!sourceFile.IsValid())
+                return null;
             var file = sourceFile.GetPrimaryPsiFile().NotNull();
             if (!file.Language.Is<GherkinLanguage>())
                 return null;
@@ -62,6 +64,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages
         {
             foreach (var (psiSourceFile, cacheItem) in Map)
                 AddToLocalCache(psiSourceFile, cacheItem);
+        }
+
+        public override void Drop(IPsiSourceFile sourceFile)
+        {
+            RemoveFromLocalCache(sourceFile);
+            base.Drop(sourceFile);
         }
 
         private void AddToLocalCache(IPsiSourceFile sourceFile, [CanBeNull] SpecflowStepsUsagesCacheEntries cacheItems)
