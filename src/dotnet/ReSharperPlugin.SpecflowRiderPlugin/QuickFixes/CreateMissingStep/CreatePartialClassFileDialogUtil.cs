@@ -1,39 +1,51 @@
+using JetBrains.Application.Threading;
+using JetBrains.Diagnostics;
 using JetBrains.IDE.UI;
 using JetBrains.IDE.UI.Extensions;
 using JetBrains.IDE.UI.Extensions.Properties;
 using JetBrains.Lifetimes;
+using JetBrains.ReSharper.Feature.Services.UI.Automation;
+using JetBrains.ReSharper.Feature.Services.UI.Validation;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.Rider.Model.UIAutomation;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 {
     public interface ICreateStepPartialClassFile
     {
-        public delegate void CreatePartialClassFile(string filename);
+        public delegate void CreatePartialClassFile(string path, string filename);
 
-        void OpenCreatePartialClassFileDialog(CreatePartialClassFile onValidation);
+        void OpenCreatePartialClassFileDialog(IPsiSourceFile otherPartSourceFile, CreatePartialClassFile onValidation);
     }
 
     [PsiComponent]
     public class CreateStepPartialClassFile : ICreateStepPartialClassFile
     {
         private readonly IDialogHost _dialogHost;
+        private readonly IThreading _threading;
 
         public CreateStepPartialClassFile(
-            IDialogHost dialogHost
-        )
+            IDialogHost dialogHost,
+            IThreading threading)
         {
             _dialogHost = dialogHost;
+            _threading = threading;
         }
 
-        public void OpenCreatePartialClassFileDialog(ICreateStepPartialClassFile.CreatePartialClassFile onValidation)
+        public void OpenCreatePartialClassFileDialog(IPsiSourceFile otherPartSourceFile, ICreateStepPartialClassFile.CreatePartialClassFile onValidation)
         {
-            var lifetimeDefinition = new LifetimeDefinition();
-            var panel = CreateControl(lifetimeDefinition.Lifetime);
-            _dialogHost.Show(lifetime => CreateDialog(lifetime, onValidation, panel, lifetimeDefinition), onDialogDispose: () => { lifetimeDefinition.Terminate(); });
+            _threading.ReentrancyGuard.Queue("Open Create Specflow Steps Class dialog", () =>
+            {
+                _dialogHost.Show(lifetime =>
+                {
+                    var panel = CreateControl(lifetime, otherPartSourceFile);
+                    return CreateDialog(lifetime, onValidation, panel);
+                });
+            });
         }
 
-        private static BeDialog CreateDialog(Lifetime lifetime, ICreateStepPartialClassFile.CreatePartialClassFile onValidation, BeControl panel, LifetimeDefinition lifetimeDefinition)
+        private static BeDialog CreateDialog(Lifetime lifetime, ICreateStepPartialClassFile.CreatePartialClassFile onValidation, BeControl panel)
         {
             return panel.InDialog(
                     "Create new binding class",
@@ -45,18 +57,31 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                     () =>
                     {
                         onValidation(
+                            panel.GetBeControlById<BeTextBox>("path").GetText(),
                             panel.GetBeControlById<BeTextBox>("filename").GetText()
                         );
                     },
-                    disableWhenInvalid: false)
-                .WithCancelButton(lifetimeDefinition.Lifetime);
+                    disableWhenInvalid: true)
+                .WithCancelButton(lifetime);
         }
 
-        private BeControl CreateControl(Lifetime lifetime)
+        private BeControl CreateControl(Lifetime lifetime, IPsiSourceFile otherPartSourceFile)
         {
             var grid = BeControls.GetGrid();
-            grid.AddElement("Filename".GetBeLabel());
-            grid.AddElement(BeControls.GetTextBox(lifetime, id: "filename"));
+
+            var solution = otherPartSourceFile.GetSolution();
+            var project = otherPartSourceFile.GetProject().NotNull("otherPartSourceFile.GetProject() != null");
+            grid.AddElement(BeControls.GetTextBox(lifetime, id: "filename")
+                .WithTextNotEmpty(lifetime, null)
+                .WithValidFileName(lifetime, null)
+                .WithDescription("Filename", lifetime));
+            grid.AddElement(BeControls.GetTextBox(lifetime, id: "path", initialText: project.Name + "/" + otherPartSourceFile.GetLocation().Parent.MakeRelativeTo(project.Location).FullPath)
+                .WithTextNotEmpty(lifetime, null)
+                .WithFolderCompletion(solution, lifetime)
+                .WithValidPath(lifetime, ValidationIcons.Error)
+                .WithFolderExistsOrMustBeCreated(solution, lifetime)
+                .WithDescription("Folder", lifetime));
+
             return grid;
         }
     }

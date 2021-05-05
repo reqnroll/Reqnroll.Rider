@@ -117,23 +117,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
         {
             var actions = new List<CreateStepMenuAction>();
 
-
             actions.Add(new CreateStepMenuAction("Create new file", CommonThemedIcons.Create.Id, () =>
             {
-                _createStepPartialClassFile.OpenCreatePartialClassFileDialog((filename) =>
+                _createStepPartialClassFile.OpenCreatePartialClassFileDialog(availableBindingClasses.First().SourceFile, (path, filename) =>
                 {
-
-                    /*
-                    var createdFile = this.Type2PartialManager.CreateProjectFile(this.Model, this.Model.FilePath, this.Helper[typeDeclaration.Language].GetExtension());
-                    this.DataModel = new Type2PartialDataModel(this.Model.TypeDeclaration, this.Model.ExistingPart, this.Model.Elements, createdFile);
-                    new CSharpType2PartialHelper().AddNewTypePart(new Type2PartialDataModel(, null, EmptyList<IDeclaration>.Instance,));*/
-                    /*
-                    var cle = new ClrTypeName("");
-                    var referenceName = CSharpElementFactory.GetInstance(_reference.GetElement()).CreateReferenceName(fullClassName);
-                    var declaredType = CSharpTypeFactory.CreateDeclaredType(referenceName, NullableAnnotation.Unknown);
-                    declaredType.GetTypeElement();
-                    var classDeclaration = CreatePartialClassFile(textControl. fullClassName,  className, path, true);
-                    AddSpecFlowStep(classDeclaration.GetSourceFile(), classDeclaration.CLRName);*/
+                    using (ReadLockCookie.Create())
+                    {
+                        var classDeclaration = CreatePartialPartCSharpFile(solution, fullClassName, path, filename);
+                        if (classDeclaration != null)
+                            AddSpecFlowStep(classDeclaration.GetSourceFile(), classDeclaration.CLRName);
+                    }
                 });
             }));
 
@@ -200,6 +193,53 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                     var cSharpNamespaceDeclaration = cSharpElementFactory.CreateNamespaceDeclaration(expectedNamespace);
                     classDeclaration.OwnerNamespaceDeclaration.SetQualifiedName(cSharpNamespaceDeclaration.QualifiedName);
                 }
+                return classDeclaration;
+            }
+        }
+
+
+        [CanBeNull]
+        protected IClassDeclaration CreatePartialPartCSharpFile(
+            ISolution solution,
+            string fullClassName,
+            string path,
+            string filename
+        )
+        {
+            var projectFolder = ChooseProjectFolderController.ParseFolderName(solution, path);
+            if (projectFolder == null)
+                return null;
+
+            var clrTypeName = new ClrTypeName(fullClassName);
+            var project = projectFolder.GetProject().NotNull("projectFolder.GetProject() != null");
+
+            var createNewFileTarget = new CreateNewFileTarget(
+                _reference.GetTreeNode(),
+                project,
+                projectFolder.Location,
+                string.Join(".", clrTypeName.NamespaceNames),
+                filename,
+                CSharpProjectFileType.Instance,
+                null,
+                CSharpLanguage.Instance
+            );
+            createNewFileTarget.PreExecute();
+
+            using (new PsiTransactionCookie(solution.GetPsiServices(), DefaultAction.Commit, "Creating new step class"))
+            {
+                var result = ClassDeclarationBuilder.CreateClass(new CreateClassDeclarationContext
+                {
+                    ClassName = clrTypeName.ShortName,
+                    IsPartial = true,
+                    AccessRights = AccessRights.PUBLIC,
+                    IsStatic = false,
+                    IsInterface = false,
+                    Target = createNewFileTarget
+                });
+
+                if (result?.ResultDeclaration is not IClassDeclaration classDeclaration)
+                    return null;
+
                 return classDeclaration;
             }
         }
