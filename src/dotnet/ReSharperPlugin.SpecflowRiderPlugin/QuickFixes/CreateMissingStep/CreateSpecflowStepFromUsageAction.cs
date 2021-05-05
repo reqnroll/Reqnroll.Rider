@@ -117,18 +117,21 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
         {
             var actions = new List<CreateStepMenuAction>();
 
-            actions.Add(new CreateStepMenuAction("Create new file", CommonThemedIcons.Create.Id, () =>
+            if (IsBindingTypePartial(fullClassName, availableBindingClasses))
             {
-                _createStepPartialClassFile.OpenCreatePartialClassFileDialog(availableBindingClasses.First().SourceFile, (path, filename) =>
+                actions.Add(new CreateStepMenuAction("Create new file", CommonThemedIcons.Create.Id, () =>
                 {
-                    using (ReadLockCookie.Create())
+                    _createStepPartialClassFile.OpenCreatePartialClassFileDialog(availableBindingClasses.First().SourceFile, (path, filename) =>
                     {
-                        var classDeclaration = CreatePartialPartCSharpFile(solution, fullClassName, path, filename);
-                        if (classDeclaration != null)
-                            AddSpecFlowStep(classDeclaration.GetSourceFile(), classDeclaration.CLRName);
-                    }
-                });
-            }));
+                        using (ReadLockCookie.Create())
+                        {
+                            var classDeclaration = CreatePartialPartCSharpFile(solution, fullClassName, path, filename);
+                            if (classDeclaration != null)
+                                AddSpecFlowStep(classDeclaration.GetSourceFile(), classDeclaration.CLRName);
+                        }
+                    });
+                }));
+            }
 
             actions.AddRange(availableBindingClasses.Select(availableBindingClass => new CreateStepMenuAction(
                 new RichText(availableBindingClass.SourceFile.DisplayName),
@@ -137,6 +140,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             )));
 
             _menuModalUtil.OpenSelectStepClassMenu(actions, "Where to create the step ?", textControl.PopupWindowContextFactory.ForCaret());
+        }
+
+        private static bool IsBindingTypePartial(string fullClassName, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass> availableBindingClasses)
+        {
+            if (availableBindingClasses.Count != 1)
+                return true;
+
+            var psiSourceFile = availableBindingClasses.First().SourceFile;
+            var @class = psiSourceFile.GetPsiServices().Symbols
+                .GetTypesAndNamespacesInFile(psiSourceFile)
+                .OfType<IClass>()
+                .FirstOrDefault(x => x.GetClrName().FullName == fullClassName);
+            if (@class == null)
+                return false;
+            if (@class.GetDeclarations().FirstOrDefault() is not IClassDeclaration classDeclaration)
+                return false;
+            return classDeclaration.IsPartial;
         }
 
         [CanBeNull]

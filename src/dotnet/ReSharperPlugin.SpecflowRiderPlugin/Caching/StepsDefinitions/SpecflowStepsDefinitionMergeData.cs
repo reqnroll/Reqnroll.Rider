@@ -10,16 +10,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 {
     public class SpecflowStepsDefinitionMergeData
     {
-        public readonly OneToSetMap<IPsiSourceFile, SpecflowStepInfo> StepsDefinitionsPerFiles = new OneToSetMap<IPsiSourceFile, SpecflowStepInfo>();
-        public readonly OneToSetMap<string, IPsiSourceFile> SpecflowBindingTypes = new OneToSetMap<string, IPsiSourceFile>();
-        public readonly OneToSetMap<string, IPsiSourceFile> PotentialSpecflowBindingTypes = new OneToSetMap<string, IPsiSourceFile>();
+        public readonly OneToSetMap<IPsiSourceFile, SpecflowStepInfo> StepsDefinitionsPerFiles = new();
+        public readonly OneToSetMap<string, IPsiSourceFile> SpecflowBindingTypes = new();
+        public readonly OneToSetMap<string, IPsiSourceFile> PotentialSpecflowBindingTypes = new();
     }
 
     public class SpecflowAssemblyStepsDefinitionMergeData
     {
-        public readonly OneToSetMap<IPsiAssembly, SpecflowStepInfo> StepsDefinitionsPerFiles = new OneToSetMap<IPsiAssembly, SpecflowStepInfo>();
-        public readonly Dictionary<string, IPsiAssembly> SpecflowBindingTypes = new Dictionary<string, IPsiAssembly>();
-        public readonly Dictionary<string, IPsiAssembly> PotentialSpecflowBindingTypes = new Dictionary<string, IPsiAssembly>();
+        public readonly OneToSetMap<IPsiAssembly, SpecflowStepInfo> StepsDefinitionsPerFiles = new();
+        public readonly Dictionary<string, IPsiAssembly> SpecflowBindingTypes = new();
+        public readonly Dictionary<string, IPsiAssembly> PotentialSpecflowBindingTypes = new();
     }
 
     public class SpecflowStepInfo
