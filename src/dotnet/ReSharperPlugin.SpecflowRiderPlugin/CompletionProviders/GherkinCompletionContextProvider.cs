@@ -20,6 +20,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             var relatedText = string.Empty;
             var nodeUnderCursor = TextControlToPsi.GetElement<ITreeNode>(context.Solution, context.TextControl);
 
+            if (IsAfterKeywordExpectingText(nodeUnderCursor))
+                return null;
+
             if (nodeUnderCursor?.GetTokenType() == GherkinTokenTypes.NEW_LINE && nodeUnderCursor?.NextSibling != null)
                 nodeUnderCursor = nodeUnderCursor.NextSibling;
 
@@ -57,6 +60,31 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 ranges = new TextLookupRanges(insertRange, replaceRange);
             }
             return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode, isStartOfLine ? startOfLineText : relatedText, isStartOfLine);
+        }
+
+        private bool IsAfterKeywordExpectingText(ITreeNode nodeUnderCursor)
+        {
+            if (nodeUnderCursor.IsWhitespaceToken()
+                || nodeUnderCursor is GherkinToken token && (token.NodeType == GherkinTokenTypes.TEXT || token.NodeType == GherkinTokenTypes.COLON))
+            {
+                for (var t = nodeUnderCursor.PrevSibling; t != null; t = t.PrevSibling)
+                {
+                    if (t.GetTokenType() == GherkinTokenTypes.NEW_LINE)
+                        break;
+                    if (t.GetTokenType() == GherkinTokenTypes.FEATURE_KEYWORD)
+                        return true;
+                    if (t.GetTokenType() == GherkinTokenTypes.SCENARIO_KEYWORD)
+                        return true;
+                    if (t.GetTokenType() == GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD)
+                        return true;
+                    if (t.GetTokenType() == GherkinTokenTypes.BACKGROUND_KEYWORD)
+                        return true;
+                    if (t.GetTokenType() == GherkinTokenTypes.PIPE || t.GetTokenType() == GherkinTokenTypes.TABLE_CELL)
+                        return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         private bool IsStartOfLine(ITreeNode nodeUnderCursor, out string text)
