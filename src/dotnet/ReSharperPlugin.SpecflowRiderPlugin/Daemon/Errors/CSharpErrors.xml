@@ -31,7 +31,7 @@
 	<SeverityConfiguration>
 		<Group name="SpecflowHighlightingGroupIds.Specflow">
 			<Tag externalName="StepNotResolvedError.HIGHLIGHTING_ID"
-				 default="ERROR">
+				 default="WARNING">
 				<Title>Unresolved SpecFlow step</Title>
 				<Description>No step definition was found for the step.</Description>
 			</Tag>
