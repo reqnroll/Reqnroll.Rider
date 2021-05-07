@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Application.Threading;
 using JetBrains.Collections;
@@ -18,6 +19,7 @@ using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 {
@@ -31,11 +33,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         public OneToSetMap<IPsiSourceFile, SpecflowStepInfo> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
         private readonly SpecflowStepsDefinitionMergeData _mergeData = new SpecflowStepsDefinitionMergeData();
         private readonly ISpecflowStepInfoFactory _specflowStepInfoFactory;
+        private readonly IUnderscoresMethodNameStepDefinitionUtil _underscoresMethodNameStepDefinitionUtil;
 
-        public SpecflowStepsDefinitionsCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager, ISpecflowStepInfoFactory specflowStepInfoFactory)
+        public SpecflowStepsDefinitionsCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager, ISpecflowStepInfoFactory specflowStepInfoFactory, IUnderscoresMethodNameStepDefinitionUtil underscoresMethodNameStepDefinitionUtil)
             : base(lifetime, locks, persistentIndexManager, new SpecflowStepDefinitionsEntriesMarshaller(), VersionInt)
         {
             _specflowStepInfoFactory = specflowStepInfoFactory;
+            _underscoresMethodNameStepDefinitionUtil = underscoresMethodNameStepDefinitionUtil;
         }
 
         public IEnumerable<SpecflowStepInfo> GetStepAccessibleForModule(IPsiModule module, GherkinStepKind stepKind)
@@ -234,27 +238,44 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 
                 foreach (var attribute in methodDeclaration.Attributes)
                 {
-                    if (attribute.Arguments.Count != 1)
-                        continue;
-
-                    var attributeArgument = attribute.Arguments[0];
-
-                    var regex = attributeArgument.Value?.ConstantValue.Value as string;
-                    if (regex == null)
-                        continue;
-
-                    // FIXME: If at some point this is not enought we could check that attribute.Name.QualifiedName contains TechTalk.SpecFlow or that
-                    // TechTalk.SpecFlow is in the `using` list somewhere in a parent
-
-                    if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Given, attribute.Name.ShortName))
-                        methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
-                    if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.When, attribute.Name.ShortName))
-                        methodCacheEntry.AddStep(GherkinStepKind.When, regex);
-                    if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Then, attribute.Name.ShortName))
-                        methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
+                    if (attribute.Arguments.Count == 1)
+                        AddToCacheEntryBasedOnAttributeRegex(attribute, methodCacheEntry);
+                    if (attribute.Arguments.Count == 0)
+                        AddToCacheEntryBasedOnMethodName(methodDeclaration, attribute, methodCacheEntry);
                 }
             }
             return classCacheEntry;
+        }
+
+        private static void AddToCacheEntryBasedOnAttributeRegex(IAttribute attribute, SpecflowStepDefinitionCacheMethodEntry methodCacheEntry)
+        {
+
+            var attributeArgument = attribute.Arguments[0];
+
+            var regex = attributeArgument.Value?.ConstantValue.Value as string;
+            if (regex == null)
+                return;
+
+            // FIXME: If at some point this is not enought we could check that attribute.Name.QualifiedName contains TechTalk.SpecFlow or that
+            // TechTalk.SpecFlow is in the `using` list somewhere in a parent
+
+            if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Given, attribute.Name.ShortName))
+                methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
+            if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.When, attribute.Name.ShortName))
+                methodCacheEntry.AddStep(GherkinStepKind.When, regex);
+            if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Then, attribute.Name.ShortName))
+                methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
+        }
+
+        private void AddToCacheEntryBasedOnMethodName(IMethodDeclaration memberDeclaration, IAttribute attribute, SpecflowStepDefinitionCacheMethodEntry methodCacheEntry)
+        {
+            var regex = _underscoresMethodNameStepDefinitionUtil.BuildRegexFromMethodName(memberDeclaration);
+            if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Given, attribute.Name.ShortName))
+                methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
+            if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.When, attribute.Name.ShortName))
+                methodCacheEntry.AddStep(GherkinStepKind.When, regex);
+            if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Then, attribute.Name.ShortName))
+                methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
         }
 
         public class AvailableBindingClass
