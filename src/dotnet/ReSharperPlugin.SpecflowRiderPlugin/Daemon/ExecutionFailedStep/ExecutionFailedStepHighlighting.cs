@@ -54,18 +54,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
                 case StepTestOutput.StepStatus.Failed:
                     var statusLineText = new RichText(_stepTestOutput.Status.ToString(), new TextStyle(FontStyle.Bold, Color.DarkRed))
                         .Append(new RichText(" - "))
-                        .Append(new RichText(_stepTestOutput.StatusLine));
+                        .Append(new RichText(_stepTestOutput.StatusLine.Replace("<", "&lt;")));
                     richTextBlock.Add(statusLineText);
                     break;
                 default:
-                    richTextBlock.Add(new RichText(_stepTestOutput.StatusLine));
+                    richTextBlock.Add(new RichText(_stepTestOutput.StatusLine.Replace("<", "&lt;")));
                     break;
             }
 
             if (!string.IsNullOrWhiteSpace(_stepTestOutput.ErrorOutput))
             {
                 richTextBlock.Add(new RichText("---------------------"));
-                richTextBlock.Add(new RichText(_stepTestOutput.ErrorOutput));
+                richTextBlock.Add(new RichText(_stepTestOutput.ErrorOutput.Replace("<", "&lt;")));
             }
 
             return richTextBlock;
