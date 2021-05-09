@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.UI.Icons.CommonThemedIcons;
 using JetBrains.Diagnostics;
+using JetBrains.DocumentManagers.impl;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
@@ -167,7 +170,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             bool isPartial
         )
         {
-            var projectFolder = ChooseProjectFolderController.ParseFolderName(solution, path);
+            var projectFolder = GetOrCreateFolder(solution, path);
             if (projectFolder == null)
                 return null;
 
@@ -217,7 +220,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             }
         }
 
-
         [CanBeNull]
         protected IClassDeclaration CreatePartialPartCSharpFile(
             ISolution solution,
@@ -226,7 +228,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             string filename
         )
         {
-            var projectFolder = ChooseProjectFolderController.ParseFolderName(solution, path);
+            var projectFolder = GetOrCreateFolder(solution, path);
             if (projectFolder == null)
                 return null;
 
@@ -277,6 +279,21 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             );
 
             NavigateToAddedElement(addedDeclaration);
+        }
+
+        private IProjectFolder GetOrCreateFolder(ISolution solution, string path)
+        {
+            // From: ChooseProjectFolderController.ParseFolderName
+            var names = path.TrimFromEnd("\\").TrimFromEnd("/").Split('\\', '/');
+            if (names.Length == 0)
+                return null;
+            var matchingProjects = solution.GetTopLevelProjects()
+                .Where(p => string.Equals(p.Name, names[0], StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            if (matchingProjects.Count != 1)
+                return null;
+            var project = matchingProjects.First();
+            return project.GetOrCreateProjectFolder(project.Location.Combine(Path.Combine(names.Skip(1).ToArray())));
         }
 
         private static void NavigateToAddedElement([CanBeNull] ITreeNode addedDeclaration)
