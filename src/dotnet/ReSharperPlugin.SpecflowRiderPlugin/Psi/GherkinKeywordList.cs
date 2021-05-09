@@ -96,7 +96,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return _translationsPerKeyword["Given"]
                 .Concat(_translationsPerKeyword["When"])
                 .Concat(_translationsPerKeyword["And"])
-                .Concat(_translationsPerKeyword["Then"]).Distinct();
+                .Concat(_translationsPerKeyword["Then"])
+                .Concat(_translationsPerKeyword["But"])
+                .Distinct();
         }
 
         public IReadOnlyCollection<string> GetAllKeywords()
