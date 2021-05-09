@@ -1,3 +1,4 @@
+using System.IO;
 using JetBrains.Application.Threading;
 using JetBrains.Diagnostics;
 using JetBrains.IDE.UI;
@@ -75,7 +76,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 .WithTextNotEmpty(lifetime, null)
                 .WithValidFileName(lifetime, null)
                 .WithDescription("Filename", lifetime));
-            grid.AddElement(BeControls.GetTextBox(lifetime, id: "path", initialText: project.Name + "/" + otherPartSourceFile.GetLocation().Parent.MakeRelativeTo(project.Location).FullPath)
+            grid.AddElement(BeControls.GetTextBox(lifetime, id: "path", initialText: project.Name + Path.DirectorySeparatorChar + otherPartSourceFile.GetLocation().Parent.MakeRelativeTo(project.Location).FullPath)
                 .WithTextNotEmpty(lifetime, null)
                 .WithFolderCompletion(solution, lifetime)
                 .WithValidPath(lifetime, ValidationIcons.Error)

@@ -1,3 +1,4 @@
+using System.IO;
 using JetBrains.Annotations;
 using JetBrains.Application.Threading;
 using JetBrains.IDE.UI;
@@ -82,7 +83,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 .WithValidName(CSharpLanguage.Instance, lifetime, ValidationIcons.Error, CLRDeclaredElementType.CLASS)
                 .WithDescription("Class name", lifetime));
 
-            grid.AddElement(BeControls.GetTextBox(lifetime, id: "path", initialText: project?.Name + (project?.Name == null ? string.Empty : "/") + defaultFolder?.MakeRelativeTo(project.Location).FullPath)
+            grid.AddElement(BeControls.GetTextBox(lifetime, id: "path", initialText: project?.Name + (project?.Name == null ? string.Empty : Path.DirectorySeparatorChar) + defaultFolder?.MakeRelativeTo(project.Location).FullPath)
                 .WithTextNotEmpty(lifetime, null)
                 .WithFolderCompletion(solution, lifetime)
                 .WithValidPath(lifetime, ValidationIcons.Error)
