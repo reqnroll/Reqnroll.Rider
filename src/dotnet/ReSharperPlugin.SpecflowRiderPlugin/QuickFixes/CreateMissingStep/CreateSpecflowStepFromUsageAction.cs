@@ -1,164 +1,310 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using JetBrains.Application.UI.Controls;
-using JetBrains.Application.UI.Controls.JetPopupMenu;
-using JetBrains.Collections;
+using JetBrains.Annotations;
+using JetBrains.Application.UI.Icons.CommonThemedIcons;
+using JetBrains.Diagnostics;
+using JetBrains.DocumentManagers.impl;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Feature.Services.Intentions.CreateDeclaration;
+using JetBrains.ReSharper.Feature.Services.Intentions.DataProviders;
+using JetBrains.ReSharper.Feature.Services.Intentions.Impl.DeclarationBuilders;
 using JetBrains.ReSharper.Feature.Services.Navigation.NavigationExtensions;
+using JetBrains.ReSharper.Feature.Services.UI;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Resources;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Naming.Extentions;
-using JetBrains.ReSharper.Psi.Naming.Impl;
-using JetBrains.ReSharper.Psi.Naming.Settings;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Resources;
 using JetBrains.ReSharper.Psi.Transactions;
+using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
-using ReSharperPlugin.SpecflowRiderPlugin.Analytics;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
-using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
+using ReSharperPlugin.SpecflowRiderPlugin.Utils;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 {
     public class CreateSpecflowStepFromUsageAction : IBulbAction
     {
-        public string Text { get; } = "Create step";
+        public string Text => "Create step";
         private readonly SpecflowStepDeclarationReference _reference;
-        private readonly IStepDefinitionBuilder _stepDefinitionBuilder;
+        private readonly IMenuModalUtil _menuModalUtil;
+        private readonly ICreateStepClassDialogUtil _createStepClassDialogUtil;
+        private readonly ICreateStepPartialClassFile _createStepPartialClassFile;
+        private readonly SpecflowStepsDefinitionsCache _specflowStepsDefinitionsCache;
+        private readonly ICreateSpecFlowStepUtil _createSpecFlowStepUtil;
 
         public CreateSpecflowStepFromUsageAction(
             SpecflowStepDeclarationReference reference,
-            IStepDefinitionBuilder stepDefinitionBuilder
-        )
+            IMenuModalUtil menuModalUtil,
+            ICreateStepClassDialogUtil createStepClassDialogUtil,
+            ICreateStepPartialClassFile createStepPartialClassFile,
+            SpecflowStepsDefinitionsCache specflowStepsDefinitionsCache,
+            ICreateSpecFlowStepUtil createSpecFlowStepUtil)
         {
             _reference = reference;
-            _stepDefinitionBuilder = stepDefinitionBuilder;
+            _menuModalUtil = menuModalUtil;
+            _createStepClassDialogUtil = createStepClassDialogUtil;
+            _createStepPartialClassFile = createStepPartialClassFile;
+            _specflowStepsDefinitionsCache = specflowStepsDefinitionsCache;
+            _createSpecFlowStepUtil = createSpecFlowStepUtil;
         }
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            var jetPopupMenus = solution.GetPsiServices().GetComponent<JetPopupMenus>();
-            var cache = solution.GetComponent<SpecflowStepsDefinitionsCache>();
-            jetPopupMenus.ShowModal(JetPopupMenu.ShowWhen.AutoExecuteIfSingleEnabledItem,
-                (lifetime, menu) =>
-                {
-                    menu.Caption.Value = WindowlessControlAutomation.Create("Where to create the step ?");
+            var availableSteps = _specflowStepsDefinitionsCache.GetBindingTypes(_reference.GetElement().GetPsiModule());
 
-                    var availableSteps = cache.GetBindingTypes(_reference.GetElement().GetPsiModule());
-                    var filesPerClasses = new OneToSetMap<string, SpecflowStepsDefinitionsCache.AvailableBindingClass>();
-                    foreach (var availableBindingClass in availableSteps)
-                        filesPerClasses.Add(availableBindingClass.ClassClrName, availableBindingClass);
+            var filesPerClasses = new OneToSetMap<string, SpecflowStepsDefinitionsCache.AvailableBindingClass>();
+            foreach (var availableBindingClass in availableSteps)
+                filesPerClasses.Add(availableBindingClass.ClassClrName, availableBindingClass);
 
-                    menu.ItemKeys.AddRange(filesPerClasses);
-                    menu.DescribeItem.Advise(lifetime, e =>
-                                                       {
-                                                           var (classClrFullName, _) = (KeyValuePair<string, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass>>) e.Key;
+            var actions = new List<CreateStepMenuAction>();
 
-                                                           e.Descriptor.Icon = PsiSymbolsThemedIcons.Class.Id;
-                                                           e.Descriptor.Style = MenuItemStyle.Enabled;
-
-                                                           var clrTypeName = new ClrTypeName(classClrFullName);
-                                                           e.Descriptor.Text = new RichText(clrTypeName.ShortName, DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type));
-                                                           e.Descriptor.ShortcutText = clrTypeName.GetNamespaceName();
-                                                       });
-                    menu.ItemClicked.Advise(lifetime, key =>
-                                                      {
-                                                          var (_, availableBindingClasses) = (KeyValuePair<string, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass>>) key;
-                                                          OpenFileSelectionModal(jetPopupMenus, textControl, availableBindingClasses, _reference.GetStepKind(), _reference.GetStepText());
-                                                      });
-                    menu.PopupWindowContextSource = textControl.PopupWindowContextFactory.ForCaret();
-                });
-        }
-
-        private void OpenFileSelectionModal(JetPopupMenus jetPopupMenus, ITextControl textControl, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass> availableBindingClasses, GherkinStepKind getStepKind, string getStepText)
-        {
-            jetPopupMenus.ShowModal(JetPopupMenu.ShowWhen.AutoExecuteIfSingleEnabledItem,
-                (lifetime, menu) =>
-                {
-                    menu.Caption.Value = WindowlessControlAutomation.Create("Where to create the step ?");
-                    menu.ItemKeys.AddRange(availableBindingClasses);
-                    menu.DescribeItem.Advise(lifetime, e =>
-                                                       {
-                                                           var key = (SpecflowStepsDefinitionsCache.AvailableBindingClass) e.Key;
-                                                           e.Descriptor.Icon = PsiCSharpThemedIcons.Csharp.Id;
-                                                           e.Descriptor.Style = MenuItemStyle.Enabled;
-                                                           e.Descriptor.Text = new RichText(key.SourceFile.DisplayName);
-                                                       });
-                    menu.ItemClicked.Advise(lifetime, e =>
-                                                      {
-                                                          var availableBindingClass = (SpecflowStepsDefinitionsCache.AvailableBindingClass) e;
-                                                          AddSpecflowStep(availableBindingClass.SourceFile, availableBindingClass.ClassClrName, getStepKind, getStepText);
-                                                      });
-                    menu.PopupWindowContextSource = textControl.PopupWindowContextFactory.ForCaret();
-                });
-        }
-
-        private void AddSpecflowStep(IPsiSourceFile targetFile, string classClrName, GherkinStepKind stepKind, string stepText)
-        {
-            var cSharpFile = targetFile.GetProject().GetCSharpFile(targetFile.DisplayName.Substring(targetFile.DisplayName.LastIndexOf('>') + 2));
-            if (cSharpFile == null)
-                return;
-
-            foreach (var type in cSharpFile.GetChildrenInSubtrees<IClassDeclaration>())
+            actions.Add(new CreateStepMenuAction("Create new binding class", CommonThemedIcons.Create.Id, () =>
             {
-                if (!(type is IClassDeclaration classDeclaration))
-                    continue;
-                if (classDeclaration.CLRName != classClrName)
-                    continue;
-                if (classDeclaration.DeclaredElement?.GetAttributeInstances(AttributesSource.Self).All(x => x.GetAttributeType().GetClrName().FullName != "TechTalk.SpecFlow.Binding") != true)
-                    continue;
-
-                var factory = CSharpElementFactory.GetInstance(classDeclaration);
-                var methodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, _reference.GetGherkinFileCulture());
-                methodName = cSharpFile.GetPsiServices().Naming.Suggestion.GetDerivedName(methodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance, new SuggestionOptions(), targetFile);
-                var parameters = _stepDefinitionBuilder.GetStepDefinitionParameters(stepText, _reference.GetGherkinFileCulture());
-                var pattern = _stepDefinitionBuilder.GetPattern(stepText, _reference.GetGherkinFileCulture());
-                var attributeType = CSharpTypeFactory.CreateType(SpecflowAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
-                var formatString = $"[$0(@\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
-                var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
-                if (methodDeclaration == null)
-                    continue;
-                var psiModule = classDeclaration.GetPsiModule();
-                
-                foreach (var (parameterName, parameterType) in parameters)
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
-
-                if (_reference.GetElement().Children<GherkinPystring>().FirstOrDefault() != null)
+                var (project, defaultFolder) = SelectDefaultFolderForNewFile();
+                _createStepClassDialogUtil.OpenCreateClassDialog(solution, project, defaultFolder, (className, path, isPartial) =>
                 {
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("string", psiModule), "multilineText", null);
+                    using (ReadLockCookie.Create())
+                    {
+                        var classDeclaration = CreateCSharpFile(solution, className, path, isPartial);
+                        if (classDeclaration != null)
+                            AddSpecFlowStep(classDeclaration.GetSourceFile(), classDeclaration.CLRName);
+                    }
+                });
+            }));
+
+            actions.AddRange(filesPerClasses.Select(availableBindingClass =>
+                {
+                    return new CreateStepMenuAction(
+                        new RichText(availableBindingClass.Key, DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type)),
+                        PsiSymbolsThemedIcons.Class.Id,
+                        () => OpenPartialClassFileSelectionModal(textControl, solution, availableBindingClass.Key, availableBindingClass.Value),
+                        new ClrTypeName(availableBindingClass.Key).GetNamespaceName());
+                })
+            );
+
+            _menuModalUtil.OpenSelectStepClassMenu(actions, "Where to create the step ?", textControl.PopupWindowContextFactory.ForCaret());
+        }
+
+        private (IProject, FileSystemPath) SelectDefaultFolderForNewFile()
+        {
+            var gherkinStep = _reference.GetElement();
+            var nearestStep = TreeNodeHelper.GetPreviousNodeOfType<GherkinStep>(gherkinStep)
+                              ?? TreeNodeHelper.GetNextNodeOfType<GherkinStep>(gherkinStep);
+            var reference = nearestStep?.GetFirstClassReferences().FirstOrDefault();
+            if (reference != null && reference.CheckResolveResult() == ResolveErrorType.OK)
+            {
+                var file = reference.Resolve().Result.DeclaredElement?.GetSourceFiles().FirstOrDefault();
+                if (file != null)
+                    return (file.GetProject(), file.GetLocation().Parent);
+            }
+
+            return (_reference.GetProject(), _reference.GetElement().GetProject()?.Location);
+        }
+
+        private void OpenPartialClassFileSelectionModal(ITextControl textControl, ISolution solution, string fullClassName, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass> availableBindingClasses)
+        {
+            var actions = new List<CreateStepMenuAction>();
+
+            if (IsBindingTypePartial(fullClassName, availableBindingClasses))
+            {
+                actions.Add(new CreateStepMenuAction("Create new file", CommonThemedIcons.Create.Id, () =>
+                {
+                    _createStepPartialClassFile.OpenCreatePartialClassFileDialog(availableBindingClasses.First().SourceFile, (path, filename) =>
+                    {
+                        using (ReadLockCookie.Create())
+                        {
+                            var classDeclaration = CreatePartialPartCSharpFile(solution, fullClassName, path, filename);
+                            if (classDeclaration != null)
+                                AddSpecFlowStep(classDeclaration.GetSourceFile(), classDeclaration.CLRName);
+                        }
+                    });
+                }));
+            }
+
+            actions.AddRange(availableBindingClasses.Select(availableBindingClass => new CreateStepMenuAction(
+                new RichText(availableBindingClass.SourceFile.DisplayName),
+                PsiCSharpThemedIcons.Csharp.Id,
+                () => { AddSpecFlowStep(availableBindingClass.NotNull().SourceFile, availableBindingClass.ClassClrName); }
+            )));
+
+            _menuModalUtil.OpenSelectStepClassMenu(actions, "Where to create the step ?", textControl.PopupWindowContextFactory.ForCaret());
+        }
+
+        private static bool IsBindingTypePartial(string fullClassName, ISet<SpecflowStepsDefinitionsCache.AvailableBindingClass> availableBindingClasses)
+        {
+            if (availableBindingClasses.Count != 1)
+                return true;
+
+            var psiSourceFile = availableBindingClasses.First().SourceFile;
+            var @class = psiSourceFile.GetPsiServices().Symbols
+                .GetTypesAndNamespacesInFile(psiSourceFile)
+                .OfType<IClass>()
+                .FirstOrDefault(x => x.GetClrName().FullName == fullClassName);
+            if (@class == null)
+                return false;
+            if (@class.GetDeclarations().FirstOrDefault() is not IClassDeclaration classDeclaration)
+                return false;
+            return classDeclaration.IsPartial;
+        }
+
+        [CanBeNull]
+        protected IClassDeclaration CreateCSharpFile(
+            ISolution solution,
+            string className,
+            string path,
+            bool isPartial
+        )
+        {
+            var projectFolder = GetOrCreateFolder(solution, path);
+            if (projectFolder == null)
+                return null;
+
+            var project = projectFolder.GetProject().NotNull("projectFolder.GetProject() != null");
+
+            var createNewFileTarget = new CreateNewFileTarget(
+                _reference.GetTreeNode(),
+                project,
+                projectFolder.Location,
+                projectFolder.Name,
+                className,
+                CSharpProjectFileType.Instance,
+                null,
+                CSharpLanguage.Instance
+            );
+            createNewFileTarget.PreExecute();
+
+            using (new PsiTransactionCookie(solution.GetPsiServices(), DefaultAction.Commit, "Creating new step class"))
+            {
+                var result = ClassDeclarationBuilder.CreateClass(new CreateClassDeclarationContext
+                {
+                    ClassName = className,
+                    IsPartial = isPartial,
+                    AccessRights = AccessRights.PUBLIC,
+                    IsStatic = false,
+                    IsInterface = false,
+                    Target = createNewFileTarget
+                });
+                if (result?.ResultDeclaration is not IClassDeclaration classDeclaration)
+                    return null;
+
+                using (CompilationContextCookie.GetOrCreate(project.GetResolveContext()))
+                {
+                    var bindingAttributeType = TypeFactory.CreateTypeByCLRName(SpecflowAttributeHelper.BindingAttribute.FullName, _reference.GetTreeNode().GetPsiModule());
+                    var specFlowBindingAttribute = CSharpElementFactory.GetInstance(_reference.GetElement()).CreateAttribute(bindingAttributeType.GetTypeElement());
+                    classDeclaration.AddAttributeAfter(specFlowBindingAttribute, null);
                 }
 
-                if (_reference.GetElement().Children<GherkinTable>().FirstOrDefault() != null)
+                var expectedNamespace = classDeclaration.GetSourceFile().ToProjectFile()?.CalculateExpectedNamespace(CSharpLanguage.Instance.NotNull());
+                if (expectedNamespace != null)
                 {
-                    methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("TechTalk.SpecFlow.Table", psiModule), "table", null);
+                    var cSharpElementFactory = CSharpElementFactory.GetInstance(classDeclaration);
+                    var cSharpNamespaceDeclaration = cSharpElementFactory.CreateNamespaceDeclaration(expectedNamespace);
+                    classDeclaration.OwnerNamespaceDeclaration.SetQualifiedName(cSharpNamespaceDeclaration.QualifiedName);
                 }
+                return classDeclaration;
+            }
+        }
 
-                IClassMemberDeclaration insertedDeclaration;
-                using (new PsiTransactionCookie(type.GetPsiServices(), DefaultAction.Commit, "Generate specflow step"))
+        [CanBeNull]
+        protected IClassDeclaration CreatePartialPartCSharpFile(
+            ISolution solution,
+            string fullClassName,
+            string path,
+            string filename
+        )
+        {
+            var projectFolder = GetOrCreateFolder(solution, path);
+            if (projectFolder == null)
+                return null;
+
+            var clrTypeName = new ClrTypeName(fullClassName);
+            var project = projectFolder.GetProject().NotNull("projectFolder.GetProject() != null");
+
+            var createNewFileTarget = new CreateNewFileTarget(
+                _reference.GetTreeNode(),
+                project,
+                projectFolder.Location,
+                string.Join(".", clrTypeName.NamespaceNames),
+                filename,
+                CSharpProjectFileType.Instance,
+                null,
+                CSharpLanguage.Instance
+            );
+            createNewFileTarget.PreExecute();
+
+            using (new PsiTransactionCookie(solution.GetPsiServices(), DefaultAction.Commit, "Creating new step class"))
+            {
+                var result = ClassDeclarationBuilder.CreateClass(new CreateClassDeclarationContext
                 {
-                    insertedDeclaration = classDeclaration.AddClassMemberDeclaration((IClassMemberDeclaration) methodDeclaration);
-                }
+                    ClassName = clrTypeName.ShortName,
+                    IsPartial = true,
+                    AccessRights = AccessRights.PUBLIC,
+                    IsStatic = false,
+                    IsInterface = false,
+                    Target = createNewFileTarget
+                });
 
-                var analyticsTransmitter = targetFile.GetSolution().GetComponent<IAnalyticsTransmitter>();
-                analyticsTransmitter.TransmitRuntimeEvent(new GenericEvent("RiderActionExecuted", new Dictionary<string, string>()
-                    {{"Type", "CreateStepBinding"}}));
+                if (result?.ResultDeclaration is not IClassDeclaration classDeclaration)
+                    return null;
 
-                var invocationExpression = insertedDeclaration.GetChildrenInSubtrees<IInvocationExpression>().FirstOrDefault();
+                return classDeclaration;
+            }
+        }
+
+        private void AddSpecFlowStep(IPsiSourceFile psiSourceFile, string classClrName)
+        {
+            var addedDeclaration = _createSpecFlowStepUtil.AddSpecFlowStep(
+                psiSourceFile,
+                classClrName,
+                _reference.GetStepKind(),
+                _reference.GetStepText(),
+                _reference.GetGherkinFileCulture(),
+                _reference.GetElement().Children<GherkinPystring>().Any(),
+                _reference.GetElement().Children<GherkinTable>().Any()
+            );
+
+            NavigateToAddedElement(addedDeclaration);
+        }
+
+        private IProjectFolder GetOrCreateFolder(ISolution solution, string path)
+        {
+            // From: ChooseProjectFolderController.ParseFolderName
+            var names = path.TrimFromEnd("\\").TrimFromEnd("/").Split('\\', '/');
+            if (names.Length == 0)
+                return null;
+            var matchingProjects = solution.GetTopLevelProjects()
+                .Where(p => string.Equals(p.Name, names[0], StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            if (matchingProjects.Count != 1)
+                return null;
+            var project = matchingProjects.First();
+            return project.GetOrCreateProjectFolder(project.Location.Combine(Path.Combine(names.Skip(1).ToArray())));
+        }
+
+        private static void NavigateToAddedElement([CanBeNull] ITreeNode addedDeclaration)
+        {
+            if (addedDeclaration != null)
+            {
+                var invocationExpression = addedDeclaration.GetChildrenInSubtrees<IInvocationExpression>().FirstOrDefault();
                 if (invocationExpression != null)
                     invocationExpression.NavigateToNode(true);
                 else
-                    insertedDeclaration.NavigateToNode(true);
+                    addedDeclaration.NavigateToNode(true);
             }
         }
     }

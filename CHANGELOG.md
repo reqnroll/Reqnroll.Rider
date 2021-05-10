@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - After running tests, if a step failed it will be marked with an icon in the gutter. For this to works, you may need to enable `traceTimings`
+- Allow to create a new binding class from the Create Step quickfix
 
 ## 1.6.0
 
