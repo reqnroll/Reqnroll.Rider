@@ -39,7 +39,18 @@ All those feature should work out of the box for existing projects. If something
 
 ![Rename step definition example](doc/images/RenameStepDefinitionToMatchPattern.gif)
 
+### Highlight the failing steps after running tests
 
+![Highlight the failing steps](doc/images/FailedStepGutterMark.gif)
+
+Note: If this is not working, try to add the following configuration in the `specflow.json`
+```json
+{
+  "trace": {
+    "traceTimings": true
+  }
+}
+```
 
 ## Limitations
 
