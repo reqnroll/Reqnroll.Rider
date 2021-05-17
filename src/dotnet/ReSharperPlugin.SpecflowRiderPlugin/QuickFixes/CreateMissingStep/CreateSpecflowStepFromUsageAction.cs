@@ -87,10 +87,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 });
             }));
 
-            actions.AddRange(filesPerClasses.Select(availableBindingClass =>
+            actions.AddRange(filesPerClasses.OrderBy(x => x.Key.Split('.').Last()).Select(availableBindingClass =>
                 {
                     return new CreateStepMenuAction(
-                        new RichText(availableBindingClass.Key, DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type)),
+                        new RichText(availableBindingClass.Key.Split('.').Last(), DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type)),
                         PsiSymbolsThemedIcons.Class.Id,
                         () => OpenPartialClassFileSelectionModal(textControl, solution, availableBindingClass.Key, availableBindingClass.Value),
                         new ClrTypeName(availableBindingClass.Key).GetNamespaceName());
