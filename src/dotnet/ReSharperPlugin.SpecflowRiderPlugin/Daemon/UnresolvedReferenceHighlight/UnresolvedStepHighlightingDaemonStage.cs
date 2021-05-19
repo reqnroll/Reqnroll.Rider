@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Daemon.Stages;
 using JetBrains.ReSharper.Daemon.UsageChecking;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Files;
+using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -42,6 +43,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighligh
             if (_specflowStepsDefinitionsCache.AllStepsPerFiles.ContainsKey(process.SourceFile))
                 return _specflowStepsUsagesCache.StepUsages.SelectMany(x => x.Value.Keys).Distinct()
                     .Select(x => x.GetPsiFile<GherkinLanguage>(x.Document.GetDocumentRange()))
+                    .Where(x => x != null && x.IsValid())
                     .Select(file => new UnresolvedStepsHighlightingDaemonStageProcess(process, (GherkinFile) file, _registrar));
 
             var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
