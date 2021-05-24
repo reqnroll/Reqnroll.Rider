@@ -67,11 +67,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
                     if (caret == 0)
                         return false;
 
-                    var lastKeywordToken = FindLastKeywordToken(cachingLexer, caret);
+                    var lastKeywordToken = FindLastKeywordToken(cachingLexer, caret, out var inTable);
                     if (lastKeywordToken == null)
                         return false;
 
                     var extraIdentSize = 0;
+                    var extraIdent = "";
+
                     if (lastKeywordToken == GherkinTokenTypes.FEATURE_KEYWORD)
                         extraIdentSize = GetFormatSettingsKey(textControl).ScenarioIndentSize;
                     else if (lastKeywordToken == GherkinTokenTypes.RULE_KEYWORD)
@@ -91,7 +93,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
                     else if (lastKeywordToken == GherkinTokenTypes.STEP_KEYWORD)
                         extraIdentSize = 0;
 
-                    var currentIndent = ComputeIndentOfCurrentKeyword(cachingLexer) + GetIndentText(textControl, extraIdentSize);
+                    if (inTable)
+                    {
+                        if (GetFormatSettingsKey(textControl).SmallTableIndent)
+                            extraIdent = "  ";
+                        else
+                            extraIdentSize += GetFormatSettingsKey(textControl).TableIndentSize;
+                    }
+
+                    var currentIndent = ComputeIndentOfCurrentKeyword(cachingLexer) + GetIndentText(textControl, extraIdentSize) + extraIdent;
 
                     textControl.Document.InsertText(caret, GetNewLineText(textControl) + currentIndent);
                     return true;
@@ -140,11 +150,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
             return string.Empty;
         }
 
-        private TokenNodeType FindLastKeywordToken(CachingLexer cachingLexer, int caret)
+        private TokenNodeType FindLastKeywordToken(CachingLexer cachingLexer, int caret, out bool inTable)
         {
             cachingLexer.FindTokenAt(caret - 1);
+            inTable = false;
             while (!GherkinTokenTypes.KEYWORDS[cachingLexer.TokenType])
             {
+                if (cachingLexer.TokenType == GherkinTokenTypes.TABLE_CELL)
+                    inTable = true;
                 if (cachingLexer.CurrentPosition == 0)
                     return null;
                 cachingLexer.SetCurrentToken(cachingLexer.CurrentPosition - 1);
