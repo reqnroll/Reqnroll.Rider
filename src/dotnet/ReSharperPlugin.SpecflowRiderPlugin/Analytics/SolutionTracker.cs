@@ -5,6 +5,7 @@ using JetBrains.Application.StdApplicationUI;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Impl;
 using JetBrains.ProjectModel.Tasks;
+using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
 using ReSharperPlugin.SpecflowRiderPlugin.Guidance;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
@@ -26,10 +27,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
                      foreach (var project in projects)
                      {
                          var targetFrameworks = project.TargetFrameworkIds;
-                         var assemblies = project.GetAllReferencedAssemblies();
-                         var nugetPackages = project.GetAllPackagesReferences().ToArray();
-                         if (assemblies.Any(a => a.Name == "TechTalk.SpecFlow") || 
-                             nugetPackages.Any(p =>  p.Name.IndexOf("SpecFlow", StringComparison.OrdinalIgnoreCase) >= 0))
+                         if(project.IsSpecFlowProject())
                          {
                              isSpecFlowSolution = true;
                              transmitter.TransmitRuntimeEvent(new GenericEvent("Rider SpecFlow loaded", new Dictionary<string, string>()
@@ -67,7 +65,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
                  }
              ));
          }
-         
+
          private static bool ShowNotification(OpensUri opensUri, GuidanceStep guidance)
          {
              if (!opensUri.IsInternetConnected())

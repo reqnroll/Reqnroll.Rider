@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
@@ -25,6 +26,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Extensions
         {
             var sourceFileInProject = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename, FileSystemPathInternStrategy.INTERN));
             return sourceFileInProject?.GetPsiFiles<GherkinLanguage>().SafeOfType<GherkinFile>().SingleOrDefault();
+        }
+
+        public static bool IsSpecFlowProject(this IProject project)
+        {
+            var isSpecFlowProject = false;
+            var assemblies = project.GetAllReferencedAssemblies();
+            var nugetPackages = project.GetAllPackagesReferences().ToArray();
+            if (assemblies.Any(a => a.Name == "TechTalk.SpecFlow") ||
+                nugetPackages.Any(p => p.Name.IndexOf("SpecFlow", StringComparison.OrdinalIgnoreCase) >= 0))
+            {
+                isSpecFlowProject = true;
+            }
+            return isSpecFlowProject;
         }
     }
 }
