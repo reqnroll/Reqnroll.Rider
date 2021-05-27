@@ -6,6 +6,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Features.SolutionBuilders;
 using JetBrains.ProjectModel.ProjectsHost;
 using JetBrains.ProjectModel.ProjectsHost.SolutionHost;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
 
@@ -28,8 +29,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectRefresher
             var solutionHost = myProjectsHostContainer.GetComponent<ISolutionHost>();
             request.AfterBuildCompleted.Advise(request.Lifetime, () =>
             {
-                var specFlowProjects = request.Projects.Where(p => p.Project.IsSpecFlowProject()).Select(p => p.Project);
-                solutionHost.ReloadProjectsAsync(specFlowProjects.Select(x => x.GetProjectMark()).WhereNotNull().ToList());
+                using (ReadLockCookie.Create()) 
+                {  
+                    var specFlowProjects = request.Projects.Where(p => p.Project.IsSpecFlowProject()).Select(p => p.Project);
+                    solutionHost.ReloadProjectsAsync(specFlowProjects.Select(x => x.GetProjectMark()).WhereNotNull().ToList());
+                }
             });   
         }
     }
