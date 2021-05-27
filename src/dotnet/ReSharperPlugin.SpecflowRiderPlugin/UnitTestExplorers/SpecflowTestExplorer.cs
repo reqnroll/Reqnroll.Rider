@@ -1,15 +1,14 @@
 using System;
 using System.Linq;
-using JetBrains.Diagnostics;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.UnitTestFramework;
 using JetBrains.ReSharper.UnitTestFramework.Exploration;
-using JetBrains.ReSharper.UnitTesting.MSTest.Provider;
 using JetBrains.ReSharper.UnitTestProvider.nUnit.v30;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
+using TechTalk.SpecFlow.Tracing;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
 {
@@ -48,51 +47,73 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                 .Where(t => t.Id.Project.Guid == project.Guid)
                 .ToList();
 
-            var featureCsFile = GetRelatedFeatureFile(psiFile);
-            if (featureCsFile == null)
-                return;
-
-            var relatedTests = projectTests.Where(t => t.GetProjectFiles()?.Contains(featureCsFile) == true).ToList();
+            var relatedTests = projectTests
+                .Where(t => string.Compare(t.ShortName,
+                    GetGeneratedClassName(gherkinFile), StringComparison.InvariantCultureIgnoreCase) == 0).ToList();
             if (relatedTests.Count == 0)
                 return;
 
             var featureTests = relatedTests.Where(x => x.IsOfKind(UnitTestElementKind.TestContainer)).ToList();
-            foreach (var feature in gherkinFile.GetFeatures())
+            
+            //A gherkin file can only contain one feature definition
+            var feature = gherkinFile.GetFeatures().FirstOrDefault();
+            var featureTest = featureTests.FirstOrDefault();
+            if (featureTest == null || feature == null)
+                return;
+
+            observer.OnUnitTestElementDisposition(new UnitTestElementDisposition(
+                featureTest,
+                projectFile,
+                feature.GetDocumentRange().TextRange,
+                feature.GetDocumentRange().TextRange
+            ));
+
+            foreach (var scenario in feature.GetScenarios())
             {
-                var featureText = feature.GetFeatureText();
-                var featureTest = featureTests.FirstOrDefault(t => GetDescription(t) == featureText) ?? featureTests.FirstOrDefault();
-                if (featureTest == null)
+                var scenarioText = scenario.GetScenarioText();
+                var matchingTest = featureTest.Children.FirstOrDefault(t => GetDescriptionFromAttributes(t) == scenarioText 
+                                                                            || CompareDescriptionWithShortName(scenarioText, t));
+                if (matchingTest == null)
                     continue;
 
                 observer.OnUnitTestElementDisposition(new UnitTestElementDisposition(
-                    featureTest,
+                    matchingTest,
                     projectFile,
-                    feature.GetDocumentRange().TextRange,
-                    feature.GetDocumentRange().TextRange
+                    scenario.GetDocumentRange().TextRange,
+                    scenario.GetDocumentRange().TextRange
                 ));
+            }
+        }
 
-                foreach (var scenario in feature.GetScenarios())
+        private string GetGeneratedClassName(GherkinFile gherkinFile)
+        {
+            return $"{gherkinFile.GetFeatures().FirstOrDefault()?.GetFeatureText()?.ToIdentifier()}Feature";
+        }
+
+        private bool CompareDescriptionWithShortName(string scenarioText, IUnitTestElement relatedTest)
+        {
+            switch (relatedTest.Id.ProviderId)
+            {
+                case NUnitTestProvider.PROVIDER_ID:
+                case "MSTest":
                 {
-                    var scenarioText = scenario.GetScenarioText();
-                    var matchingTest = featureTest.Children.FirstOrDefault(t => GetDescription(t) == scenarioText);
-                    if (matchingTest == null)
-                        continue;
+                    var scenarioTextWithoutSpace = scenarioText.ToIdentifier();
+                    return string.Compare(scenarioTextWithoutSpace, relatedTest.ShortName, StringComparison.InvariantCultureIgnoreCase) == 0;
 
-                    observer.OnUnitTestElementDisposition(new UnitTestElementDisposition(
-                        matchingTest,
-                        projectFile,
-                        scenario.GetDocumentRange().TextRange,
-                        scenario.GetDocumentRange().TextRange
-                    ));
+                }
+                case "xUnit":
+                {
+                    return scenarioText == relatedTest.ShortName;
                 }
             }
+            return false;
         }
 
         public static readonly ClrTypeName NUnitDescriptionAttribute = new ClrTypeName("NUnit.Framework.DescriptionAttribute");
         public static readonly ClrTypeName XUnitTraitAttribute = new ClrTypeName("Xunit.TraitAttribute");
         public static readonly ClrTypeName MsTestDescriptionAttribute = new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute");
 
-        private string GetDescription(IUnitTestElement relatedTest)
+        private string GetDescriptionFromAttributes(IUnitTestElement relatedTest)
         {
             switch (relatedTest.Id.ProviderId)
             {
@@ -122,19 +143,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                 }
             }
             return null;
-        }
-
-        private IProjectFile GetRelatedFeatureFile(IFile psiFile)
-        {
-            var fileLocation = psiFile.GetSourceFile().NotNull().ToProjectFile()?.Location;
-            if (fileLocation == null)
-                return null;
-            var expectedFeatureCsFileName = fileLocation.Name.Replace(".feature", ".feature.cs");
-            var file = psiFile.GetProject()
-                .GetAllProjectFiles()
-                .FirstOrDefault(f => f.Location.Parent == fileLocation.Parent && f.Name == expectedFeatureCsFileName);
-
-            return file;
         }
     }
 }
