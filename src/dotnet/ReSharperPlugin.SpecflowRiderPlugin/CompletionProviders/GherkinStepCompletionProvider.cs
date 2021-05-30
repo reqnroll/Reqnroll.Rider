@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.UI.ThemedIcons;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
+using ReSharperPlugin.SpecflowRiderPlugin.Icons;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
@@ -51,7 +52,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                     {
                         // Ignored
                     }
-                    var lookupItem = new CompletionStepLookupItem(completionText, SpecFlowThemedIcons.Specflow.Id);
+                    var lookupItem = new CompletionStepLookupItem(completionText, SpecFlowIcons.SpecFlowIcon);
                     lookupItem.InitializeRanges(context.Ranges, context.BasicContext);
 
                     collector.Add(lookupItem);

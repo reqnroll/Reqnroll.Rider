@@ -4,14 +4,14 @@ using JetBrains.Application.Settings;
 using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Templates;
-using JetBrains.UI.ThemedIcons;
+using ReSharperPlugin.SpecflowRiderPlugin.Icons;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Templates
 {
     [ShellComponent]
     public class SpecFlowTemplatesDefaultSettings : IHaveDefaultSettingsStream
     {
-        static SpecFlowTemplatesDefaultSettings() => TemplateImage.Register("SpecFlowFile", SpecFlowThemedIcons.Specflow.Id);
+        static SpecFlowTemplatesDefaultSettings() => TemplateImage.Register("SpecFlowFile", SpecFlowIcons.SpecFlowIcon);
         
         
         public Stream GetDefaultSettingsStream(Lifetime lifetime)

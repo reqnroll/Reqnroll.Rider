@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Text;
 using JetBrains.UI.Icons;
-using JetBrains.UI.ThemedIcons;
+using ReSharperPlugin.SpecflowRiderPlugin.Icons;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
@@ -22,6 +22,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         protected override PsiLanguageType PsiLanguageType => GherkinLanguage.Instance.NotNull();
 
-        public override IconId Icon => SpecFlowThemedIcons.Specflow.Id;
+        public override IconId Icon => SpecFlowIcons.SpecFlowIcon;
     }
 }

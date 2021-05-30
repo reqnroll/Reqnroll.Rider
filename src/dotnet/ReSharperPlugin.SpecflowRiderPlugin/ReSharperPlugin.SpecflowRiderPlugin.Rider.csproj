@@ -24,10 +24,10 @@
     </ErrorsGen>
   </ItemGroup>
   <!-- TODO: uncomment for xaml icons -->
-  <ItemGroup>
+  <!--<ItemGroup>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-  </ItemGroup>
+  </ItemGroup>-->
   <!--<ItemGroup Condition="'$(OS)' != 'Unix'">-->
   <!--<Reference Include="PresentationCore" />-->
   <!--<Reference Include="PresentationFramework" />-->
