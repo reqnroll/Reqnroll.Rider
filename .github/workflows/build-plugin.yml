@@ -2,7 +2,7 @@ name: Build Plugin
 
 on:
   push:
-    branches: [ master, 2021.1 ]
+    branches: [ master, fix-pipelines ]
   pull_request:
     branches: [ master ]
 
@@ -41,8 +41,11 @@ jobs:
         set_check_status_from_test_outcome: true
         project_path: src/dotnet/ReSharperPlugin.SpecflowRiderPlugin.Tests/ReSharperPlugin.SpecflowRiderPlugin.Tests.csproj
         github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Unpack Distribution
+      shell: pwsh
+      run: scripts/Unpack-Distribution.ps1
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: SpecFlowPlugin
-        path: output/
+        path: build/distributions/unpacked
