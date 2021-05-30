@@ -42,7 +42,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         protected override bool IsAvailable(GherkinSpecificCodeCompletionContext context)
         {
             var codeCompletionType = context.BasicContext.CodeCompletionType;
-            return codeCompletionType == CodeCompletionType.BasicCompletion || codeCompletionType == CodeCompletionType.SmartCompletion && context.IsStartOfLine;
+            return (codeCompletionType == CodeCompletionType.BasicCompletion || codeCompletionType == CodeCompletionType.SmartCompletion) && context.IsStartOfLine;
         }
 
         protected override bool AddLookupItems(GherkinSpecificCodeCompletionContext context, IItemsCollector collector)
