@@ -121,10 +121,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
             textControl.Document.InsertText(context.TextControl.Caret.Offset(), "|");
             CommitPsiOnlyAndProceedWithDirtyCaches(textControl, (Func<IFile, object>) (file =>
             {
-                var lexer = TextControlToLexer(textControl, textControl.Caret.Offset());
-                if (lexer < 0)
-                    return null;
-                var tokenNode = file.FindTokenAt(textControl.Document, lexer - 1) as ITokenNode;
+                var tokenNode = file.FindNodeAt(textControl.Caret.DocumentOffset());
                 var parentTable = tokenNode?.GetPreviousToken()?.GetParentOfType<GherkinTable>();
                 if (tokenNode == null || parentTable == null)
                     return null;
