@@ -4,7 +4,6 @@ using JetBrains.Diagnostics;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resources;
 using JetBrains.ReSharper.Psi.Tree;
@@ -43,7 +42,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         protected override bool IsAvailable(GherkinSpecificCodeCompletionContext context)
         {
             var codeCompletionType = context.BasicContext.CodeCompletionType;
-            return codeCompletionType == CodeCompletionType.BasicCompletion || codeCompletionType == CodeCompletionType.SmartCompletion && context.IsStartOfLine;
+            return (codeCompletionType == CodeCompletionType.BasicCompletion || codeCompletionType == CodeCompletionType.SmartCompletion) && context.IsStartOfLine;
         }
 
         protected override bool AddLookupItems(GherkinSpecificCodeCompletionContext context, IItemsCollector collector)
