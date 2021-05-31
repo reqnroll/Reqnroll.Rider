@@ -16,8 +16,10 @@ using JetBrains.ReSharper.Psi.CachingLexers;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.Format;
 using JetBrains.ReSharper.Psi.Parsing;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.Util;
+using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
 using ReSharperPlugin.SpecflowRiderPlugin.Formatting;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
@@ -41,6 +43,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
             : base(solution, settingsStore, cachingLexerService, commandProcessor, psiServices, externalIntellisenseHost, skippingTypingAssist, lastTypingAction, structuralRemoveManager)
         {
             manager.AddActionHandler(lifetime, TextControlActions.ActionIds.Enter, this, HandleEnter, IsActionHandlerAvailable);
+            manager.AddTypingHandler(lifetime, '|', this, HandleTableCellClosing, IsTypingHandlerAvailable);
         }
 
         protected override bool IsSupported(ITextControl textControl) => true;
@@ -109,6 +112,27 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
             }
 
             return false;
+        }
+
+        private bool HandleTableCellClosing([NotNull] ITypingContext context)
+        {
+            var textControl = context.TextControl;
+
+            textControl.Document.InsertText(context.TextControl.Caret.Offset(), "|");
+            CommitPsiOnlyAndProceedWithDirtyCaches(textControl, (Func<IFile, object>) (file =>
+            {
+                var tokenNode = file.FindNodeAt(textControl.Caret.DocumentOffset());
+                var parentTable = tokenNode?.GetPreviousToken()?.GetParentOfType<GherkinTable>();
+                if (tokenNode == null || parentTable == null)
+                    return null;
+
+                PsiServices.Transactions.Execute("Format code", () =>
+                {
+                    GetCodeFormatter(tokenNode).Format(parentTable.firstChild, parentTable.lastChild.LastChild, CodeFormatProfile.SOFT, new AdditionalFormatterParameters(treatTextAfterLastNodeAsIncorrect: false));
+                });
+                return null;
+            }));
+            return true;
         }
 
         private string GetNewLineText(ITextControl textControl)
