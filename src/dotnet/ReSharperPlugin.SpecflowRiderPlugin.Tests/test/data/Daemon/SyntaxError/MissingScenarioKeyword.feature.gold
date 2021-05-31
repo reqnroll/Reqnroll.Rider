@@ -1,0 +1,9 @@
+﻿Feature: test
+
+    Scenario: first
+        |Given this is a step|(0)
+        
+    |error Scenario: second|(1)
+---------------------------------------------------------
+(0): ReSharper Warning: Cannot find a matching step definition
+(1): ReSharper Underlined Error Highlighting: Unexpected text found.
