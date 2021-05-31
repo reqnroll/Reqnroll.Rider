@@ -27,7 +27,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.SyntaxHighlighting
             Layer = HighlighterLayer.SYNTAX),
         RegisterHighlighter(REGEXP_PARAMETER,
             GroupId = GroupID,
-            FallbackAttributeId = IdeaHighlightingAttributeIds.NOT_USED_ELEMENT_ATTRIBUTES, 
+            FallbackAttributeId = IdeaHighlightingAttributeIds.STRING,
             Layer = HighlighterLayer.SYNTAX),
         RegisterHighlighter(TABLE_CELL,
             GroupId = GroupID,
