@@ -15,10 +15,34 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
         {
             if (element is not GherkinToken token)
                 return;
-            if (token.GetTokenType() == GherkinTokenTypes.SCENARIO_KEYWORD && element.Parent is not GherkinScenario)
+            if (IsScenarioToken(token) && element.Parent is not IGherkinScenario)
                 context.AddHighlighting(new GherkinSyntaxScenarioNotInFeatureError(token));
-            if (token.GetTokenType() == GherkinTokenTypes.TEXT && IsAtStartOfLine(token) && element.Parent is not GherkinPystring)
+            if (token.GetTokenType() == GherkinTokenTypes.TEXT && element.Parent is IGherkinScenario && !IsInScenarioDescription(token))
                 context.AddHighlighting(new GherkinSyntaxError(token));
+        }
+
+        private bool IsScenarioToken(ITreeNode token)
+        {
+            return token.GetTokenType() == GherkinTokenTypes.SCENARIO_KEYWORD || token.GetTokenType() == GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD;
+        }
+
+        private bool IsInScenarioDescription(GherkinToken token)
+        {
+            var current = token.PrevSibling;
+            var hasScenarioKeyword = false;
+            while (current != null)
+            {
+                if (IsScenarioToken(current))
+                {
+                    hasScenarioKeyword = true;
+                }
+                if (current is GherkinStep)
+                {
+                    return false;
+                }
+                current = current.PrevSibling;
+            }
+            return hasScenarioKeyword;
         }
 
         private bool IsAtStartOfLine(GherkinToken token)

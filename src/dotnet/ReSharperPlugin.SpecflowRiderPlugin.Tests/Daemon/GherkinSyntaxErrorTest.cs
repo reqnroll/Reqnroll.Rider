@@ -15,7 +15,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Daemon
         protected override string RelativeTestDataPath => "Daemon/SyntaxError";
 
         [TestCase("MissingFeatureLine")]
-        [TestCase("MissingScenarioLine")]
+        [TestCase("MissingStepKeyword")]
+        [TestCase("MissingScenarioKeyword")]
         public void TestFormat(string name) { DoOneTest(name); }
     }
 }
