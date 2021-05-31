@@ -131,7 +131,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
 
                 PsiServices.Transactions.Execute("Format code", () =>
                 {
-                    GetCodeFormatter(tokenNode).Format(parentTable.firstChild, parentTable.lastChild, CodeFormatProfile.SOFT, new AdditionalFormatterParameters(treatTextAfterLastNodeAsIncorrect: false));
+                    GetCodeFormatter(tokenNode).Format(parentTable.firstChild, parentTable.lastChild.LastChild, CodeFormatProfile.SOFT, new AdditionalFormatterParameters(treatTextAfterLastNodeAsIncorrect: false));
                 });
                 return null;
             }));
