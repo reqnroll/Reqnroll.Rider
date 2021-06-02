@@ -19,40 +19,40 @@
             "replaces": "$target$",
             "choices": [
                 {
-                    "choice": "netcoreapp2.1",
-                    "description": ".NET Core 2.1"
+                    "choice": "net5.0",
+                    "description": "net5.0"
                 },
                 {
                     "choice": "netcoreapp3.1",
-                    "description": ".NET Core 3.1"
+                    "description": "netcoreapp3.1"
                 },
                 {
-                    "choice": "net5.0",
-                    "description": ".NET 5.0"
-                },
-                {
-                    "choice": "net461",
-                    "description": ".NET Framework 4.6.1"
-                },
-                {
-                    "choice": "net462",
-                    "description": ".NET Framework 4.6.2"
-                },
-                {
-                    "choice": "net47",
-                    "description": ".NET Framework 4.7"
-                },
-                {
-                    "choice": "net471",
-                    "description": ".NET Framework 4.7.1"
-                },
-                {
-                    "choice": "net472",
-                    "description": ".NET Framework 4.7.2"
+                    "choice": "netcoreapp2.1",
+                    "description": "netcoreapp2.1"
                 },
                 {
                     "choice": "net48",
-                    "description": ".NET Framework 4.8"
+                    "description": ".Net Framework v4.8"
+                },
+                {
+                    "choice": "net472",
+                    "description": ".Net Framework v4.7.2"
+                },
+                {
+                    "choice": "net471",
+                    "description": ".Net Framework v4.7.1"
+                },
+                {
+                    "choice": "net47",
+                    "description": ".Net Framework v4.7"
+                },
+                {
+                    "choice": "net462",
+                    "description": ".Net Framework v4.6.2"
+                },
+                {
+                    "choice": "net461",
+                    "description": ".Net Framework v4.6.1"
                 }
             ]
         },
@@ -67,13 +67,13 @@
                     "description": "SpecFlow+ Runner"
                 },
                 {
-                    "choice": "xunit",
-                    "description": "xUnit"
-                },
-                {
                     "choice": "nunit",
                     "description": "NUnit"
                 },
+                {
+                    "choice": "xunit",
+                    "description": "xUnit"
+                },                
                 {
                     "choice": "mstest",
                     "description": "MSTest"
