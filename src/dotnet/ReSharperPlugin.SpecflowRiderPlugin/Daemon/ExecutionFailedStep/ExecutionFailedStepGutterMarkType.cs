@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using JetBrains.Application.UI.Controls.BulbMenu.Anchors;
 using JetBrains.Application.UI.Controls.BulbMenu.Items;
-using JetBrains.ReSharper.Host.Features.Icons;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Icons;

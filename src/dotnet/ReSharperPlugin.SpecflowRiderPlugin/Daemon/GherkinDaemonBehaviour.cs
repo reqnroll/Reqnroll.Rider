@@ -7,12 +7,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
     [Language(typeof(GherkinLanguage))]
     public class GherkinDaemonBehaviour : LanguageSpecificDaemonBehavior
     {
-        public override ErrorStripeRequest InitialErrorStripe(IPsiSourceFile sourceFile)
+        public override ErrorStripeRequestWithDescription InitialErrorStripe(IPsiSourceFile sourceFile)
         {
             if (sourceFile.Properties.ShouldBuildPsi && sourceFile.Properties.ProvidesCodeModel && sourceFile.IsLanguageSupported<GherkinLanguage>())
-                return ErrorStripeRequest.STRIPE_AND_ERRORS;
+                return ErrorStripeRequestWithDescription.StripeAndErrors;
 
-            return ErrorStripeRequest.NONE;
+            //TODO: fixeme
+            return ErrorStripeRequestWithDescription.None("");
         }
     }
 }

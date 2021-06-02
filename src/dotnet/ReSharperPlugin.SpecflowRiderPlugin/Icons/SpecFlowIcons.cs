@@ -1,4 +1,4 @@
-using JetBrains.ReSharper.Host.Features.Icons;
+using JetBrains.RdBackend.Common.Features.Icons;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Icons
 {
