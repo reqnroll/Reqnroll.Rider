@@ -26,7 +26,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             Provider = unitTestProvider;
             _unitTestElementRepository = unitTestElementRepository;
         }
-
+        
         public void ProcessFile(
             IFile psiFile,
             IUnitTestElementsObserver observer,
@@ -38,23 +38,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             var project = psiFile.GetProject();
             if (project == null)
                 return;
-
+            
             var projectFile = gherkinFile.GetSourceFile().ToProjectFile();
             if (projectFile == null)
                 return;
 
-            var projectTests = _unitTestElementRepository.Query()
-                .Where(t => t.Id.Project.Guid == project.Guid)
-                .ToList();
-
-            var relatedTests = projectTests
-                .Where(t => string.Compare(t.ShortName,
-                    GetGeneratedClassName(gherkinFile), StringComparison.InvariantCultureIgnoreCase) == 0).ToList();
-            if (relatedTests.Count == 0)
+            var featureTests = _unitTestElementRepository.GetRelatedFeatureTests(gherkinFile);
+            if (featureTests == null)
                 return;
 
-            var featureTests = relatedTests.Where(x => x.IsOfKind(UnitTestElementKind.TestContainer)).ToList();
-            
             //A gherkin file can only contain one feature definition
             var feature = gherkinFile.GetFeatures().FirstOrDefault();
             var featureTest = featureTests.FirstOrDefault();
@@ -83,11 +75,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                     scenario.GetDocumentRange().TextRange
                 ));
             }
-        }
-
-        private string GetGeneratedClassName(GherkinFile gherkinFile)
-        {
-            return $"{gherkinFile.GetFeatures().FirstOrDefault()?.GetFeatureText()?.ToIdentifier()}Feature";
         }
 
         private bool CompareDescriptionWithShortName(string scenarioText, IUnitTestElement relatedTest)
