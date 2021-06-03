@@ -4,11 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Upcomming
+## 1.7.0
 
 ### Added
 - After running tests, if a step failed it will be marked with an icon in the gutter. For this to works, you may need to enable `traceTimings`
 - Allow to create a new binding class from the Create Step quickfix
+- Format table while typing `|` character
+- Syntax analysis, highlight some syntax errors
+- Add run tests action in the feature file context menu [#122](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/122)
+
+### Fixed
+- Fix smart indentation when adding newline after a table [#87](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/87)
+- Fix crash in unresolved step daemon [#100](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/100)
+- `.feature.cs` is not nested after creation [#99](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/99)
+- Arguments are not noticeable [#118](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/118)
+- Сode completion shows irrelevant results in feature files [#86](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/86)
+- Fix the "phantom" errors in Xunit projects [#115](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/115)
+- Fix the test gutter mark for the old style csprojects [#116](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/116)
+- Make SpecFlow project template consistent with other templates [#121](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/121)
 
 ## 1.6.0
 
