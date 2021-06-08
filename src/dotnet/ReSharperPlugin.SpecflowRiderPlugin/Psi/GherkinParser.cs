@@ -197,7 +197,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             // scenarios
             var startTokenType = builder.GetTokenType();
             var outline = startTokenType == GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD;
-            builder.AdvanceLexer();
+            
+            if (!builder.Eof())
+                builder.AdvanceLexer();
 
             while (!AtScenarioEnd(builder))
             {
