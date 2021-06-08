@@ -7,7 +7,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectTemplateParameters
 {
     public class TargetFrameworkProviderParameter : DotNetTemplateParameter
     {
-        public TargetFrameworkProviderParameter() : base("targetFramework", "Framework", "Framework")
+        public TargetFrameworkProviderParameter() : base("targetFramework", "Framework", null)
         {
             
         }

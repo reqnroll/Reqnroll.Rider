@@ -11,7 +11,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectTemplateParameters
         private readonly string _runner = "specflowplusrunner";
         private readonly string _msTest = "mstest";
 
-        public UnitTestProviderParameter() : base("unitTestProvider", "Test Framework", "Test Framework")
+        public UnitTestProviderParameter() : base("unitTestProvider", "Test Framework", null)
         {
 
         }
