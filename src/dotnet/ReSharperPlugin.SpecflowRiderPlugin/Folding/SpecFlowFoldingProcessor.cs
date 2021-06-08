@@ -50,6 +50,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Folding
 
         private static int CalculateLength(DocumentRange? textRange, DocumentRange keywordRange, DocumentRange range)
         {
+            if (!keywordRange.IsValid() || !range.IsValid())
+                return 0;
+
+            if (textRange.HasValue && !textRange.Value.IsValid())
+                return 0;
+            
             if (keywordRange == range)
                 return 0;
 
