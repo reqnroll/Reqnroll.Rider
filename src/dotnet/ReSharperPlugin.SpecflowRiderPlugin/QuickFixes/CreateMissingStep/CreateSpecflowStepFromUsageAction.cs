@@ -186,7 +186,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 null,
                 CSharpLanguage.Instance
             );
+            
             createNewFileTarget.PreExecute();
+            if (createNewFileTarget.GetTargetDeclarationFile() == null)
+                return null;
 
             using (new PsiTransactionCookie(solution.GetPsiServices(), DefaultAction.Commit, "Creating new step class"))
             {
