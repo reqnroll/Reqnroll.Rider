@@ -32,7 +32,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                     psiServices.GetComponent<ICreateStepPartialClassFile>(),
                     psiServices.GetComponent<SpecflowStepsDefinitionsCache>(),
                     psiServices.GetComponent<ICreateSpecFlowStepUtil>()
-                ), BulbThemedIcons.RedBulb.Id, IntentionsAnchors.QuickFixesAnchor)
+                ), BulbThemedIcons.YellowBulb.Id, IntentionsAnchors.QuickFixesAnchor)
             };
         }
 
