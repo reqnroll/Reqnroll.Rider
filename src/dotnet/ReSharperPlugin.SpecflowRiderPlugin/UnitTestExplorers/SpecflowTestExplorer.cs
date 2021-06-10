@@ -63,6 +63,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             foreach (var scenario in feature.GetScenarios())
             {
                 var scenarioText = scenario.GetScenarioText();
+                if (string.IsNullOrWhiteSpace(scenarioText))
+                    continue;
+                
                 var matchingTest = featureTest.Children.FirstOrDefault(t => GetDescriptionFromAttributes(t) == scenarioText 
                                                                             || CompareDescriptionWithShortName(scenarioText, t));
                 if (matchingTest == null)
