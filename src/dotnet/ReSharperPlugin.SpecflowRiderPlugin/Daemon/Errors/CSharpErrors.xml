@@ -45,6 +45,11 @@
 				<Title>A Scenario need to be inside a Feature</Title>
 				<Description>Scenario definition need to be included in a Feature.</Description>
 			</Tag>
+			<Tag externalName="GherkinScenarioHasNoTitleError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>Missing title</Title>
+				<Description>A scenario needs a title.</Description>
+			</Tag>
 			<Tag externalName="GherkinSyntaxError.HIGHLIGHTING_ID"
 				 default="ERROR">
 				<Title>Syntax Rrror</Title>
@@ -87,6 +92,12 @@
 	<Error name="GherkinSyntaxScenarioNotInFeature" configurableSeverity="SpecFlow.GherkinSyntaxScenarioNotInFeatureError">
 		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
 		<Message value="Scenario definition need to be included in a Feature" />
+		<Range>TreeNode.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
+	<Error name="GherkinScenarioHasNoTitle" configurableSeverity="SpecFlow.GherkinScenarioHasNoTitleError">
+		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
+		<Message value="Missing title" />
 		<Range>TreeNode.GetDocumentRange()</Range>
 		<Behavour overlapResolvePolicy="NONE" />
 	</Error>

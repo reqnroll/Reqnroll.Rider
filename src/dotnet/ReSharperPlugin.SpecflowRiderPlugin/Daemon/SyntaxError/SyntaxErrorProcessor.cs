@@ -15,6 +15,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
         {
             if (element is not GherkinToken token)
                 return;
+            if (IsScenarioToken(token))
+            {
+                var scenario = element.Parent as IGherkinScenario;
+                var title = scenario?.GetScenarioText();
+                if(title == null)
+                    context.AddHighlighting(new GherkinScenarioHasNoTitleError(token));
+            }
             if (IsScenarioToken(token) && element.Parent is not IGherkinScenario)
                 context.AddHighlighting(new GherkinSyntaxScenarioNotInFeatureError(token));
             if (token.GetTokenType() == GherkinTokenTypes.TEXT && element.Parent is IGherkinScenario && !IsInScenarioDescription(token))
