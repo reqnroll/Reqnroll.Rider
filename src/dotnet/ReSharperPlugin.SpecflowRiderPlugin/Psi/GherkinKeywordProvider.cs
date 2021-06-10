@@ -11,6 +11,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
     public class GherkinKeywordProvider
     {
         private readonly Dictionary<string, GherkinKeywordList> _allKeywords = new Dictionary<string, GherkinKeywordList>();
+
         public GherkinKeywordProvider()
         {
             Initialize();
@@ -73,8 +74,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             if (_allKeywords.TryGetValue(language, out var keywordsList))
                 return keywordsList;
 
-            if (_allKeywords.TryGetValue(language.Substring(0, 2), out var keywordsListLang))
-                return keywordsListLang;
+            if (language.Contains("-"))
+            {
+                if (_allKeywords.TryGetValue(language.Split('-')[0], out var keywordList))
+                    return keywordList;
+            }
 
             return _allKeywords["en"];
         }

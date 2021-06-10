@@ -52,6 +52,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         public void UpdateLanguage(string language)
         {
+            if (string.IsNullOrWhiteSpace(language))
+                return;
             _myCurLanguage = language;
             _myKeywords = _keywordProvider.GetAllKeywords(language);
         }
