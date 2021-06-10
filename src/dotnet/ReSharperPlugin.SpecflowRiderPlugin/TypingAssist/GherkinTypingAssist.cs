@@ -98,20 +98,29 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
 
                     if (inTable)
                     {
-                        if (GetFormatSettingsKey(textControl).SmallTableIndent)
-                            extraIdent = "  ";
-                        else
-                            extraIdentSize += GetFormatSettingsKey(textControl).TableIndentSize;
+                        var indentSizeBasedOnPreviousRow = FindPreviousRowFirstPipeIndent(cachingLexer, caret);
+                        var indentText = GetTableIndentText(indentSizeBasedOnPreviousRow);
+                        textControl.Document.InsertText(caret, GetNewLineText(textControl) + indentText);
+                        return true;
                     }
 
                     var currentIndent = ComputeIndentOfCurrentKeyword(cachingLexer) + GetIndentText(textControl, extraIdentSize) + extraIdent;
-
                     textControl.Document.InsertText(caret, GetNewLineText(textControl) + currentIndent);
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private static string GetTableIndentText(int indent)
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < indent; i++)
+            {
+                sb.Append(" ");
+            }
+            return sb.ToString();
         }
 
         private bool HandleTableCellClosing([NotNull] ITypingContext context)
@@ -128,7 +137,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
 
                 PsiServices.Transactions.Execute("Format code", () =>
                 {
-                    GetCodeFormatter(tokenNode).Format(parentTable.firstChild, parentTable.lastChild.LastChild, CodeFormatProfile.SOFT, new AdditionalFormatterParameters(treatTextAfterLastNodeAsIncorrect: false));
+                    GetCodeFormatter(tokenNode).Format(parentTable.firstChild.FirstChild, parentTable.lastChild.LastChild, CodeFormatProfile.SOFT, new AdditionalFormatterParameters(treatTextAfterLastNodeAsIncorrect: false));
                 });
                 return null;
             }));
@@ -187,6 +196,32 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
                 cachingLexer.SetCurrentToken(cachingLexer.CurrentPosition - 1);
             }
             return cachingLexer.TokenType;
+        }
+        
+        private int FindPreviousRowFirstPipeIndent(CachingLexer cachingLexer, int caret)
+        {
+            //find previous enter
+            cachingLexer.FindTokenAt(caret - 1);
+            while (GherkinTokenTypes.NEW_LINE != cachingLexer.TokenType)
+            {
+                if (cachingLexer.CurrentPosition == 0)
+                    return 0;
+                cachingLexer.SetCurrentToken(cachingLexer.CurrentPosition - 1);
+            }
+
+            var enterStart = cachingLexer.TokenStart;
+            
+            //find the first pipe after the enter
+            while (GherkinTokenTypes.PIPE != cachingLexer.TokenType)
+            {
+                if (cachingLexer.CurrentPosition == 0)
+                    return 0;
+                cachingLexer.SetCurrentToken(cachingLexer.CurrentPosition + 1);
+            }
+
+            var pipeStart = cachingLexer.TokenStart;
+
+            return pipeStart - enterStart -1;
         }
 
 
