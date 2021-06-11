@@ -31,15 +31,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
 
             if (IsScenarioToken(token))
             {
-                var scenario = element.Parent as IGherkinScenario;
-                var title = scenario?.GetScenarioText();
-                if (title == null)
-                    context.AddHighlighting(new GherkinScenarioHasNoTitleError(token));
+                if (element.Parent is IGherkinScenario scenario && !scenario.IsBackground())
+                {
+                    var title = scenario?.GetScenarioText();
+                    if (title == null)
+                        context.AddHighlighting(new GherkinScenarioHasNoTitleError(token));
 
-                var hasSameTitle = scenario?.Parent is GherkinFeature feature && feature.GetScenarios().Count(sc => sc.GetScenarioText() == title) > 1;
-                if (hasSameTitle)
-                    context.AddHighlighting(new GherkinScenarioWithSameTitleError(token));
+                    var hasSameTitle = scenario?.Parent is GherkinFeature feature && feature.GetScenarios()
+                        .Where(s => !s.IsBackground()).Count(sc => sc.GetScenarioText() == title) > 1;
+                    if (hasSameTitle)
+                        context.AddHighlighting(new GherkinScenarioWithSameTitleError(token));
+                }
             }
+
             if (IsScenarioToken(token) && element.Parent is not IGherkinScenario)
                 context.AddHighlighting(new GherkinSyntaxScenarioNotInFeatureError(token));
 
@@ -75,7 +79,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
 
         private bool IsScenarioToken(ITreeNode token)
         {
-            return token.GetTokenType() == GherkinTokenTypes.SCENARIO_KEYWORD || token.GetTokenType() == GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD;
+            return token.GetTokenType() == GherkinTokenTypes.SCENARIO_KEYWORD || token.GetTokenType() == GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD ||
+                   token.GetTokenType() == GherkinTokenTypes.BACKGROUND_KEYWORD;
         }
 
         private bool IsInScenarioDescription(GherkinToken token)
