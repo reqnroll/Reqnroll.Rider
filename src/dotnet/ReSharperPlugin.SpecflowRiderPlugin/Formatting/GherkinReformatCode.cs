@@ -27,17 +27,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         {
             get { return new CodeCleanupOptionDescriptor[] { ourDescriptor }; }
         }
-
         public bool IsAvailable(IPsiSourceFile sourceFile) => sourceFile.IsLanguageSupported<GherkinLanguage>();
         public bool IsAvailable(CodeCleanupProfile profile) => profile.GetSetting(ourDescriptor);
 
-        public void SetDefaultSetting(CodeCleanupProfile profile, CodeCleanup.DefaultProfileType profileType)
+        public void SetDefaultSetting(CodeCleanupProfile profile, CodeCleanupService.DefaultProfileType profileType)
         {
             switch (profileType)
             {
-                case CodeCleanup.DefaultProfileType.FULL:
-                case CodeCleanup.DefaultProfileType.REFORMAT:
-                case CodeCleanup.DefaultProfileType.CODE_STYLE:
+                case CodeCleanupService.DefaultProfileType.FULL:
+                case CodeCleanupService.DefaultProfileType.REFORMAT:
+                case CodeCleanupService.DefaultProfileType.CODE_STYLE:
                     profile.SetSetting(ourDescriptor, true);
                     break;
                 default:
