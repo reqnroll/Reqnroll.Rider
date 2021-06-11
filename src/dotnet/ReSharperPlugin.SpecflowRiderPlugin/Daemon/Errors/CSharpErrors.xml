@@ -50,6 +50,11 @@
 				<Title>Missing title</Title>
 				<Description>A scenario needs a title.</Description>
 			</Tag>
+			<Tag externalName="GherkinScenarioWithSameTitleError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>The feature file already contains a scenario with this title.</Title>
+				<Description>The feature file already contains a scenario with this title.</Description>
+			</Tag>
 			<Tag externalName="GherkinSyntaxError.HIGHLIGHTING_ID"
 				 default="ERROR">
 				<Title>Syntax Rrror</Title>
@@ -98,6 +103,12 @@
 	<Error name="GherkinScenarioHasNoTitle" configurableSeverity="SpecFlow.GherkinScenarioHasNoTitleError">
 		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
 		<Message value="Missing title" />
+		<Range>TreeNode.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
+	<Error name="GherkinScenarioWithSameTitle" configurableSeverity="SpecFlow.GherkinScenarioWithSameTitleError">
+		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
+		<Message value="The feature file already contains a scenario with this title." />
 		<Range>TreeNode.GetDocumentRange()</Range>
 		<Behavour overlapResolvePolicy="NONE" />
 	</Error>

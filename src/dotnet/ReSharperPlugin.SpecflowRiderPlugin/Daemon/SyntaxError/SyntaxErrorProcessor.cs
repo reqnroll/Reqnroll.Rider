@@ -1,3 +1,4 @@
+using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
@@ -21,9 +22,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
                 var title = scenario?.GetScenarioText();
                 if(title == null)
                     context.AddHighlighting(new GherkinScenarioHasNoTitleError(token));
+
+                var hasSameTitle = scenario?.Parent is GherkinFeature feature && feature.GetScenarios().Count(sc => sc.GetScenarioText() == title) > 1;
+                if(hasSameTitle)
+                    context.AddHighlighting(new GherkinScenarioWithSameTitleError(token));
             }
             if (IsScenarioToken(token) && element.Parent is not IGherkinScenario)
                 context.AddHighlighting(new GherkinSyntaxScenarioNotInFeatureError(token));
+
             if (token.GetTokenType() == GherkinTokenTypes.TEXT && element.Parent is IGherkinScenario && !IsInScenarioDescription(token))
                 context.AddHighlighting(new GherkinSyntaxError(token));
         }
