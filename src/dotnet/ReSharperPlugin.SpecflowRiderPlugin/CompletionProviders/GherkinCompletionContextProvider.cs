@@ -23,10 +23,25 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             if (IsAfterKeywordExpectingText(nodeUnderCursor))
                 return null;
 
-            if (nodeUnderCursor?.GetTokenType() == GherkinTokenTypes.NEW_LINE && nodeUnderCursor?.NextSibling != null)
-                nodeUnderCursor = nodeUnderCursor.NextSibling;
+            ITreeNode interestingNode;
+            if (IsAtEmptyLineBeforeEndOfFile(nodeUnderCursor))
+            {
+                var node = nodeUnderCursor;
+                while (node != null && node.IsWhitespaceToken())
+                    node = node.PrevSibling;
+                interestingNode = node;
+                while (interestingNode?.LastChild != null &&
+                       (interestingNode.LastChild is GherkinFeature || interestingNode.LastChild is GherkinScenario || interestingNode.LastChild is GherkinScenarioOutline)
+                )
+                    interestingNode = interestingNode?.LastChild;
+            }
+            else
+            {
+                if (nodeUnderCursor?.GetTokenType() == GherkinTokenTypes.NEW_LINE && nodeUnderCursor?.NextSibling != null)
+                    nodeUnderCursor = nodeUnderCursor.NextSibling;
+                interestingNode = GetInterestingNode(nodeUnderCursor);
+            }
 
-            var interestingNode = GetInterestingNode(nodeUnderCursor);
             if (interestingNode == null)
                 return null;
 
@@ -62,6 +77,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode, isStartOfLine ? startOfLineText : relatedText, isStartOfLine);
         }
 
+        private bool IsAtEmptyLineBeforeEndOfFile(ITreeNode node)
+        {
+            var nodePrev = node;
+            while (nodePrev?.IsWhitespaceToken() == true && nodePrev.GetTokenType() != GherkinTokenTypes.NEW_LINE)
+                nodePrev = nodePrev.GetPreviousToken();
+            if (nodePrev?.GetTokenType() != GherkinTokenTypes.NEW_LINE)
+                return false;
+
+            while (node != null)
+            {
+                if (!node.IsWhitespaceToken())
+                    return false;
+                node = node.GetNextToken();
+            }
+            return true;
+        }
+
         private bool IsAfterKeywordExpectingText(ITreeNode nodeUnderCursor)
         {
             if (nodeUnderCursor.IsWhitespaceToken()
@@ -94,7 +126,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             if (nodeUnderCursor.IsWhitespaceToken() && nodeUnderCursor.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
                 return true;
 
-            if (nodeUnderCursor.GetPreviousToken()?.IsWhitespaceToken() == true && nodeUnderCursor.GetPreviousToken()?.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
+            if ((nodeUnderCursor.GetPreviousToken()?.IsWhitespaceToken() == true && nodeUnderCursor.GetPreviousToken()?.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
+                ||nodeUnderCursor.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE )
             {
                 text = nodeUnderCursor.GetText();
                 return true;
