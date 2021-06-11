@@ -30,7 +30,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             ("Background", true),
             ("But", false),
             ("Examples", true),
-            ("Feature", true),
             ("Given", false),
             ("Rule", true),
             ("Scenario", true),
