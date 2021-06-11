@@ -32,6 +32,26 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
 
             if (token.GetTokenType() == GherkinTokenTypes.TEXT && element.Parent is IGherkinScenario && !IsInScenarioDescription(token))
                 context.AddHighlighting(new GherkinSyntaxError(token));
+
+            if (token.GetTokenType() == GherkinTokenTypes.STEP_KEYWORD || token.GetTokenType() == GherkinTokenTypes.EXAMPLES_KEYWORD)
+            {
+                var table = element.Parent?.Children<GherkinTable>().FirstOrDefault();
+                var inconsistentCellCount =  CheckInconsistentCellCount(table);
+                if (inconsistentCellCount)
+                    context.AddHighlighting(new InconsistentCellCountWithinTheTableError(table));
+            }
+        }
+
+        private static bool CheckInconsistentCellCount(GherkinTable table)
+        {  
+            if (table != null)
+            {
+                var headerRow = table.FirstChild;
+                var cellCount = headerRow?.Children<GherkinTableCell>().Count();
+                var gherkinTableRows = table.Children<GherkinTableRow>();
+               return gherkinTableRows.Any(row => row.Children<GherkinTableCell>().Count() != cellCount);
+            }
+            return false;
         }
 
         private bool IsScenarioToken(ITreeNode token)

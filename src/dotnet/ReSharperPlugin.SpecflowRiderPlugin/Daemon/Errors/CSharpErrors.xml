@@ -55,6 +55,11 @@
 				<Title>The feature file already contains a scenario with this title.</Title>
 				<Description>The feature file already contains a scenario with this title.</Description>
 			</Tag>
+			<Tag externalName="InconsistentCellCountWithinTheTableError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>Inconsistent cell count within the table.</Title>
+				<Description>Inconsistent cell count within the table..</Description>
+			</Tag>
 			<Tag externalName="GherkinSyntaxError.HIGHLIGHTING_ID"
 				 default="ERROR">
 				<Title>Syntax Rrror</Title>
@@ -109,6 +114,12 @@
 	<Error name="GherkinScenarioWithSameTitle" configurableSeverity="SpecFlow.GherkinScenarioWithSameTitleError">
 		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
 		<Message value="The feature file already contains a scenario with this title." />
+		<Range>TreeNode.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
+	<Error name="InconsistentCellCountWithinTheTable" configurableSeverity="SpecFlow.InconsistentCellCountWithinTheTableError">
+		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
+		<Message value="Inconsistent cell count within the table." />
 		<Range>TreeNode.GetDocumentRange()</Range>
 		<Behavour overlapResolvePolicy="NONE" />
 	</Error>
