@@ -1,3 +1,4 @@
-|Scenario|(0): Some scenario
+||Scenario|(1): Some scenario|(0)
 ---------------------------------------------------------
-(0): ReSharper Underlined Error Highlighting: Scenario definition need to be included in a Feature
+(0): ReSharper Underlined Error Highlighting: The file does not contain a Feature.
+(1): ReSharper Underlined Error Highlighting: Scenario definition need to be included in a Feature
