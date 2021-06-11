@@ -10,12 +10,22 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
     public class SyntaxErrorProcessor : IRecursiveElementProcessor<IHighlightingConsumer>
     {
         public bool InteriorShouldBeProcessed(ITreeNode element, IHighlightingConsumer context) => true;
-        public bool IsProcessingFinished(IHighlightingConsumer context) => false;
+        public bool IsProcessingFinished(IHighlightingConsumer context)
+        {
+            return context.Highlightings.Select(h => h.Highlighting).OfType<GherkinHasNoFeatureError>().Any();
+        }
 
         public void ProcessBeforeInterior(ITreeNode element, IHighlightingConsumer context)
         {
             if (element is not GherkinToken token)
                 return;
+
+            if (token.Parent is GherkinFile gherkinFile)
+            { var feature = gherkinFile.Children<GherkinFeature>().FirstOrDefault();
+                if (feature == null)
+                    context.AddHighlighting(new GherkinHasNoFeatureError(gherkinFile));
+            }
+            
             if (IsScenarioToken(token))
             {
                 var scenario = element.Parent as IGherkinScenario;

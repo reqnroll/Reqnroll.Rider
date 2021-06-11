@@ -40,6 +40,11 @@
 				<Title>Method name and specflow step pattern does not match</Title>
 				<Description>Method name and specflow step pattern does not match.</Description>
 			</Tag>
+			<Tag externalName="GherkinHasNoFeatureError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>The file does not contain a Feature.</Title>
+				<Description>The file does not contain a Feature.</Description>
+			</Tag>
 			<Tag externalName="GherkinSyntaxScenarioNotInFeatureError.HIGHLIGHTING_ID"
 				 default="ERROR">
 				<Title>A Scenario need to be inside a Feature</Title>
@@ -99,6 +104,12 @@
 		<Range>Method.NameIdentifier.GetDocumentRange()</Range>
 		<Behavour overlapResolvePolicy="NONE" />
 	</Info>
+	<Error name="GherkinHasNoFeature" configurableSeverity="SpecFlow.GherkinHasNoFeatureError">
+		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
+		<Message value="The file does not contain a Feature." />
+		<Range>TreeNode.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
 	<Error name="GherkinSyntaxScenarioNotInFeature" configurableSeverity="SpecFlow.GherkinSyntaxScenarioNotInFeatureError">
 		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
 		<Message value="Scenario definition need to be included in a Feature" />
