@@ -126,7 +126,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             if (nodeUnderCursor.IsWhitespaceToken() && nodeUnderCursor.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
                 return true;
 
-            if (nodeUnderCursor.GetPreviousToken()?.IsWhitespaceToken() == true && nodeUnderCursor.GetPreviousToken()?.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
+            if ((nodeUnderCursor.GetPreviousToken()?.IsWhitespaceToken() == true && nodeUnderCursor.GetPreviousToken()?.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE)
+                ||nodeUnderCursor.GetPreviousToken()?.NodeType == GherkinTokenTypes.NEW_LINE )
             {
                 text = nodeUnderCursor.GetText();
                 return true;
