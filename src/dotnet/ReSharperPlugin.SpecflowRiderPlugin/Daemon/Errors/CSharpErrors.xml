@@ -40,14 +40,34 @@
 				<Title>Method name and specflow step pattern does not match</Title>
 				<Description>Method name and specflow step pattern does not match.</Description>
 			</Tag>
+			<Tag externalName="GherkinHasNoFeatureError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>The file does not contain a Feature.</Title>
+				<Description>The file does not contain a Feature.</Description>
+			</Tag>
 			<Tag externalName="GherkinSyntaxScenarioNotInFeatureError.HIGHLIGHTING_ID"
 				 default="ERROR">
 				<Title>A Scenario need to be inside a Feature</Title>
 				<Description>Scenario definition need to be included in a Feature.</Description>
 			</Tag>
+			<Tag externalName="GherkinScenarioHasNoTitleError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>Missing title</Title>
+				<Description>A scenario needs a title.</Description>
+			</Tag>
+			<Tag externalName="GherkinScenarioWithSameTitleError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>The feature file already contains a scenario with this title.</Title>
+				<Description>The feature file already contains a scenario with this title.</Description>
+			</Tag>
+			<Tag externalName="InconsistentCellCountWithinTheTableError.HIGHLIGHTING_ID"
+				 default="ERROR">
+				<Title>Inconsistent cell count within the table.</Title>
+				<Description>Inconsistent cell count within the table..</Description>
+			</Tag>
 			<Tag externalName="GherkinSyntaxError.HIGHLIGHTING_ID"
 				 default="ERROR">
-				<Title>Syntax Rrror</Title>
+				<Title>Syntax Error</Title>
 				<Description>Unexpected text here.</Description>
 			</Tag>
 		</Group>
@@ -84,9 +104,33 @@
 		<Range>Method.NameIdentifier.GetDocumentRange()</Range>
 		<Behavour overlapResolvePolicy="NONE" />
 	</Info>
+	<Error name="GherkinHasNoFeature" configurableSeverity="SpecFlow.GherkinHasNoFeatureError">
+		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
+		<Message value="The file does not contain a Feature." />
+		<Range>TreeNode.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
 	<Error name="GherkinSyntaxScenarioNotInFeature" configurableSeverity="SpecFlow.GherkinSyntaxScenarioNotInFeatureError">
 		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
 		<Message value="Scenario definition need to be included in a Feature" />
+		<Range>TreeNode.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
+	<Error name="GherkinScenarioHasNoTitle" configurableSeverity="SpecFlow.GherkinScenarioHasNoTitleError">
+		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
+		<Message value="Missing title" />
+		<Range>TreeNode.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
+	<Error name="GherkinScenarioWithSameTitle" configurableSeverity="SpecFlow.GherkinScenarioWithSameTitleError">
+		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
+		<Message value="The feature file already contains a scenario with this title." />
+		<Range>TreeNode.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Error>
+	<Error name="InconsistentCellCountWithinTheTable" configurableSeverity="SpecFlow.InconsistentCellCountWithinTheTableError">
+		<Parameter type="JetBrains.ReSharper.Psi.Tree.ITreeNode" name="treeNode"/>
+		<Message value="Inconsistent cell count within the table." />
 		<Range>TreeNode.GetDocumentRange()</Range>
 		<Behavour overlapResolvePolicy="NONE" />
 	</Error>
