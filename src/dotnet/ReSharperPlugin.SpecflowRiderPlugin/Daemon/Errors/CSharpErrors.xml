@@ -67,7 +67,7 @@
 			</Tag>
 			<Tag externalName="GherkinSyntaxError.HIGHLIGHTING_ID"
 				 default="ERROR">
-				<Title>Syntax Rrror</Title>
+				<Title>Syntax Error</Title>
 				<Description>Unexpected text here.</Description>
 			</Tag>
 		</Group>
