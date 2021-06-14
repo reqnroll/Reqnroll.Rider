@@ -204,17 +204,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
             cachingLexer.FindTokenAt(caret - 1);
             while (GherkinTokenTypes.NEW_LINE != cachingLexer.TokenType)
             {
-                if (cachingLexer.CurrentPosition == 0)
+                if (cachingLexer.TokenType == null)
                     return 0;
                 cachingLexer.SetCurrentToken(cachingLexer.CurrentPosition - 1);
             }
 
             var enterStart = cachingLexer.TokenStart;
             
+            cachingLexer.SetCurrentToken(cachingLexer.CurrentPosition + 1);
+            
             //find the first pipe after the enter
             while (GherkinTokenTypes.PIPE != cachingLexer.TokenType)
             {
-                if (cachingLexer.CurrentPosition == 0)
+                if (cachingLexer.TokenType == null || GherkinTokenTypes.NEW_LINE == cachingLexer.TokenType)
                     return 0;
                 cachingLexer.SetCurrentToken(cachingLexer.CurrentPosition + 1);
             }
