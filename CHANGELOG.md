@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.8.0
+
+### Added
+- Further enhance the gherkin code inspections [#98](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/98)
+
+### Fixed
+- Fix smart indentation when adding newline after a table [#87](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/87)
+- Сode completion shows irrelevant results in feature files [#86](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/86)
+- Don't show the test gutter marks when the scenario does not have a title [#136](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/138)
+- Fix exceptions when no or an invalid language is provided [#138](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/138)
+- Fix NullReferenceException when the createNewFileTarget cannot create the file [#135](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/135)
+- Make the create step quick fix bulb yellow [#90](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/90)
+- Fix exception when adding tag after the last row in the feature file [#126](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/126)
+- Fix folding when adding tags before a Background [#125](https://github.com/SpecFlowOSS/SpecFlow.Rider/pull/125)
+
 ## 1.7.0
 
 ### Added
