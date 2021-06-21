@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin require-restart="true">
   <id>com.settler.rider.specflow</id>
   <name>SpecFlow for Rider</name>
   <version>_PLACEHOLDER_</version>
