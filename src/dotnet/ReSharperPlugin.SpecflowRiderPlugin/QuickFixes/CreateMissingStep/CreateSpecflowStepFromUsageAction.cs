@@ -199,7 +199,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                     IsPartial = isPartial,
                     AccessRights = AccessRights.PUBLIC,
                     IsStatic = false,
-                    IsInterface = false,
                     Target = createNewFileTarget
                 });
                 if (result?.ResultDeclaration is not IClassDeclaration classDeclaration)
@@ -258,7 +257,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                     IsPartial = true,
                     AccessRights = AccessRights.PUBLIC,
                     IsStatic = false,
-                    IsInterface = false,
                     Target = createNewFileTarget
                 });
 
