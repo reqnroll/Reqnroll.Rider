@@ -16,7 +16,7 @@ using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
 {
     [CodeCleanupModule]
-    public class GherkinReformatCode : ICodeCleanupModule
+    public class GherkinReformatCode : IReformatCodeCleanupModule
     {
         public string Name => "Reformat Gherkin";
         public PsiLanguageType LanguageType => GherkinLanguage.Instance.NotNull();
