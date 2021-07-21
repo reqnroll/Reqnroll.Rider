@@ -96,19 +96,19 @@
                 "cases": [
                     {
                         "condition": "(unitTestProvider == 'specflowplusrunner')",
-                        "value": "<PackageReference Include=\"SpecRun.SpecFlow\" Version=\"3.8.12\" />"
+                        "value": "<PackageReference Include=\"SpecRun.SpecFlow\" Version=\"3.9.7\" />"
                     },
                     {
                         "condition": "(unitTestProvider == 'xunit')",
-                        "value": "<PackageReference Include=\"SpecFlow.xUnit\" Version=\"3.8.14\" />"
+                        "value": "<PackageReference Include=\"SpecFlow.xUnit\" Version=\"3.9.8\" />"
                     },
                     {
                         "condition": "(unitTestProvider == 'mstest')",
-                        "value": "<PackageReference Include=\"SpecFlow.MsTest\" Version=\"3.8.14\" />"
+                        "value": "<PackageReference Include=\"SpecFlow.MsTest\" Version=\"3.9.8\" />"
                     },
                     {
                         "condition": "(unitTestProvider == 'nunit')",
-                        "value": "<PackageReference Include=\"SpecFlow.NUnit\" Version=\"3.8.14\" />"
+                        "value": "<PackageReference Include=\"SpecFlow.NUnit\" Version=\"3.9.8\" />"
                     }
                 ]
             }
