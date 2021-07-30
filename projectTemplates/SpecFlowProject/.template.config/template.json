@@ -100,15 +100,15 @@
                     },
                     {
                         "condition": "(unitTestProvider == 'xunit')",
-                        "value": "<PackageReference Include=\"SpecFlow.xUnit\" Version=\"3.9.8\" />"
+                        "value": "<PackageReference Include=\"SpecFlow.xUnit\" Version=\"3.9.22\" />"
                     },
                     {
                         "condition": "(unitTestProvider == 'mstest')",
-                        "value": "<PackageReference Include=\"SpecFlow.MsTest\" Version=\"3.9.8\" />"
+                        "value": "<PackageReference Include=\"SpecFlow.MsTest\" Version=\"3.9.22\" />"
                     },
                     {
                         "condition": "(unitTestProvider == 'nunit')",
-                        "value": "<PackageReference Include=\"SpecFlow.NUnit\" Version=\"3.9.8\" />"
+                        "value": "<PackageReference Include=\"SpecFlow.NUnit\" Version=\"3.9.22\" />"
                     }
                 ]
             }
