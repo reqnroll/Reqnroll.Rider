@@ -24,7 +24,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.SyntaxHighlighting.Rider
             return base.InteriorShouldBeProcessed(element, context);
         }
 
-        //TODO: syntax coloring is not working anymore
         public override string GetAttributeId(TokenNodeType tokenType)
         {
             if (tokenType == GherkinTokenTypes.TAG)

@@ -12,7 +12,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon
             if (sourceFile.Properties.ShouldBuildPsi && sourceFile.Properties.ProvidesCodeModel && sourceFile.IsLanguageSupported<GherkinLanguage>())
                 return ErrorStripeRequestWithDescription.StripeAndErrors;
 
-            //TODO: fixeme
             return ErrorStripeRequestWithDescription.None("");
         }
     }
