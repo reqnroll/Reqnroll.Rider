@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Application.Notifications;
 using JetBrains.Application.StdApplicationUI;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Impl;
 using JetBrains.ProjectModel.Tasks;
@@ -18,6 +20,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
                                 IAnalyticsTransmitter transmitter, 
                                 IRiderInstallationStatusService riderInstallationStatusService, 
                                 IGuidanceConfiguration guidanceConfiguration, 
+                                UserNotifications userNotifications,
+                                Lifetime lifetime,
                                 OpensUri opensUri)
          {
              solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask("SpecFlow", SolutionLoadTaskKinds.AsLateAsPossible, () =>
@@ -51,12 +55,20 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
                 
                          if (guidance?.UsageDays != null)
                          {
-                             if (guidance.Url == null || ShowNotification(opensUri, guidance))
+                             if (guidance.Url != null)
                              {
-                                 transmitter.TransmitRuntimeEvent(new GenericEvent($"{guidance.UsageDays.Value} day usage"));
 
-                                 statusData.UserLevel = (int)guidance.UserLevel;
+                                 userNotifications.CreateNotification(lifetime,
+                                     NotificationSeverity.INFO,
+                                     guidance.Title,
+                                     body: guidance.Content,
+
+                                     executed: new UserNotificationCommand(guidance.LinkText, () => ShowNotification(opensUri, guidance)));
                              }
+                             
+                             transmitter.TransmitRuntimeEvent(new GenericEvent($"{guidance.UsageDays.Value} day usage"));
+
+                             statusData.UserLevel = (int)guidance.UserLevel;
                          }
                          
                          riderInstallationStatusService.SaveNewStatus(statusData);

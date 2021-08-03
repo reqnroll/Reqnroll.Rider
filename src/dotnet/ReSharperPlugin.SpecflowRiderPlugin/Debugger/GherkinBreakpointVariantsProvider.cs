@@ -15,7 +15,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Debugger
     [Language(typeof(GherkinLanguage))]
     public class GherkinBreakpointVariantsProvider : IBreakpointVariantsProvider
     {
-        public List<IBreakpoint> GetBreakpointVariants(IProjectFile file, int line, ISolution solution)
+        public IEnumerable<IBreakpoint> GetBreakpointVariants(IProjectFile file, int line, ISolution solution)
         {
             if (file.GetPrimaryPsiFile() is not GherkinFile gherkinFile)
                 return null;
@@ -68,7 +68,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Debugger
             }
         }
 
-        public List<string> GetSupportedFileExtensions()
+        public IEnumerable<string> GetSupportedFileExtensions()
         {
             return new List<string>
             {

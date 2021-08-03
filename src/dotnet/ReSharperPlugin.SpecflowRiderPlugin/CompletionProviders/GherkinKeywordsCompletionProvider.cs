@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Diagnostics;
@@ -62,7 +63,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         {
             foreach (var (keyword, addColon) in ValidKeywordsInFeature
                 .SelectMany(k => keywordList.GetTranslations(k.keyword).Select(keyword => (keyword, k.addColon)))
-                .Where(x => x.keyword.StartsWith(context.RelatedText))
+                .Where(x => x.keyword.StartsWith(context.RelatedText, StringComparison.InvariantCultureIgnoreCase))
                 .Distinct(x => x.keyword))
             {
                 AddKeywordItem(context, collector, keyword, addColon);
@@ -74,7 +75,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         {
              foreach (var (keyword, addColon) in ValidKeywordsInScenario
                 .SelectMany(k => keywordList.GetTranslations(k.keyword).Select(keyword => (keyword, k.addColon)))
-                .Where(x => x.keyword.StartsWith(context.RelatedText))
+                .Where(x => x.keyword.StartsWith(context.RelatedText, StringComparison.InvariantCultureIgnoreCase))
                 .Distinct(x => x.keyword))
             {
                 AddKeywordItem(context, collector, keyword, addColon);

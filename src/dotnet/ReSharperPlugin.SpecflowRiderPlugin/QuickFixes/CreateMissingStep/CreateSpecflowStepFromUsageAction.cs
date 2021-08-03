@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
@@ -89,11 +90,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
 
             actions.AddRange(filesPerClasses.OrderBy(x => x.Key.Split('.').Last()).Select(availableBindingClass =>
                 {
+                    var richText = new RichText(availableBindingClass.Key.Split('.').Last(), DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type));
+                    richText.Append($" (in {new ClrTypeName(availableBindingClass.Key).GetNamespaceName()})",
+                        TextStyle.FromForeColor(Color.FromArgb(124,129,144)));
                     return new CreateStepMenuAction(
-                        new RichText(availableBindingClass.Key.Split('.').Last(), DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type)),
+                        richText,
                         PsiSymbolsThemedIcons.Class.Id,
-                        () => OpenPartialClassFileSelectionModal(textControl, solution, availableBindingClass.Key, availableBindingClass.Value),
-                        new ClrTypeName(availableBindingClass.Key).GetNamespaceName());
+                        () => OpenPartialClassFileSelectionModal(textControl, solution, availableBindingClass.Key, availableBindingClass.Value)
+                        );
                 })
             );
 
@@ -199,7 +203,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                     IsPartial = isPartial,
                     AccessRights = AccessRights.PUBLIC,
                     IsStatic = false,
-                    IsInterface = false,
                     Target = createNewFileTarget
                 });
                 if (result?.ResultDeclaration is not IClassDeclaration classDeclaration)
@@ -258,7 +261,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                     IsPartial = true,
                     AccessRights = AccessRights.PUBLIC,
                     IsStatic = false,
-                    IsInterface = false,
                     Target = createNewFileTarget
                 });
 
