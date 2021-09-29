@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.UnitTestFramework;
+using JetBrains.ReSharper.UnitTestFramework.Criteria;
+using JetBrains.ReSharper.UnitTestFramework.Elements;
+using JetBrains.ReSharper.UnitTestFramework.Persistence;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using TechTalk.SpecFlow.Tracing;
 
@@ -12,8 +14,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
     {
         public static List<IUnitTestElement> GetRelatedFeatureTests(this IUnitTestElementRepository unitTestElementRepository, GherkinFile gherkinFile)
         {
-            var projectTests = unitTestElementRepository.Query()
-                .Where(t => t.Id.Project.Guid == gherkinFile.GetProject().Guid)
+            var projectTests = unitTestElementRepository.Query(new ProjectCriterion(gherkinFile.GetProject()))
                 .ToList();
 
             var relatedTests = projectTests

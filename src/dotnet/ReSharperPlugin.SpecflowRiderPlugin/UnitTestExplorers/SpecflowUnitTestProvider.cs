@@ -2,6 +2,9 @@ using System.Linq;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.UnitTestFramework;
+using JetBrains.ReSharper.UnitTestFramework.Elements;
+using JetBrains.ReSharper.UnitTestFramework.Execution;
+using JetBrains.ReSharper.UnitTestFramework.Execution.Hosting;
 using JetBrains.Util.Dotnet.TargetFrameworkIds;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
@@ -28,7 +31,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
         {
             return project.GetAssemblyReferences(targetFrameworkId).Any(x => x.Name == "TechTalk.SpecFlow");
         }
-        public int CompareUnitTestElements(IUnitTestElement x, IUnitTestElement y)
+        public IUnitTestRunStrategy GetRunStrategy(IUnitTestElement element, IHostProvider hostProvider)
         {
             throw new System.NotImplementedException();
         }

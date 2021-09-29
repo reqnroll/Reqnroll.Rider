@@ -12,6 +12,8 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.ReSharper.UnitTestFramework;
+using JetBrains.ReSharper.UnitTestFramework.Elements;
+using JetBrains.ReSharper.UnitTestFramework.Execution;
 using JetBrains.ReSharper.UnitTestFramework.Session;
 using JetBrains.Util;
 using JetBrains.Util.Collections;
@@ -49,11 +51,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
             _myLogger = logger;
             _failedStepCache = failedStepCache;
             _daemon = daemon;
-            _updatedUnitTests = new Dictionary<IUnitTestElement, (IUnitTestSession session, UnitTestResult result)>(UnitTestElement.EqualityComparer);
+            _updatedUnitTests = new Dictionary<IUnitTestElement, (IUnitTestSession session, UnitTestResult result)>(UnitTestElement.Comparer.ById); // FIXME: or ByNaturalId ?
             _myResultUpdated = shellLocks.NotNull("shellLocks != null")
                 .CreateGroupingEvent(lifetime, nameof(ExecutionFailedStepGutterIconUpdater) + "::ResultUpdated", 500.Milliseconds(), OnProcessUpdated);
             _unitTestResultManager = resultManager;
-            resultManager.NotNull("resultManager != null").UnitTestResultUpdated.Advise(lifetime, OnUnitTestResultUpdated);
+            UT.Events.Result.Updated.Subscribe(lifetime, OnUnitTestResultUpdated);
         }
 
         private void OnProcessUpdated()

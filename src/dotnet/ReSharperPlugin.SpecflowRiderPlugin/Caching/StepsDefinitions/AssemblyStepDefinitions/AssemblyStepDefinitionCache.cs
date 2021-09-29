@@ -58,7 +58,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
         public object Build(IPsiAssembly assembly)
         {
             SpecflowStepsDefinitionsCacheEntries stepDefinitions = null;
-            _psiAssemblyFileLoader.GetOrLoadAssembly(assembly, true, (psiAssembly, assemblyFile, metadataAssembly) =>
+            _psiAssemblyFileLoader.GetOrLoadAssembly(assembly, true, (_, _, metadataAssembly) =>
             {
                 stepDefinitions = new SpecflowStepsDefinitionsCacheEntries();
 
@@ -106,9 +106,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
             AddToLocalCache(assembly, builtPart as SpecflowStepsDefinitionsCacheEntries);
         }
 
-        public void Drop(IPsiAssembly assembly)
+        public void Drop(IEnumerable<IPsiAssembly> assemblies)
         {
-            RemoveFromLocalCache(assembly);
+            foreach (var assembly in assemblies)
+            {
+                RemoveFromLocalCache(assembly);
+            }
         }
 
         private void AddToLocalCache(IPsiAssembly assembly, [CanBeNull] SpecflowStepsDefinitionsCacheEntries cacheItems)

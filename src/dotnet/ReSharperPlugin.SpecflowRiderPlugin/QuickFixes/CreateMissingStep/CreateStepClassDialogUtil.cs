@@ -19,7 +19,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
     {
         public delegate void CreateStepClass(string className, string path, bool isPartial);
 
-        void OpenCreateClassDialog(ISolution solution, IProject project, [CanBeNull] FileSystemPath defaultFolder, CreateStepClass onValidation);
+        void OpenCreateClassDialog(ISolution solution, IProject project, [CanBeNull] VirtualFileSystemPath defaultFolder, CreateStepClass onValidation);
     }
 
     [PsiComponent]
@@ -40,7 +40,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
         public void OpenCreateClassDialog(
             ISolution solution,
             IProject project,
-            FileSystemPath defaultFolder,
+            VirtualFileSystemPath defaultFolder,
             ICreateStepClassDialogUtil.CreateStepClass onValidation
         )
         {
@@ -75,7 +75,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 .WithCancelButton(lifetime);
         }
 
-        private BeControl CreateControl(Lifetime lifetime, ISolution solution, IProject project, [CanBeNull] FileSystemPath defaultFolder)
+        private BeControl CreateControl(Lifetime lifetime, ISolution solution, IProject project, [CanBeNull] VirtualFileSystemPath defaultFolder)
         {
             var grid = BeControls.GetGrid();
             grid.AddElement(BeControls.GetTextBox(lifetime, id: "className")

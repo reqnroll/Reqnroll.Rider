@@ -104,7 +104,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             _menuModalUtil.OpenSelectStepClassMenu(actions, "Where to create the step ?", textControl.PopupWindowContextFactory.ForCaret());
         }
 
-        private (IProject, FileSystemPath) SelectDefaultFolderForNewFile()
+        private (IProject, VirtualFileSystemPath) SelectDefaultFolderForNewFile()
         {
             var gherkinStep = _reference.GetElement();
             var nearestStep = TreeNodeHelper.GetPreviousNodeOfType<GherkinStep>(gherkinStep)
@@ -219,7 +219,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 if (expectedNamespace != null)
                 {
                     var cSharpElementFactory = CSharpElementFactory.GetInstance(classDeclaration);
-                    var cSharpNamespaceDeclaration = cSharpElementFactory.CreateNamespaceDeclaration(expectedNamespace);
+                    var cSharpNamespaceDeclaration = cSharpElementFactory.CreateNamespaceDeclaration(expectedNamespace, false);
                     classDeclaration.OwnerNamespaceDeclaration.SetQualifiedName(cSharpNamespaceDeclaration.QualifiedName);
                 }
                 return classDeclaration;

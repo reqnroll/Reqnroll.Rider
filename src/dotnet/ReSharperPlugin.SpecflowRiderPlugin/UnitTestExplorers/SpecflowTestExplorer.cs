@@ -5,7 +5,10 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.UnitTestFramework;
+using JetBrains.ReSharper.UnitTestFramework.Elements;
 using JetBrains.ReSharper.UnitTestFramework.Exploration;
+using JetBrains.ReSharper.UnitTestFramework.Exploration.Daemon;
+using JetBrains.ReSharper.UnitTestFramework.Persistence;
 using JetBrains.ReSharper.UnitTestProvider.nUnit.v30;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using TechTalk.SpecFlow.Tracing;
@@ -26,10 +29,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             Provider = unitTestProvider;
             _unitTestElementRepository = unitTestElementRepository;
         }
-        
+
         public void ProcessFile(
             IFile psiFile,
-            IUnitTestElementsObserver observer,
+            IUnitTestElementObserverOnFile observer,
             Func<bool> interrupted)
         {
             if (!(psiFile is GherkinFile gherkinFile))
@@ -53,12 +56,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             if (featureTest == null || feature == null)
                 return;
 
-            observer.OnUnitTestElementDisposition(new UnitTestElementDisposition(
+            observer.OnUnitTestElementDisposition(
                 featureTest,
-                projectFile,
                 feature.GetDocumentRange().TextRange,
                 feature.GetDocumentRange().TextRange
-            ));
+            );
 
             foreach (var scenario in feature.GetScenarios())
             {
@@ -71,18 +73,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                 if (matchingTest == null)
                     continue;
 
-                observer.OnUnitTestElementDisposition(new UnitTestElementDisposition(
+                observer.OnUnitTestElementDisposition(
                     matchingTest,
-                    projectFile,
                     scenario.GetDocumentRange().TextRange,
                     scenario.GetDocumentRange().TextRange
-                ));
+                );
             }
         }
 
         private bool CompareDescriptionWithShortName(string scenarioText, IUnitTestElement relatedTest)
         {
-            switch (relatedTest.Id.ProviderId)
+            switch (relatedTest.Provider.ID)
             {
                 case NUnitTestProvider.PROVIDER_ID:
                 case "MSTest":
@@ -105,7 +106,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
 
         private string GetDescriptionFromAttributes(IUnitTestElement relatedTest)
         {
-            switch (relatedTest.Id.ProviderId)
+            switch (relatedTest.Provider.ID)
             {
                 case NUnitTestProvider.PROVIDER_ID:
                 {

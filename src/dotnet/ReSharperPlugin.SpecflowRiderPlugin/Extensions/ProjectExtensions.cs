@@ -17,14 +17,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Extensions
         [CanBeNull]
         public static ICSharpFile GetCSharpFile(this IProject project, string filename)
         {
-            var sourceFileInProject = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename, FileSystemPathInternStrategy.INTERN));
+            var sourceFileInProject = project.GetPsiSourceFileInProject(VirtualFileSystemPath.Parse(filename, InteractionContext.Local, FileSystemPathInternStrategy.INTERN));
             return sourceFileInProject?.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault<ICSharpFile>();
         }
 
         [CanBeNull]
         public static GherkinFile GetGherkinFile(this IProject project, string filename)
         {
-            var sourceFileInProject = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename, FileSystemPathInternStrategy.INTERN));
+            var sourceFileInProject = project.GetPsiSourceFileInProject(VirtualFileSystemPath.Parse(filename, InteractionContext.Local, FileSystemPathInternStrategy.INTERN));
             return sourceFileInProject?.GetPsiFiles<GherkinLanguage>().SafeOfType<GherkinFile>().SingleOrDefault();
         }
 

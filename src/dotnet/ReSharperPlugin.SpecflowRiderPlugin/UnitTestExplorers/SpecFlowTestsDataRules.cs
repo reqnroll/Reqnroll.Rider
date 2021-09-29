@@ -8,9 +8,11 @@ using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.DataContext;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.UnitTestFramework;
-using JetBrains.ReSharper.UnitTestFramework.Common;
+using JetBrains.ReSharper.UnitTestFramework.Actions;
 using JetBrains.ReSharper.UnitTestFramework.Criteria;
+using JetBrains.ReSharper.UnitTestFramework.Elements;
+using JetBrains.ReSharper.UnitTestFramework.Execution.Launch;
+using JetBrains.ReSharper.UnitTestFramework.Persistence;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
@@ -26,7 +28,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             Lifetime lifetime)
         {
             _unitTestElementRepository = unitTestElementRepository;
-            actionManager.DataContexts.RegisterDataRule(lifetime, new DataRule<UnitTestElements>.AssertionDataRule("SpecFlowProjectFilesToUnitTestElements", UnitTestDataConstants.UnitTestElements.SELECTED, GetSpecFlowUnitTestElements));
+            actionManager.DataContexts.RegisterDataRule(lifetime, new DataRule<UnitTestElements>.AssertionDataRule("SpecFlowProjectFilesToUnitTestElements", UnitTestDataConstants.Elements.SELECTED, GetSpecFlowUnitTestElements));
         }
 
         private UnitTestElements GetSpecFlowUnitTestElements(IDataContext context)
@@ -41,7 +43,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
 
                 var dependentFileTests = new List<IUnitTestElementCriterion>();
                 var featureFileTests = new List<IUnitTestElement>();
-                foreach (IProjectModelElement projectModelElement in data)
+                foreach (var projectModelElement in data)
                 {
                     if (projectModelElement is IProjectFile projectFile)
                     {
@@ -67,11 +69,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                 {
                     if (featureFileTests.Count == 0)
                         return null;
-                    return new UnitTestElements(new TestAncestorCriterion(featureFileTests.Select(e => e.Id)), Array.Empty<IUnitTestElement>());
+                    return new UnitTestElements(TestAncestorCriterion.From(featureFileTests.Select(e => e.Id)), Array.Empty<IUnitTestElement>());
                 }
                 return dependentFileTests.Count == 1 ? 
                     new UnitTestElements(dependentFileTests.First(), Array.Empty<IUnitTestElement>()) 
-                    : new UnitTestElements(new DisjunctiveCriterion(dependentFileTests).Reduce(), Array.Empty<IUnitTestElement>());
+                    : new UnitTestElements(DisjunctiveCriterion.From(dependentFileTests).Reduce(), Array.Empty<IUnitTestElement>());
 
             }
         }
