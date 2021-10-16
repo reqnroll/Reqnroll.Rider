@@ -5,6 +5,7 @@ using JetBrains.Application.Threading;
 using JetBrains.Collections;
 using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.Files;
@@ -45,6 +46,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsUsages
             var steps = gherkinFile.GetChildrenInSubtrees<GherkinStep>();
             stepUsages.AddRange(steps.Select(step => new SpecflowStepUsageCacheEntry(step.EffectiveStepKind, step.GetStepText())));
             return stepUsages;
+        }
+
+        protected override bool IsApplicable(IPsiSourceFile sf)
+        {
+            return sf.LanguageType.Is<GherkinProjectFileType>();
         }
 
         public override void MergeLoaded(object data)

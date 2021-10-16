@@ -6,6 +6,7 @@ using JetBrains.Application.Threading;
 using JetBrains.Collections;
 using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -108,6 +109,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                 return null;
 
             return stepDefinitions;
+        }
+
+        protected override bool IsApplicable(IPsiSourceFile sf)
+        {
+            return sf.LanguageType.Is<CSharpProjectFileType>();
         }
 
         private bool IsSpecflowFeatureFile(IClassDeclaration classDeclaration)
