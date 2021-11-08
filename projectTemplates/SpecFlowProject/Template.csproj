@@ -1,12 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>$target$</TargetFramework>
+    <TargetFramework>$target$</TargetFramework>$langVersion$
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-    <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.35" />
+    <Using Include="TechTalk.SpecFlow" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
     $SpecFlowNugetPackages$
     $additionalNugetPackages$
     $fluentAssertionsNugetPackage$

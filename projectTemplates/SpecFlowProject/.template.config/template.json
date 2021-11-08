@@ -15,10 +15,13 @@
             "type": "parameter",
             "description": "Target Framework",
             "datatype": "choice",
-            "defaultValue": "netcoreapp3.1",
+            "defaultValue": "net6.0",
             "replaces": "$target$",
             "choices": [
                 {
+                    "choice": "net6.0",
+                    "description": "net6.0"
+                },                {
                     "choice": "net5.0",
                     "description": "net5.0"
                 },
@@ -86,6 +89,21 @@
             "description": "Add FluentAssertions library",
             "defaultValue": "true"
         },
+        "LangVersion": {
+            "type": "generated",
+            "generator": "switch",
+            "replaces": "$langVersion$",
+            "parameters": {
+                "evaluator": "C++",
+                "datatype": "string",
+                "cases": [
+                    {
+                        "condition": "(targetFramework != 'net6.0')",
+                        "value": "\r\n<LangVersion>10</LangVersion>"
+                    }
+                ]
+            }
+        },
         "SpecFlowNugetPackages": {
             "type": "generated",
             "generator": "switch",
@@ -123,15 +141,15 @@
                 "cases": [
                     {
                         "condition": "(unitTestProvider == 'xunit')",
-                        "value": "<PackageReference Include=\"xunit\" Version=\"2.4.1\" />\n    <PackageReference Include=\"xunit.runner.visualstudio\" Version=\"2.4.1\">\n    <PrivateAssets>all</PrivateAssets>\n        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>\n    </PackageReference>"
+                        "value": "<PackageReference Include=\"xunit\" Version=\"2.4.1\" />\n    <PackageReference Include=\"xunit.runner.visualstudio\" Version=\"2.4.3\">\n    <PrivateAssets>all</PrivateAssets>\n        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>\n    </PackageReference>"
                     },
                     {
                         "condition": "(unitTestProvider == 'mstest')",
-                        "value": "<PackageReference Include=\"MSTest.TestAdapter\" Version=\"2.1.2\" />"
+                        "value": "<PackageReference Include=\"MSTest.TestAdapter\" Version=\"2.1.7\" />"
                     },
                     {
                         "condition": "(unitTestProvider == 'nunit')",
-                        "value": "<PackageReference Include=\"nunit\" Version=\"3.13.1\" />\n    <PackageReference Include=\"NUnit3TestAdapter\" Version=\"3.17.0\" />"
+                        "value": "<PackageReference Include=\"nunit\" Version=\"3.13.2\" />\n    <PackageReference Include=\"NUnit3TestAdapter\" Version=\"4.1.0\" />"
                     }
                 ]
             }
@@ -146,7 +164,7 @@
                 "cases": [
                     {
                         "condition": "(includeFluentAssertions)",
-                        "value": "<PackageReference Include=\"FluentAssertions\" Version=\"5.10.3\" />"
+                        "value": "<PackageReference Include=\"FluentAssertions\" Version=\"6.2.0\" />"
                     }
                 ]
             }
