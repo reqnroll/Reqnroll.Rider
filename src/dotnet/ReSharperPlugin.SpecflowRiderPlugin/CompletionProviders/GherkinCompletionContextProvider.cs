@@ -51,6 +51,27 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             if (nodeUnderCursor is GherkinToken token && token.IsWhitespaceToken() && token?.PrevSibling?.GetTokenType() == GherkinTokenTypes.NEW_LINE)
                 ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange().SetStartTo(context.CaretDocumentOffset));
 
+            if (interestingNode is GherkinTag tag)
+            {
+                relatedText = startOfLineText = tag.GetStepTextBeforeCaret(context.CaretDocumentOffset);
+                if (context.CaretDocumentOffset > tag.GetDocumentEndOffset())
+                {
+                    relatedText = "@";
+                    ranges = new TextLookupRanges(
+                        new DocumentRange(tag.GetDocumentEndOffset().Shift(1), context.CaretDocumentOffset),
+                        new DocumentRange(tag.GetDocumentEndOffset().Shift(1), context.CaretDocumentOffset)
+                    );
+                }
+                else
+                {
+                    ranges = new TextLookupRanges(
+                        new DocumentRange(tag.GetDocumentStartOffset(), context.CaretDocumentOffset),
+                        tag.GetDocumentRange()
+                    );
+                }
+
+            }
+
             if (interestingNode is GherkinStep step)
             {
                 var stepTextRange = step.GetStepTextRange();
@@ -163,6 +184,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 if (node is GherkinStep)
                     return node;
                 if (node is IGherkinScenario)
+                    return node;
+                if (node is GherkinTag)
                     return node;
                 if (node is GherkinFeature)
                     return node;
