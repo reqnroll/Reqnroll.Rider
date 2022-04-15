@@ -1,30 +1,20 @@
 // Reference https://www.jetbrains.org/intellij/sdk/docs/tutorials/build_system/gradle_guide.html
 import org.apache.tools.ant.taskdefs.condition.Os
 
-buildscript {
-    repositories {
-        maven { url 'https://www.myget.org/F/rd-snapshots/maven/' }
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath("com.jetbrains.rd:rd-gen:0.1831.17") // https://www.myget.org/feed/rd-snapshots/package/maven/com.jetbrains.rd/rd-gen
-    }
-}
-
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
-    id 'org.jetbrains.intellij' version '0.7.2' // https://github.com/JetBrains/gradle-intellij-plugin/releases
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'org.jetbrains.intellij' version '1.4.0'     // https://github.com/JetBrains/gradle-intellij-plugin/releases
+    id 'com.jetbrains.rdgen' version '2022.1.2'    // https://www.myget.org/feed/rd-snapshots/package/maven/com.jetbrains.rd/rd-gen
 }
 
 ext {
     isWindows = Os.isFamily(Os.FAMILY_WINDOWS)
     rdLibDirectory = {
-        new File(intellij.ideaDependency.classes, "lib/rd")
+        new File(setupDependencies.idea.get().classes, "lib/rd")
     }
     resharperHostLibDirectory = {
-        new File(intellij.ideaDependency.classes, "lib/ReSharperHost")
+        new File(setupDependencies.classes, "lib/ReSharperHost")
     }
     aiKey = System.getenv('APPINSIGHTSINSTRUMENTATIONKEY')
 }
@@ -35,7 +25,7 @@ repositories {
 }
 
 wrapper {
-    gradleVersion = '6.8.3'
+    gradleVersion = '7.1'
     distributionType = Wrapper.DistributionType.ALL
     distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
@@ -47,7 +37,8 @@ if (ext.has("password")) intellij.publish.password = ext.password
 
 sourceSets {
     main {
-        java.srcDir 'src/rider/main/kotlin'
+        java.srcDir 'src/rider/main/java'
+        kotlin.srcDir 'src/rider/main/kotlin'
         resources.srcDir 'src/rider/main/resources'
     }
 }
@@ -56,28 +47,25 @@ compileKotlin {
     kotlinOptions { jvmTarget = "1.8" }
 }
 
-task prepareCompileDotNet {
-    def generatedPropsFile = file("${rootDir}/src/dotnet/SdkProperties.generated.props")
-    outputs.files generatedPropsFile
+task setBuildTool {
     doLast {
-        generatedPropsFile.text = """<?xml version="1.0" encoding="utf-8"?>
-<Project>
-    <PropertyGroup>
-        <ReSharperHostPath>${resharperHostLibDirectory()}</ReSharperHostPath>
-    </PropertyGroup>
-</Project>
-"""
+        ext.args = []
+        ext.executable = "dotnet"
+        ext.args << "msbuild"
+        ext.args << "${DotnetSolution}"
+        ext.args << "/p:Configuration=${BuildConfiguration}"
+        ext.args << "/p:HostFullIdentifier="
     }
 }
 
 task compileDotNet {
-    dependsOn prepareCompileDotNet
+    dependsOn setBuildTool
 
     doLast {
         def arguments = ["msbuild","/t:Restore;Rebuild","${DotnetSolution}","/p:Configuration=${BuildConfiguration}","/p:HostFullIdentifier=","/p:AssemblyVersion=${version}"]
         if (aiKey) arguments << "/p:AppInsightsInstrumentationKey=${aiKey}";
-        exec {            
-            executable "dotnet"
+        exec {
+            executable setBuildTool.executable
             args arguments
             workingDir rootDir
         }
@@ -99,15 +87,20 @@ intellij {
     downloadSources = false
     instrumentCode = false
     // TODO: add plugins
-    // plugins("uml", "com.jetbrains.ChooseRuntime:1.0.9")
+    // plugins = ["uml", "com.jetbrains.ChooseRuntime:1.0.9"]
 }
 
 runIde {
-    // TODO: adapt runtime if necessary
-    // jbrVersion("jbr_jcef-11_0_6b765.40") // https://confluence.jetbrains.com/display/JBR/Release+notes
-}
+    // Match Rider's default heap size of 1.5Gb (default for runIde is 512Mb)
+    maxHeapSize = "1500m"
 
-apply plugin: 'com.jetbrains.rdgen'
+    // Rider's backend doesn't support dynamic plugins. It might be possible to work with auto-reload of the frontend
+    // part of a plugin, but there are dangers about keeping plugins in sync
+    autoReloadPlugins = false
+
+    // gradle-intellij-plugin will download the default version of the JBR for the snapshot. Update if required
+    // jbrVersion = "jbr_jcef-11_0_6b765.40" // https://confluence.jetbrains.com/display/JBR/Release+notes
+}
 
 rdgen {
     def modelDir = new File(rootDir, "protocol/src/main/kotlin/model")
@@ -148,6 +141,10 @@ patchPluginXml {
     }.take(1).join('')
 }
 
+buildSearchableOptions {
+    enabled = false
+}
+
 prepareSandbox {
     dependsOn compileDotNet
 
@@ -166,8 +163,8 @@ prepareSandbox {
     })
     
     into("${intellij.pluginName}/projectTemplates") {
-                from("projectTemplates")
-            }
+        from("projectTemplates")
+    }
 
     doLast {
         dllFiles.forEach({ f ->
@@ -182,6 +179,4 @@ publishPlugin {
     if (hasProperty('intellijPublishToken')) {
         token intellijPublishToken
     }
-
-    channels(!version.contains("-") ? 'Stable' : 'EAP')
 }

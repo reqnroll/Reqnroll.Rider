@@ -1,6 +1,8 @@
 <Project>
   
   <PropertyGroup>
+    <LangVersion>Latest</LangVersion>
+    <NoWarn>MSB3277</NoWarn>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
@@ -15,12 +17,16 @@
   </PropertyGroup>
 
   <Import Project="Plugin.props" />
-  <Import Project="SdkProperties.generated.props" />
 
   <PropertyGroup>
     <WaveVersionBase>$(SdkVersion.Substring(2,2))$(SdkVersion.Substring(5,1))</WaveVersionBase>
     <WaveVersion>$(WaveVersionBase).0.0$(SdkVersion.Substring(8))</WaveVersion>
+    <UpperWaveVersion>$(WaveVersionBase).9999.0</UpperWaveVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
   <!-- Running tests on a Mac requires PresentationCore/PresentationFramework, which isn't part of the standard Mono/netcore
        distro. We need to copy them from the SDK. Note that the IsOsPlatform function requires msbuild 15.3+

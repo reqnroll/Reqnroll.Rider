@@ -28,7 +28,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             Lifetime lifetime)
         {
             _unitTestElementRepository = unitTestElementRepository;
-            actionManager.DataContexts.RegisterDataRule(lifetime, new DataRule<UnitTestElements>.AssertionDataRule("SpecFlowProjectFilesToUnitTestElements", UnitTestDataConstants.Elements.SELECTED, GetSpecFlowUnitTestElements));
+            actionManager.DataContexts.RegisterDataRule(lifetime, new DataRule<UnitTestElements>.AssertionDataRule("SpecFlowProjectFilesToUnitTestElements", UnitTestDataConstants.Elements.IN_CONTEXT, GetSpecFlowUnitTestElements));
         }
 
         private UnitTestElements GetSpecFlowUnitTestElements(IDataContext context)
