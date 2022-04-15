@@ -36,7 +36,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Searchers
             return words;
         }
 
-        public override IDomainSpecificSearcher CreateReferenceSearcher(IDeclaredElementsSet elements, bool findCandidates)
+        public override IDomainSpecificSearcher CreateReferenceSearcher(IDeclaredElementsSet elements, ReferenceSearcherParameters referenceSearcherParameters)
         {
             return new SpecflowStepReferenceSearcher(elements);
         }

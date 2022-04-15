@@ -2,6 +2,7 @@ using JetBrains.Application.Settings;
 using JetBrains.Diagnostics;
 using JetBrains.Rd.Impl;
 using JetBrains.RdBackend.Common.Features.SyntaxHighlighting;
+using JetBrains.ReSharper.Daemon.Syntax;
 using JetBrains.ReSharper.Daemon.SyntaxHighlighting;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -11,7 +12,7 @@ using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 namespace ReSharperPlugin.SpecflowRiderPlugin.SyntaxHighlighting.Rider
 {
     [Language(typeof(GherkinLanguage))]
-    public class GherkinSyntaxHighlightingManager : RiderSyntaxHighlightingManager
+    public class GherkinSyntaxHighlightingManager : SyntaxHighlightingManager
     {
         public GherkinSyntaxHighlightingManager()
         {

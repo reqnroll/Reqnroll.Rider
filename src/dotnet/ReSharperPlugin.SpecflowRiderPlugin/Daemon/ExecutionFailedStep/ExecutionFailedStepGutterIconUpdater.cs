@@ -206,7 +206,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
 
         public IEnumerable<string> GetTestOutputByLine(UnitTestResultData testResult)
         {
-            for (var i = 0; i < testResult.OutputChunks; i++)
+            for (var i = 0; i < testResult.OutputChunksCount; i++)
             {
                 var chunk = testResult.GetOutputChunk(i);
                 var lines = chunk.SplitByNewLine();

@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon.SyntaxHighlighting;
+using JetBrains.ReSharper.Daemon.Syntax;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Tree;
 
