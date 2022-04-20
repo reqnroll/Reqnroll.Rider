@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.RichText;
+using JetBrains.Util.Media;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput;
 
@@ -52,7 +53,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
             switch (_stepTestOutput.Status)
             {
                 case StepTestOutput.StepStatus.Failed:
-                    var statusLineText = new RichText(_stepTestOutput.Status.ToString(), new TextStyle(FontStyle.Bold, Color.DarkRed))
+                    var statusLineText = new RichText(_stepTestOutput.Status.ToString(), new TextStyle(JetFontStyles.Bold, JetRgbaColors.DarkRed))
                         .Append(new RichText(" - "))
                         .Append(new RichText(_stepTestOutput.StatusLine.Replace("<", "&lt;")));
                     richTextBlock.Add(statusLineText);

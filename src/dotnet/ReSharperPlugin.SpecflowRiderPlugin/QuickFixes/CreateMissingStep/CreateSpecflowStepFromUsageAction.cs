@@ -29,6 +29,7 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+using JetBrains.Util.Media;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
 using ReSharperPlugin.SpecflowRiderPlugin.Helpers;
@@ -92,7 +93,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 {
                     var richText = new RichText(availableBindingClass.Key.Split('.').Last(), DeclaredElementPresenterTextStyles.ParameterInfo.GetStyle(DeclaredElementPresentationPartKind.Type));
                     richText.Append($" (in {new ClrTypeName(availableBindingClass.Key).GetNamespaceName()})",
-                        TextStyle.FromForeColor(Color.FromArgb(124,129,144)));
+                        TextStyle.FromForeColor(JetRgbaColor.FromArgb(byte.MaxValue,124,129,144)));
                     return new CreateStepMenuAction(
                         richText,
                         PsiSymbolsThemedIcons.Class.Id,

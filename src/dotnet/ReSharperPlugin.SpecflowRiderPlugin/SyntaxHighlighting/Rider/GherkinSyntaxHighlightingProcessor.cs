@@ -1,3 +1,4 @@
+using JetBrains.ReSharper.Daemon.Syntax;
 using JetBrains.ReSharper.Daemon.SyntaxHighlighting;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Parsing;

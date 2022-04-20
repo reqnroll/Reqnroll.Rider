@@ -10,6 +10,7 @@ import com.jetbrains.rd.util.reactive.*
 import com.jetbrains.rd.util.string.*
 import com.jetbrains.rd.util.*
 import kotlin.reflect.KClass
+import kotlin.jvm.JvmStatic
 
 
 
@@ -31,6 +32,7 @@ class SpecflowRiderPluginModel private constructor(
             serializers.register(MyEnum.marshaller)
             serializers.register(MyStructure)
         }
+        
         
         
         

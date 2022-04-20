@@ -31,7 +31,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectTemplateParameters
                 
                 options.Add(new RdProjectTemplateGroupOption(
                     choice.Key,
-                    choice.Value,
+                    choice.Value.Description ?? choice.Key,
                     null, content));
             }
             return new RdProjectTemplateGroupParameter(Name,PresentableName, parameter.DefaultValue, Tooltip, options);

@@ -85,7 +85,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings
                 foreach (var featurePsiFile in featurePsiFiles)
                 {
                     var psiServices = featurePsiFile.GetPsiServices();
-                    var cachedPsiFile = psiServices.Files.GetCachedPsiFile(featurePsiFile, GherkinLanguage.Instance);
+                    var cachedPsiFile = psiServices.Files.PsiFilesCache.TryGetCachedPsiFile(featurePsiFile, GherkinLanguage.Instance);
                     if (cachedPsiFile != null)
                     {
                         cachedPsiFile.OnDocumentChanged(new DocumentChange(featurePsiFile.Document, 0, featurePsiFile.Document.GetTextLength(),
