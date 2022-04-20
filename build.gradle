@@ -159,10 +159,10 @@ prepareSandbox {
 
     dllFiles.forEach({ f ->
         def file = file(f)
-        from(file, { into "${intellij.pluginName}/dotnet" })
+        from(file, { into "${intellij.pluginName.get()}/dotnet" })
     })
     
-    into("${intellij.pluginName}/projectTemplates") {
+    into("${intellij.pluginName.get()}/projectTemplates") {
         from("projectTemplates")
     }
 
