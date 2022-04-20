@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.11
 ### Added
-- Support for Rider 2022.1 eap 6
+- Support for Rider 2022.1
 
 ## 1.10.2
 ### Added
