@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Application.Threading;
 using JetBrains.Collections;
@@ -131,7 +130,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
             {
                 if (potentialBindingAttribute.GetClrName().FullName == "System.CodeDom.Compiler.GeneratedCodeAttribute"
-                    && potentialBindingAttribute.PositionParameter(0).ConstantValue.Value as string == "TechTalk.SpecFlow")
+                    && potentialBindingAttribute.PositionParameter(0).ConstantValue.StringValue == "TechTalk.SpecFlow")
                     specflowGeneratedAttribute = true;
             }
             return specflowGeneratedAttribute;
@@ -257,12 +256,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         {
 
             var attributeArgument = attribute.Arguments[0];
-
-            var regex = attributeArgument.Value?.ConstantValue.Value as string;
-            if (regex == null)
+            if (attributeArgument.Value?.ConstantValue?.IsString(out var regex) != true)
                 return;
 
-            // FIXME: If at some point this is not enought we could check that attribute.Name.QualifiedName contains TechTalk.SpecFlow or that
+            // FIXME: If at some point this is not enough we could check that attribute.Name.QualifiedName contains TechTalk.SpecFlow or that
             // TechTalk.SpecFlow is in the `using` list somewhere in a parent
 
             if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Given, attribute.Name.ShortName))

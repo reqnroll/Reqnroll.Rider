@@ -68,13 +68,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.MethodNameMismatchPattern
                 if (!constantValue.IsValid())
                     continue;
 
-                if (!(constantValue.Value is string stepText))
+                if (constantValue.Kind is not ConstantValueKind.String)
                     continue;
 
                 if (method.DeclaredElement == null)
                     continue;
 
-                var expectedMethodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromPattern(stepKind.Value, stepText, method.DeclaredElement.Parameters.SelectNotNull(x => x.ShortName).ToArray());
+                var expectedMethodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromPattern(stepKind.Value, constantValue.StringValue, method.DeclaredElement.Parameters.SelectNotNull(x => x.ShortName).ToArray());
                 expectedMethodName = psiServices.Naming.Suggestion.GetDerivedName(expectedMethodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance.NotNull(), new SuggestionOptions(), _daemonProcess.SourceFile);
 
                 if (string.Equals(method.DeclaredName, expectedMethodName, StringComparison.InvariantCultureIgnoreCase))

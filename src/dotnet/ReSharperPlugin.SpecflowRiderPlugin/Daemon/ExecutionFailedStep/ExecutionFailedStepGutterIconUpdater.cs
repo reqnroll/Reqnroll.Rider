@@ -52,7 +52,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
             _failedStepCache = failedStepCache;
             _daemon = daemon;
             _updatedUnitTests = new Dictionary<IUnitTestElement, (IUnitTestSession session, UnitTestResult result)>(UnitTestElement.Comparer.ById); // FIXME: or ByNaturalId ?
-            _myResultUpdated = shellLocks.NotNull("shellLocks != null")
+            _myResultUpdated = shellLocks.NotNull()
                 .CreateGroupingEvent(lifetime, nameof(ExecutionFailedStepGutterIconUpdater) + "::ResultUpdated", 500.Milliseconds(), OnProcessUpdated);
             _unitTestResultManager = resultManager;
             UT.Events.Result.Updated.Subscribe(lifetime, OnUnitTestResultUpdated);
@@ -158,23 +158,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
             if (featureAttributeDescription == null || featureAttributeDescription.PositionParameterCount < 1)
                 return false;
 
-            featureText = featureAttributeDescription.PositionParameter(0).ConstantValue.Value as string;
-            scenarioText = scenarioAttributeDescription.PositionParameter(0).ConstantValue.Value as string;
+            featureText = featureAttributeDescription.PositionParameter(0).ConstantValue.StringValue;
+            scenarioText = scenarioAttributeDescription.PositionParameter(0).ConstantValue.StringValue;
             return true;
         }
 
         private static bool ReadFromXUnit(IMethod methodTestDeclaration, ref string featureText, ref string scenarioText)
         {
             var xUnitTraitAttributes = methodTestDeclaration.GetAttributeInstances(XunitTraitAttribute, false);
-            var scenarioAttributeDescription = xUnitTraitAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.Value as string == "Description");
+            var scenarioAttributeDescription = xUnitTraitAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.StringValue == "Description");
             if (scenarioAttributeDescription == null || scenarioAttributeDescription.PositionParameterCount < 2)
                 return false;
-            var featureAttributeDescription = xUnitTraitAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.Value as string == "FeatureTitle");
+            var featureAttributeDescription = xUnitTraitAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.StringValue == "FeatureTitle");
             if (featureAttributeDescription == null || featureAttributeDescription.PositionParameterCount < 2)
                 return false;
 
-            featureText = featureAttributeDescription.PositionParameter(1).ConstantValue.Value as string;
-            scenarioText = scenarioAttributeDescription.PositionParameter(1).ConstantValue.Value as string;
+            featureText = featureAttributeDescription.PositionParameter(1).ConstantValue.StringValue;
+            scenarioText = scenarioAttributeDescription.PositionParameter(1).ConstantValue.StringValue;
             return true;
         }
 
@@ -184,12 +184,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.ExecutionFailedStep
             if (msTestDescriptionAttribute == null || msTestDescriptionAttribute.PositionParameterCount < 1)
                 return false;
             var msTestPropertyAttributes = methodTestDeclaration.GetAttributeInstances(MsTestPropertyAttribute, false);
-            var featureAttributeDescription = msTestPropertyAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.Value as string == "FeatureTitle");
+            var featureAttributeDescription = msTestPropertyAttributes.FirstOrDefault(x => x.PositionParameter(0).ConstantValue.StringValue == "FeatureTitle");
             if (featureAttributeDescription == null || featureAttributeDescription.PositionParameterCount < 2)
                 return false;
 
-            featureText = featureAttributeDescription.PositionParameter(1).ConstantValue.Value as string;
-            scenarioText = msTestDescriptionAttribute.PositionParameter(0).ConstantValue.Value as string;
+            featureText = featureAttributeDescription.PositionParameter(1).ConstantValue.StringValue;
+            scenarioText = msTestDescriptionAttribute.PositionParameter(0).ConstantValue.StringValue;
             return true;
         }
 

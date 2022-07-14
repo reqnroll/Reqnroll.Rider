@@ -113,7 +113,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                     if (relatedTest.GetDeclaredElement() is IAttributesOwner c)
                         return c.GetAttributeInstances(NUnitDescriptionAttribute, false)
                             .FirstOrDefault()
-                            ?.PositionParameter(0).ConstantValue.Value as string;
+                            ?.PositionParameter(0).ConstantValue.StringValue;
                     break;
                 }
                 case "MSTest":
@@ -121,15 +121,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
                     if (relatedTest.GetDeclaredElement() is IAttributesOwner c)
                         return c.GetAttributeInstances(MsTestDescriptionAttribute, false)
                             .FirstOrDefault()
-                            ?.PositionParameter(0).ConstantValue.Value as string;
+                            ?.PositionParameter(0).ConstantValue.StringValue;
                     break;
                 }
                 case "xUnit":
                 {
                     if (relatedTest.GetDeclaredElement() is IAttributesOwner c)
                         return c.GetAttributeInstances(XUnitTraitAttribute, false)
-                            .FirstOrDefault(x => x.PositionParameter(0).ConstantValue.Value as string == "Description")
-                            ?.PositionParameter(1).ConstantValue.Value as string;
+                            .FirstOrDefault(x => x.PositionParameter(0).ConstantValue.StringValue == "Description")
+                            ?.PositionParameter(1).ConstantValue.StringValue;
                     break;
                 }
             }
