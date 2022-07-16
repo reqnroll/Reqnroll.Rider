@@ -4,8 +4,6 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Resources;
-using JetBrains.ReSharper.Psi.Resources;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.Tags;
 using ReSharperPlugin.SpecflowRiderPlugin.Icons;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;

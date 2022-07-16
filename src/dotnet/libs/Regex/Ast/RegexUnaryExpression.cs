@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RE
+﻿namespace RE
 {
 	/// <summary>
 	/// Represents an expression with a single target expression

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using JetBrains.Application;
-using JetBrains.Application.UI.Options.Options.ThemedIcons;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
 {

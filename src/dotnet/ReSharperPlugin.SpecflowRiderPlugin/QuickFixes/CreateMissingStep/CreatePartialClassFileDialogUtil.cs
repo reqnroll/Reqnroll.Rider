@@ -8,7 +8,6 @@ using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Feature.Services.UI.Automation;
 using JetBrains.ReSharper.Feature.Services.UI.Validation;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.Rider.Model.UIAutomation;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep

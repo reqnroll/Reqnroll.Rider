@@ -7,7 +7,6 @@ using JetBrains.ReSharper.Daemon.UsageChecking;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Files;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
-using ReSharperPlugin.SpecflowRiderPlugin.Daemon.ParameterHighlighting;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps;
 
