@@ -31,6 +31,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests
         [TestCase("TagBeforeExamples")]
         [TestCase("WithoutFeatureKeyword")]
         [TestCase("ScenarioWithTags")]
+        [TestCase("PystringBacktick")]
         [TestCase("PystringWithParams")]
         [TestCase("PystringWithTripleQuoteInText")]
         [TestCase("FeatureRu")]

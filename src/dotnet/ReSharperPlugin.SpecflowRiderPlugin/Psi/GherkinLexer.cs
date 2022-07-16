@@ -16,6 +16,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private int _myPystringIdent;
         private int _lastNewLineOffset;
         private string _myCurLanguage;
+        private string _closingPyStringMarker;
         
         private IReadOnlyCollection<string> _myKeywords;
         private readonly GherkinKeywordProvider _keywordProvider;
@@ -30,7 +31,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private const int STATE_PARAMETER_INSIDE_PYSTRING = 6;
         private const int STATE_PARAMETER_INSIDE_STEP = 7;
 
-        private const string PYSTRING_MARKER = "\"\"\"";
+        private const string PYSTRING_QUOTE_MARKER = "\"\"\"";
+        private const string PYSTRING_BACKTICK_MARKER = "```";
         // ReSharper restore InconsistentNaming
 
         public GherkinLexer(IBuffer buffer, GherkinKeywordProvider keywordProvider, SpecflowSettingsProvider settingsProvider)
@@ -94,13 +96,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 }
                 else
                 {
-                    AdvanceToParameterEnd(PYSTRING_MARKER);
+                    AdvanceToParameterEnd(_closingPyStringMarker);
                     TokenType = GherkinTokenTypes.STEP_PARAMETER_TEXT;
                 }
             }
             else if (_myState == STATE_INSIDE_PYSTRING)
             {
-                if (IsStringAtPosition(PYSTRING_MARKER))
+                if (IsStringAtPosition(_closingPyStringMarker))
                 {
                     _currentPosition += 3 /* marker length */;
                     TokenType = GherkinTokenTypes.PYSTRING;
@@ -110,7 +112,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 {
                     if (Buffer[_currentPosition] == '<')
                     {
-                        if (IsStepParameter(PYSTRING_MARKER))
+                        if (IsStepParameter(_closingPyStringMarker))
                         {
                             _currentPosition++;
                             _myState = STATE_PARAMETER_INSIDE_PYSTRING;
@@ -190,12 +192,21 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     _currentPosition++;
                 }
             }
-            else if (IsStringAtPosition(PYSTRING_MARKER))
+            else if (IsStringAtPosition(PYSTRING_QUOTE_MARKER))
             {
                 TokenType = GherkinTokenTypes.PYSTRING;
                 _myState = STATE_INSIDE_PYSTRING;
                 _myPystringIdent = _currentPosition - _lastNewLineOffset;
                 _currentPosition += 3;
+                _closingPyStringMarker = PYSTRING_QUOTE_MARKER;
+            }
+            else if (IsStringAtPosition(PYSTRING_BACKTICK_MARKER))
+            {
+                TokenType = GherkinTokenTypes.PYSTRING;
+                _myState = STATE_INSIDE_PYSTRING;
+                _myPystringIdent = _currentPosition - _lastNewLineOffset;
+                _currentPosition += 3;
+                _closingPyStringMarker = PYSTRING_BACKTICK_MARKER;
             }
             else
             {
@@ -368,7 +379,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private void AdvancePystring()
         {
             while (_currentPosition < _myEndOffset
-                   && !IsStepParameter(PYSTRING_MARKER)
+                   && !IsStepParameter(_closingPyStringMarker)
                    && !IsNewLine(out _)) {
                 _currentPosition++;
             }
