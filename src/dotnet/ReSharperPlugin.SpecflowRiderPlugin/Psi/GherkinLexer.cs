@@ -365,9 +365,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             _myState = STATE_DEFAULT;
         }
 
-        private void AdvancePystring() {
+        private void AdvancePystring()
+        {
             while (_currentPosition < _myEndOffset
-                   && !IsStringAtPosition(PYSTRING_MARKER)
                    && !IsStepParameter(PYSTRING_MARKER)
                    && !IsNewLine(out _)) {
                 _currentPosition++;

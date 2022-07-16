@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using JetBrains.Diagnostics;
@@ -345,8 +347,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             {
                 var marker = builder.Mark();
                 builder.AdvanceLexer();
-                while (!builder.Eof() && builder.GetTokenType() != GherkinTokenTypes.PYSTRING)
+                var nonSpaceFoundAfterNewLine = true;
+                while (!builder.Eof())
                 {
+                    if (!nonSpaceFoundAfterNewLine && builder.GetTokenType() == GherkinTokenTypes.PYSTRING)
+                        break;
+                    if (builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
+                        nonSpaceFoundAfterNewLine = false;
+                    else if (builder.GetTokenType() != GherkinTokenTypes.WHITE_SPACE)
+                        nonSpaceFoundAfterNewLine = true;
+
                     if (!ParseStepParameter(builder))
                         builder.AdvanceLexer();
                 }
