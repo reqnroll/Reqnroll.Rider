@@ -181,7 +181,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 TokenType = GherkinTokenTypes.COLON;
                 _currentPosition++;
             }
-            else if (c == '@')
+            else if (c == '@' && State != STATE_AFTER_KEYWORD && State != STATE_AFTER_KEYWORD_WITH_PARAMETER)
             {
                 TokenType = GherkinTokenTypes.TAG;
                 _currentPosition++;
