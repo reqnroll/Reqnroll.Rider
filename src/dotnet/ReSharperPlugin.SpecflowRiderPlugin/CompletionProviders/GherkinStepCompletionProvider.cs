@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
+using JetBrains.ReSharper.Feature.Services.LiveTemplates.Util;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.ExpectedTypes;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Icons;
@@ -23,7 +26,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
         protected override bool AddLookupItems(GherkinSpecificCodeCompletionContext context, IItemsCollector collector)
         {
-            if (!(context.NodeUnderCursor is GherkinStep selectedStep))
+            if (context.NodeUnderCursor is not GherkinStep selectedStep)
                 return false;
 
             var specflowStepsDefinitionsCache = context.BasicContext.PsiServices.GetComponent<SpecflowStepsDefinitionsCache>();
@@ -59,6 +62,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             }
 
             return true;
+        }
+
+        protected override void TransformItems(GherkinSpecificCodeCompletionContext context, IItemsCollector collector)
+        {
+            if (context.NodeUnderCursor is not GherkinStep)
+                return;
+
+            // Filter out other completion suggestion from generic plugin like live template
+            collector.RemoveWhere(x => x is not CompletionStepLookupItem);
         }
 
         protected override TextLookupRanges GetDefaultRanges(GherkinSpecificCodeCompletionContext context)
