@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using JetBrains;
 using JetBrains.Application;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 
@@ -42,12 +43,25 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps
                 var (token, isParameter) = ReadNext(parameterNames, parameterIndex, methodName, pos);
                 pos += token.Length;
                 if (isParameter)
-                    words.Add("(.+)");
+                {
+                    if (IsIntNumber(methodDeclaration, parameterIndex))
+                        words.Add("(\\d+)");
+                    else
+                        words.Add("(.+)");
+                }
                 else
                     words.Add(token.ToLowerInvariant());
             }
 
             return string.Join(" ", words.Skip(1));
+        }
+
+        private static bool IsIntNumber(IMethodDeclaration methodDeclaration, int parameterIndex)
+        {
+            var type = methodDeclaration.Params?.ParameterDeclarations[parameterIndex].Type;
+            if (type is not IDeclaredType clrTypeName)
+                return false;
+            return PredefinedType.IsPredefinedIntegral(clrTypeName.GetClrName());
         }
 
         private (string, bool) ReadNext(IList<string> parameterNames, int parameterIndex, string methodName, int pos)
