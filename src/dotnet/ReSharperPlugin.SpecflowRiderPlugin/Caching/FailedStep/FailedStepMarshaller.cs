@@ -62,7 +62,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
                 {
                     FeatureText = featureText,
                     ScenarioText = scenarioText,
-                    StepsOutputs = stepsOutputs
+                    StepsOutputs = stepsOutputs,
                 });
             }
 

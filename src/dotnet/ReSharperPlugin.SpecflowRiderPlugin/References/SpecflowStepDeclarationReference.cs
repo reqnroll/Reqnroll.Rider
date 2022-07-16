@@ -154,7 +154,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                 return this;
             using (WriteLockCookie.Create(myOwner.IsPhysical(), "/Product.Root/Psi.Features/Web/Core/Psi/Src/Css/Impl/Tree/References/CssClassReference.cs", nameof (BindTo)))
                 ModificationUtil.ReplaceChild(myOwner, firstChild.Identifier);*/
-            return this.myOwner.GetReferences<IReference>().Single();
+            return myOwner.GetReferences<IReference>().Single();
         }
 
         public override IAccessContext GetAccessContext()

@@ -4,12 +4,13 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+// ReSharper disable once CheckNamespace
 namespace TechTalk.SpecFlow.BindingSkeletons
 {
     public class AnalyzedStepText
     {
-        public readonly List<string> TextParts = new List<string>();
-        public readonly List<AnalyzedStepParameter> Parameters = new List<AnalyzedStepParameter>();
+        public readonly List<string> TextParts = new();
+        public readonly List<AnalyzedStepParameter> Parameters = new();
     }
 
     public class AnalyzedStepParameter
@@ -20,9 +21,9 @@ namespace TechTalk.SpecFlow.BindingSkeletons
 
         public AnalyzedStepParameter(string type, string name, string regexPattern = null)
         {
-            this.Type = type;
-            this.Name = name;
-            this.RegexPattern = regexPattern;
+            Type = type;
+            Name = name;
+            RegexPattern = regexPattern;
         }
     }
 
@@ -36,7 +37,7 @@ namespace TechTalk.SpecFlow.BindingSkeletons
     /// </summary>
     public class StepTextAnalyzer : IStepTextAnalyzer
     {
-        private List<string> usedParameterNames = new List<string>();
+        private readonly List<string> _usedParameterNames = new();
         public AnalyzedStepText Analyze(string stepText, CultureInfo bindingCulture)
         {
             var result = new AnalyzedStepText();
@@ -87,46 +88,43 @@ namespace TechTalk.SpecFlow.BindingSkeletons
 
         private AnalyzedStepParameter AnalyzeParameter(string value, CultureInfo bindingCulture, int paramIndex, string regexPattern, ParameterType parameterType)
         {
-            string paramName = StepParameterNameGenerator.GenerateParameterName(value, paramIndex, usedParameterNames);
+            string paramName = StepParameterNameGenerator.GenerateParameterName(value, paramIndex, _usedParameterNames);
 
-            int intParamValue;
-            if (parameterType == ParameterType.Int && int.TryParse(value, NumberStyles.Integer, bindingCulture, out intParamValue))
+            if (parameterType == ParameterType.Int && int.TryParse(value, NumberStyles.Integer, bindingCulture, out _))
                 return new AnalyzedStepParameter("Int32", paramName, regexPattern);
 
-            decimal decimalParamValue;
-            if (parameterType == ParameterType.Decimal && decimal.TryParse(value, NumberStyles.Number, bindingCulture, out decimalParamValue))
+            if (parameterType == ParameterType.Decimal && decimal.TryParse(value, NumberStyles.Number, bindingCulture, out _))
                 return new AnalyzedStepParameter("Decimal", paramName, regexPattern);
 
-            DateTime dateParamValue;
-            if (parameterType == ParameterType.Date && DateTime.TryParse(value, bindingCulture, DateTimeStyles.AllowWhiteSpaces, out dateParamValue))
+            if (parameterType == ParameterType.Date && DateTime.TryParse(value, bindingCulture, DateTimeStyles.AllowWhiteSpaces, out _))
                 return new AnalyzedStepParameter("DateTime", paramName, regexPattern);
 
             return new AnalyzedStepParameter("String", paramName, regexPattern);
         }
 
-        private static readonly Regex quotesRe = new Regex(@"""+(?<param>.*?)""+|'+(?<param>.*?)'+|(?<param>\<.*?\>)");
+        private static readonly Regex QuotesRe = new Regex(@"""+(?<param>.*?)""+|'+(?<param>.*?)'+|(?<param>\<.*?\>)");
         private IEnumerable<CaptureWithContext> RecognizeQuotedTexts(string stepText)
         {
-            return quotesRe.Matches(stepText)
+            return QuotesRe.Matches(stepText)
                            .Cast<Match>()
                            .Select(m => (Capture)m.Groups["param"])
                            .ToCaptureWithContext(ParameterType.Text);
         }
 
-        private static readonly Regex intRe = new Regex(@"-?\d+");
+        private static readonly Regex IntRe = new Regex(@"-?\d+");
 
         private IEnumerable<CaptureWithContext> RecognizeIntegers(string stepText)
         {
-            return intRe.Matches(stepText).ToCaptureWithContext(ParameterType.Int);
+            return IntRe.Matches(stepText).ToCaptureWithContext(ParameterType.Int);
         }
 
         private IEnumerable<CaptureWithContext> RecognizeDecimals(string stepText, CultureInfo bindingCulture)
         {
-            Regex decimalRe = new Regex(string.Format(@"-?\d+{0}\d+", bindingCulture.NumberFormat.NumberDecimalSeparator));
+            var decimalRe = new Regex($@"-?\d+{bindingCulture.NumberFormat.NumberDecimalSeparator}\d+");
             return decimalRe.Matches(stepText).ToCaptureWithContext(ParameterType.Decimal);
         }
 
-        private static readonly Regex dateRe = new Regex(string.Join("|", GetDateFormats()));
+        private static readonly Regex DateRe = new Regex(string.Join("|", GetDateFormats()));
 
         /// <summary>
         /// note: space separator not supported to prevent clashes
@@ -146,7 +144,7 @@ namespace TechTalk.SpecFlow.BindingSkeletons
 
         private IEnumerable<CaptureWithContext> RecognizeDates(string stepText)
         {
-            return dateRe.Matches(stepText).ToCaptureWithContext(ParameterType.Date);
+            return DateRe.Matches(stepText).ToCaptureWithContext(ParameterType.Date);
         }
     }
 

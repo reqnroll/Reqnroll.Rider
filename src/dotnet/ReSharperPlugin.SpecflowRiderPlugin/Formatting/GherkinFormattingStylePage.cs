@@ -16,7 +16,7 @@ using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
 {
     [OptionsPage(
-        PID,
+        Pid,
         "Gherkin (SpecFlow) Formatting Style",
         typeof(PsiFeaturesUnsortedOptionsThemedIcons.Indent),
         ParentId = CodeEditingPage.PID,
@@ -24,11 +24,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         FilterTags = new[] {ConfigFileUtils.EditorConfigName})]
     public class GherkinFormattingStylePage : CodeStylePage
     {
-        public const string PID = "GherkinDotnetFormattingStylePage";
+        public const string Pid = "GherkinDotnetFormattingStylePage";
 
         public override bool ShowAutoDetectAndConfigureFormattingTip => true;
 
-        public override string Id => PID;
+        public override string Id => Pid;
 
         public GherkinFormattingStylePage(Lifetime lifetime,
                                             [NotNull] OptionsSettingsSmartContext smartContext,

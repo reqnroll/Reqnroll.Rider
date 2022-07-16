@@ -70,7 +70,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             var grid = BeControls.GetGrid();
 
             var solution = otherPartSourceFile.GetSolution();
-            var project = otherPartSourceFile.GetProject().NotNull("otherPartSourceFile.GetProject() != null");
+            var project = otherPartSourceFile.GetProject().NotNull();
             grid.AddElement(BeControls.GetTextBox(lifetime, id: "filename")
                 .WithTextNotEmpty(lifetime, null)
                 .WithValidFileName(lifetime, null)

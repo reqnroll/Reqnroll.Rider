@@ -6,29 +6,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Extensions
 {
     public static class TreeNodeExtensions
     {
-        public static ITreeNode GetLastNodeInLine(this ITreeNode node)
-        {
-            while (node.NextSibling != null)
-                node = node.NextSibling;
-            return node;
-        }
-
-        public static IEnumerable<ITreeNode> GetChildrenInSubtrees(
-            [NotNull] this ITreeNode node)
-        {
-            if (node.FirstChild != null)
-            {
-                ITreeNode child;
-                for (child = node.FirstChild; child != null; child = child.NextSibling)
-                {
-                    yield return child;
-                    foreach (ITreeNode childrenInSubtree in child.GetChildrenInSubtrees())
-                        yield return childrenInSubtree;
-                }
-                child = (ITreeNode) null;
-            }
-        }
-
         public static IEnumerable<T> GetChildrenInSubtrees<T>([NotNull] this ITreeNode node) where T : class, ITreeNode
         {
             if (node.FirstChild != null)
@@ -38,10 +15,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Extensions
                 {
                     if (child is T obj)
                         yield return obj;
-                    foreach (T childrenInSubtree in child.GetChildrenInSubtrees<T>())
+                    foreach (var childrenInSubtree in child.GetChildrenInSubtrees<T>())
                         yield return childrenInSubtree;
                 }
-                child = (ITreeNode) null;
             }
         }
 

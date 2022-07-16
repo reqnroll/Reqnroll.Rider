@@ -177,7 +177,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
             if (projectFolder == null)
                 return null;
 
-            var project = projectFolder.GetProject().NotNull("projectFolder.GetProject() != null");
+            var project = projectFolder.GetProject().NotNull();
 
             var createNewFileTarget = new CreateNewFileTarget(
                 _reference.GetTreeNode(),
@@ -238,7 +238,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 return null;
 
             var clrTypeName = new ClrTypeName(fullClassName);
-            var project = projectFolder.GetProject().NotNull("projectFolder.GetProject() != null");
+            var project = projectFolder.GetProject().NotNull();
 
             var createNewFileTarget = new CreateNewFileTarget(
                 _reference.GetTreeNode(),

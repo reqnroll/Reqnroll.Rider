@@ -4,7 +4,7 @@ using JetBrains.Util;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.Tags
 {
-    public class SpecflowTagMarshaller : JetBrains.Util.PersistentMap.IUnsafeMarshaller<System.Collections.Generic.IList<string>>
+    public class SpecflowTagMarshaller : JetBrains.Util.PersistentMap.IUnsafeMarshaller<IList<string>>
     {
         public void Marshal(UnsafeWriter writer, IList<string> values)
         {

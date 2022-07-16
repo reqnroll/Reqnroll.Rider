@@ -33,11 +33,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
             {
                 if (element.Parent is IGherkinScenario scenario && !scenario.IsBackground())
                 {
-                    var title = scenario?.GetScenarioText();
+                    var title = scenario.GetScenarioText();
                     if (title == null)
                         context.AddHighlighting(new GherkinScenarioHasNoTitleError(token));
 
-                    var hasSameTitle = scenario?.Parent is GherkinFeature feature && feature.GetScenarios()
+                    var hasSameTitle = scenario.Parent is GherkinFeature feature && feature.GetScenarios()
                         .Where(s => !s.IsBackground()).Count(sc => sc.GetScenarioText() == title) > 1;
                     if (hasSameTitle)
                         context.AddHighlighting(new GherkinScenarioWithSameTitleError(token));
@@ -100,12 +100,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SyntaxError
                 current = current.PrevSibling;
             }
             return hasScenarioKeyword;
-        }
-
-        private bool IsAtStartOfLine(GherkinToken token)
-        {
-            return token.PrevSibling?.GetTokenType() == GherkinTokenTypes.NEW_LINE
-                   || token.PrevSibling?.GetTokenType() == GherkinTokenTypes.WHITE_SPACE && token.PrevSibling?.PrevSibling?.GetTokenType() == GherkinTokenTypes.NEW_LINE;
         }
 
         public void ProcessAfterInterior(ITreeNode element, IHighlightingConsumer context)

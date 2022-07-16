@@ -7,7 +7,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching
     [PolymorphicMarshaller(2)]
     public class CacheVersion
     {
-        [UsedImplicitly] public static UnsafeReader.ReadDelegate<object> ReadDelegate = r => new CacheVersion();
-        [UsedImplicitly] public static UnsafeWriter.WriteDelegate<object> WriteDelegate = (w, o) => { };
+        [UsedImplicitly] public static UnsafeReader.ReadDelegate<object> ReadDelegate = _ => new CacheVersion();
+        [UsedImplicitly] public static UnsafeWriter.WriteDelegate<object> WriteDelegate = (_, _) => { };
     }
 }

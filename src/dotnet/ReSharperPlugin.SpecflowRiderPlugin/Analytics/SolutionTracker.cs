@@ -78,13 +78,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
              ));
          }
 
-         private static bool ShowNotification(OpensUri opensUri, GuidanceStep guidance)
+         private static void ShowNotification(OpensUri opensUri, GuidanceStep guidance)
          {
              if (!opensUri.IsInternetConnected())
-                 return false;
-                         
+                 return;
+
              opensUri.OpenUri(new Uri(guidance.Url));
-             return true;
          }
      }
 }

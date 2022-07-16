@@ -15,17 +15,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectRefresher
     [SolutionComponent]
     public class ProjectRefresher
     {
-        private readonly ISolution solution;
+        private readonly ISolution _solution;
 
         public ProjectRefresher(ISolution solution, ISolutionBuilder solutionBuilder, Lifetime lifetime)
         {
-            this.solution = solution;
+            _solution = solution;
             solutionBuilder.RunningRequest.ForEachValue_NotNull(lifetime, (_, request) => HandleNewRequest(request));
         }
 
         private void HandleNewRequest(SolutionBuilderRequest request)
         {
-            var myProjectsHostContainer = solution.ProjectsHostContainer();
+            var myProjectsHostContainer = _solution.ProjectsHostContainer();
             var solutionHost = myProjectsHostContainer.GetComponent<ISolutionHost>();
             request.AfterBuildCompleted.Advise(request.Lifetime, () =>
             {

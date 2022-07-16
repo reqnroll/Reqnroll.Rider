@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+// ReSharper disable once CheckNamespace
 namespace TechTalk.SpecFlow.Tracing
 {
     /// <summary>
@@ -37,16 +38,16 @@ namespace TechTalk.SpecFlow.Tracing
             return identifier;
         }
 
-        static private readonly Regex firstWordCharRe = new Regex(@"(?<pre>[^\p{Ll}\p{Lu}]+)(?<fc>[\p{Ll}\p{Lu}])");
-        static private readonly Regex punctCharRe = new Regex(@"[\n\.-]+");
+        static private readonly Regex FirstWordCharRe = new Regex(@"(?<pre>[^\p{Ll}\p{Lu}]+)(?<fc>[\p{Ll}\p{Lu}])");
+        static private readonly Regex PunctCharRe = new Regex(@"[\n\.-]+");
 
         public static string ToIdentifierPart(this string text)
         {
             text = RemoveQuotationCharacters(text);
 
-            text = firstWordCharRe.Replace(text, match => match.Groups["pre"].Value + match.Groups["fc"].Value.ToUpper());
+            text = FirstWordCharRe.Replace(text, match => match.Groups["pre"].Value + match.Groups["fc"].Value.ToUpper());
 
-            text = punctCharRe.Replace(text, "_");
+            text = PunctCharRe.Replace(text, "_");
 
             text = RemoveAccentAndPunctuationChars(text);
 
@@ -66,7 +67,7 @@ namespace TechTalk.SpecFlow.Tracing
         }
 
         #region Accent replacements
-        static private Dictionary<string, string> accentReplacements = new Dictionary<string, string>()
+        static private Dictionary<string, string> _accentReplacements = new Dictionary<string, string>()
                                                                 {
                                                                     {"\u00C0", "A"},
                                                                     {"\u00C1", "A"},
@@ -185,28 +186,28 @@ namespace TechTalk.SpecFlow.Tracing
                                                                 };
         #endregion
 
-        static private readonly Regex nonIdentifierRe = new Regex(@"[^\p{Ll}\p{Lu}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Nd}\p{Pc}]");
-        static private readonly Regex nonLatinRe = new Regex("[^a-zA-Z]");
+        static private readonly Regex NonIdentifierRe = new Regex(@"[^\p{Ll}\p{Lu}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Nd}\p{Pc}]");
+        static private readonly Regex NonLatinRe = new Regex("[^a-zA-Z]");
 
         public static string RemoveAccentAndPunctuationChars(string text)
         {
-            var nonIdRemoved = nonIdentifierRe.Replace(text, String.Empty);
+            var nonIdRemoved = NonIdentifierRe.Replace(text, String.Empty);
 
-            return nonLatinRe.Replace(nonIdRemoved, match =>
+            return NonLatinRe.Replace(nonIdRemoved, match =>
             {
                 string result;
                 // if there is a Latin substitute, we use that
-                if (accentReplacements.TryGetValue(match.Value, out result))
+                if (_accentReplacements.TryGetValue(match.Value, out result))
                     return result;
                 return match.Value;
             });
         }
 
-        static private readonly Regex singleAndDoubleQuotes = new Regex(@"['""]");
+        static private readonly Regex SingleAndDoubleQuotes = new Regex(@"['""]");
 
         public static string RemoveQuotationCharacters(string text)
         {
-            return singleAndDoubleQuotes.Replace(text, String.Empty);
+            return SingleAndDoubleQuotes.Replace(text, String.Empty);
         }
     }
 }

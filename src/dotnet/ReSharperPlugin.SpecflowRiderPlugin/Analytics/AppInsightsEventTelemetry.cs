@@ -51,14 +51,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
                     Properties = new Dictionary<string, string>(analyticsEvent.Properties)
                     {
                         { "UserId", userId },
-                        { "Platform", GetOSPlatform() ?? DefaultValue },
+                        { "Platform", GetOsPlatform() ?? DefaultValue },
                         { "PlatformDescription", RuntimeInformation.OSDescription },
                     }
                 }
             };
         }
 
-        private string GetOSPlatform()
+        private string GetOsPlatform()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

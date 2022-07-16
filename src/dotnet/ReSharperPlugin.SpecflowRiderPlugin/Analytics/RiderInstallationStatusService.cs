@@ -10,10 +10,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
     public class RiderInstallationStatusService : IRiderInstallationStatusService
     {
         private readonly IAnalyticsTransmitter _analyticsTransmitter;
-        private RiderInstallationStatus currentStatusData;
-        private static readonly string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
-        private static readonly string specFlowFolder = Path.Combine(appDataFolder, "SpecFlow");
-        private static readonly string specflowRiderPluginFilePath = Path.Combine(specFlowFolder, "specflowriderplugin.json");
+        private RiderInstallationStatus _currentStatusData;
+        private static readonly string AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
+        private static readonly string SpecFlowFolder = Path.Combine(AppDataFolder, "SpecFlow");
+        private static readonly string SpecflowRiderPluginFilePath = Path.Combine(SpecFlowFolder, "specflowriderplugin.json");
 
         public RiderInstallationStatusService(IAnalyticsTransmitter analyticsTransmitter)
         {
@@ -25,26 +25,26 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
             var today = DateTime.Today;
             var currentPluginVersion = Assembly.GetExecutingAssembly().GetName().Version;
 
-            if (currentStatusData == null)
+            if (_currentStatusData == null)
             {
-                currentStatusData = new RiderInstallationStatus()
+                _currentStatusData = new RiderInstallationStatus()
                 {
                     InstallDate = today,
                     InstalledVersion = currentPluginVersion.ToString(),
                     LastUsedDate = today,
                     UsageDays = 1
                 };
-                if (!File.Exists(specflowRiderPluginFilePath))
+                if (!File.Exists(SpecflowRiderPluginFilePath))
                 {
                     _analyticsTransmitter.TransmitRuntimeEvent(new GenericEvent("Rider Extension installed"));
-                    SaveNewStatus(currentStatusData);
+                    SaveNewStatus(_currentStatusData);
                 }
                 else
                 {
                     try
                     {
-                        currentStatusData = JsonConvert.DeserializeObject<RiderInstallationStatus>(
-                            File.ReadAllText(specflowRiderPluginFilePath));
+                        _currentStatusData = JsonConvert.DeserializeObject<RiderInstallationStatus>(
+                            File.ReadAllText(SpecflowRiderPluginFilePath));
                     }
                     catch
                     {
@@ -52,15 +52,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
                     }
                 }
             }
-            return currentStatusData;
+            return _currentStatusData;
         }
 
         public void SaveNewStatus(RiderInstallationStatus newStatus)
         {
             try
             {
-                currentStatusData = newStatus;
-                File.WriteAllText(specflowRiderPluginFilePath, JsonConvert.SerializeObject(currentStatusData));
+                _currentStatusData = newStatus;
+                File.WriteAllText(SpecflowRiderPluginFilePath, JsonConvert.SerializeObject(_currentStatusData));
             }
             catch
             {

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JetBrains.Application.Settings;
 using JetBrains.DataStructures;
@@ -33,7 +32,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Service
     }
     
     
-    [DaemonStage(StagesBefore = new Type[] {typeof (SmartResolverStage)})]
+    [DaemonStage(StagesBefore = new[] {typeof (SmartResolverStage)})]
     public class TestCodeFoldingStage : IDaemonStage
     {
         public IEnumerable<IDaemonStageProcess> CreateProcess(
@@ -43,7 +42,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests.Service
         {
             if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
                 return ImmutableArray<IDaemonStageProcess>.Empty;
-            return new CodeFoldingProcess[1]
+            return new[]
             {
                 new CodeFoldingProcess(process, settings)
             };

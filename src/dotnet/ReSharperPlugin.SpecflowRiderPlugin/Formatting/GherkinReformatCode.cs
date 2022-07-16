@@ -22,13 +22,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         public PsiLanguageType LanguageType => GherkinLanguage.Instance.NotNull();
         public bool IsAvailableOnSelection => true;
 
-        private static readonly Descriptor ourDescriptor = new Descriptor();
+        private static readonly Descriptor OurDescriptor = new Descriptor();
         public ICollection<CodeCleanupOptionDescriptor> Descriptors
         {
-            get { return new CodeCleanupOptionDescriptor[] { ourDescriptor }; }
+            get { return new CodeCleanupOptionDescriptor[] { OurDescriptor }; }
         }
         public bool IsAvailable(IPsiSourceFile sourceFile) => sourceFile.IsLanguageSupported<GherkinLanguage>();
-        public bool IsAvailable(CodeCleanupProfile profile) => profile.GetSetting(ourDescriptor);
+        public bool IsAvailable(CodeCleanupProfile profile) => profile.GetSetting(OurDescriptor);
 
         public void SetDefaultSetting(CodeCleanupProfile profile, CodeCleanupService.DefaultProfileType profileType)
         {
@@ -37,7 +37,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 case CodeCleanupService.DefaultProfileType.FULL:
                 case CodeCleanupService.DefaultProfileType.REFORMAT:
                 case CodeCleanupService.DefaultProfileType.CODE_STYLE:
-                    profile.SetSetting(ourDescriptor, true);
+                    profile.SetSetting(OurDescriptor, true);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("profileType");
@@ -48,7 +48,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         {
             var solution = sourceFile.GetSolution();
 
-            if (!profile.GetSetting(ourDescriptor)) return;
+            if (!profile.GetSetting(OurDescriptor)) return;
 
             var psiServices = sourceFile.GetPsiServices();
             GherkinFile[] files;

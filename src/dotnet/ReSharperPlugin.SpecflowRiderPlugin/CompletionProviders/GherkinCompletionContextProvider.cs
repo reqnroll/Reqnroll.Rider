@@ -48,7 +48,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             var isStartOfLine = IsStartOfLine(nodeUnderCursor, out var startOfLineText);
 
             var ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange());
-            if (nodeUnderCursor is GherkinToken token && token.IsWhitespaceToken() && token?.PrevSibling?.GetTokenType() == GherkinTokenTypes.NEW_LINE)
+            if (nodeUnderCursor is GherkinToken token && token.IsWhitespaceToken() && token.PrevSibling?.GetTokenType() == GherkinTokenTypes.NEW_LINE)
                 ranges = GetTextLookupRanges(context, nodeUnderCursor.GetDocumentRange().SetStartTo(context.CaretDocumentOffset));
 
             if (interestingNode is GherkinTag tag)

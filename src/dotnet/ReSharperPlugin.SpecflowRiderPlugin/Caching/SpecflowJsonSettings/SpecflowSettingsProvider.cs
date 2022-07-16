@@ -42,7 +42,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings
 
         public SpecflowSettings GetSettings(IProject project)
         {
-            var settings = _settingsRepository.GetOrAdd(project, o => new SpecflowSettings());
+            var settings = _settingsRepository.GetOrAdd(project, _ => new SpecflowSettings());
 
             return settings;
         }

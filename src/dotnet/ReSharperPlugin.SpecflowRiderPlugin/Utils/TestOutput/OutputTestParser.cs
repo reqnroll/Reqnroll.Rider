@@ -115,7 +115,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
             return content.ToString();
         }
 
-        private bool Advance()
+        private void Advance()
         {
             bool hasNext = _enumerator.MoveNext();
             if (hasNext)
@@ -125,7 +125,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput
                 _currentLine = null;
                 _eof = true;
             }
-            return hasNext;
         }
 
         public void Dispose()

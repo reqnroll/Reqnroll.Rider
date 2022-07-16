@@ -5,8 +5,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
 {
     public class FailedStepCacheEntry
     {
-        public string FeatureText { get; set; }
-        public string ScenarioText { get; set; }
+        public string FeatureText { get; init; }
+        public string ScenarioText { get; init; }
         public IList<StepTestOutput> StepsOutputs { get; set; }
 
         protected bool Equals(FailedStepCacheEntry other)
@@ -20,7 +20,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.FailedStep
                 return false;
             if (ReferenceEquals(this, obj))
                 return true;
-            if (obj.GetType() != this.GetType())
+            if (obj.GetType() != GetType())
                 return false;
             return Equals((FailedStepCacheEntry) obj);
         }

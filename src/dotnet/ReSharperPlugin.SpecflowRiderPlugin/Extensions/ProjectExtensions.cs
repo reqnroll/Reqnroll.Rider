@@ -17,7 +17,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Extensions
         public static ICSharpFile GetCSharpFile(this IProject project, string filename)
         {
             var sourceFileInProject = project.GetPsiSourceFileInProject(VirtualFileSystemPath.Parse(filename, InteractionContext.Local, FileSystemPathInternStrategy.INTERN));
-            return sourceFileInProject?.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault<ICSharpFile>();
+            return sourceFileInProject?.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault();
         }
 
         [CanBeNull]
