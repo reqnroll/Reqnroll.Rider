@@ -21,14 +21,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectTemplateParameters
             }
             
             var options = new List<RdProjectTemplateGroupOption>();
-            foreach (var choice in parameter.Choices)
+            if (parameter.Choices != null)
             {
-                var content = factory.CreateNextParameters(new[] {expander}, index + 1, context);
+                foreach (var choice in parameter.Choices)
+                {
+                    var content = factory.CreateNextParameters(new[] {expander}, index + 1, context);
                 
-                options.Add(new RdProjectTemplateGroupOption(
-                    choice.Key,
-                    choice.Value.Description ?? choice.Key,
-                    null, content));
+                    options.Add(new RdProjectTemplateGroupOption(
+                        choice.Key,
+                        choice.Value.Description ?? choice.Key,
+                        null, content));
+                }
             }
             return new RdProjectTemplateGroupParameter(Name,PresentableName, parameter.DefaultValue, Tooltip, options);
         }
