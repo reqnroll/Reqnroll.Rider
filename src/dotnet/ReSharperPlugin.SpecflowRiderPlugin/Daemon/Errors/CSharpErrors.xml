@@ -35,6 +35,11 @@
 				<Title>Unresolved SpecFlow step</Title>
 				<Description>No step definition was found for the step.</Description>
 			</Tag>
+			<Tag externalName="IgnoredStepNotResolvedInfo.HIGHLIGHTING_ID"
+				 default="SUGGESTION">
+				<Title>Unresolved SpecFlow step</Title>
+				<Description>No step definition was found for the step.</Description>
+			</Tag>
 			<Tag externalName="MethodNameMismatchPatternInfo.HIGHLIGHTING_ID"
 				 default="HINT">
 				<Title>Method name and specflow step pattern does not match</Title>
@@ -97,6 +102,12 @@
 		<Range>GherkinStep.GetDocumentRange()</Range>
 		<Behavour overlapResolvePolicy="NONE" />
 	</Error>
+	<Info name="IgnoredStepNotResolved" configurableSeverity="SpecFlow.IgnoredStepNotResolved">
+		<Parameter type="ReSharperPlugin.SpecflowRiderPlugin.Psi.GherkinStep" name="gherkinStep"/>
+		<Message value="Cannot find a matching step definition" />
+		<Range>GherkinStep.GetDocumentRange()</Range>
+		<Behavour overlapResolvePolicy="NONE" />
+	</Info>
 	<Info name="MethodNameMismatchPattern" configurableSeverity="SpecFlow.MethodNameMismatchPattern">
 		<Parameter type="IMethodDeclaration" name="method"/>
 		<Parameter type="string" name="expectedName" />

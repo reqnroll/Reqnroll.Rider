@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using JetBrains.Diagnostics;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -50,6 +52,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighligh
         {
             if (element is GherkinStep gherkinStep)
             {
+                var isIgnored = gherkinStep.GetEffectiveTags().Any(tag => tag.Equals("ignore", StringComparison.OrdinalIgnoreCase));
                 var references = gherkinStep.GetFirstClassReferences();
                 foreach (var reference in references)
                 {
@@ -61,15 +64,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.UnresolvedReferenceHighligh
                     if (error == ResolveErrorType.OK)
                         return;
 
-                    // ReSharper disable once AssignNullToNotNullAttribute
-                    if (_resolveHighlighterRegistrar.ContainsHandler(GherkinLanguage.Instance, error))
-                    {
-                        var highlighting = _resolveHighlighterRegistrar.GetResolveHighlighting(reference, error);
-                        if (highlighting != null)
-                            context.AddHighlighting(highlighting);
-                    }
+                    if (isIgnored)
+                        context.AddHighlighting(new IgnoredStepNotResolvedInfo(gherkinStep));
                     else
-                        context.AddHighlighting(new StepNotResolvedError(gherkinStep));
+                    {
+                        if (_resolveHighlighterRegistrar.ContainsHandler(GherkinLanguage.Instance.NotNull(), error))
+                        {
+                            var highlighting = _resolveHighlighterRegistrar.GetResolveHighlighting(reference, error);
+                            if (highlighting != null)
+                                context.AddHighlighting(highlighting);
+                        }
+                        else
+                            context.AddHighlighting(new StepNotResolvedError(gherkinStep));
+                    }
                 }
             }
         }

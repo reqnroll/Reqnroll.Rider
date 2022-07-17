@@ -7,6 +7,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 {
     public class GherkinFeature : GherkinElement
     {
+        [CanBeNull] private IList<string> _cachedTags;
+
         public GherkinFeature() : base(GherkinNodeTypes.FEATURE)
         {
         }
@@ -28,5 +30,25 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 .Concat(this.Children<GherkinScenarioOutline>())
                 .Concat(this.Children<GherkinRule>().SelectMany(x => x.Children<GherkinScenario>()));
         }
+
+        public IList<string> GetTags()
+        {
+            return _cachedTags ??= ListTags().ToList();
+
+        }
+
+        private IEnumerable<string> ListTags()
+        {
+            var node = PrevSibling;
+            while (node != null)
+            {
+                if (node is GherkinTag tag)
+                    yield return tag.GetTagText();
+                else if (!node.IsWhitespaceToken() && node is not GherkinLanguageComment)
+                    break;
+                node = node.PrevSibling;
+            }
+        }
+
     }
 }

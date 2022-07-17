@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Intentions;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Feature.Services.Resources;
@@ -13,20 +14,29 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
     public class CreateMissingStepQuickFix : IQuickFix
     {
         private readonly StepNotResolvedError _error;
+        private readonly IgnoredStepNotResolvedInfo _info;
 
         public CreateMissingStepQuickFix(StepNotResolvedError error)
         {
             _error = error;
         }
 
+        public CreateMissingStepQuickFix(IgnoredStepNotResolvedInfo info)
+        {
+            _info = info;
+        }
+
         public IEnumerable<IntentionAction> CreateBulbItems()
         {
-            var psiServices = _error.GherkinStep.GetPsiServices();
+            var gherkinStep = _error?.GherkinStep ?? _info?.GherkinStep;
+            if (gherkinStep == null)
+                return Enumerable.Empty<IntentionAction>();
+            var psiServices = gherkinStep.GetPsiServices();
 
             return new List<IntentionAction>
             {
                 new IntentionAction(new CreateSpecflowStepFromUsageAction(
-                    _error.GherkinStep.GetStepReference(),
+                    gherkinStep.GetStepReference(),
                     psiServices.GetComponent<IMenuModalUtil>(),
                     psiServices.GetComponent<ICreateStepClassDialogUtil>(),
                     psiServices.GetComponent<ICreateStepPartialClassFile>(),

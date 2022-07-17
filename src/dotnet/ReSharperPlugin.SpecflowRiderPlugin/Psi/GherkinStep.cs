@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
+using JetBrains.ReSharper.Psi.IL.Resources;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
 using ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput;
@@ -32,6 +34,17 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             if (token == null)
                 return new DocumentRange(LastChild.GetDocumentEndOffset(), LastChild.GetDocumentEndOffset());
             return new DocumentRange(token.GetDocumentStartOffset(), LastChild.GetDocumentEndOffset());
+        }
+
+        public IEnumerable<string> GetEffectiveTags()
+        {
+            var gherkinScenario = GetContainingNode<GherkinScenario>();
+            if (gherkinScenario == null)
+                return Enumerable.Empty<string>();
+            var gherkinFeature = gherkinScenario.GetContainingNode<GherkinFeature>();
+            if (gherkinFeature == null)
+                return gherkinScenario.GetTags();
+            return gherkinScenario.GetTags().Concat(gherkinFeature.GetTags());
         }
 
         private ITreeNode GetFirstTextToken()
