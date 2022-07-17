@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Impl;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
@@ -20,6 +23,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             var relatedText = string.Empty;
             var nodeUnderCursor = TextControlToPsi.GetElement<ITreeNode>(context.Solution, context.TextControl);
 
+            if (IsInIndentPart(nodeUnderCursor))
+                return null;
             if (IsAfterKeywordExpectingText(nodeUnderCursor))
                 return null;
 
@@ -115,8 +120,37 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             return true;
         }
 
+
+        private bool IsInIndentPart(ITreeNode nodeUnderCursor)
+        {
+            if (!IsAtLineStart(nodeUnderCursor))
+                return false;
+
+            return GetNodesUntilEol(nodeUnderCursor.NextSibling).Any(x => !x.IsWhitespaceToken());
+        }
+
+        private bool IsAtLineStart(ITreeNode nodeUnderCursor)
+        {
+            if (nodeUnderCursor.NodeType == GherkinTokenTypes.NEW_LINE)
+                return true;
+
+            return nodeUnderCursor.IsWhitespaceToken() && nodeUnderCursor.PrevSibling?.NodeType == GherkinTokenTypes.NEW_LINE;
+        }
+
+        [ItemCanBeNull]
+        private IEnumerable<ITreeNode> GetNodesUntilEol(ITreeNode node)
+        {
+            while (node != null && node.NodeType != GherkinTokenTypes.NEW_LINE)
+            {
+                yield return node;
+                node = node.NextSibling;
+            }
+        }
+
         private bool IsAfterKeywordExpectingText(ITreeNode nodeUnderCursor)
         {
+            if (nodeUnderCursor.NodeType == GherkinTokenTypes.NEW_LINE)
+                return false;
             if (nodeUnderCursor.IsWhitespaceToken()
                 || nodeUnderCursor is GherkinToken token && (token.NodeType == GherkinTokenTypes.TEXT || token.NodeType == GherkinTokenTypes.COLON))
             {
