@@ -49,7 +49,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         {
             var settings = context.BasicContext.PsiServices.GetComponent<SpecflowSettingsProvider>();
             var keywordProvider = context.BasicContext.PsiServices.LanguageManager.GetService<GherkinKeywordProvider>(GherkinLanguage.Instance.NotNull());
-            var keywordList = keywordProvider.GetKeywordsList(context.GherkinFile.Lang ?? settings.GetSettings(context.BasicContext.File.GetProject()).Language.Feature);
+            var project = context.BasicContext.File.GetProject();
+            var keywordList = keywordProvider.GetKeywordsList(context.GherkinFile.Lang ?? settings.GetSettings(project).Language.Feature);
 
             if (context.NodeUnderCursor is IGherkinScenario)
                 return AddKeywordsLookupItemsForScenario(keywordList, context, collector);

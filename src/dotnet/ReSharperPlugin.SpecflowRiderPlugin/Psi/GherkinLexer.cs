@@ -17,7 +17,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private int _lastNewLineOffset;
         private string _myCurLanguage;
         private string _closingPyStringMarker;
-        
+
         private IReadOnlyCollection<string> _myKeywords;
         private readonly GherkinKeywordProvider _keywordProvider;
 
@@ -35,13 +35,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private const string PYSTRING_BACKTICK_MARKER = "```";
         // ReSharper restore InconsistentNaming
 
-        public GherkinLexer(IBuffer buffer, GherkinKeywordProvider keywordProvider, SpecflowSettingsProvider settingsProvider)
+        public GherkinLexer(IBuffer buffer, GherkinKeywordProvider keywordProvider, SpecflowSettingsProvider specflowSettingsProvider)
         {
             Buffer = buffer;
             _keywordProvider = keywordProvider;
-            
-            var settings = settingsProvider.GetDefaultSettings();
-            UpdateLanguage(settings.Language.NeutralFeature);
+
+            UpdateLanguage(specflowSettingsProvider.GetDefaultSettings().Language.NeutralFeature);
         }
 
         public void Start()
@@ -70,7 +69,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
             _myCurrentTokenStart = _currentPosition;
             char c = Buffer[_currentPosition];
-            if (char.IsWhiteSpace(c) && (IsNewLine(out _) ||  !InPyStringText()))
+            if (char.IsWhiteSpace(c) && (IsNewLine(out _) || !InPyStringText()))
             {
                 TokenType = GherkinTokenTypes.WHITE_SPACE;
                 if (AdvanceNewLine())
@@ -330,29 +329,36 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             return commentText.StartsWith("language:") ? commentText.Substring(9).Trim() : null;
         }
 
-        private bool IsStringAtPosition(string keyword) {
+        private bool IsStringAtPosition(string keyword)
+        {
             int length = keyword.Length;
             return _myEndOffset - _currentPosition >= length && Buffer.GetText(new TextRange(_currentPosition, _currentPosition + length)).Equals(keyword, StringComparison.Ordinal);
         }
 
-        private bool IsStringAtPosition(string keyword, int position) {
+        private bool IsStringAtPosition(string keyword, int position)
+        {
             int length = keyword.Length;
             return _myEndOffset - position >= length && Buffer.GetText(new TextRange(position, position + length)).Equals(keyword, StringComparison.Ordinal);
         }
 
-        private static bool IsValidTagChar(char c) {
+        private static bool IsValidTagChar(char c)
+        {
             return !char.IsWhiteSpace(c) && c != '@';
         }
-        
-        private void AdvanceToParameterEnd(string endSymbol) {
+
+        private void AdvanceToParameterEnd(string endSymbol)
+        {
             _currentPosition++;
             int mark = _currentPosition;
-            while (_currentPosition < _myEndOffset && !IsStringAtPosition(endSymbol) && Buffer[_currentPosition] != '>') {
+            while (_currentPosition < _myEndOffset && !IsStringAtPosition(endSymbol) && Buffer[_currentPosition] != '>')
+            {
                 _currentPosition++;
             }
 
-            if (_currentPosition < _myEndOffset) {
-                if (IsStringAtPosition(endSymbol)) {
+            if (_currentPosition < _myEndOffset)
+            {
+                if (IsStringAtPosition(endSymbol))
+                {
                     _myState = STATE_DEFAULT;
                 }
             }
@@ -365,11 +371,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             while (_currentPosition > mark && char.IsWhiteSpace(Buffer[_currentPosition - 1]))
                 _currentPosition--;
         }
-        
-        private void AdvanceToEol() {
+
+        private void AdvanceToEol()
+        {
             _currentPosition++;
             int mark = _currentPosition;
-            while (_currentPosition < _myEndOffset && Buffer[_currentPosition] != '\n') {
+            while (_currentPosition < _myEndOffset && Buffer[_currentPosition] != '\n')
+            {
                 _currentPosition++;
             }
             ReturnWhitespace(mark);
@@ -380,22 +388,28 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         {
             while (_currentPosition < _myEndOffset
                    && !IsStepParameter(_closingPyStringMarker)
-                   && !IsNewLine(out _)) {
+                   && !IsNewLine(out _))
+            {
                 _currentPosition++;
             }
         }
 
-        private void AdvanceToParameterOrSymbol(string s, uint parameterState, bool shouldReturnWhitespace) {
+        private void AdvanceToParameterOrSymbol(string s, uint parameterState, bool shouldReturnWhitespace)
+        {
             int mark = _currentPosition;
 
-            while (_currentPosition < _myEndOffset && !IsStringAtPosition(s) && !IsStepParameter(s)) {
+            while (_currentPosition < _myEndOffset && !IsStringAtPosition(s) && !IsStepParameter(s))
+            {
                 _currentPosition++;
             }
 
-            if (shouldReturnWhitespace) {
+            if (shouldReturnWhitespace)
+            {
                 _myState = STATE_DEFAULT;
-                if (_currentPosition < _myEndOffset) {
-                    if (!IsStringAtPosition(s)) {
+                if (_currentPosition < _myEndOffset)
+                {
+                    if (!IsStringAtPosition(s))
+                    {
                         _myState = parameterState;
                     }
                 }
@@ -403,12 +417,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 ReturnWhitespace(mark);
             }
         }
-        
-        private bool IsStepParameter(string currentElementTerminator) {
+
+        private bool IsStepParameter(string currentElementTerminator)
+        {
             int pos = _currentPosition;
 
-            if (Buffer[pos] == '<') {
-                while (pos < _myEndOffset && Buffer[pos] != '\n' && Buffer[pos] != '>' && !IsStringAtPosition(currentElementTerminator, pos)) {
+            if (Buffer[pos] == '<')
+            {
+                while (pos < _myEndOffset && Buffer[pos] != '\n' && Buffer[pos] != '>' && !IsStringAtPosition(currentElementTerminator, pos))
+                {
                     pos++;
                 }
 
@@ -420,13 +437,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
 
         public object CurrentPosition { get => _currentPosition; set => _currentPosition = (int)value; }
-        
+
         public TokenNodeType TokenType { get; private set; }
-        
+
         public int TokenStart => _myCurrentTokenStart;
-        
+
         public int TokenEnd => _currentPosition;
-        
+
         public IBuffer Buffer { get; }
 
         public uint State => _myState;
