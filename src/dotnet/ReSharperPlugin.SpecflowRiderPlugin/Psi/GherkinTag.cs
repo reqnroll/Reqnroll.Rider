@@ -19,7 +19,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public string GetTagText()
         {
             var textToken = this.FindChild<GherkinToken>(o => o.NodeType == GherkinTokenTypes.TAG);
-            return textToken?.GetText()?.Substring(1);
+            return textToken?.GetText().Substring(1);
         }
 
         public string GetStepTextBeforeCaret(DocumentOffset caretLocation)

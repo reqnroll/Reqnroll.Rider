@@ -6,6 +6,7 @@ using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.Files;
+using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Extensions;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
@@ -42,7 +43,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.Tags
 
             var tags = new List<string>();
             var tagsNodes = gherkinFile.GetChildrenInSubtrees<GherkinTag>();
-            tags.AddRange(tagsNodes.Select(x => x.GetTagText()));
+            tags.AddRange(tagsNodes.Select(x => x.GetTagText()).WhereNotNull());
             return tags;
         }
     }

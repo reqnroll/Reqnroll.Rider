@@ -23,9 +23,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
         {
             if (context.NodeUnderCursor is not GherkinTag)
                 return false;
+            if (context.RelatedText.Length == 0)
+                return false;
+
+            var textToComplete = context.RelatedText.Substring(1);
 
             var specflowTagsCache = context.BasicContext.PsiServices.GetComponent<SpecflowTagsCache>();
-            var matchingTags = specflowTagsCache.GetAllTags().Where(x => x.StartsWith(context.RelatedText.Substring(1))).OrderBy();
+            var matchingTags = specflowTagsCache.GetAllTags().Where(x => x.StartsWith(textToComplete)).OrderBy();
 
            foreach (var matchingTag in matchingTags)
            {
