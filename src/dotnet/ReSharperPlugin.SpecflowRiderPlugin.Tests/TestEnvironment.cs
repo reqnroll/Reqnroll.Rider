@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using JetBrains.Application.BuildScript.Application.Zones;
+using JetBrains.ReSharper.Features.ReSpeller;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
@@ -12,7 +13,10 @@ using NUnit.Framework;
 namespace ReSharperPlugin.SpecflowRiderPlugin.Tests
 {
   [ZoneDefinition]
-  public interface ISpecflowRiderPluginTestZone : ITestsEnvZone, IRequire<PsiFeatureTestZone>
+  public interface ISpecflowRiderPluginTestZone
+    : ITestsEnvZone,
+      IRequire<PsiFeatureTestZone>,
+      IRequire<IReSpellerZone>
   {
   }
 
