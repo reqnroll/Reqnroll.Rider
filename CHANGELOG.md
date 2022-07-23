@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.14.2
+### Added
+- Hide live template and other completion items added by other plugin when completing steps
+- Add support for backticks in Doc strings (multiline string) [#75](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/75)
+(- When specflow.json is not available, use config from App.config  [#162](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/162)
+- Disable code completion in case of adding spaces before a step. [#147](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/147)
+- Do not show unresolved step warning for ignored scenarios. [#137](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/137)
+
+### Fixed
+- Fix invalid step resolution when using method name and parameter is a integer
+
 ## 1.14.1
 ### Added
 - Enable spell check in .feature [#153](https://github.com/SpecFlowOSS/SpecFlow.Rider/issues/153)
