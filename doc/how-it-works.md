@@ -4,7 +4,7 @@ This document describes how this plugin is working. It aims to explain some basi
 
 ## PSI (Lexer / Parser)
 
-The custom language part is explained [in the resharper dev guide](https://www.jetbrains.com/help/resharper/sdk/CustomLanguages/Overview.html)
+The custom language part is explained [in the resharper dev guide](https://www.jetbrains.com/help/resharper/sdk/CustomLanguages_Overview.html)
 
 The language behind `.feature` is Gherkin, so every class related to the language part are named with `Gherkin` in them (And the one related to SpecFlow like references between C# / .feature and other things like that are name with `Specflow`.
 
@@ -105,7 +105,7 @@ There is a tricky part here with specflow, to get the `Find Usages` working sinc
 
 ## Quick fixes
 
-Quick fixes are actions, linked to a highlighting, see the doc [here](https://www.jetbrains.com/help/resharper/sdk/Features/Actions/QuickFixes.html) 
+Quick fixes are actions, linked to a highlighting, see the doc [here](https://www.jetbrains.com/help/resharper/sdk/QuickFixes.html) 
 
 ### CreateMissingStepQuickFix
 
