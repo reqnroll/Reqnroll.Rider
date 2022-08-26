@@ -4,7 +4,7 @@ This document describes how this plugin is working. It aims to explain some basi
 
 ## PSI (Lexer / Parser)
 
-The custom language part is explained [in the resharper dev guide](https://www.jetbrains.com/help/resharper/sdk/CustomLanguages/Overview.html)
+The custom language part is explained [in the resharper dev guide](https://www.jetbrains.com/help/resharper/sdk/CustomLanguages_Overview.html)
 
 The language behind `.feature` is Gherkin, so every class related to the language part are named with `Gherkin` in them (And the one related to SpecFlow like references between C# / .feature and other things like that are name with `Specflow`.
 
@@ -42,7 +42,7 @@ Those daemons can be called in various context (see `DaemonProcessKind`) for exa
 
 ### UnresolvedReferenceHighlight
 
-This daemon adds highlighting on steps that does not have any step definition in C# code. It's not doing much, only trying to resolve each `GherkinStep` and if they cannot be resolved it add highlithing
+This daemon adds highlighting on steps that do not have any step definition in C# code. It's not doing much, only trying to resolve each `GherkinStep` and if they cannot be resolved it add highlighting.
 
 See References section below for more details about this.
 
@@ -105,7 +105,7 @@ There is a tricky part here with specflow, to get the `Find Usages` working sinc
 
 ## Quick fixes
 
-Quick fixes are actions, linked to a highlighting, see the doc [here](https://www.jetbrains.com/help/resharper/sdk/Features/Actions/QuickFixes.html) 
+Quick fixes are actions, linked to a highlighting, see the doc [here](https://www.jetbrains.com/help/resharper/sdk/QuickFixes.html) 
 
 ### CreateMissingStepQuickFix
 
@@ -156,7 +156,7 @@ The `compileDotNet` task is configured in the `build.grade` to take this paramet
 - When running rider (using gradle `:runIde`) You can attach the process `dotnet exec --runtimeconfig` to debug the extensions and explore rider code.
 - You can access Resharper decompiled from rider using `Go to symbol...` by name, of by using `Go To definition` / `Find usage`.
 - The jetbrains dev guide is sometimes outdated and example does not always work.
-- To search the jetbrains dev guide, seach directly in the markdown files available [here](https://github.com/JetBrains/resharper-devguide)
+- To search the jetbrains dev guide, search directly in the markdown files available [here](https://github.com/JetBrains/resharper-devguide)
 - Here are some plugins that can be used as example
     - https://github.com/jetbrains/ForTea
     - https://github.com/JetBrains/resharper-unity
