@@ -3,9 +3,9 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
-    id 'org.jetbrains.intellij' version '1.10.0-SNAPSHOT'     // https://github.com/JetBrains/gradle-intellij-plugin/releases
-    id 'com.jetbrains.rdgen' version '2022.3.1'    // https://github.com/JetBrains/rd/releases
+    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+    id 'org.jetbrains.intellij' version '1.10.0'     // https://github.com/JetBrains/gradle-intellij-plugin/releases
+    id 'com.jetbrains.rdgen' version '2022.3.4'    // https://github.com/JetBrains/rd/releases
 }
 
 ext {
@@ -25,7 +25,7 @@ repositories {
 }
 
 wrapper {
-    gradleVersion = '8.0'
+    gradleVersion = '7.3'
     distributionType = Wrapper.DistributionType.ALL
     distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
@@ -139,10 +139,6 @@ patchPluginXml {
     changeNotes = changelogMatches.collect {
         it[1].replaceAll(/(?s)\r?\n/, "<br />\n")
     }.take(1).join('')
-}
-
-buildSearchableOptions {
-    enabled = false
 }
 
 prepareSandbox {

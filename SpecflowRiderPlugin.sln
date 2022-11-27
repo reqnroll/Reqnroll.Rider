@@ -11,6 +11,9 @@ ProjectSection(SolutionItems) = preProject
 	src\dotnet\Directory.Build.props = src\dotnet\Directory.Build.props
 	gradle.properties = gradle.properties
 	.github\workflows\build-plugin.yml = .github\workflows\build-plugin.yml
+	settings.gradle = settings.gradle
+	build.gradle = build.gradle
+	gradle\wrapper\gradle-wrapper.properties = gradle\wrapper\gradle-wrapper.properties
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSharperPlugin.SpecflowRiderPlugin.Tests", "src\dotnet\ReSharperPlugin.SpecflowRiderPlugin.Tests\ReSharperPlugin.SpecflowRiderPlugin.Tests.csproj", "{A11F0703-5136-4641-A2B7-262AB200E862}"

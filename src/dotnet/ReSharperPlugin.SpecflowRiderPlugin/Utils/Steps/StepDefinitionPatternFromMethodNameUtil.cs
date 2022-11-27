@@ -61,7 +61,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Utils.Steps
             var type = methodDeclaration.Params?.ParameterDeclarations[parameterIndex].Type;
             if (type is not IDeclaredType clrTypeName)
                 return false;
-            return PredefinedType.IsPredefinedIntegral(clrTypeName.GetClrName());
+            return clrTypeName.IsPredefinedIntegral();
         }
 
         private (string, bool) ReadNext(IList<string> parameterNames, int parameterIndex, string methodName, int pos)
