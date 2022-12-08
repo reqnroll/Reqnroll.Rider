@@ -25,7 +25,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings
         /// <returns>true if it changes the current project config</returns>
         public bool TryUpdate(IProject project, ConfigSource source, SpecflowSettings? settings)
         {
-            var lifetime = project.GetSolution().GetLifetime();
+            var lifetime = project.GetSolution().GetSolutionLifetimes().UntilSolutionCloseLifetime;
 
             RegisterProjectLifetime(project, lifetime);
 

@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
-using JetBrains.ReSharper.Feature.Services.LiveTemplates.Util;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.ExpectedTypes;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Icons;

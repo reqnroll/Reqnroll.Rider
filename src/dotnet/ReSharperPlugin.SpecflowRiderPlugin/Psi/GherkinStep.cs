@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
-using JetBrains.ReSharper.Psi.IL.Resources;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
 using ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput;

@@ -5,7 +5,6 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
-using JetBrains.Application.Changes;
 using JetBrains.Application.Threading;
 using JetBrains.Collections;
 using JetBrains.Diagnostics;
