@@ -1,13 +1,13 @@
 <Project>
   <PropertyGroup>
-    <SdkVersion>2022.3.0</SdkVersion>
+    <SdkVersion>2023.1.0-eap04</SdkVersion>
     
     <Title>SpecFlow for Rider</Title>
 
     <Description>Description</Description>
   
     <Authors>Valentin Livkin;Bertrand Provost (Socolin)</Authors>
-    <Copyright>Copyright 2021 Maintainers of SpecflowRiderPlugin</Copyright>
+    <Copyright>Copyright 2023 Maintainers of SpecflowRiderPlugin</Copyright>
     <PackageTags>resharper plugin</PackageTags>
   
     <PackageProjectUrl>https://github.com/SpecFlowOSS/SpecFlow.Rider</PackageProjectUrl>

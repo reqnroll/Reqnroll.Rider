@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using JetBrains.Application.Settings;
-using JetBrains.DataStructures;
 using JetBrains.ReSharper.Daemon.CodeFolding;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Feature.Services.Daemon;
