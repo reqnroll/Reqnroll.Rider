@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <SdkVersion>2023.1.0-eap04</SdkVersion>
+    <SdkVersion>2023.1.0</SdkVersion>
     
     <Title>SpecFlow for Rider</Title>
 

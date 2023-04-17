@@ -137,7 +137,7 @@ patchPluginXml {
     def changelogMatches = changelogText =~ /(?s)(-.+?)(?=##|$)/
 
     changeNotes = changelogMatches.collect {
-        it[1].replaceAll(/(?s)\r?\n/, "<br />\n")
+        it[1].replaceAll(/(?s)- /, "\u2022 ").replaceAll(/`/, "").replaceAll(/,/, "%2C").replaceAll(/;/, "%3B")
     }.take(1).join('')
 }
 
