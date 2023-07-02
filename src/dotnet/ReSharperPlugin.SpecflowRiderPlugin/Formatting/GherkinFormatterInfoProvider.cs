@@ -59,7 +59,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
             Describe<IndentingRule>()
                 .Name("AndIndent")
                 .Where(
-                    Left().HasType(GherkinNodeTypes.STEP).Satisfies2((node, _) => node is GherkinStep {StepKind: GherkinStepKind.And})
+                    Left().HasType(GherkinNodeTypes.STEP).Satisfies2((node, _) => node.Node is GherkinStep {StepKind: GherkinStepKind.And})
                 )
                 .Switch(s => s.AndStepIndentSize, ContinuousIndentOptions(this, IndentType.External))
                 .Build();
@@ -86,7 +86,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                     Parent().HasType(GherkinNodeTypes.EXAMPLES_BLOCK).Or().HasType(GherkinNodeTypes.STEP),
                     Node().HasType(GherkinNodeTypes.TABLE))
                 .Switch(s => s.SmallTableIndent,
-                    When(true).Calculate((_, _) => new IndentOptionValue(IndentType.External, 0, "  ")),
+                    When(true).Calculate((_, _) => new IndentOptionValue(IndentType.External, 0, new Whitespace(0, 2))),
                     When(false).Switch(s => s.TableIndentSize, ContinuousIndentOptions(this, IndentType.External)))
                 .Build();
         }
