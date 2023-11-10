@@ -7,9 +7,9 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.5.1" />
-    <PackageReference Include="JetBrains.Rider.SDK.Tests" Version="$(SdkVersion)" />
+    <PackageReference Include="JetBrains.Rider.SDK.Tests" Version="2023.2.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="SpecFlow" Version="3.9.58" />
   </ItemGroup>
 
