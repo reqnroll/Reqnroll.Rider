@@ -103,6 +103,8 @@ class SpecflowRiderPluginModel private constructor(
         )
     }
     //contexts
+    //threading
+    override val extThreading: ExtThreadingKind get() = ExtThreadingKind.Default
 }
 val Solution.specflowRiderPluginModel get() = getOrCreateExtension("specflowRiderPluginModel", ::SpecflowRiderPluginModel)
 
@@ -182,4 +184,5 @@ data class MyStructure (
     }
     //deepClone
     //contexts
+    //threading
 }
