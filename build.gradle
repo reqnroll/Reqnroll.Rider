@@ -88,6 +88,8 @@ intellij {
     instrumentCode = false
     // TODO: add plugins
     // plugins = ["uml", "com.jetbrains.ChooseRuntime:1.0.9"]
+    
+    sameSinceUntilBuild = false
 }
 
 runIde {
@@ -139,6 +141,8 @@ patchPluginXml {
     changeNotes = changelogMatches.collect {
         it[1].replaceAll(/(?s)- /, "\u2022 ").replaceAll(/`/, "").replaceAll(/,/, "%2C").replaceAll(/;/, "%3B")
     }.take(1).join('')
+    
+    untilBuild="${UntilBuild}"
 }
 
 prepareSandbox {
