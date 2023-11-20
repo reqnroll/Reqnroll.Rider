@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
@@ -31,4 +31,4 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SpellCheck
             return new[] {new SpellCheckDaemonStageProcess(process.Solution.GetComponent<ISpellService>(), process, (GherkinFile) gherkinFile)};
         }
     }
-}
+}*/

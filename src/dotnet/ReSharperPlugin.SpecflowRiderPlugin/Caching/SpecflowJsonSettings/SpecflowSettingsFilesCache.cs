@@ -13,6 +13,7 @@ using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
+using JetBrains.ReSharper.Resources.Shell;
 using Newtonsoft.Json;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
@@ -137,25 +138,29 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.SpecflowJsonSettings
                 return;
 
             var featureFilesInProject = specflowJsonProjectOwner.GetAllProjectFiles(o => o.Name.EndsWith(".feature"));
+
             foreach (var featureFile in featureFilesInProject)
             {
                 var featurePsiFiles = featureFile.ToSourceFiles();
                 foreach (var featurePsiFile in featurePsiFiles)
                 {
-                    var psiServices = featurePsiFile.GetPsiServices();
-                    var cachedPsiFile = psiServices.Files.PsiFilesCache.TryGetCachedPsiFile(featurePsiFile, GherkinLanguage.Instance.NotNull());
-                    if (cachedPsiFile != null)
+                    using (WriteLockCookie.Create())
                     {
-                        cachedPsiFile.OnDocumentChanged(
-                            new DocumentChange(
-                                featurePsiFile.Document,
-                                0,
-                                featurePsiFile.Document.GetTextLength(),
-                                featurePsiFile.Document.GetText(),
-                                featurePsiFile.Document.LastModificationStamp,
-                                TextModificationSide.NotSpecified));
-                        psiServices.Files.MarkAsDirty(featurePsiFile);
-                        psiServices.Caches.MarkAsDirty(featurePsiFile);
+                        var psiServices = featurePsiFile.GetPsiServices();
+                        var cachedPsiFile = psiServices.Files.PsiFilesCache.TryGetCachedPsiFile(featurePsiFile, GherkinLanguage.Instance.NotNull());
+                        if (cachedPsiFile != null)
+                        {
+                            cachedPsiFile.OnDocumentChanged(
+                                new DocumentChange(
+                                    featurePsiFile.Document,
+                                    0,
+                                    featurePsiFile.Document.GetTextLength(),
+                                    featurePsiFile.Document.GetText(),
+                                    featurePsiFile.Document.LastModificationStamp,
+                                    TextModificationSide.NotSpecified));
+                            psiServices.Files.MarkAsDirty(featurePsiFile);
+                            psiServices.Caches.MarkAsDirty(featurePsiFile);
+                        }
                     }
                 }
             }

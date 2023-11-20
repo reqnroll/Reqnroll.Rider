@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Features.ReSpeller.SpellEngine;
 using JetBrains.ReSharper.Psi;
@@ -34,4 +34,4 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SpellCheck
 
         }
     }
-}
+}*/

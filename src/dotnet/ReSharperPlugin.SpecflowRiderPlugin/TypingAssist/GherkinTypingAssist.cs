@@ -2,17 +2,13 @@ using System;
 using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Application.CommandProcessing;
-using JetBrains.Application.Settings;
 using JetBrains.Application.UI.ActionSystem.Text;
 using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Options;
-using JetBrains.ReSharper.Feature.Services.StructuralRemove;
 using JetBrains.ReSharper.Feature.Services.TypingAssist;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CachingLexers;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.Format;
 using JetBrains.ReSharper.Psi.Parsing;
@@ -30,20 +26,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
     {
         public GherkinTypingAssist(
             Lifetime lifetime,
-            [NotNull] ISolution solution,
-            [NotNull] ISettingsStore settingsStore,
-            [NotNull] CachingLexerService cachingLexerService,
-            [NotNull] ICommandProcessor commandProcessor,
-            [NotNull] IPsiServices psiServices,
-            [NotNull] IExternalIntellisenseHost externalIntellisenseHost,
-            [NotNull] SkippingTypingAssist skippingTypingAssist,
-            [NotNull] LastTypingAction lastTypingAction,
-            [NotNull] ITypingAssistManager manager,
-            [NotNull] StructuralRemoveManager structuralRemoveManager)
-            : base(solution, settingsStore, cachingLexerService, commandProcessor, psiServices, externalIntellisenseHost, skippingTypingAssist, lastTypingAction, structuralRemoveManager)
+            [NotNull] TypingAssistDependencies typingAssistDependencies
+        )
+            : base(typingAssistDependencies)
         {
-            manager.AddActionHandler(lifetime, TextControlActions.ActionIds.Enter, this, HandleEnter, IsActionHandlerAvailable);
-            manager.AddTypingHandler(lifetime, '|', this, HandleTableCellClosing, IsTypingHandlerAvailable);
+            typingAssistDependencies.TypingAssistManager.AddActionHandler(lifetime, TextControlActions.ActionIds.Enter, this, HandleEnter, IsActionHandlerAvailable);
+            typingAssistDependencies.TypingAssistManager.AddTypingHandler(lifetime, '|', this, HandleTableCellClosing, IsTypingHandlerAvailable);
         }
 
         protected override bool IsSupported(ITextControl textControl) => true;
@@ -137,7 +125,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.TypingAssist
 
                 PsiServices.Transactions.Execute("Format code", () =>
                 {
-                    GetCodeFormatter(tokenNode).Format(parentTable.firstChild.FirstChild, parentTable.lastChild.LastChild, CodeFormatProfile.SOFT, new AdditionalFormatterParameters(treatTextAfterLastNodeAsIncorrect: false));
+                    GetCodeFormatter(tokenNode).Format(parentTable.firstChild.FirstChild, parentTable.lastChild.LastChild, CodeFormatProfile.SOFT, new AdditionalFormatterParameters(TreatTextAfterLastNodeAsIncorrect: false));
                 });
                 return null;
             }));

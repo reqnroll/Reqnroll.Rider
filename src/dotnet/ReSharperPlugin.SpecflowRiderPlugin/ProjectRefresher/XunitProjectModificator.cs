@@ -12,11 +12,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectRefresher
         {
             return true;
         }
-        
-        public void Modify(List<string> targets)
+
+        public void ModifyProperties(IDictionary<string, string> properties)
+        {
+        }
+
+        public void ModifyTargets(List<string> targets)
         {
             //Temporary workaround for the Xunit error issue https://youtrack.jetbrains.com/issue/RIDER-62536
             targets.Add("GenerateSpecFlowAssemblyHooksFileTask");
         }
+
     }
 }

@@ -1,4 +1,4 @@
-using JetBrains.DocumentModel;
+/*using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Features.ReSpeller.Analyzers;
 using JetBrains.ReSharper.Features.ReSpeller.Highlightings;
@@ -28,10 +28,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Daemon.SpellCheck
 
         public void ProcessAfterInterior(ITreeNode element, IHighlightingConsumer context)
         {
-            DocumentRange documentRange = element.GetDocumentRange();
-            var containingFile = element.GetContainingFile();
-            if (containingFile != null)
-                AnalyzerHelper.GenerateRangeBasedHighlightings(_spellService, context, containingFile, documentRange, range => new CommentTypoHighlighting(range, element));
+            // var documentRange = element.GetDocumentRange();
+            // var containingFile = element.GetContainingFile();
+            // if (containingFile != null)
+            //     AnalyzerHelper.GenerateRangeBasedHighlightings(_spellService, context, containingFile, documentRange, range => new CommentTypoHighlighting(range, element));
         }
     }
-}
+}*/
