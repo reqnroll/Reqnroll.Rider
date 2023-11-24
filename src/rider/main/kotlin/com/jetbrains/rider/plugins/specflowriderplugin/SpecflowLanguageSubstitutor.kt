@@ -4,7 +4,7 @@ import com.intellij.lang.Language
 import com.intellij.openapi.project.Project
 import com.intellij.psi.LanguageSubstitutor
 import com.intellij.openapi.vfs.VirtualFile
-import com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes.GherkinLanguage
+import com.jetbrains.rider.plugins.specflowriderplugin.psi.GherkinLanguage
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFileVisitor
 import java.util.*

@@ -1,9 +1,9 @@
-package com.jetbrains.rider.plugins.specflowriderplugin.settings;
+package com.jetbrains.rider.plugins.specflowriderplugin.settings
 
 import com.intellij.lang.Language
 import com.intellij.psi.codeStyle.CodeStyleConfigurable
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes.GherkinLanguage
+import com.jetbrains.rider.plugins.specflowriderplugin.psi.GherkinLanguage
 import com.jetbrains.rider.settings.IRiderViewModelConfigurable
 import com.jetbrains.rider.settings.RiderLanguageCodeStyleSettingsProvider
 

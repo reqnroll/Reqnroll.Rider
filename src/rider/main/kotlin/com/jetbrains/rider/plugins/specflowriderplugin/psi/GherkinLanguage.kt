@@ -1,4 +1,4 @@
-package com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes
+package com.jetbrains.rider.plugins.specflowriderplugin.psi
 
 import com.jetbrains.rider.ideaInterop.fileTypes.RiderLanguageBase
 
