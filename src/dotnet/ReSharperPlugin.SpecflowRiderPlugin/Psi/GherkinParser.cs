@@ -27,9 +27,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private GherkinStepKind _lastStepKind = GherkinStepKind.Given;
         [CanBeNull] private string _lang;
 
-        public GherkinParser(ILexer lexer, IPsiSourceFile sourceFile, SpecflowSettingsProvider settingsProvider, GherkinKeywordProvider keywordProvider)
+        // sourceFile is null in the preview of the code style (Settings)
+        public GherkinParser(ILexer lexer, [CanBeNull] IPsiSourceFile sourceFile, SpecflowSettingsProvider settingsProvider, GherkinKeywordProvider keywordProvider)
         {
-            var settings = settingsProvider.GetSettings(sourceFile.GetProject());
+            var settings = settingsProvider.GetSettings(sourceFile?.GetProject());
             _lang = settings.Language.NeutralFeature;
             _lexer = lexer;
             _sourceFile = sourceFile;
