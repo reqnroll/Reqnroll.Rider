@@ -51,9 +51,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Templates/FileTemplates.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\libs\Regex\Regex.csproj" />
-  </ItemGroup>
 
   <PropertyGroup Condition="'$(AppInsightsInstrumentationKey)' == ''">
     <!-- This is only the testing instance's instrumentation key -->

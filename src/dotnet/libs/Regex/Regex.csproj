@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
-    <RootNamespace>RE</RootNamespace>
-  </PropertyGroup>
-
-</Project>

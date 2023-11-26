@@ -37,9 +37,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
             foreach (var stepDefinitionInfo in specflowStepsDefinitionsCache.GetStepAccessibleForModule(psiModule, selectedStepKind).Concat(assemblyStepDefinitionCache.GetStepAccessibleForModule(psiModule, selectedStepKind)))
             {
-                if (stepDefinitionInfo.RegexForPartialMatch == null)
-                    continue;
-
                 foreach (var stepVariation in stepPatternUtil.ExpandMatchingStepPatternWithAllPossibleParameter(stepDefinitionInfo, partialStepText, fullStepText))
                 {
                     var completionText = stepVariation;

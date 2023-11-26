@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.Util;
-using RE;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
@@ -31,7 +30,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         [CanBeNull]
         public Regex Regex { get; }
         [CanBeNull]
-        public CharFA<string> RegexForPartialMatch { get; }
         public List<Regex> RegexesPerCapture { get; }
 
         public SpecflowStepInfo(
@@ -40,7 +38,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             GherkinStepKind stepKind,
             string pattern,
             [CanBeNull] Regex regex,
-            [CanBeNull] CharFA<string> regexForPartialMatch,
             List<Regex> regexesPerCapture
         )
         {
@@ -49,7 +46,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             StepKind = stepKind;
             Pattern = pattern;
             Regex = regex;
-            RegexForPartialMatch = regexForPartialMatch;
             RegexesPerCapture = regexesPerCapture;
         }
     }

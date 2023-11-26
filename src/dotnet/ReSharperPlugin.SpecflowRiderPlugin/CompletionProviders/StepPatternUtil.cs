@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.ReSharper.Psi;
-using JetBrains.Util;
-using RE;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
@@ -25,21 +23,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
 
         public IEnumerable<string> ExpandMatchingStepPatternWithAllPossibleParameter(SpecflowStepInfo stepDefinitionInfo, string partialStepText, string fullStepText)
         {
-            var matchedText = string.Empty;
-            if (partialStepText.Length > 0)
-            {
-                var result = stepDefinitionInfo.RegexForPartialMatch?.Match(ParseContext.Create(partialStepText), successOnAnyState: true);
-                if (result == null || result.Position != 0)
-                    return EmptyList<string>.Enumerable;
-                matchedText = result.Value;
-            }
-
             var tokenizedStepPattern = TokenizeStepPattern(stepDefinitionInfo.Pattern).ToList();
             var captureValues = RetrieveParameterValues(stepDefinitionInfo, partialStepText, fullStepText, tokenizedStepPattern);
 
             var stringBuilder = new StringBuilder();
             var results = new List<string>();
-            BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern.ToArray(), captureValues, 0, 0);
+            BuildAllPossibleSteps(stringBuilder, results, tokenizedStepPattern.ToArray(), captureValues, 0, 0);
             return results;
         }
 
@@ -77,7 +66,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
             return captureValues;
         }
 
-        private void BuildAllPossibleSteps(string matchedText, StringBuilder stringBuilder, List<string> results, (StepPatternTokenType tokenType, string text, bool optional)[] tokenizedStepPattern, List<List<string>> captureValues, int elementIndex, int captureIndex)
+        private void BuildAllPossibleSteps(StringBuilder stringBuilder, List<string> results, (StepPatternTokenType tokenType, string text, bool optional)[] tokenizedStepPattern, List<List<string>> captureValues, int elementIndex, int captureIndex)
         {
             if (elementIndex == tokenizedStepPattern.Length)
             {
@@ -92,31 +81,20 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders
                 {
                     stringBuilder.Length = saveStringBuilderPosition;
                     stringBuilder.Append(variant);
-                    BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex);
+                    BuildAllPossibleSteps(stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex);
                 }
                 stringBuilder.Length = saveStringBuilderPosition;
             }
             else if (tokenizedStepPattern[elementIndex].tokenType == StepPatternTokenType.Capture)
             {
                 if (tokenizedStepPattern[elementIndex].optional)
-                    BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex + 1);
+                    BuildAllPossibleSteps(stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex + 1);
                 foreach (var captureValue in captureValues[captureIndex])
                 {
                     stringBuilder.Length = saveStringBuilderPosition;
                     stringBuilder.Append(captureValue);
 
-                    if (matchedText.Length <= stringBuilder.Length)
-                    {
-                        if (!stringBuilder.ToString().StartsWith(matchedText))
-                            continue;
-                    }
-                    else
-                    {
-                        if (!matchedText.StartsWith(stringBuilder.ToString()))
-                            continue;
-                    }
-
-                    BuildAllPossibleSteps(matchedText, stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex + 1);
+                    BuildAllPossibleSteps(stringBuilder, results, tokenizedStepPattern, captureValues, elementIndex + 1, captureIndex + 1);
                 }
                 stringBuilder.Length = saveStringBuilderPosition;
             }
