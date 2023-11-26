@@ -120,6 +120,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                     Right().HasType(GherkinNodeTypes.EXAMPLES_BLOCK))
                 .SwitchBlankLines(s => s.BlankLinesBeforeExamples, true, BlankLineLimitKind.LimitBothStrict)
                 .Build();
+
+
+            Describe<FormattingRule>()
+                .Name("WrapTagOnDifferentLines")
+                .Where(
+                    Left().HasType(GherkinNodeTypes.TAG),
+                    Right().HasType(GherkinNodeTypes.TAG))
+                .Switch(s => s.WrapTagsOnDifferentLines,
+                    When(true).Return(IntervalFormatType.InsertNewLine),
+                    When(false).Return(IntervalFormatType.Space)
+                )
+                .Build();
         }
 
         public static IBuildableBuilder<OptionTreeBlank>[] ContinuousIndentOptions<TContext, TSettingsKey>(

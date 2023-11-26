@@ -31,10 +31,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         public override string Id => Pid;
 
         public GherkinFormattingStylePage(Lifetime lifetime,
-                                            [NotNull] OptionsSettingsSmartContext smartContext,
-                                            [NotNull] IUIApplication environment,
-                                            [NotNull] GherkinFormattingStylePageSchema schema,
-                                            [NotNull] CodeStylePreview preview, IComponentContainer container)
+                                          [NotNull] OptionsSettingsSmartContext smartContext,
+                                          [NotNull] IUIApplication environment,
+                                          [NotNull] GherkinFormattingStylePageSchema schema,
+                                          [NotNull] CodeStylePreview preview,
+                                          IComponentContainer container)
             : base(lifetime, smartContext, environment, schema, preview, container)
         {
         }
@@ -47,9 +48,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         public override string PageName => "Gherkin (SpecFlow) Formatting Style";
 
         public GherkinFormattingStylePageSchema(Lifetime lifetime,
-                                                  [NotNull] IContextBoundSettingsStoreLive smartContext,
-                                                  [NotNull] IValueEditorViewModelFactory itemViewModelFactory,
-                                                  IComponentContainer container, ISettingsToHide settingsToHide)
+                                                [NotNull] IContextBoundSettingsStoreLive smartContext,
+                                                [NotNull] IValueEditorViewModelFactory itemViewModelFactory,
+                                                IComponentContainer container,
+                                                ISettingsToHide settingsToHide)
             : base(lifetime, smartContext, itemViewModelFactory, container, settingsToHide)
         {
         }
@@ -80,6 +82,11 @@ Scenario: All spares
         {
             base.Describe(builder);
 
+            var tagsExample = """
+                              Feature: Calculator
+                                  @ignore @myTag1 @myTag2
+                                  Scenario: Add two numbers
+                              """;
             var indentationExample = @"
 Feature: Cucumber stock keeping
 Scenario: eat 5 out of 20
@@ -105,18 +112,22 @@ Scenario Outline: eating
 ";
             builder
                 .Category("Indentation rules")
-                .ItemFor(key => key.ExampleIndentSize,indentationExample)
-                .ItemFor(key => key.PyStringIndentSize,indentationExample)
-                .ItemFor(key => key.ScenarioIndentSize,indentationExample)
-                .ItemFor(key => key.StepIndentSize,indentationExample)
-                .ItemFor(key => key.AndStepIndentSize,indentationExample)
-                .ItemFor(key => key.TableIndentSize,indentationExample)
-                .ItemFor(key => key.SmallTableIndent,indentationExample)
+                .ItemFor(key => key.ExampleIndentSize, indentationExample)
+                .ItemFor(key => key.PyStringIndentSize, indentationExample)
+                .ItemFor(key => key.ScenarioIndentSize, indentationExample)
+                .ItemFor(key => key.StepIndentSize, indentationExample)
+                .ItemFor(key => key.AndStepIndentSize, indentationExample)
+                .ItemFor(key => key.TableIndentSize, indentationExample)
+                .ItemFor(key => key.SmallTableIndent, indentationExample)
                 .EndCategory();
             builder
                 .Category("Blank lines rules")
-                .ItemFor(key => key.BlankLinesBeforeExamples,indentationExample)
-                .ItemFor(key => key.BlankLinesBeforeScenario,indentationExample)
+                .ItemFor(key => key.BlankLinesBeforeExamples, indentationExample)
+                .ItemFor(key => key.BlankLinesBeforeScenario, indentationExample)
+                .EndCategory();
+            builder
+                .Category("New Lines")
+                .ItemFor(key => key.WrapTagsOnDifferentLines, tagsExample)
                 .EndCategory();
 
         }

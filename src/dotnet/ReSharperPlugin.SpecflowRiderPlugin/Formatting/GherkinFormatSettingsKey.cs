@@ -29,5 +29,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
         public int BlankLinesBeforeExamples;
         [SettingsEntry(1, "Blank lines before scenario")]
         public int BlankLinesBeforeScenario;
+        [SettingsEntry(WrapStyle.CHOP_ALWAYS, "New line between tags")]
+        public bool WrapTagsOnDifferentLines;
     }
 }

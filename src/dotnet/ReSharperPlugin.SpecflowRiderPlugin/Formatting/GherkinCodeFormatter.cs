@@ -34,9 +34,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
 
         public override MinimalSeparatorType GetMinimalSeparatorByNodeTypes(TokenNodeType leftToken, TokenNodeType rightToken)
         {
-            if (leftToken == GherkinTokenTypes.TAG)
+            if (leftToken == GherkinTokenTypes.TAG && rightToken != GherkinTokenTypes.TAG)
                 return MinimalSeparatorType.NewLine;
-            if (rightToken == GherkinTokenTypes.TAG)
+            if (leftToken != GherkinTokenTypes.TAG && rightToken == GherkinTokenTypes.TAG)
                 return MinimalSeparatorType.NewLine;
             if (leftToken == GherkinTokenTypes.TABLE_CELL && rightToken == GherkinTokenTypes.PIPE)
                 return MinimalSeparatorType.Space;
