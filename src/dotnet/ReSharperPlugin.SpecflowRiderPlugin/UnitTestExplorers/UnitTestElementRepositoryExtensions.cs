@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Diagnostics;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.UnitTestFramework.Criteria;
 using JetBrains.ReSharper.UnitTestFramework.Elements;
@@ -14,7 +15,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
     {
         public static List<IUnitTestElement> GetRelatedFeatureTests(this IUnitTestElementRepository unitTestElementRepository, GherkinFile gherkinFile)
         {
-            var projectTests = unitTestElementRepository.Query(new ProjectCriterion(gherkinFile.GetProject()))
+            var projectTests = unitTestElementRepository.Query(new ProjectCriterion(gherkinFile.GetProject().NotNull()))
                 .ToList();
 
             var relatedTests = projectTests

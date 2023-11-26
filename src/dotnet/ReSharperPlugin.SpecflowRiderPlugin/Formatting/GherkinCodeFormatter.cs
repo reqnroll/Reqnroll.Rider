@@ -69,8 +69,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
             var formatterSettings = GetFormattingSettings(task.FirstElement, parameters, _formatterInfoProvider);
             formatterSettings.Settings.SetValue(key => key.WRAP_LINES, false);
 
-            DoDeclarativeFormat(formatterSettings, _formatterInfoProvider, null, new[] {task},
-                parameters, null, null, false);
+            DoDeclarativeFormat(formatterSettings, _formatterInfoProvider, null, new[] {task}, parameters, null, null);
 
             return new TreeRange(firstElement, lastElement);
         }

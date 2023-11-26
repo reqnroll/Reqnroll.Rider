@@ -16,9 +16,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Tests
   public interface ISpecflowRiderPluginTestZone
     : ITestsEnvZone,
       IRequire<PsiFeatureTestZone>,
-      IRequire<IReSpellerZone>
-  {
-  }
+      IRequire<IReSpellerZone>;
 
   [SetUpFixture]
   public class TestEnvironment : ExtensionTestEnvironmentAssembly<ISpecflowRiderPluginTestZone>

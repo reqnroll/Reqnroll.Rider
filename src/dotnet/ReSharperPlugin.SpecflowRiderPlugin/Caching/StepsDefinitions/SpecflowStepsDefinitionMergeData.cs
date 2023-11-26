@@ -29,7 +29,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         public string Pattern { get; }
         [CanBeNull]
         public Regex Regex { get; }
-        [CanBeNull]
         public List<Regex> RegexesPerCapture { get; }
 
         public SpecflowStepInfo(

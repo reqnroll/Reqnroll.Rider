@@ -20,7 +20,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ExtendSelection
             if (sourceFile.GetPrimaryPsiFile() is not GherkinFile gherkinFile)
                 return null;
 
-            var gherkinNode = gherkinFile?.FindNodeAt(documentRange);
+            var gherkinNode = gherkinFile.FindNodeAt(documentRange);
             if (gherkinNode == null)
                 return null;
 

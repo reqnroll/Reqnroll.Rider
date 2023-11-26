@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JetBrains.Collections;
+using JetBrains.Diagnostics;
 using JetBrains.Extension;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Parsing;
@@ -20,7 +21,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         private void Initialize()
         {
             var keywordsStream = typeof(GherkinKeywordProvider).Assembly.GetManifestResourceStream("ReSharperPlugin.SpecflowRiderPlugin.Psi.i18n.json");
-            var keywordsStr = keywordsStream.ReadTextFromFile();
+            var keywordsStr = keywordsStream.NotNull().ReadTextFromFile();
             var jObject = JObject.Parse(keywordsStr.Text);
 
             foreach (var (language, value) in jObject)

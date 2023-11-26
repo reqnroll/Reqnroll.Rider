@@ -210,7 +210,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.QuickFixes.CreateMissingStep
                 using (CompilationContextCookie.GetOrCreate(project.GetResolveContext()))
                 {
                     var bindingAttributeType = TypeFactory.CreateTypeByCLRName(SpecflowAttributeHelper.BindingAttribute.FullName, _reference.GetTreeNode().GetPsiModule());
-                    var specFlowBindingAttribute = CSharpElementFactory.GetInstance(_reference.GetElement()).CreateAttribute(bindingAttributeType.GetTypeElement());
+                    var specFlowBindingAttribute = CSharpElementFactory.GetInstance(_reference.GetElement()).CreateAttribute(bindingAttributeType.GetTypeElement().NotNull());
                     classDeclaration.AddAttributeAfter(specFlowBindingAttribute, null);
                 }
 

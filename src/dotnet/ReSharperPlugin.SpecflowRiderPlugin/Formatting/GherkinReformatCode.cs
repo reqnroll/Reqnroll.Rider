@@ -66,7 +66,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                         var service = file.Language.LanguageService();
                         if (service == null) return;
 
-                        var formatter = service.CodeFormatter;
+                        var formatter = service.CodeFormatter.NotNull();
 
                         sourceFile.GetPsiServices().Transactions.Execute("Code cleanup", delegate
                         {

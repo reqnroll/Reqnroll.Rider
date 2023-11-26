@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Collections;
+using JetBrains.Diagnostics;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Util;
 using Newtonsoft.Json.Linq;
@@ -41,7 +42,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
         // Need to use Descending comparer, because long keywords should be first.
         // For example: "Scenario" keyword is a part of "Scenario Outline" keyword.
-        private readonly SortedSet<string> _allKeywords = new SortedSet<string>(new DescendingComparer<string>());
+        private readonly SortedSet<string> _allKeywords = new(new DescendingComparer<string>());
 
         public GherkinKeywordList(JObject keywords)
         {
@@ -56,7 +57,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 var translations = new List<string>();
                 _translationsPerKeyword[keyword] = translations;
 
-                foreach (var jToken in values)
+                foreach (var jToken in values.NotNull())
                 {
                     var translatedKeyword = jToken.Value<string>();
                     if (translatedKeyword.EndsWith(" "))

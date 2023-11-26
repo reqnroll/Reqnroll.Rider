@@ -57,7 +57,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Analytics
             var directoryName = Path.GetDirectoryName(UserIdFilePath);
             if (!Directory.Exists(directoryName))
             {
-                Directory.CreateDirectory(directoryName);
+                Directory.CreateDirectory(directoryName.NotNull());
             }
 
             File.WriteAllText(UserIdFilePath, userId);

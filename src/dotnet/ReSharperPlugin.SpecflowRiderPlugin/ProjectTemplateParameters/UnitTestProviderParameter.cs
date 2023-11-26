@@ -19,11 +19,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.ProjectTemplateParameters
         public override RdProjectTemplateContent CreateContent(DotNetProjectTemplateExpander expander, IDotNetTemplateContentFactory factory, int index, IDictionary<string, string> context)
         {
             var parameter = expander.TemplateInfo.GetParameter(Name);
-            if (parameter == null)
+            if (parameter?.Choices == null)
             {
                 return factory.CreateNextParameters(new[] {expander}, index + 1, context);
             }
-            
+
             var options = new List<RdProjectTemplateGroupOption>();
             foreach (var choice in parameter.Choices.Where( c => c.Key != _runner && c.Key != _msTest))
             {
