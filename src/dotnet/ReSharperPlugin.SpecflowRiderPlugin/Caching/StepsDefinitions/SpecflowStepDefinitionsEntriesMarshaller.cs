@@ -20,6 +20,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                 foreach (var cacheMethod in cacheClass.Methods)
                 {
                     writer.WriteString(cacheMethod.MethodName);
+                    WriteMethodParameterTypes(writer, cacheMethod.MethodParameterTypes);
                     WriteScopes(writer, cacheMethod.Scopes);
                     writer.WriteInt32(cacheMethod.Steps.Count);
                     foreach (var cacheStep in cacheMethod.Steps)
@@ -46,8 +47,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                 for (var j = 0; j < methodCount; j++)
                 {
                     var methodName = reader.ReadString();
+                    var methodParameterTypes = ParseMethodParameterTypes(reader);
                     var methodScopes = ParseScope(reader);
-                    var methodCacheEntry = cacheClassEntry.AddMethod(methodName, methodScopes);
+                    var methodCacheEntry = cacheClassEntry.AddMethod(methodName, methodParameterTypes, methodScopes);
                     var stepCount = reader.ReadInt32();
                     for (var k = 0; k < stepCount; k++)
                     {
@@ -61,6 +63,23 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                 entries.Add(cacheClassEntry);
             }
             return entries;
+        }
+
+
+        private void WriteMethodParameterTypes(UnsafeWriter writer, string[] cacheMethodMethodParameterTypes)
+        {
+            writer.WriteByte((byte)cacheMethodMethodParameterTypes.Length);
+            foreach (var type in cacheMethodMethodParameterTypes)
+                writer.WriteString(type);
+        }
+
+        private string[] ParseMethodParameterTypes(UnsafeReader reader)
+        {
+            int count = reader.ReadByte();
+            var methodParameterTypes = new string[count];
+            for (var i = 0; i < count; i++)
+                methodParameterTypes[i] = reader.ReadString();
+            return methodParameterTypes;
         }
 
         private void WriteScopes(UnsafeWriter writer, [CanBeNull] IReadOnlyList<SpecflowStepScope> cacheMethodScopes)

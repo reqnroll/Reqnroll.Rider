@@ -64,11 +64,36 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                             if (cl.GetClrName().FullName != cacheEntry.ClassFullName)
                                 continue;
 
-                            var method = cl.GetMembers().OfType<IMethod>().FirstOrDefault(x => x.ShortName == cacheEntry.MethodName);
-                            if (method == null)
+                            var methods = cl.GetMembers().OfType<IMethod>();
+                            IDeclaredElement matchingMethod = null;
+                            foreach (var method in methods)
+                            {
+                                if (method.ShortName != cacheEntry.MethodName)
+                                    continue;
+                                if (method.Parameters.Count != cacheEntry.MethodParameterTypes.Length)
+                                    continue;
+                                var allParameterTypesMatch = true;
+                                for (var i = 0; i < method.Parameters.Count; i++)
+                                {
+                                    var methodParameter = method.Parameters[i];
+                                    var expectedTypeName = cacheEntry.MethodParameterTypes[i];
+                                    if (expectedTypeName != null)
+                                    {
+                                        if (methodParameter.Type is IDeclaredType declarationType && declarationType.GetClrName().FullName != expectedTypeName)
+                                        {
+                                            allParameterTypesMatch = false;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (allParameterTypesMatch)
+                                    matchingMethod = method;
+                            }
+                            if (matchingMethod == null)
                                 continue;
 
-                            var symbolInfo = new SymbolInfo(method);
+                            var symbolInfo = new SymbolInfo(matchingMethod);
                             var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
 
                             RegexPattern = cacheEntry.Regex;

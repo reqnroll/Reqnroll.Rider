@@ -18,9 +18,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             Scopes = scopes;
         }
 
-        public SpecflowStepDefinitionCacheMethodEntry AddMethod(string methodName, [CanBeNull] IReadOnlyList<SpecflowStepScope> methodScopes)
+        public SpecflowStepDefinitionCacheMethodEntry AddMethod(
+            string methodName,
+            string[] methodParameterTypes,
+            [CanBeNull] IReadOnlyList<SpecflowStepScope> methodScopes
+        )
         {
-            var methodCacheEntry = new SpecflowStepDefinitionCacheMethodEntry(methodName, methodScopes);
+            var methodCacheEntry = new SpecflowStepDefinitionCacheMethodEntry(methodName, methodParameterTypes, methodScopes);
             Methods.Add(methodCacheEntry);
             return methodCacheEntry;
         }
@@ -31,10 +35,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         public string MethodName { get; }
         public IList<SpecflowStepDefinitionCacheStepEntry> Steps { get; } = new List<SpecflowStepDefinitionCacheStepEntry>();
         [CanBeNull] public IReadOnlyList<SpecflowStepScope> Scopes { get; }
+        public string[] MethodParameterTypes { get; set; }
 
-        public SpecflowStepDefinitionCacheMethodEntry(string methodName, [CanBeNull] IReadOnlyList<SpecflowStepScope> scopes = null)
+        public SpecflowStepDefinitionCacheMethodEntry(
+            string methodName,
+            string[] methodParameterTypes,
+            [CanBeNull] IReadOnlyList<SpecflowStepScope> scopes
+        )
         {
             MethodName = methodName;
+            MethodParameterTypes = methodParameterTypes;
             Scopes = scopes;
         }
 

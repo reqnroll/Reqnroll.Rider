@@ -80,7 +80,13 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     {
                         // FIXME: We should avoid adding method that are not step here (it's just using more memory)
                         var methodScopes = _scopeAttributeUtil.GetScopesFromAttributes(method.CustomAttributes);
-                        var methodCacheEntry = classCacheEntry.AddMethod(method.Name, methodScopes);
+                        var methodParameterTypes = new string[method.Parameters.Length];
+                        for (var i = 0; i < method.Parameters.Length; i++)
+                        {
+                            var parameterDeclaration = method.Parameters[i];
+                            methodParameterTypes[i] = parameterDeclaration.Name;
+                        }
+                        var methodCacheEntry = classCacheEntry.AddMethod(method.Name, methodParameterTypes, methodScopes);
 
                         for (var index = 0; index < method.CustomAttributes.Length; index++)
                         {
@@ -133,7 +139,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     _mergeData.PotentialSpecflowBindingTypes.Add(classEntry.ClassName, assembly);
                 foreach (var method in classEntry.Methods)
                 foreach (var step in method.Steps)
-                    _mergeData.StepsDefinitionsPerFiles.Add(assembly, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern, classEntry.Scopes, method.Scopes));
+                    _mergeData.StepsDefinitionsPerFiles.Add(assembly, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, method.MethodParameterTypes, step.StepKind, step.Pattern, classEntry.Scopes, method.Scopes));
             }
         }
 

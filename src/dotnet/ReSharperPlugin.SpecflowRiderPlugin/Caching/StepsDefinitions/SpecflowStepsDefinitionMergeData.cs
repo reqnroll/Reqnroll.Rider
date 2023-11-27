@@ -25,6 +25,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     {
         public string ClassFullName { get; }
         public string MethodName { get; }
+        public string[] MethodParameterTypes { get; }
         public GherkinStepKind StepKind { get; }
         public string Pattern { get; }
         [CanBeNull]
@@ -34,6 +35,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 
         public SpecflowStepInfo(string classFullName,
                                 string methodName,
+                                string[] methodParameterTypes,
                                 GherkinStepKind stepKind,
                                 string pattern,
                                 [CanBeNull] Regex regex,
@@ -42,6 +44,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         {
             ClassFullName = classFullName;
             MethodName = methodName;
+            MethodParameterTypes = methodParameterTypes;
             StepKind = stepKind;
             Pattern = pattern;
             Regex = regex;
