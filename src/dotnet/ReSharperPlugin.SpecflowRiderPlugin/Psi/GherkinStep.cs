@@ -96,41 +96,46 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public string GetStepText(bool withStepKeyWord = false)
         {
             var sb = new StringBuilder();
-            for (var te = (TreeElement)FirstChild; te != null; te = te.nextSibling)
+
+            var element = (TreeElement)FirstChild;
+            if (!withStepKeyWord)
             {
-                switch (te)
+                // Skip keyword and white space at tbe begining
+                for (; element != null && (element.NodeType == GherkinTokenTypes.STEP_KEYWORD || element.NodeType == GherkinTokenTypes.WHITE_SPACE); element = element.nextSibling)
+                    element = element.nextSibling;
+            }
+
+            for (; element != null; element = element.nextSibling)
+            {
+                switch (element)
                 {
                     case GherkinStepParameter p:
                         sb.Append(p.GetText());
                         break;
                     case GherkinToken token:
                     {
-                        if (withStepKeyWord)
-                        {
+                        if (token.NodeType == GherkinTokenTypes.WHITE_SPACE && element.nextSibling != null)
                             sb.Append(token.GetText());
-                        }
                         else
-                        {
-                            if (token.NodeType != GherkinTokenTypes.STEP_KEYWORD)
-                            {
-                                sb.Append(token.GetText());
-                            }
-                        }
-
+                            sb.Append(token.GetText());
                         break;
                     }
                 }
             }
-            return sb.ToString().Trim();
+            return sb.ToString();
         }
 
         public string GetStepTextForExample(IDictionary<string, string> exampleData)
         {
             var sb = new StringBuilder();
             var previousTokenWasAParameter = false;
-            for (var te = (TreeElement)FirstChild; te != null; te = te.nextSibling)
+            // Skip keyword and white space at tbe begining
+            var element = (TreeElement)FirstChild;
+            for (; element != null && (element.NodeType == GherkinTokenTypes.STEP_KEYWORD || element.NodeType == GherkinTokenTypes.WHITE_SPACE); element = element.nextSibling)
+                element = element.nextSibling;
+            for (; element != null; element = element.nextSibling)
             {
-                switch (te)
+                switch (element)
                 {
                     case GherkinStepParameter p:
                         if (exampleData.TryGetValue(p.GetParameterName(), out var value))
@@ -145,17 +150,26 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                         }
 
                         break;
-                    case GherkinToken token when token.NodeType != GherkinTokenTypes.STEP_KEYWORD:
-                        sb.Append(token.GetText());
 
+                    case GherkinToken token:
                         // Remove `>`
-                        if (previousTokenWasAParameter)
-                            sb.Length--;
+                        if (token.NodeType != GherkinTokenTypes.WHITE_SPACE)
+                        {
+                            sb.Append(token.GetText());
+                            if (previousTokenWasAParameter)
+                                sb.Length--;
+                        }
+                        else if (element.nextSibling != null)
+                        {
+                            sb.Append(token.GetText());
+                            if (previousTokenWasAParameter)
+                                sb.Length--;
+                        }
                         previousTokenWasAParameter = false;
                         break;
                 }
             }
-            return sb.ToString().Trim();
+            return sb.ToString();
         }
 
         public SpecflowStepDeclarationReference GetStepReference()
