@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -25,6 +26,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
         }
 
         public Regex RegexPattern { get; private set; }
+        public string ScenarioText { get; private set; }
+        public string FeatureText { get; private set; }
+        public IList<string> Tags { get; private set; }
 
         public override ResolveResultWithInfo ResolveWithoutCache()
         {
@@ -33,6 +37,9 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
             var stepKind = myOwner.EffectiveStepKind;
             var stepText = myOwner.GetStepText();
             var psiModule = myOwner.GetPsiModule();
+            ScenarioText = myOwner.GetScenarioText();
+            FeatureText = myOwner.GetFeatureText();
+            Tags = myOwner.GetEffectiveTags().ToList();
 
             var containingScenario = myOwner.GetContainingNode<IGherkinScenario>();
             if (containingScenario is GherkinScenarioOutline scenarioOutline)
@@ -45,26 +52,29 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
 
                 foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
                 {
-                     if (cacheEntry.Regex?.IsMatch(stepText) == true)
-                     {
-                         var types = psiServices.Symbols.GetTypesAndNamespacesInFile(sourceFile);
-                         foreach (var decElement in types)
-                         {
-                             if (!(decElement is IClass cl))
-                                 continue;
+                    if (!myOwner.MatchScope(cacheEntry.Scopes))
+                        continue;
+                    if (cacheEntry.Regex?.IsMatch(stepText) == true)
+                    {
+                        var types = psiServices.Symbols.GetTypesAndNamespacesInFile(sourceFile);
+                        foreach (var decElement in types)
+                        {
+                            if (decElement is not IClass cl)
+                                continue;
+                            if (cl.GetClrName().FullName != cacheEntry.ClassFullName)
+                                continue;
 
-                             var method = cl.GetMembers().OfType<IMethod>().FirstOrDefault(x => x.ShortName == cacheEntry.MethodName);
-                             if (method == null)
-                                 continue;
+                            var method = cl.GetMembers().OfType<IMethod>().FirstOrDefault(x => x.ShortName == cacheEntry.MethodName);
+                            if (method == null)
+                                continue;
 
-                             var symbolInfo = new SymbolInfo(method);
-                             var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
+                            var symbolInfo = new SymbolInfo(method);
+                            var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
 
-                             RegexPattern = cacheEntry.Regex;
-                             return new ResolveResultWithInfo(resolveResult, ResolveErrorType.OK);
-                         }
-                     }
-
+                            RegexPattern = cacheEntry.Regex;
+                            return new ResolveResultWithInfo(resolveResult, ResolveErrorType.OK);
+                        }
+                    }
                 }
             }
 
@@ -78,6 +88,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
 
                 foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
                 {
+                    if (!myOwner.MatchScope(cacheEntry.Scopes))
+                        continue;
                     if (cacheEntry.Regex?.IsMatch(stepText) == true)
                     {
                         var assemblyFile = psiAssemblyFileLoader.GetOrLoadAssembly(psiAssembly, false);

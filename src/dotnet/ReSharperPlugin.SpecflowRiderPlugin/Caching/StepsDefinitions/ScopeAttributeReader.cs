@@ -61,7 +61,7 @@ public class ScopeAttributeUtil
             }
 
             scopes ??= new List<SpecflowStepScope>(attributeInstances.Count);
-            scopes.Add(new SpecflowStepScope(feature, tag, scenario));
+            scopes.Add(new SpecflowStepScope(feature, scenario, tag));
         }
 
         return scopes;
@@ -103,7 +103,7 @@ public class ScopeAttributeUtil
             }
 
             scopes ??= new List<SpecflowStepScope>(attributeInstances.Count);
-            scopes.Add(new SpecflowStepScope(feature, tag, scenario));
+            scopes.Add(new SpecflowStepScope(feature, scenario, tag));
         }
 
         return scopes;

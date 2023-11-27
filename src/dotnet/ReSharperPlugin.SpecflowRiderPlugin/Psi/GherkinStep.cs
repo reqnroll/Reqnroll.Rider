@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.References;
 using ReSharperPlugin.SpecflowRiderPlugin.Utils.TestOutput;
 
@@ -94,7 +96,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public string GetStepText(bool withStepKeyWord = false)
         {
             var sb = new StringBuilder();
-            for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
+            for (var te = (TreeElement)FirstChild; te != null; te = te.nextSibling)
             {
                 switch (te)
                 {
@@ -126,7 +128,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         {
             var sb = new StringBuilder();
             var previousTokenWasAParameter = false;
-            for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
+            for (var te = (TreeElement)FirstChild; te != null; te = te.nextSibling)
             {
                 switch (te)
                 {
@@ -169,7 +171,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public string GetFirstLineText()
         {
             var sb = new StringBuilder();
-            for (var te = (TreeElement) FirstChild; te != null; te = te.nextSibling)
+            for (var te = (TreeElement)FirstChild; te != null; te = te.nextSibling)
             {
                 if (te.GetTokenType() == GherkinTokenTypes.NEW_LINE)
                     break;
@@ -182,6 +184,51 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public bool Match(StepTestOutput failedStepStepsOutput)
         {
             return GetFirstLineText() == failedStepStepsOutput.FirstLine;
+        }
+
+        public bool MatchScope([CanBeNull] IReadOnlyList<SpecflowStepScope> scopes)
+        {
+            if (scopes == null)
+                return true;
+
+            foreach (var scope in scopes)
+            {
+                if (scope.Scenario is not null)
+                {
+                    var matchScenario = GetScenarioText() == scope.Scenario;
+                    if (!matchScenario)
+                        continue;
+                }
+
+                if (scope.Feature is not null)
+                {
+                    var matchFeature = GetFeatureText() == scope.Feature;
+                    if (!matchFeature)
+                        continue;
+                }
+
+                if (scope.Tag is not null)
+                {
+                    var matchTag = GetEffectiveTags().Contains(scope.Tag);
+                    if (!matchTag)
+                        continue;
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+        [CanBeNull]
+        public string GetFeatureText()
+        {
+            return GetContainingNode<GherkinFeature>()?.GetFeatureText();
+        }
+
+        [CanBeNull]
+        public string GetScenarioText()
+        {
+            return GetContainingNode<GherkinScenario>()?.GetScenarioText();
         }
     }
 }
