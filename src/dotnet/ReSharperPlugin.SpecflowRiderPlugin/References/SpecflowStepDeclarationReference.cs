@@ -16,6 +16,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
+using IClassDeclaration = JetBrains.ReSharper.Psi.CSharp.Tree.IClassDeclaration;
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.References
 {
@@ -64,9 +65,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                             if (cl.GetClrName().FullName != cacheEntry.ClassFullName)
                                 continue;
 
-                            var methods = cl.GetMembers().OfType<IMethod>();
                             IDeclaredElement matchingMethod = null;
-                            foreach (var method in methods)
+                            foreach (var method in GetAllMethodFromClassAndBaseClasses(cl))
                             {
                                 if (method.ShortName != cacheEntry.MethodName)
                                     continue;
@@ -140,6 +140,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                 }
             }
             return new ResolveResultWithInfo(EmptyResolveResult.Instance, ResolveErrorType.NOT_RESOLVED);
+        }
+
+        private static IEnumerable<IMethod> GetAllMethodFromClassAndBaseClasses(IClass clazz)
+        {
+            foreach (var method in clazz.Methods)
+                yield return method;
+            var baseClassType = clazz.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
+            while (baseClassType is IClassDeclaration baseClassDeclaration)
+            {
+                foreach (var declaredElementMethod in baseClassDeclaration.MethodDeclarationsEnumerable)
+                    yield return declaredElementMethod.DeclaredElement;
+                baseClassType = baseClassDeclaration.DeclaredElement?.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
+            }
         }
 
         public override string GetName()

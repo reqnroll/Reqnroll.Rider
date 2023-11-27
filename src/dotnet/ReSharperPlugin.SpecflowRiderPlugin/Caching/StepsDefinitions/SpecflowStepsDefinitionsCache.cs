@@ -244,11 +244,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             var classScopes = _scopeAttributeUtil.GetScopes(classDeclaration);
             var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(classDeclaration.CLRName, hasSpecflowBindingAttribute, classScopes);
 
-            foreach (var member in classDeclaration.MemberDeclarations)
-            {
-                if (member is not IMethodDeclaration methodDeclaration)
-                    continue;
+            ReadStepsFromMethodsOfClass(classDeclaration, classCacheEntry);
+            return classCacheEntry;
+        }
 
+        private void ReadStepsFromMethodsOfClass(IClassDeclaration classDeclaration, SpecflowStepDefinitionCacheClassEntry classCacheEntry)
+        {
+            foreach (var methodDeclaration in classDeclaration.MethodDeclarations)
+            {
                 var methodParameterTypes = new string[methodDeclaration.ParameterDeclarations.Count];
                 for (var i = 0; i < methodDeclaration.ParameterDeclarations.Count; i++)
                 {
@@ -270,7 +273,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                         AddToCacheEntryBasedOnMethodName(methodDeclaration, attribute, methodCacheEntry);
                 }
             }
-            return classCacheEntry;
+
+            var baseClassType = classDeclaration.DeclaredElement?.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
+            if (baseClassType is IClassDeclaration baseClassDeclaration)
+                ReadStepsFromMethodsOfClass(baseClassDeclaration, classCacheEntry);
         }
 
         private static void AddToCacheEntryBasedOnAttributeRegex(
