@@ -19,16 +19,22 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
     public class AssemblyStepDefinitionCache : IAssemblyCache
     {
         private readonly IPsiAssemblyFileLoader _psiAssemblyFileLoader;
-        private readonly SpecflowAssemblyStepsDefinitionMergeData _mergeData = new SpecflowAssemblyStepsDefinitionMergeData();
+        private readonly SpecflowAssemblyStepsDefinitionMergeData _mergeData = new();
         private readonly ISpecflowStepInfoFactory _specflowStepInfoFactory;
+        private readonly ScopeAttributeUtil _scopeAttributeUtil;
 
         // FIXME: per step kind
         public OneToSetMap<IPsiAssembly, SpecflowStepInfo> AllStepsPerAssembly => _mergeData.StepsDefinitionsPerFiles;
 
-        public AssemblyStepDefinitionCache(IPsiAssemblyFileLoader psiAssemblyFileLoader, ISpecflowStepInfoFactory specflowStepInfoFactory)
+        public AssemblyStepDefinitionCache(
+            IPsiAssemblyFileLoader psiAssemblyFileLoader,
+            ISpecflowStepInfoFactory specflowStepInfoFactory,
+            ScopeAttributeUtil scopeAttributeUtil
+        )
         {
             _psiAssemblyFileLoader = psiAssemblyFileLoader;
             _specflowStepInfoFactory = specflowStepInfoFactory;
+            _scopeAttributeUtil = scopeAttributeUtil;
         }
 
         public IEnumerable<SpecflowStepInfo> GetStepAccessibleForModule(IPsiModule module, GherkinStepKind stepKind)
@@ -67,12 +73,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     if (type.CustomAttributesTypeNames.All(a => a.FullName.GetText() != SpecflowAttributeHelper.BindingAttribute.FullName))
                         continue;
 
-                    var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(type.FullyQualifiedName, true);
+                    var classScopes = _scopeAttributeUtil.GetScopesFromAttributes(type.CustomAttributes);
+                    var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(type.FullyQualifiedName, true, classScopes);
 
                     foreach (var method in type.GetMethods().Where(x => x.IsPublic))
                     {
                         // FIXME: We should avoid adding method that are not step here (it's just using more memory)
-                        var methodCacheEntry = classCacheEntry.AddMethod(method.Name);
+                        var methodScopes = _scopeAttributeUtil.GetScopesFromAttributes(method.CustomAttributes);
+                        var methodCacheEntry = classCacheEntry.AddMethod(method.Name, methodScopes);
 
                         for (var index = 0; index < method.CustomAttributes.Length; index++)
                         {
@@ -80,10 +88,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                             if (attributeInstance.ConstructorArguments.Length == 0)
                                 continue;
 
-                            var regex = attributeInstance.ConstructorArguments[0].Value as string;
-                            if (regex == null)
+                            if (attributeInstance.ConstructorArguments[0].Value is not string regex)
                                 continue;
-
 
                             var attributeTypeName = method.CustomAttributesTypeNames[index].FullName.ToString();
                             if (SpecflowAttributeHelper.IsAttributeForKind(GherkinStepKind.Given, attributeTypeName))
@@ -127,7 +133,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     _mergeData.PotentialSpecflowBindingTypes.Add(classEntry.ClassName, assembly);
                 foreach (var method in classEntry.Methods)
                 foreach (var step in method.Steps)
-                    _mergeData.StepsDefinitionsPerFiles.Add(assembly, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern));
+                    _mergeData.StepsDefinitionsPerFiles.Add(assembly, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern, classEntry.Scopes, method.Scopes));
             }
         }
 

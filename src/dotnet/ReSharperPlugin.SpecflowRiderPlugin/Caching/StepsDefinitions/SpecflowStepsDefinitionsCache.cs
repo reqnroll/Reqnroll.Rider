@@ -26,20 +26,29 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     [PsiComponent]
     public class SpecflowStepsDefinitionsCache : SimpleICache<SpecflowStepsDefinitionsCacheEntries>
     {
-        private const int VersionInt = 12;
+        private const int VersionInt = 13;
         public override string Version => VersionInt.ToString();
 
         // FIXME: per step kind
         public OneToSetMap<IPsiSourceFile, SpecflowStepInfo> AllStepsPerFiles => _mergeData.StepsDefinitionsPerFiles;
-        private readonly SpecflowStepsDefinitionMergeData _mergeData = new SpecflowStepsDefinitionMergeData();
+        private readonly SpecflowStepsDefinitionMergeData _mergeData = new();
         private readonly ISpecflowStepInfoFactory _specflowStepInfoFactory;
         private readonly IUnderscoresMethodNameStepDefinitionUtil _underscoresMethodNameStepDefinitionUtil;
+        private readonly ScopeAttributeUtil _scopeAttributeUtil;
 
-        public SpecflowStepsDefinitionsCache(Lifetime lifetime, IShellLocks locks, IPersistentIndexManager persistentIndexManager, ISpecflowStepInfoFactory specflowStepInfoFactory, IUnderscoresMethodNameStepDefinitionUtil underscoresMethodNameStepDefinitionUtil)
+        public SpecflowStepsDefinitionsCache(
+            Lifetime lifetime,
+            IShellLocks locks,
+            IPersistentIndexManager persistentIndexManager,
+            ISpecflowStepInfoFactory specflowStepInfoFactory,
+            IUnderscoresMethodNameStepDefinitionUtil underscoresMethodNameStepDefinitionUtil,
+            ScopeAttributeUtil scopeAttributeUtil
+        )
             : base(lifetime, locks, persistentIndexManager, new SpecflowStepDefinitionsEntriesMarshaller(), VersionInt)
         {
             _specflowStepInfoFactory = specflowStepInfoFactory;
             _underscoresMethodNameStepDefinitionUtil = underscoresMethodNameStepDefinitionUtil;
+            _scopeAttributeUtil = scopeAttributeUtil;
         }
 
         public IEnumerable<SpecflowStepInfo> GetStepAccessibleForModule(IPsiModule module, GherkinStepKind stepKind)
@@ -197,7 +206,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                     _mergeData.PotentialSpecflowBindingTypes.Add(classEntry.ClassName, sourceFile);
                 foreach (var method in classEntry.Methods)
                 foreach (var step in method.Steps)
-                    _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern));
+                    _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, step.StepKind, step.Pattern, classEntry.Scopes, method.Scopes));
             }
         }
 
@@ -232,14 +241,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
 
         private SpecflowStepDefinitionCacheClassEntry BuildBindingClassCacheEntry(IClassDeclaration classDeclaration, bool hasSpecflowBindingAttribute)
         {
-            var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(classDeclaration.CLRName, hasSpecflowBindingAttribute);
+            var classScopes = _scopeAttributeUtil.GetScopes(classDeclaration);
+            var classCacheEntry = new SpecflowStepDefinitionCacheClassEntry(classDeclaration.CLRName, hasSpecflowBindingAttribute, classScopes);
 
             foreach (var member in classDeclaration.MemberDeclarations)
             {
-                if (!(member is IMethodDeclaration methodDeclaration))
+                if (member is not IMethodDeclaration methodDeclaration)
                     continue;
 
-                var methodCacheEntry = classCacheEntry.AddMethod(methodDeclaration.DeclaredName);
+                var methodScopes = _scopeAttributeUtil.GetScopes(methodDeclaration);
+                var methodCacheEntry = classCacheEntry.AddMethod(methodDeclaration.DeclaredName, methodScopes);
 
                 foreach (var attribute in methodDeclaration.Attributes)
                 {
@@ -252,7 +263,10 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             return classCacheEntry;
         }
 
-        private static void AddToCacheEntryBasedOnAttributeRegex(IAttribute attribute, SpecflowStepDefinitionCacheMethodEntry methodCacheEntry)
+        private static void AddToCacheEntryBasedOnAttributeRegex(
+            IAttribute attribute,
+            SpecflowStepDefinitionCacheMethodEntry methodCacheEntry
+        )
         {
 
             var attributeArgument = attribute.Arguments[0];
@@ -270,7 +284,11 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                 methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
         }
 
-        private void AddToCacheEntryBasedOnMethodName(IMethodDeclaration memberDeclaration, IAttribute attribute, SpecflowStepDefinitionCacheMethodEntry methodCacheEntry)
+        private void AddToCacheEntryBasedOnMethodName(
+            IMethodDeclaration memberDeclaration,
+            IAttribute attribute,
+            SpecflowStepDefinitionCacheMethodEntry methodCacheEntry
+        )
         {
             var regex = _underscoresMethodNameStepDefinitionUtil.BuildRegexFromMethodName(memberDeclaration);
             if (SpecflowAttributeHelper.IsAttributeForKindUsingShortName(GherkinStepKind.Given, attribute.Name.ShortName))

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.SpecflowRiderPlugin.CompletionProviders;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -10,7 +11,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
 {
     public interface ISpecflowStepInfoFactory
     {
-        SpecflowStepInfo Create(string classFullName, string methodName, GherkinStepKind stepKind, string pattern);
+        SpecflowStepInfo Create(
+            string classFullName,
+            string methodName,
+            GherkinStepKind stepKind,
+            string pattern,
+            [CanBeNull] IReadOnlyList<SpecflowStepScope> classEntryScopes,
+            [CanBeNull] IReadOnlyList<SpecflowStepScope> methodScopes
+        );
     }
 
     [PsiSharedComponent]
@@ -23,7 +31,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
             _stepPatternUtil = stepPatternUtil;
         }
 
-        public SpecflowStepInfo Create(string classFullName, string methodName, GherkinStepKind stepKind, string pattern)
+        public SpecflowStepInfo Create(
+            string classFullName,
+            string methodName,
+            GherkinStepKind stepKind,
+            string pattern,
+            IReadOnlyList<SpecflowStepScope> classEntryScopes,
+            IReadOnlyList<SpecflowStepScope> methodScopes
+        )
         {
             Regex regex;
             try
@@ -39,6 +54,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
             {
                 regex = null;
             }
+
+            IReadOnlyList<SpecflowStepScope> scopes = null;
+            if (classEntryScopes != null && methodScopes != null)
+            {
+                var scope = new List<SpecflowStepScope>(classEntryScopes.Count + methodScopes.Count);
+                scope.AddRange(classEntryScopes);
+                scope.AddRange(methodScopes);
+                scopes = scope;
+            }
+            else if (classEntryScopes != null)
+                scopes = classEntryScopes;
+            else if (methodScopes != null)
+                scopes = methodScopes;
 
             var regexesPerCapture = new List<Regex>();
             var partialPattern = new StringBuilder();
@@ -73,7 +101,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     break;
             }
 
-            return new SpecflowStepInfo(classFullName, methodName, stepKind, pattern, regex, regexesPerCapture);
+            return new SpecflowStepInfo(classFullName, methodName, stepKind, pattern, regex, regexesPerCapture, scopes);
         }
     }
 }

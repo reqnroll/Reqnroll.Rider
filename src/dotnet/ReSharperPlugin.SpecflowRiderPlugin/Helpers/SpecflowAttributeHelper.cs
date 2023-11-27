@@ -8,6 +8,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Helpers
     public class SpecflowAttributeHelper
     {
         public static readonly ClrTypeName BindingAttribute = new ClrTypeName("TechTalk.SpecFlow.BindingAttribute");
+        public static readonly ClrTypeName ScopeAttribute = new ClrTypeName("TechTalk.SpecFlow.ScopeAttribute");
         public static readonly ClrTypeName StepDefinitionAttribute = new ClrTypeName("TechTalk.SpecFlow.StepDefinitionAttribute");
         public static readonly ClrTypeName GivenAttribute = new ClrTypeName("TechTalk.SpecFlow.GivenAttribute");
         public static readonly ClrTypeName WhenAttribute = new ClrTypeName("TechTalk.SpecFlow.WhenAttribute");

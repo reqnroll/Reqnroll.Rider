@@ -30,15 +30,15 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
         [CanBeNull]
         public Regex Regex { get; }
         public List<Regex> RegexesPerCapture { get; }
+        public IReadOnlyList<SpecflowStepScope> Scopes { get; }
 
-        public SpecflowStepInfo(
-            string classFullName,
-            string methodName,
-            GherkinStepKind stepKind,
-            string pattern,
-            [CanBeNull] Regex regex,
-            List<Regex> regexesPerCapture
-        )
+        public SpecflowStepInfo(string classFullName,
+                                string methodName,
+                                GherkinStepKind stepKind,
+                                string pattern,
+                                [CanBeNull] Regex regex,
+                                List<Regex> regexesPerCapture,
+                                IReadOnlyList<SpecflowStepScope> scopes)
         {
             ClassFullName = classFullName;
             MethodName = methodName;
@@ -46,6 +46,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             Pattern = pattern;
             Regex = regex;
             RegexesPerCapture = regexesPerCapture;
+            Scopes = scopes;
         }
     }
 }
