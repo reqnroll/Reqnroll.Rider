@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.21.0
+### Added
+- Add a new option to format tags. One tag / line or all the tag on the same line.
+- Add support for scope
+### Fixed
+- Invalid step resolution when 2 steps had the same name
+- Fix code preview in Code Style configuration
+
 ## 1.20.0
 ### Added
 - Support for language injection on pystring (Json / XML syntax color)
