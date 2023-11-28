@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.22.0
+### Fixed
+- Fix matching step in Scenario Outline when the last part is a parameter and the value of the parameter is empty Fix (#194)
+- Fix icon and text in Show usage popup (#105)
+
 ## 1.21.0
 ### Added
 - Add a new option to format tags. One tag / line or all the tag on the same line.
