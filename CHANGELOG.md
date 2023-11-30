@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.23.1
+- Fix parsing of step text that can lead to unrecognized steps
+
 ## 1.23.0
 - Fix invalid association between scenario and unit test when 2 feature file are name the same in different folders (#191)
 - Fix comment indentation (#185)
