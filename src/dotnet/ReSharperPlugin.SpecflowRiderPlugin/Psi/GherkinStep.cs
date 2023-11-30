@@ -105,7 +105,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     element = element.nextSibling;
             }
 
-            for (; element != null; element = element.nextSibling)
+            var eol = false;
+            for (; element != null && !eol; element = element.nextSibling)
             {
                 switch (element)
                 {
@@ -114,10 +115,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                         break;
                     case GherkinToken token:
                     {
-                        if (token.NodeType == GherkinTokenTypes.WHITE_SPACE && element.nextSibling != null)
+                        if (token.IsWhitespaceToken() && element.nextSibling?.IsWhitespaceToken() == false)
                             sb.Append(token.GetText());
-                        else
+                        else if (!token.IsWhitespaceToken())
                             sb.Append(token.GetText());
+                        if (token.NodeType == GherkinTokenTypes.NEW_LINE)
+                            eol = true;
                         break;
                     }
                 }
@@ -133,7 +136,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             var element = (TreeElement)FirstChild;
             for (; element != null && (element.NodeType == GherkinTokenTypes.STEP_KEYWORD || element.NodeType == GherkinTokenTypes.WHITE_SPACE); element = element.nextSibling)
                 element = element.nextSibling;
-            for (; element != null; element = element.nextSibling)
+            var eol = false;
+            for (; element != null && !eol; element = element.nextSibling)
             {
                 switch (element)
                 {
@@ -153,18 +157,21 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
 
                     case GherkinToken token:
                         // Remove `>`
-                        if (token.NodeType != GherkinTokenTypes.WHITE_SPACE)
+
+                        if (token.IsWhitespaceToken() && element.nextSibling?.IsWhitespaceToken() == false)
                         {
                             sb.Append(token.GetText());
                             if (previousTokenWasAParameter)
                                 sb.Length--;
                         }
-                        else if (element.nextSibling != null)
+                        else if (!token.IsWhitespaceToken())
                         {
                             sb.Append(token.GetText());
                             if (previousTokenWasAParameter)
                                 sb.Length--;
                         }
+                        if (token.NodeType == GherkinTokenTypes.NEW_LINE)
+                            eol = true;
                         previousTokenWasAParameter = false;
                         break;
                 }
