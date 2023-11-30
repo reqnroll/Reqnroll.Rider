@@ -53,7 +53,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     else if (tokenType == GherkinTokenTypes.TAG)
                         ParseTags(builder);
                     else if (tokenType == GherkinTokenTypes.COMMENT)
-                        ParseComments(builder);
+                        ParseTopComments(builder);
                     else
                         builder.AdvanceLexer();
                 }
@@ -65,7 +65,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
         }
 
-        private void ParseComments(PsiBuilder builder)
+        private void ParseTopComments(PsiBuilder builder)
         {
             while (builder.GetTokenType() == GherkinTokenTypes.COMMENT)
             {
@@ -79,7 +79,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     builder.DoneBeforeWhitespaces(commentMarker, GherkinNodeTypes.LANGUAGE_COMMENT, _lang);
                 }
                 else
-                    builder.Drop(commentMarker);
+                    builder.DoneBeforeWhitespaces(commentMarker, GherkinNodeTypes.COMMENT, commentText);
 
                 if (builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE
                     || builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
@@ -87,7 +87,19 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             }
         }
 
-        private static void ParseTags(PsiBuilder builder)
+        private static void ParseComment(PsiBuilder builder)
+        {
+            while (builder.GetTokenType() == GherkinTokenTypes.COMMENT)
+            {
+                var commentMarker = builder.Mark();
+                var commentText = builder.GetTokenText();
+                builder.AdvanceLexer();
+                builder.DoneBeforeWhitespaces(commentMarker, GherkinNodeTypes.COMMENT, commentText);
+                SkipWhitespace(builder);
+            }
+        }
+
+        private void ParseTags(PsiBuilder builder)
         {
             while (builder.GetTokenType() == GherkinTokenTypes.TAG)
             {
@@ -96,6 +108,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 builder.DoneBeforeWhitespaces(tagMarker, GherkinNodeTypes.TAG, null);
 
                 SkipWhitespace(builder);
+                ParseComment(builder);
             }
         }
 
@@ -111,6 +124,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             do
             {
                 builder.AdvanceLexer();
+                ParseComment(builder);
 
                 var tokenType = builder.GetTokenType();
                 if (tokenType == GherkinTokenTypes.TEXT && descMarker == null)
@@ -155,6 +169,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                     builder.AdvanceLexer();
                     continue;
                 }
+                ParseComment(builder);
 
                 ruleMarker = ParseRule(builder, ruleMarker);
                 ParseScenario(builder);
@@ -194,11 +209,12 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 return;
             var scenarioMarker = builder.Mark();
             ParseTags(builder);
+            ParseComment(builder);
 
             // scenarios
             var startTokenType = builder.GetTokenType();
             var outline = startTokenType == GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD;
-            
+
             if (!builder.Eof())
                 builder.AdvanceLexer();
 
@@ -206,6 +222,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             {
                 SkipWhitespace(builder);
                 ParseTags(builder);
+                ParseComment(builder);
 
                 if (ParseStepParameter(builder))
                     continue;
@@ -261,6 +278,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
                 _lastStepKind = effectiveStepKind;
             builder.DoneBeforeWhitespaces(marker, GherkinNodeTypes.STEP, (stepKind, effectiveStepKind));
         }
+
         private static void ParseExamplesBlock(PsiBuilder builder)
         {
             var marker = builder.Mark();

@@ -5,6 +5,7 @@ using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Format;
 using JetBrains.ReSharper.Psi.Impl.CodeStyle;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -14,6 +15,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
     [Language(typeof(GherkinLanguage))]
     public class GherkinFormatterInfoProvider : FormatterInfoProviderWithFluentApi<CodeFormattingContext, GherkinFormatSettingsKey>
     {
+        private static readonly NodeTypeSet Comments = new NodeTypeSet(GherkinNodeTypes.COMMENT);
+
         public GherkinFormatterInfoProvider(ISettingsSchema settingsSchema, ICalculatedSettingsSchema calculatedSettingsSchema, IThreading threading, Lifetime lifetime)
             : base(settingsSchema, calculatedSettingsSchema, threading, lifetime)
         {
@@ -36,7 +39,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 .Name("FeatureScenario")
                 .Where(
                     Parent().HasType(GherkinNodeTypes.FEATURE),
-                    Node().HasType(GherkinNodeTypes.SCENARIO).Or().HasType(GherkinNodeTypes.SCENARIO_OUTLINE).Or().HasType(GherkinNodeTypes.RULE))
+                    Node().HasType(GherkinNodeTypes.SCENARIO).Or().HasType(GherkinNodeTypes.SCENARIO_OUTLINE).Or().HasType(GherkinNodeTypes.RULE).OptionallyPreceededBy(Comments))
                 .Switch(s => s.ScenarioIndentSize, ContinuousIndentOptions(this, IndentType.External))
                 .Build();
 
@@ -44,7 +47,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 .Name("RuleScenario")
                 .Where(
                     Parent().HasType(GherkinNodeTypes.RULE),
-                    Node().HasType(GherkinNodeTypes.SCENARIO).Or().HasType(GherkinNodeTypes.SCENARIO_OUTLINE))
+                    Node().HasType(GherkinNodeTypes.SCENARIO).Or().HasType(GherkinNodeTypes.SCENARIO_OUTLINE).OptionallyPreceededBy(Comments))
                 .Switch(s => s.ScenarioIndentSize, ContinuousIndentOptions(this, IndentType.External))
                 .Build();
 
@@ -52,7 +55,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 .Name("ScenarioStep")
                 .Where(
                     Parent().HasType(GherkinNodeTypes.SCENARIO).Or().HasType(GherkinNodeTypes.SCENARIO_OUTLINE),
-                    Node().HasType(GherkinNodeTypes.STEP))
+                    Node().HasType(GherkinNodeTypes.STEP).OptionallyPreceededBy(Comments))
                 .Switch(s => s.StepIndentSize, ContinuousIndentOptions(this, IndentType.External))
                 .Build();
 
@@ -60,6 +63,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 .Name("AndIndent")
                 .Where(
                     Left().HasType(GherkinNodeTypes.STEP).Satisfies2((node, _) => node.Node is GherkinStep {StepKind: GherkinStepKind.And})
+                        .OptionallyPreceededBy(Comments)
                 )
                 .Switch(s => s.AndStepIndentSize, ContinuousIndentOptions(this, IndentType.External))
                 .Build();
@@ -76,7 +80,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                 .Name("ScenarioOutlineExampleBlob")
                 .Where(
                     Parent().HasType(GherkinNodeTypes.SCENARIO_OUTLINE),
-                    Node().HasType(GherkinNodeTypes.EXAMPLES_BLOCK))
+                    Node().HasType(GherkinNodeTypes.EXAMPLES_BLOCK).OptionallyPreceededBy(Comments))
                 .Switch(s => s.ExampleIndentSize, ContinuousIndentOptions(this, IndentType.External))
                 .Build();
 
@@ -90,7 +94,6 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Formatting
                     When(false).Switch(s => s.TableIndentSize, ContinuousIndentOptions(this, IndentType.External)))
                 .Build();
         }
-
 
         private void Aligning()
         {

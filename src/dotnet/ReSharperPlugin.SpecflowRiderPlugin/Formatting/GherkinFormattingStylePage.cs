@@ -91,6 +91,7 @@ Scenario: All spares
 Feature: Cucumber stock keeping
 Scenario: eat 5 out of 20
   Given there are 20 cucumbers
+  And something else
   When I eat 5 cucumbers
   Then I should have 15 cucumbers
 

@@ -1,4 +1,5 @@
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
+using JetBrains.ReSharper.Psi.Parsing;
 // ReSharper disable InconsistentNaming
 
 namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
@@ -24,6 +25,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
         public static readonly GherkinNodeType TABLE = new GherkinTableNodeType("TABLE", NextId);
         public static readonly GherkinNodeType RULE = new GherkinRuleNodeType("RULE", NextId);
         public static readonly GherkinNodeType LANGUAGE_COMMENT = new GherkinLanguageCommentNodeType("LANGUAGE_COMMENT", NextId);
+        public static readonly GherkinNodeType COMMENT = new GherkinCommentNodeType("COMMENT", NextId);
 
         private class GherkinFileNodeType : GherkinNodeType
         {
@@ -150,6 +152,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             public override CompositeElement Create(object userData)
             {
                 return new GherkinLanguageComment(userData as string);
+            }
+        }
+
+        private class GherkinCommentNodeType : GherkinNodeType
+        {
+            public GherkinCommentNodeType(string name, int index) : base(name, index)
+            {
+            }
+
+            public override CompositeElement Create(object userData)
+            {
+                return new GherkinComment(userData as string);
             }
         }
     }
