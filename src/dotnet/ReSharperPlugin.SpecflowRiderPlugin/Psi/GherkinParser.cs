@@ -401,6 +401,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Psi
             var i = 0;
             while (builder.GetTokenType(i) == GherkinTokenTypes.TAG ||
                    builder.GetTokenType(i) == GherkinTokenTypes.WHITE_SPACE ||
+                   builder.GetTokenType(i) == GherkinTokenTypes.COMMENT ||
                    builder.GetTokenType(i) == GherkinTokenTypes.NEW_LINE)
                 i++;
 
