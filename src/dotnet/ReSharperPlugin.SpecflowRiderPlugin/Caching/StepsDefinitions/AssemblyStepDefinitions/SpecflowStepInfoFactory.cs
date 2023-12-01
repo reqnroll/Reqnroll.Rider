@@ -11,15 +11,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
 {
     public interface ISpecflowStepInfoFactory
     {
-        SpecflowStepInfo Create(
-            string classFullName,
-            string methodName,
-            string[] methodParameterTypes,
-            GherkinStepKind stepKind,
-            string pattern,
-            [CanBeNull] IReadOnlyList<SpecflowStepScope> classEntryScopes,
-            [CanBeNull] IReadOnlyList<SpecflowStepScope> methodScopes
-        );
+        SpecflowStepInfo Create(string classFullName,
+                                string methodName,
+                                string[] methodParameterTypes,
+                                string[] methodParameterNames,
+                                GherkinStepKind stepKind,
+                                string pattern,
+                                [CanBeNull] IReadOnlyList<SpecflowStepScope> classEntryScopes,
+                                [CanBeNull] IReadOnlyList<SpecflowStepScope> methodScopes);
     }
 
     [PsiSharedComponent]
@@ -32,15 +31,14 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
             _stepPatternUtil = stepPatternUtil;
         }
 
-        public SpecflowStepInfo Create(
-            string classFullName,
-            string methodName,
-            string[] methodParameterTypes,
-            GherkinStepKind stepKind,
-            string pattern,
-            IReadOnlyList<SpecflowStepScope> classEntryScopes,
-            IReadOnlyList<SpecflowStepScope> methodScopes
-        )
+        public SpecflowStepInfo Create(string classFullName,
+                                       string methodName,
+                                       string[] methodParameterTypes,
+                                       string[] methodParameterNames,
+                                       GherkinStepKind stepKind,
+                                       string pattern,
+                                       IReadOnlyList<SpecflowStepScope> classEntryScopes,
+                                       IReadOnlyList<SpecflowStepScope> methodScopes)
         {
             Regex regex;
             try
@@ -103,7 +101,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     break;
             }
 
-            return new SpecflowStepInfo(classFullName, methodName, methodParameterTypes, stepKind, pattern, regex, regexesPerCapture, scopes);
+            return new SpecflowStepInfo(classFullName, methodName, methodParameterTypes, methodParameterNames, stepKind, pattern, regex, regexesPerCapture, scopes);
         }
     }
 }

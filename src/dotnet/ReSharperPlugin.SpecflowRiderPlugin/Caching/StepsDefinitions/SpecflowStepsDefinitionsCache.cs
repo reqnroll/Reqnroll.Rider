@@ -26,7 +26,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
     [PsiComponent]
     public class SpecflowStepsDefinitionsCache : SimpleICache<SpecflowStepsDefinitionsCacheEntries>
     {
-        private const int VersionInt = 14;
+        private const int VersionInt = 15;
         public override string Version => VersionInt.ToString();
 
         // FIXME: per step kind
@@ -206,7 +206,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
                     _mergeData.PotentialSpecflowBindingTypes.Add(classEntry.ClassName, sourceFile);
                 foreach (var method in classEntry.Methods)
                 foreach (var step in method.Steps)
-                    _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, method.MethodParameterTypes, step.StepKind, step.Pattern, classEntry.Scopes, method.Scopes));
+                    _mergeData.StepsDefinitionsPerFiles.Add(sourceFile, _specflowStepInfoFactory.Create(classEntry.ClassName, method.MethodName, method.MethodParameterTypes, method.MethodParameterNames, step.StepKind, step.Pattern, classEntry.Scopes, method.Scopes));
             }
         }
 
@@ -253,17 +253,16 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions
             foreach (var methodDeclaration in classDeclaration.MethodDeclarations)
             {
                 var methodParameterTypes = new string[methodDeclaration.ParameterDeclarations.Count];
+                var methodParameterNames = new string[methodDeclaration.ParameterDeclarations.Count];
                 for (var i = 0; i < methodDeclaration.ParameterDeclarations.Count; i++)
                 {
                     var parameterDeclaration = methodDeclaration.ParameterDeclarations[i];
-                    if (parameterDeclaration.Type is not IDeclaredType declarationType)
-                        methodParameterTypes[i] = null;
-                    else
-                        methodParameterTypes[i] = declarationType.GetClrName().FullName;
+                    methodParameterNames[i] = parameterDeclaration.DeclaredName;
+                    methodParameterTypes[i] = parameterDeclaration.TypeUsage?.GetText();
                 }
 
                 var methodScopes = _scopeAttributeUtil.GetScopes(methodDeclaration);
-                var methodCacheEntry = classCacheEntry.AddMethod(methodDeclaration.DeclaredName, methodParameterTypes, methodScopes);
+                var methodCacheEntry = classCacheEntry.AddMethod(methodDeclaration.DeclaredName, methodParameterTypes, methodParameterNames, methodScopes);
 
                 foreach (var attribute in methodDeclaration.Attributes)
                 {

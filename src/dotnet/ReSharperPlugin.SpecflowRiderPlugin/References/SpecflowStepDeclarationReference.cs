@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using JetBrains.Collections;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 using JetBrains.ReSharper.Psi.Impl.Reflection2;
 using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Compiled;
@@ -76,10 +77,18 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                                 for (var i = 0; i < method.Parameters.Count; i++)
                                 {
                                     var methodParameter = method.Parameters[i];
+                                    var expectedParameterName = cacheEntry.MethodParameterNames[i];
+                                    if (methodParameter.ShortName != expectedParameterName)
+                                    {
+                                        allParameterTypesMatch = false;
+                                        break;
+                                    }
                                     var expectedTypeName = cacheEntry.MethodParameterTypes[i];
                                     if (expectedTypeName != null)
                                     {
-                                        if (methodParameter.Type is IDeclaredType declarationType && declarationType.GetClrName().FullName != expectedTypeName)
+                                        if (methodParameter.Type is IDeclaredType declarationType
+                                            && !declarationType.GetClrName().FullName.EndsWith(expectedTypeName)
+                                            && !declarationType.GetLongPresentableName(CSharpLanguage.Instance).EndsWith(expectedTypeName))
                                         {
                                             allParameterTypesMatch = false;
                                             break;
