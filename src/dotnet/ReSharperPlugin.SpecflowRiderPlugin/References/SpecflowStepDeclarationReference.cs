@@ -14,6 +14,7 @@ using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Compiled;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.TestRunner.Abstractions.Extensions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
@@ -88,7 +89,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.References
                                     {
                                         if (methodParameter.Type is IDeclaredType declarationType
                                             && !declarationType.GetClrName().FullName.EndsWith(expectedTypeName)
-                                            && !declarationType.GetLongPresentableName(CSharpLanguage.Instance).EndsWith(expectedTypeName))
+                                            && !declarationType.GetLongPresentableName(CSharpLanguage.Instance).SubstringBefore("<").EndsWith(expectedTypeName.SubstringBefore("<")))
                                         {
                                             allParameterTypesMatch = false;
                                             break;
