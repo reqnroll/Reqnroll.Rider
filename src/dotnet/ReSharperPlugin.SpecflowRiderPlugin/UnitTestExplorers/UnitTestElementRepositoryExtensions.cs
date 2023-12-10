@@ -5,10 +5,12 @@ using System.Text;
 using JetBrains.Diagnostics;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.JavaScript.Util.Literals;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.UnitTestFramework.Criteria;
 using JetBrains.ReSharper.UnitTestFramework.Elements;
 using JetBrains.ReSharper.UnitTestFramework.Persistence;
+using JetBrains.Util;
 using ReSharperPlugin.SpecflowRiderPlugin.Psi;
 using TechTalk.SpecFlow.Tracing;
 
@@ -42,7 +44,7 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             {
                 if (projectItem is IProjectFolder projectFolder)
                 {
-                    sb.Append(projectFolder.Name);
+                    NamespaceHelper.ConvertFolderNameToToIdentifierPart(projectFolder.Name, sb);
                     sb.Append('.');
                 }
             }
