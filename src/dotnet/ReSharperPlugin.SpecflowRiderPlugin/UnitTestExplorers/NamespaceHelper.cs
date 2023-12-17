@@ -19,6 +19,7 @@ public static class NamespaceHelper
                 case '\'':
                 case '"':
                 case ' ':
+                case '+':
                 case '\t':
                     lastIsSeparator = true;
                     break;
