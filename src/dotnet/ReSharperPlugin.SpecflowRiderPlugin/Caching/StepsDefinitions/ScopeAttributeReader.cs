@@ -76,7 +76,8 @@ public class ScopeAttributeUtil
         List<SpecflowStepScope>? scopes = null;
         foreach (var attribute in attributeInstances)
         {
-            if (attribute.CustomAttributesTypeNames.All(a => a.FullName.GetText() != SpecflowAttributeHelper.ScopeAttribute.FullName))
+            if (attribute.UsedConstructorSpecification?.OwnerType?.FullName != SpecflowAttributeHelper.ScopeAttribute.FullName
+                && attribute.UsedConstructor?.DeclaringType?.FullyQualifiedName != SpecflowAttributeHelper.ScopeAttribute.FullName)
                 continue;
 
             string? feature = null;
