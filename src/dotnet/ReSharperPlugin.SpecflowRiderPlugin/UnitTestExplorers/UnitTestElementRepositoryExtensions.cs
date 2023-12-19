@@ -44,6 +44,8 @@ namespace ReSharperPlugin.SpecflowRiderPlugin.UnitTestExplorers
             {
                 if (projectItem is IProjectFolder projectFolder)
                 {
+                    if (projectFolder.IsSolutionFolder())
+                        continue;
                     NamespaceHelper.ConvertFolderNameToToIdentifierPart(projectFolder.Name, sb);
                     sb.Append('.');
                 }

@@ -23,8 +23,11 @@ public static class NamespaceHelper
                 case '\t':
                     lastIsSeparator = true;
                     break;
-                case '-':
                 case '.':
+                    lastIsSeparator = true;
+                    sb.Append('.');
+                    break;
+                case '-':
                 case '_':
                     lastIsSeparator = true;
                     sb.Append('_');
