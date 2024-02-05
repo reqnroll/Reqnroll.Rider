@@ -12,7 +12,6 @@
     
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="Reqnroll.Plus.LivingDocPlugin" Version="3.9.57" />
     $ReqnrollNugetPackages$
     $additionalNugetPackages$
     $fluentAssertionsNugetPackage$

@@ -63,12 +63,8 @@
             "type": "parameter",
             "description": "Provider for Unit Tests",
             "datatype": "choice",
-            "defaultValue": "reqnrollplusrunner",
+            "defaultValue": "nunit",
             "choices": [
-                {
-                    "choice": "reqnrollplusrunner",
-                    "description": "SpecFlow+ Runner"
-                },
                 {
                     "choice": "nunit",
                     "description": "NUnit"
@@ -113,20 +109,16 @@
                 "datatype": "string",
                 "cases": [
                     {
-                        "condition": "(unitTestProvider == 'reqnrollplusrunner')",
-                        "value": "<PackageReference Include=\"SpecRun.Reqnroll\" Version=\"3.9.7\" />"
-                    },
-                    {
                         "condition": "(unitTestProvider == 'xunit')",
-                        "value": "<PackageReference Include=\"Reqnroll.xUnit\" Version=\"3.9.22\" />"
+                        "value": "<PackageReference Include=\"Reqnroll.xUnit\" Version=\"1.0.0\" />"
                     },
                     {
                         "condition": "(unitTestProvider == 'mstest')",
-                        "value": "<PackageReference Include=\"Reqnroll.MsTest\" Version=\"3.9.22\" />"
+                        "value": "<PackageReference Include=\"Reqnroll.MsTest\" Version=\"1.0.0\" />"
                     },
                     {
                         "condition": "(unitTestProvider == 'nunit')",
-                        "value": "<PackageReference Include=\"Reqnroll.NUnit\" Version=\"3.9.22\" />"
+                        "value": "<PackageReference Include=\"Reqnroll.NUnit\" Version=\"1.0.0\" />"
                     }
                 ]
             }

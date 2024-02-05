@@ -8,7 +8,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectTemplateParameters
 {
     public class UnitTestProviderParameter : DotNetTemplateParameter
     {
-        private readonly string _runner = "reqnrollplusrunner";
+        private readonly string _runner = "nunit";
         private readonly string _msTest = "mstest";
 
         public UnitTestProviderParameter() : base("unitTestProvider", "Test Framework", null)
