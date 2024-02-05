@@ -58,6 +58,6 @@ packages
 
 *.generated.cs
 *.generated.props
-/src/dotnet/ReSharperPlugin.SpecflowRiderPlugin/Analytics/AppInsightsConfiguration.cs
+/src/dotnet/ReSharperPlugin.ReqnrollRiderPlugin/Analytics/AppInsightsConfiguration.cs
 
 *.orig

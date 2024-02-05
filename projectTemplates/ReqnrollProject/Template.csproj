@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$target$</TargetFramework>$langVersion$
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Using Include="Reqnroll" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="Reqnroll.Plus.LivingDocPlugin" Version="3.9.57" />
+    $ReqnrollNugetPackages$
+    $additionalNugetPackages$
+    $fluentAssertionsNugetPackage$
+  </ItemGroup>
+
+</Project>

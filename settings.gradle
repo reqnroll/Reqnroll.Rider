@@ -21,6 +21,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'specflowriderplugin'
+rootProject.name = 'reqnrollriderplugin'
 
 include ':protocol'

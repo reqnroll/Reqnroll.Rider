@@ -1,9 +1,9 @@
-![GitHub](https://img.shields.io/github/license/Socolin/resharper-specflow)
-[![Gitter](https://badges.gitter.im/Rider-Specflow/community.svg)](https://gitter.im/Rider-Specflow/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+![GitHub](https://img.shields.io/github/license/Socolin/resharper-reqnroll)
+[![Gitter](https://badges.gitter.im/Rider-Reqnroll/community.svg)](https://gitter.im/Rider-Reqnroll/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
-# SpecFlow Support for ReSharper and Rider
-The "SpecFlow Support" plugin adds specific functionality for the [SpecFlow](https://specflow.org/) to [Rider](https://www.jetbrains.com/rider/). (Resharper will come if requested enough)
+# Reqnroll Support for ReSharper and Rider
+The "Reqnroll Support" plugin adds specific functionality for the [Reqnroll](https://reqnroll.net/) to [Rider](https://www.jetbrains.com/rider/). (Resharper will come if requested enough)
 
 **IMPORTANT**: This plugin is still at it's beginning, It may be still buggy. Don't hesitate to report any bug or cool feature to add and don't forget to :+1: any feature you want to help prioritize.
 
@@ -13,7 +13,7 @@ The "SpecFlow Support" plugin adds specific functionality for the [SpecFlow](htt
 ./gradlew :buildPlugin
 ```
 
-You can find CI builds in [Actions](https://github.com/SpecFlowOSS/SpecFlow.Rider/actions) tab
+You can find CI builds in [Actions](https://github.com/reqnroll/Reqnroll.Rider/actions) tab
 
 ## Features
 
@@ -21,7 +21,7 @@ All those feature should work out of the box for existing projects. If something
 
 ### Syntax highlight
 
-![Syntax highlight](doc/images/SpecflowSyntaxHighlight.png)
+![Syntax highlight](doc/images/ReqnrollSyntaxHighlight.png)
 
 ### Go to step declaration
 
@@ -31,7 +31,7 @@ All those feature should work out of the box for existing projects. If something
 
 ![Quick fix example](doc/images/QuickFixCreateStep.gif)
 
-### Run tests from SpecFlow files
+### Run tests from Reqnroll files
 
 ![Run test in gutter example](doc/images/RunTestInGutter.png)
 
@@ -43,7 +43,7 @@ All those feature should work out of the box for existing projects. If something
 
 ![Highlight the failing steps](doc/images/FailedStepGutterMark.gif)
 
-Note: If this is not working, try to add the following configuration in the `specflow.json`
+Note: If this is not working, try to add the following configuration in the `reqnroll.json`
 ```json
 {
   "trace": {
@@ -54,7 +54,7 @@ Note: If this is not working, try to add the following configuration in the `spe
 
 ## Limitations
 
-- For now, it only supports step definitions using [Regular expressions in attributes](https://docs.specflow.org/projects/specflow/en/latest/Bindings/Step-Definitions.html#step-matching-styles-rules). If you are interested in the other ones, please open an issue.
+- For now, it only supports step definitions using [Regular expressions in attributes](https://docs.reqnroll.net/projects/reqnroll/en/latest/Bindings/Step-Definitions.html#step-matching-styles-rules). If you are interested in the other ones, please open an issue.
 
 ## Notes
 

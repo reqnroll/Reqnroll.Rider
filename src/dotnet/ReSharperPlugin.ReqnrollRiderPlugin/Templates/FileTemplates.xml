@@ -1,0 +1,198 @@
+<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=0539349E338DE14B8DA4652D2CBBFA4A/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=0539349E338DE14B8DA4652D2CBBFA4A/EntryName/@EntryValue">&lt;No Name&gt;</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=0539349E338DE14B8DA4652D2CBBFA4A/Position/@EntryValue">11</s:Int64>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=2CBD6971A7955044AD2624B84FB49E38/Position/@EntryValue">8</s:Int64>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=7F2A1BE8D0078241A9AE7802038BAD3C/Position/@EntryValue">6</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=98ED9E8976410F4BB95D7F45D2EBFEDE/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=98ED9E8976410F4BB95D7F45D2EBFEDE/EntryName/@EntryValue">&lt;No Name&gt;</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=98ED9E8976410F4BB95D7F45D2EBFEDE/Position/@EntryValue">10</s:Int64>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=C4795E57DDEC1C4F97BBC8C7173EBBCA/Position/@EntryValue">7</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=EE11C7F40DD13340B0E9F793AEE22A33/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=EE11C7F40DD13340B0E9F793AEE22A33/EntryName/@EntryValue">&lt;No Name&gt;</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=EE11C7F40DD13340B0E9F793AEE22A33/Position/@EntryValue">12</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=FC83E82868E3174BB9F0C3F25EEADB16/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=FC83E82868E3174BB9F0C3F25EEADB16/EntryName/@EntryValue">&lt;No Name&gt;</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=FC83E82868E3174BB9F0C3F25EEADB16/Position/@EntryValue">9</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/@KeyIndexDefined">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Applicability/=File/@EntryIndexedValue">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/CustomProperties/=Extension/@EntryIndexedValue">json</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/CustomProperties/=FileName/@EntryIndexedValue">reqnroll</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/CustomProperties/=ValidateFileName/@EntryIndexedValue">False</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Description/@EntryValue">Reqnroll Json Configuration</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Image/@EntryValue">ReqnrollFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Reformat/@EntryValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=ABDFB0613102DF4DBB59387506ADA616/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=ABDFB0613102DF4DBB59387506ADA616/CustomProperties/=mask/@EntryIndexedValue">techtalk.reqnroll</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=ABDFB0613102DF4DBB59387506ADA616/Type/@EntryValue">InProjectWithReference</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=0539349E338DE14B8DA4652D2CBBFA4A/Text/@EntryValue">{
+    "bindingCulture":
+    {
+        "name" :"en-us"
+    },
+    "language":
+    {
+        "feature": "en-us"
+    }
+}
+</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/@KeyIndexDefined">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Applicability/=File/@EntryIndexedValue">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/CustomProperties/=Extension/@EntryIndexedValue">cs</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/CustomProperties/=FileName/@EntryIndexedValue">Hook</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/CustomProperties/=ValidateFileName/@EntryIndexedValue">False</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Description/@EntryValue">Reqnroll Hooks (event bindings)</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Image/@EntryValue">ReqnrollFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Field/=CLASS/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Field/=CLASS/Expression/@EntryValue">getAlphaNumericFileNameWithoutExtension()</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Field/=CLASS/Order/@EntryValue">1</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Field/=NAMESPACE/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Field/=NAMESPACE/Expression/@EntryValue">fileDefaultNamespace()</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Field/=NAMESPACE/Order/@EntryValue">0</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Reformat/@EntryValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=ABDFB0613102DF4DBB59387506ADA616/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=ABDFB0613102DF4DBB59387506ADA616/CustomProperties/=mask/@EntryIndexedValue">techtalk.reqnroll</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=ABDFB0613102DF4DBB59387506ADA616/Type/@EntryValue">InProjectWithReference</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=98ED9E8976410F4BB95D7F45D2EBFEDE/Text/@EntryValue">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Reqnroll;
+
+namespace $NAMESPACE$
+{
+  [Binding]
+  public sealed class $CLASS$
+  {
+  // For additional details on Reqnroll hooks see http://go.reqnroll.net/doc-hooks
+
+        [BeforeScenario]
+        public void BeforeScenario()
+        {
+            //TODO: implement logic that has to run before executing each scenario
+        }
+
+        [AfterScenario]
+        public void AfterScenario()
+        {
+            //TODO: implement logic that has to run after executing each scenario
+        }
+    }
+}
+</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/@KeyIndexDefined">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Applicability/=File/@EntryIndexedValue">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/CustomProperties/=Extension/@EntryIndexedValue">cs</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/CustomProperties/=FileName/@EntryIndexedValue">StepDefinition</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/CustomProperties/=ValidateFileName/@EntryIndexedValue">False</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Description/@EntryValue">Reqnroll Step Definition</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Image/@EntryValue">ReqnrollFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Field/=CLASS/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Field/=CLASS/Expression/@EntryValue">getAlphaNumericFileNameWithoutExtension()</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Field/=CLASS/Order/@EntryValue">1</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Field/=NAMESPACE/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Field/=NAMESPACE/Expression/@EntryValue">fileDefaultNamespace()</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Field/=NAMESPACE/Order/@EntryValue">0</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Reformat/@EntryValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=ABDFB0613102DF4DBB59387506ADA616/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=ABDFB0613102DF4DBB59387506ADA616/CustomProperties/=mask/@EntryIndexedValue">techtalk.reqnroll</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=ABDFB0613102DF4DBB59387506ADA616/Type/@EntryValue">InProjectWithReference</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=EE11C7F40DD13340B0E9F793AEE22A33/Text/@EntryValue">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Reqnroll;
+
+namespace $NAMESPACE$
+{
+    [Binding]
+    public sealed class $CLASS$
+    {
+        // For additional details on Reqnroll step definitions see https://go.reqnroll.net/doc-stepdef
+
+        private readonly ScenarioContext _scenarioContext;
+
+        public $CLASS$(ScenarioContext scenarioContext)
+        {
+            _scenarioContext = scenarioContext;
+        }
+
+        [Given("the first number is (.*)")]
+        public void GivenTheFirstNumberIs(int number)
+        {
+            //TODO: implement arrange (precondition) logic
+            // For storing and retrieving scenario-specific data see https://go.reqnroll.net/doc-sharingdata 
+            // To use the multiline text or the table argument of the scenario,
+            // additional string/Table parameters can be defined on the step definition
+            // method. 
+
+            _scenarioContext.Pending();
+        }
+
+        [Given("the second number is (.*)")]
+        public void GivenTheSecondNumberIs(int number)
+        {
+            //TODO: implement arrange (precondition) logic
+            // For storing and retrieving scenario-specific data see https://go.reqnroll.net/doc-sharingdata 
+            // To use the multiline text or the table argument of the scenario,
+            // additional string/Table parameters can be defined on the step definition
+            // method. 
+
+            _scenarioContext.Pending();
+        }
+
+        [When("the two numbers are added")]
+        public void WhenTheTwoNumbersAreAdded()
+        {
+            //TODO: implement act (action) logic
+
+            _scenarioContext.Pending();
+        }
+
+        [Then("the result should be (.*)")]
+        public void ThenTheResultShouldBe(int result)
+        {
+            //TODO: implement assert (verification) logic
+
+            _scenarioContext.Pending();
+        }
+    }
+}
+</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/@KeyIndexDefined">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Applicability/=File/@EntryIndexedValue">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/CustomProperties/=Extension/@EntryIndexedValue">feature</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/CustomProperties/=FileName/@EntryIndexedValue">ReqnrollFeature</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/CustomProperties/=ValidateFileName/@EntryIndexedValue">False</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Description/@EntryValue">Reqnroll Feature file</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Image/@EntryValue">ReqnrollFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Field/=CLASS/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Field/=CLASS/Expression/@EntryValue">getAlphaNumericFileNameWithoutExtension()</s:String>
+    <s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Field/=CLASS/Order/@EntryValue">0</s:Int64>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Reformat/@EntryValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=ABDFB0613102DF4DBB59387506ADA616/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=ABDFB0613102DF4DBB59387506ADA616/CustomProperties/=mask/@EntryIndexedValue">techtalk.reqnroll</s:String>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=ABDFB0613102DF4DBB59387506ADA616/Type/@EntryValue">InProjectWithReference</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
+    <s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+    <s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC83E82868E3174BB9F0C3F25EEADB16/Text/@EntryValue">Feature: $CLASS$
+	Simple calculator for adding two numbers
+
+@mytag
+Scenario: Add two numbers
+	Given the first number is 50
+	And the second number is 70
+	When the two numbers are added
+	Then the result should be 120</s:String>
+
+	</wpf:ResourceDictionary>

@@ -6,7 +6,7 @@ This document describes how this plugin is working. It aims to explain some basi
 
 The custom language part is explained [in the resharper dev guide](https://www.jetbrains.com/help/resharper/sdk/CustomLanguages_Overview.html)
 
-The language behind `.feature` is Gherkin, so every class related to the language part are named with `Gherkin` in them (And the one related to SpecFlow like references between C# / .feature and other things like that are name with `Specflow`.
+The language behind `.feature` is Gherkin, so every class related to the language part are named with `Gherkin` in them (And the one related to Reqnroll like references between C# / .feature and other things like that are name with `Reqnroll`.
 
 The Lexer/Parser code that build the Gherkin's `ITreeNode` can be found in `PSI/` folder. The goal of all this is to provide syntax highlighting, and a tree style structure `GherkinFile` which can be walked to find `Feature`, `Scenario`, and `Step`
 
@@ -20,17 +20,17 @@ A cache iterate over all files of the solution and update in memory structure th
 
 In this plugin there are various caches:
 
-### SpecflowSettingsFilesCache
+### ReqnrollSettingsFilesCache
 
-This cache look for the `specflow.json` file and update the settings. Those settings can be access by injecting `SpecflowSettingsProvider`
+This cache look for the `reqnroll.json` file and update the settings. Those settings can be access by injecting `ReqnrollSettingsProvider`
 
 There is a special case for this one, if it detects a change in the locales, it invalidates other related caches
 
-### SpecflowStepsDefinitionsCache
+### ReqnrollStepsDefinitionsCache
 
 This cache keeps the list of files that may contains C# step definition and all the steps definitions
 
-### SpecflowStepsUsagesCache
+### ReqnrollStepsUsagesCache
 
 This cache keeps the list of all step in `.feature` files
 
@@ -46,7 +46,7 @@ This daemon adds highlighting on steps that do not have any step definition in C
 
 See References section below for more details about this.
 
-TODO: If a step definition can be found in one assembly not specified in `specflow.json` it should add another kind of error to allow a quickfix that will add the assembly to `specflow.json`
+TODO: If a step definition can be found in one assembly not specified in `reqnroll.json` it should add another kind of error to allow a quickfix that will add the assembly to `reqnroll.json`
 
 ### MethodNameMismatchPattern
 
@@ -77,7 +77,7 @@ In this case **"50"** matches the **(.\*)** pattern.
 
 ## Folding
 
-The implementation of the folding can be found in the `SpecFlowFoldingProcessor` class.
+The implementation of the folding can be found in the `ReqnrollFoldingProcessor` class.
 The following sections are foldable:
 - Scenarios
 - Scenario Outlines
@@ -97,11 +97,11 @@ The references systems in resharper allow to link a declaration with its usage.
 A good summary from Matt Ellis on the `#dotnet-pluginwritters`
 > To recap a little, IReference is an outgoing reference from a tree node. It can be first class (implemented by the language itself) or come from a provider (via the factory interfaces). The reference doesn’t really point to anything until you try to resolve it, at which point it tries to find candidate declared element(s). These can be used for completion, or for navigation, or for error highlighting. If a reference fails to resolve, it is highlighted as an error - the dreaded red code. It is up to the custom language to provide this highlighting. Once the references are in place, find usages and navigation should come out of the box. Find usages is just a reverse lookup - find files with a matching name, the resolve all outgoing references with that name and see if they resolve to the target element. Implementing the reference correctly will also mean rename works.
 
-So this is what the `SpecflowStepDeclarationReference` is doing, it's taking a `GherkinStep` as input and provide the method `ResolveWithoutCache` in charge of finding the C# method that declare this step. This process uses the cache `SpecflowStepsDefinitionsCache`
+So this is what the `ReqnrollStepDeclarationReference` is doing, it's taking a `GherkinStep` as input and provide the method `ResolveWithoutCache` in charge of finding the C# method that declare this step. This process uses the cache `ReqnrollStepsDefinitionsCache`
 
 This reference is built in `GherkinStep` constructor and accessed via `GherkinStep.GetFirstClassReferences()`
 
-There is a tricky part here with specflow, to get the `Find Usages` working since specflow steps text does not match specflow step definition method name, there is a class: `SpecflowSearcherFactory` that resolve this problem by providing for a given method, ths potential files that may reference this step definition. This last part use the cache `SpecflowStepsUsagesCache`
+There is a tricky part here with reqnroll, to get the `Find Usages` working since reqnroll steps text does not match reqnroll step definition method name, there is a class: `ReqnrollSearcherFactory` that resolve this problem by providing for a given method, ths potential files that may reference this step definition. This last part use the cache `ReqnrollStepsUsagesCache`
 
 ## Quick fixes
 
@@ -121,24 +121,24 @@ TODO: Use rename refactoring instead so other reference can be updated at the sa
 
 ## Test explorer
 
-### SpecflowUnitTestProvider
+### ReqnrollUnitTestProvider
 
 This test explorer find matching tests from the test repository for each Scenario and Feature. This is what is behind the `Run unit test` icon in the gutter.
 
 ## Analytics
 
-The AppInsights REST api is used to collect anonymous usage data similarly to SpecFlow. 
+The AppInsights REST api is used to collect anonymous usage data similarly to Reqnroll. 
 The official AppInsights SDK collects and sends more data than what we need so we are controlling
 what data do we send.
 
-The users can opt out by setting the `SPECFLOW_TELEMETRY_ENABLED` environment variable to `0`
+The users can opt out by setting the `REQNROLL_TELEMETRY_ENABLED` environment variable to `0`
 
-The users are identified by the SpecFlowUserId stored in the `SpecFlow\.userid` in the `SpecialFolder.ApplicationData` 
+The users are identified by the ReqnrollUserId stored in the `Reqnroll\.userid` in the `SpecialFolder.ApplicationData` 
 
 The main parts of the Rider specific implementation:
 
 - `AnalyticsTransmitter` this class is responsible to collect the generic information included in every event
-- `SolutionTracker` this class is responsible to check if the opened solution contains a reference to SpecFlow and fire the solution loaded event
+- `SolutionTracker` this class is responsible to check if the opened solution contains a reference to Reqnroll and fire the solution loaded event
 - `PluginTracker` is created for each Shell instance and fires the extension loaded/installed events
 
 ### Setting the InstrumentationKey

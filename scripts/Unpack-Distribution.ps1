@@ -14,6 +14,6 @@ param (
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$file = "$DistributionsLocation/specflowriderplugin-*.zip"
+$file = "$DistributionsLocation/reqnrollriderplugin-*.zip"
 
 Expand-Archive -Path $file -DestinationPath $DistributionsLocation/unpacked

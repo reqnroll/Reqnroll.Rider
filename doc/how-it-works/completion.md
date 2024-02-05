@@ -20,7 +20,7 @@ The plugin provides auto-completion for steps
 
 ![Simple completion example](images/completion-1.png)
 
-The way it works is by listing all the step definitions using the [`SpecflowStepsDefinitionsCache`]() and the [`AssemblyStepDefinitionCache`](). Then it iterates over all the steps for the given step kind (_Given_, _When_ and _Then_) and sees if the step matches the text already typed (`partialStepText`).
+The way it works is by listing all the step definitions using the [`ReqnrollStepsDefinitionsCache`]() and the [`AssemblyStepDefinitionCache`](). Then it iterates over all the steps for the given step kind (_Given_, _When_ and _Then_) and sees if the step matches the text already typed (`partialStepText`).
 
 ### Terminology
 
@@ -67,11 +67,11 @@ The objective is to extract the `2` from the `partialStepText` and replace it wi
 
 To perform that task, again it would be nice if the regex parser would be able to give us the captured values while doing a partial match. Unfortunately, this is not possible, since, during a partial match when the regex ends, it may be on multiple valid states and cannot choose which one it should use to return the captured values.
 
-So the trick is to create one regex for each capture group (see `SpecflowStepInfo.RegexesPerCapture`) and execute them one after another to try to capture the first value, then the seconds, etc...
+So the trick is to create one regex for each capture group (see `ReqnrollStepInfo.RegexesPerCapture`) and execute them one after another to try to capture the first value, then the seconds, etc...
 
 For this let's use another example: `I roll (.+) times (.+) and (.+)`
 
-So this would build the 3 following regex (done in `SpecflowStepInfoFactory`):
+So this would build the 3 following regex (done in `ReqnrollStepInfoFactory`):
 
 - `I roll (.+)`
 - `I roll (.+) times (.+)`

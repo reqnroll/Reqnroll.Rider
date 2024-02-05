@@ -1,8 +1,8 @@
 <idea-plugin require-restart="true">
-  <id>com.settler.rider.specflow</id>
-  <name>SpecFlow for Rider</name>
+  <id>com.settler.rider.reqnroll</id>
+  <name>Reqnroll for Rider</name>
   <version>_PLACEHOLDER_</version>
-  <vendor url="https://specflow.org/">SpecFlow</vendor>
+  <vendor url="https://reqnroll.net/">Reqnroll</vendor>
   <idea-version since-build="_PLACEHOLDER_" />
   <depends>com.intellij.modules.rider</depends>
   <depends>com.intellij.modules.xml</depends>
@@ -15,35 +15,35 @@
   </description>
 
   <extensions defaultExtensionNs="com.intellij">
-    <notificationGroup id="SpecFlow" displayType="BALLOON"/>
-    <fileType name="SpecFlow" language="GherkinDotnet" extensions="feature" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.psi.GherkinFileType" />
-    <lang.parserDefinition language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.psi.GherkinParserDefinition"/>
-    <lang.syntaxHighlighterFactory language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.psi.GherkinSyntaxHighlighterFactory"/>
-    <completion.contributor language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.psi.completion.GherkinCompletionContributor" />
-    <completion.completionSessionStrategy language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.completion.GherkinCompletionStrategy" />
+    <notificationGroup id="Reqnroll" displayType="BALLOON"/>
+    <fileType name="Reqnroll" language="GherkinDotnet" extensions="feature" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinFileType" />
+    <lang.parserDefinition language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinSyntaxHighlighterFactory"/>
+    <completion.contributor language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.completion.GherkinCompletionContributor" />
+    <completion.completionSessionStrategy language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.completion.GherkinCompletionStrategy" />
     <backend.markup.adapterFactory language="GherkinDotnet" implementationClass="com.jetbrains.rdclient.daemon.FrontendMarkupAdapterFactory" />
-    <backend.typedHandler language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.psi.GherkinTypedHandler" />
-    <backend.actions.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.ideaInterop.fileTypes.GherkinActionSupportPolicy" />
+    <backend.typedHandler language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinTypedHandler" />
+    <backend.actions.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.ideaInterop.fileTypes.GherkinActionSupportPolicy" />
     <backend.autoPopup.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.completion.BackendAndGenericRider" />
     <rider.debuggerSupportPolicy language="GherkinDotnet" implementationClass="com.jetbrains.rider.debugger.RiderDebuggerSupportPolicy" />
     <lang.altEnter language="GherkinDotnet" implementationClass="com.jetbrains.rider.intentions.altEnter.ReSharperBulbMenuModelFactory" />
-    <lang.substitutor language="Gherkin" implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.SpecflowLanguageSubstitutor" />
-    <langCodeStyleSettingsProvider implementation="com.jetbrains.rider.plugins.specflowriderplugin.settings.GherkinStyleSettingsProvider"/>
+    <lang.substitutor language="Gherkin" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.ReqnrollLanguageSubstitutor" />
+    <langCodeStyleSettingsProvider implementation="com.jetbrains.rider.plugins.reqnrollriderplugin.settings.GherkinStyleSettingsProvider"/>
     <code.cleanup.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.actions.impl.cleanup.BackendCodeCleanupSupportPolicy" />
-    <multiHostInjector implementation="com.jetbrains.rider.plugins.specflowriderplugin.injector.LanguageInjector"/>
+    <multiHostInjector implementation="com.jetbrains.rider.plugins.reqnrollriderplugin.injector.LanguageInjector"/>
     <lang.psiStructureViewFactory language="GherkinDotnet"
-                                  implementationClass="com.jetbrains.rider.plugins.specflowriderplugin.psi.structure.GherkinStructureViewFactory"/>
-    <!--    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.specflowriderplugin.SampleOptionsPage" id="SampleOptionsPage" />-->
+                                  implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.structure.GherkinStructureViewFactory"/>
+    <!--    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.reqnrollriderplugin.SampleOptionsPage" id="SampleOptionsPage" />-->
   </extensions>
   
   <actions>
-<!--    <action id="SampleAction" class="com.jetbrains.rider.plugins.specflowriderplugin.SampleAction"-->
+<!--    <action id="SampleAction" class="com.jetbrains.rider.plugins.reqnrollriderplugin.SampleAction"-->
 <!--            text="Do Something" description="Do Something Description">-->
 <!--    </action>-->
   </actions>
   <extensionPoints>
-    <extensionPoint qualifiedName="com.jetbrains.rider.plugins.specflowriderplugin.injector.injectorExtensionPoint"
-                    interface="com.jetbrains.rider.plugins.specflowriderplugin.injector.GherkinInjectorExtensionPoint"
+    <extensionPoint qualifiedName="com.jetbrains.rider.plugins.reqnrollriderplugin.injector.injectorExtensionPoint"
+                    interface="com.jetbrains.rider.plugins.reqnrollriderplugin.injector.GherkinInjectorExtensionPoint"
                     dynamic="true"/>
   </extensionPoints>
   <change-notes>

@@ -7,16 +7,16 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
       <PackageReference Include="MSTest.TestAdapter" Version="2.2.4" />
-      <PackageReference Include="SpecFlow.MsTest" Version="3.8.14" />
+      <PackageReference Include="Reqnroll.MsTest" Version="3.8.14" />
     </ItemGroup>
 
     <ItemGroup>
-      <SpecFlowFeatureFiles Update="Calculator.feature">
+      <ReqnrollFeatureFiles Update="Calculator.feature">
         <CodeBehindFile>Calculator.feature.cs</CodeBehindFile>
-      </SpecFlowFeatureFiles>
-      <SpecFlowFeatureFiles Update="Examples.feature">
+      </ReqnrollFeatureFiles>
+      <ReqnrollFeatureFiles Update="Examples.feature">
         <CodeBehindFile>Examples.feature.cs</CodeBehindFile>
-      </SpecFlowFeatureFiles>
+      </ReqnrollFeatureFiles>
     </ItemGroup>
 
 </Project>

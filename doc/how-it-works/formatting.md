@@ -29,7 +29,7 @@ For this to works there is also a class in the java class `GherkinStyleSettingsP
 and an entry in the `plugin.xml`
 
 ```xml
-<langCodeStyleSettingsProvider implementation="com.jetbrains.rider.plugins.specflowriderplugin.settings.GherkinStyleSettingsProvider"/>
+<langCodeStyleSettingsProvider implementation="com.jetbrains.rider.plugins.reqnrollriderplugin.settings.GherkinStyleSettingsProvider"/>
 ```
 
 

@@ -31,18 +31,18 @@ jobs:
       run: dotnet restore
     - name: Build plugin
       env:
-        SPECFLOW_TELEMETRY_ENABLED: 0
+        REQNROLL_TELEMETRY_ENABLED: 0
         APPINSIGHTSINSTRUMENTATIONKEY: ${{ secrets.APPINSIGHTSINSTRUMENTATIONKEY }}
       run: gradle :buildPlugin --stacktrace -PintellijPublishToken=none
     - name: dotnet-tests-report
       uses: zyborg/dotnet-tests-report@v1.4.3
       env:
-        SPECFLOW_TELEMETRY_ENABLED: 0
+        REQNROLL_TELEMETRY_ENABLED: 0
       with:
         report_name: plugin_tests
         report_title: Plugin Tests
         set_check_status_from_test_outcome: true
-        project_path: src/dotnet/ReSharperPlugin.SpecflowRiderPlugin.Tests/ReSharperPlugin.SpecflowRiderPlugin.Tests.csproj
+        project_path: src/dotnet/ReSharperPlugin.ReqnrollRiderPlugin.Tests/ReSharperPlugin.ReqnrollRiderPlugin.Tests.csproj
         github_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Unpack Distribution
       shell: pwsh
@@ -50,5 +50,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
-        name: SpecFlowPlugin
+        name: ReqnrollPlugin
         path: build/distributions/unpacked

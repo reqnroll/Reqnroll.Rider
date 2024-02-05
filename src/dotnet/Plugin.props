@@ -2,16 +2,16 @@
   <PropertyGroup>
     <SdkVersion>2023.3.1</SdkVersion>
 
-    <Title>SpecFlow for Rider</Title>
+    <Title>Reqnroll for Rider</Title>
 
     <Description>Description</Description>
   
     <Authors>Valentin Livkin;Bertrand Provost (Socolin)</Authors>
-    <Copyright>Copyright 2023 Maintainers of SpecflowRiderPlugin</Copyright>
+    <Copyright>Copyright 2023 Maintainers of ReqnrollRiderPlugin</Copyright>
     <PackageTags>resharper plugin</PackageTags>
   
-    <PackageProjectUrl>https://github.com/SpecFlowOSS/SpecFlow.Rider</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/SpecFlowOSS/SpecFlow.Rider/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/reqnroll/Reqnroll.Rider</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/reqnroll/Reqnroll.Rider/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl></PackageIconUrl>
   </PropertyGroup>
 </Project>
