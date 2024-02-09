@@ -100,6 +100,6 @@ CLI:
 
 ## Where can I go for help?
 
-Please join our dedicated [discord server](https://go.reqnroll.net/join-contributing-on-discord) to ask questions from the Reqnroll team and also get to work with other contributors.
+Please ask in our [Contributor Q&A](https://github.com/orgs/reqnroll/discussions/categories/contributor-q-a) discussion group.
 
 Thank you for your contributions!
