@@ -14,6 +14,7 @@ using JetBrains.ReSharper.UnitTestFramework.Elements;
 using JetBrains.ReSharper.UnitTestFramework.Execution.Launch;
 using JetBrains.ReSharper.UnitTestFramework.Persistence;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+using JetBrains.Util;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
 {
@@ -21,13 +22,16 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
     public class ReqnrollTestsDataRules
     {
         private readonly IUnitTestElementRepository _unitTestElementRepository;
+        private readonly ILogger _logger;
 
         public ReqnrollTestsDataRules(
             IUnitTestElementRepository unitTestElementRepository,
             IActionManager actionManager,
+            ILogger logger,
             Lifetime lifetime)
         {
             _unitTestElementRepository = unitTestElementRepository;
+            _logger = logger;
             actionManager.DataContexts.RegisterDataRule(lifetime, new DataRule<UnitTestElements>.AssertionDataRule("ReqnrollProjectFilesToUnitTestElements", UnitTestDataConstants.Elements.IN_CONTEXT, GetReqnrollUnitTestElements));
         }
 
@@ -57,7 +61,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
                             //old non SDK style project
                             else
                             {
-                                var featureTests = _unitTestElementRepository.GetRelatedFeatureTests(projectFile.GetPrimaryPsiFile() as GherkinFile);
+                                var featureTests = _unitTestElementRepository.GetRelatedFeatureTests(projectFile.GetPrimaryPsiFile() as GherkinFile, _logger);
                                 if (featureTests != null)
                                     featureFileTests.AddRange(featureTests);
                             }

@@ -11,6 +11,7 @@ using JetBrains.ReSharper.UnitTestFramework.Exploration.Daemon;
 using JetBrains.ReSharper.UnitTestFramework.Persistence;
 using JetBrains.ReSharper.UnitTestProvider.nUnit.v30;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+using JetBrains.Util;
 using Reqnroll.Tracing;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
@@ -19,15 +20,18 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
     internal class ReqnrollTestExplorer : IUnitTestExplorerFromFile
     {
         private readonly IUnitTestElementRepository _unitTestElementRepository;
+        private readonly ILogger _logger;
         public IUnitTestProvider Provider { get; }
 
         public ReqnrollTestExplorer(
             ReqnrollUnitTestProvider unitTestProvider,
-            IUnitTestElementRepository unitTestElementRepository
+            IUnitTestElementRepository unitTestElementRepository,
+            ILogger logger
         )
         {
             Provider = unitTestProvider;
             _unitTestElementRepository = unitTestElementRepository;
+            _logger = logger;
         }
 
         public void ProcessFile(
@@ -46,7 +50,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
             if (projectFile == null)
                 return;
 
-            var featureTests = _unitTestElementRepository.GetRelatedFeatureTests(gherkinFile);
+            var featureTests = _unitTestElementRepository.GetRelatedFeatureTests(gherkinFile, _logger);
             if (featureTests == null)
                 return;
 
