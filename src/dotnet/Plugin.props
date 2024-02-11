@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <SdkVersion>2023.3.1</SdkVersion>
+    <SdkVersion>2023.3.3</SdkVersion>
 
     <Title>Reqnroll for Rider</Title>
 
