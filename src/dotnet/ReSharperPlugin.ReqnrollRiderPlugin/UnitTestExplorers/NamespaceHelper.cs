@@ -24,9 +24,6 @@ public static class NamespaceHelper
                     lastIsSeparator = true;
                     break;
                 case '.':
-                    lastIsSeparator = true;
-                    sb.Append('.');
-                    break;
                 case '-':
                 case '_':
                     lastIsSeparator = true;
