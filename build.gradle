@@ -87,9 +87,6 @@ intellij {
     downloadSources = false
     instrumentCode = false
     plugins = ["org.intellij.intelliLang"]
-
-    updateSinceUntilBuild = true
-    sameSinceUntilBuild = false
 }
 
 runIde {
@@ -141,8 +138,6 @@ patchPluginXml {
     changeNotes = changelogMatches.collect {
         it[1].replaceAll(/(?s)- /, "\u2022 ").replaceAll(/`/, "").replaceAll(/,/, "%2C").replaceAll(/;/, "%3B")
     }.take(1).join('')
-    
-    untilBuild = provider {null} // removes until-build in plugin.xml
 }
 
 prepareSandbox {

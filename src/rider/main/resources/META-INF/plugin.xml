@@ -3,7 +3,7 @@
   <name>Reqnroll for Rider</name>
   <version>_PLACEHOLDER_</version>
   <vendor url="https://reqnroll.net/">Reqnroll</vendor>
-  <idea-version since-build="_PLACEHOLDER_" />
+  <idea-version since-build="_PLACEHOLDER_" until-build="_PLACEHOLDER_" />
   <depends>com.intellij.modules.rider</depends>
   <depends>com.intellij.modules.xml</depends>
   <depends>org.intellij.intelliLang</depends>
