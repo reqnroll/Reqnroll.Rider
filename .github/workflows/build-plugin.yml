@@ -2,9 +2,9 @@ name: Build Plugin
 
 on:
   push:
-    branches: [ master, fix-pipelines ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
