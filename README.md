@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/Socolin/resharper-reqnroll)
+![GitHub](https://img.shields.io/github/license/reqnroll/Reqnroll.Rider)
 
 # Reqnroll Support for ReSharper and Rider
 The "Reqnroll Support" plugin adds specific functionality for the [Reqnroll](https://reqnroll.net/) to [Rider](https://www.jetbrains.com/rider/). (Resharper will come if requested enough)
