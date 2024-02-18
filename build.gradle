@@ -4,7 +4,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.8.22'
-    id 'org.jetbrains.intellij' version '1.16.0'     // https://github.com/JetBrains/gradle-intellij-plugin/releases
+    id 'org.jetbrains.intellij' version '1.17.1'     // https://github.com/JetBrains/gradle-intellij-plugin/releases
     id 'com.jetbrains.rdgen' version '2023.3.2'     // https://github.com/JetBrains/rd/releases
 }
 
@@ -25,7 +25,7 @@ repositories {
 }
 
 wrapper {
-    gradleVersion = '7.6'
+    gradleVersion = '8.6'
     distributionType = Wrapper.DistributionType.ALL
     distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
