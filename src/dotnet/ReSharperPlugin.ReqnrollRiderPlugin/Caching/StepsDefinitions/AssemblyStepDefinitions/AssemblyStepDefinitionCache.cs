@@ -70,7 +70,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
 
                 foreach (var type in metadataAssembly.GetTypes())
                 {
-                    if (type.CustomAttributesTypeNames.All(a => a.FullName.GetText() != ReqnrollAttributeHelper.BindingAttribute.FullName))
+                    if (type.CustomAttributesTypeNames.All(a => !ReqnrollAttributeHelper.IsBindingAttribute(a.FullName.GetText())))
                         continue;
 
                     var classScopes = _scopeAttributeUtil.GetScopesFromAttributes(type.CustomAttributes);

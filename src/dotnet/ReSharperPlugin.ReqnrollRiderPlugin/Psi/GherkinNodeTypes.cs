@@ -1,5 +1,4 @@
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
-using JetBrains.ReSharper.Psi.Parsing;
 // ReSharper disable InconsistentNaming
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi

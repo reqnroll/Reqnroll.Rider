@@ -1,5 +1,4 @@
 Feature: Calculator
-![Calculator](https://reqnroll.net/wp-content/uploads/2020/09/calculator.png)
 Simple calculator for adding **two** numbers
 
 Link to a feature: [Calculator]($projectname$/Features/Calculator.feature)

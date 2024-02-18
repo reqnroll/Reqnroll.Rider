@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.0.0
+- Support Reqnroll. Support for specflow partially dropped for code generation for now but we could bring back it easily.
+
 ## 1.23.7
 - Fix matching feature with tests
 

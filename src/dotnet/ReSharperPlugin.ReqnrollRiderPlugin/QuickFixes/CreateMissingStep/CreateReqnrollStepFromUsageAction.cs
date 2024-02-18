@@ -209,7 +209,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
 
                 using (CompilationContextCookie.GetOrCreate(project.GetResolveContext()))
                 {
-                    var bindingAttributeType = TypeFactory.CreateTypeByCLRName(ReqnrollAttributeHelper.BindingAttribute.FullName, _reference.GetTreeNode().GetPsiModule());
+                    var bindingAttributeType = TypeFactory.CreateTypeByCLRName(ReqnrollAttributeHelper.BindingAttribute.First().FullName, _reference.GetTreeNode().GetPsiModule());
                     var reqnrollBindingAttribute = CSharpElementFactory.GetInstance(_reference.GetElement()).CreateAttribute(bindingAttributeType.GetTypeElement().NotNull());
                     classDeclaration.AddAttributeAfter(reqnrollBindingAttribute, null);
                 }

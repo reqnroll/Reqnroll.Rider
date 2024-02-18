@@ -7,7 +7,7 @@
     <Description>Description</Description>
   
     <Authors>Valentin Livkin;Bertrand Provost (Socolin)</Authors>
-    <Copyright>Copyright 2023 Maintainers of ReqnrollRiderPlugin</Copyright>
+    <Copyright>Copyright 2024 Maintainers of ReqnrollRiderPlugin</Copyright>
     <PackageTags>resharper plugin</PackageTags>
   
     <PackageProjectUrl>https://github.com/reqnroll/Reqnroll.Rider</PackageProjectUrl>

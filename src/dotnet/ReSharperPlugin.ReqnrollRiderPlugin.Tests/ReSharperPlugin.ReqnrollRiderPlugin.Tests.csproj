@@ -10,7 +10,7 @@
     <PackageReference Include="JetBrains.Rider.SDK.Tests" Version="$(SdkVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageReference Include="Reqnroll" Version="3.9.58" />
+    <PackageReference Include="Reqnroll" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

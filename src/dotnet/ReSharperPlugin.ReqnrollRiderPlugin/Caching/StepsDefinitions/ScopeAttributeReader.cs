@@ -1,6 +1,5 @@
 #nullable enable
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Application;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Psi;
@@ -35,7 +34,7 @@ public class ScopeAttributeUtil
         List<ReqnrollStepScope>? scopes = null;
         foreach (var attribute in attributeInstances)
         {
-            if (attribute.GetAttributeType().GetClrName().FullName != ReqnrollAttributeHelper.ScopeAttribute.FullName)
+            if (!ReqnrollAttributeHelper.IsScopeAttribute(attribute.GetAttributeType().GetClrName().FullName))
                 continue;
 
             string? feature = null;
@@ -76,8 +75,8 @@ public class ScopeAttributeUtil
         List<ReqnrollStepScope>? scopes = null;
         foreach (var attribute in attributeInstances)
         {
-            if (attribute.UsedConstructorSpecification?.OwnerType?.FullName != ReqnrollAttributeHelper.ScopeAttribute.FullName
-                && attribute.UsedConstructor?.DeclaringType?.FullyQualifiedName != ReqnrollAttributeHelper.ScopeAttribute.FullName)
+            if (!ReqnrollAttributeHelper.IsScopeAttribute(attribute.UsedConstructorSpecification?.OwnerType?.FullName)
+                && ReqnrollAttributeHelper.IsScopeAttribute(attribute.UsedConstructor?.DeclaringType?.FullyQualifiedName))
                 continue;
 
             string? feature = null;

@@ -224,7 +224,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.References
         
         public CultureInfo GetGherkinFileCulture()
         {
-            return new (myOwner.GetContainingNode<GherkinFile>().Lang);
+            return new (myOwner.GetContainingNode<GherkinFile>().NotNull().Lang);
         }
 
         public bool IsInsideScenarioOutline()

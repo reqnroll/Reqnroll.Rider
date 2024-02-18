@@ -1,4 +1,5 @@
 using JetBrains.Application.Settings;
+using JetBrains.Diagnostics;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Settings;
@@ -32,7 +33,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
             return file is GherkinFile;
         }
 
-        public PsiLanguageType Language => GherkinLanguage.Instance;
+        public PsiLanguageType Language => GherkinLanguage.Instance.NotNull();
         public bool ForceHideCompletion => false;
     }
 }

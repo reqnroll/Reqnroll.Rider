@@ -30,7 +30,7 @@ public static class NamespaceHelper
                     sb.Append('_');
                     break;
                 default:
-                    if (!c.IsIdentifierPart() && accentReplacements.TryGetValue(c, out var replacement))
+                    if (!c.IsIdentifierPart() && AccentReplacements.TryGetValue(c, out var replacement))
                     {
                         if (lastIsSeparator)
                         {
@@ -56,7 +56,7 @@ public static class NamespaceHelper
         }
     }
 
-    private static readonly Dictionary<char, string> accentReplacements = new()
+    private static readonly Dictionary<char, string> AccentReplacements = new()
     {
         {'\u00C0', "A"},
         {'\u00C1', "A"},

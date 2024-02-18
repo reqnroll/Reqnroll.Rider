@@ -1,4 +1,3 @@
-using System.Text;
 using JetBrains.Application.UI.Controls.JetPopupMenu;
 using JetBrains.ReSharper.Feature.Services.Occurrences;
 using JetBrains.UI.RichText;

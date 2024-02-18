@@ -24,7 +24,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
                                 Lifetime lifetime,
                                 OpensUri opensUri)
          {
-             solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask("Reqnroll", SolutionLoadTaskKinds.AsLateAsPossible, () =>
+             solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask(GetType(), "Reqnroll", SolutionLoadTaskKinds.AsLateAsPossible, () =>
                  {
                      var projects = ((SolutionElement)solution).GetAllProjects();
                      var isReqnrollSolution = false;

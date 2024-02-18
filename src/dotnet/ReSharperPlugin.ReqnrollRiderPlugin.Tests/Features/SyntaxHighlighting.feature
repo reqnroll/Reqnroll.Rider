@@ -56,11 +56,11 @@ Feature: Syntax highlighting
   Scenario: Only the keywords that match the specified feature file language should be highlighted (default: English)
     The feature file language can be specified in 2 ways:
     - In the Gherkin feature file with the language directive
-    - In the reqnroll.jon file. e.g:
+    - In the reqnroll.json file. e.g:
          {
-          "language": {
-          "feature": "de-AT"
-         }
+            "language": {
+            "feature": "de-AT"
+           }
          }
       
   Szenariogrundriss: German keywords should not be highlighed (default: English)

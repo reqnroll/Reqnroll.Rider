@@ -4,7 +4,4 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.References;
 
-public class GherkinStepElementAccessContext([NotNull] ITreeNode element) : ElementAccessContext(element)
-{
-
-}
+public class GherkinStepElementAccessContext([NotNull] ITreeNode element) : ElementAccessContext(element);

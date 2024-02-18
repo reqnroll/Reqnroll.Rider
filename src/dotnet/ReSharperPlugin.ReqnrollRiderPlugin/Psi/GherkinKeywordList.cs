@@ -134,7 +134,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
         {
             public int Compare(T x, T y)
             {
-                return y.CompareTo(x);
+                return y!.CompareTo(x);
             }
         }
     }
