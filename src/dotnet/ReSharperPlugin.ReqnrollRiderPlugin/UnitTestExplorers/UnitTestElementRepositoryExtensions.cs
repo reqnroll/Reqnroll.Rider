@@ -41,7 +41,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
                     return null;
                 }
                 logger.Warn(
-                    "Failed to find exact match for specflow test between the file {0} and the class {1} in the namespace {2}. The class was found in the following namespaces: {3}",
+                    "Failed to find exact match for Reqnroll test between the file {0} and the class {1} in the namespace {2}. The class was found in the following namespaces: {3}",
                     gherkinFile,
                     generatedClassName,
                     generatedNamespace,

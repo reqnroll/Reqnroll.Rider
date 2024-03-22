@@ -7,5 +7,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 2024.1.0
 
-- Support Reqnroll. Support for specflow partially dropped for code generation for now but we could bring back it
-  easily.
+- Support for Reqnroll projects.
+- Support for SpecFlow code snippet generation is dropped. (Can be re-enabled later if necessary.)
+- Initial release based on v1.23.6 of the [SpecFlow for Rider](https://github.com/SpecFlowOSS/SpecFlow.Rider) extension.
