@@ -9,20 +9,25 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.SpellCheck;
 
 [SolutionComponent]
-public class GherkinTokenTextExtractor : ElementTextExtractor<GherkinToken>
+public class GherkinTokenTextExtractor(
+    ISpellingAndGrammarDataBuilder spellingAndGrammarDataBuilder,
+    IRequiredSpellCheckingModesProvider requiredRequiredSpellCheckingModesProvider,
+    GrammarAndSpellingMeasurements measurements
+) : ElementTextExtractor<GherkinToken>(
+    spellingAndGrammarDataBuilder,
+    requiredRequiredSpellCheckingModesProvider,
+    measurements
+)
 {
-    public GherkinTokenTextExtractor(
-        ReSpellerDataBuilder reReSpellerDataBuilder,
-        IRequiredSpellCheckingModesProvider requiredRequiredSpellCheckingModesProvider,
-        GrammarAndSpellingMeasurements measurements
-    ) : base(reReSpellerDataBuilder, requiredRequiredSpellCheckingModesProvider, measurements)
-    {
-    }
 
     public override bool Extract(GherkinToken node, ElementTextExtractorContext context)
     {
         context.Collector.EnrichWithReSpellerData(
-            ReSpellerDataBuilder, context.File, SpellCheckingMode.Orthography, CheckingContext.Comment,
+            SpellingAndGrammarDataBuilder,
+            context.File,
+            node,
+            SpellCheckingMode.Orthography,
+            CheckingContext.Comment,
             SparseTextToCheck.FromNode(node)
         );
         return true;

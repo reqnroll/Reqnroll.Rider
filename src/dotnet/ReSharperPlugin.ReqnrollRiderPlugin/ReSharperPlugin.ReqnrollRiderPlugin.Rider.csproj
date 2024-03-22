@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="MSBuild.AdditionalTasks" Version="0.1.36" />
     <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup Label="C#">
     <ErrorsGen Include="Daemon\Errors\CSharpErrors.xml">

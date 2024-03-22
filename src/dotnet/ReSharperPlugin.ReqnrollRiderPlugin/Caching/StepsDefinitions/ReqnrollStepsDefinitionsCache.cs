@@ -105,12 +105,12 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions
             {
                 if (!(type is IClassDeclaration classDeclaration))
                     continue;
-                var hasReqnrollBindingAttribute = HasReqnrollBindingAttribute(classDeclaration);
-                if (!hasReqnrollBindingAttribute && !classDeclaration.IsPartial)
+                var hasBindingAttribute = HasBindingAttribute(classDeclaration);
+                if (!hasBindingAttribute && !classDeclaration.IsPartial)
                     continue;
                 if (IsReqnrollFeatureFile(classDeclaration))
                     continue;
-                stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration, hasReqnrollBindingAttribute));
+                stepDefinitions.Add(BuildBindingClassCacheEntry(classDeclaration, hasBindingAttribute));
             }
 
             if (stepDefinitions.Count == 0)
@@ -145,7 +145,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions
             return reqnrollGeneratedAttribute;
         }
 
-        private static bool HasReqnrollBindingAttribute(IClassDeclaration classDeclaration)
+        private static bool HasBindingAttribute(IClassDeclaration classDeclaration)
         {
             if (classDeclaration.Attributes.Count == 0)
                 return false;
@@ -159,12 +159,13 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions
             foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
             {
                 var fullName = potentialBindingAttribute.GetClrName().FullName;
-                if (fullName == "Reqnroll.BindingAttribute")
+
+                if (ReqnrollAttributeHelper.BindingAttribute.Any(x => x.FullName == fullName))
                 {
                     bindingAttributeFound = true;
                     break;
                 }
-                // FIXME: Should we check for `using Reqnroll` ?
+
                 if (fullName.IsEmpty() && potentialBindingAttribute.GetAttributeShortName() == "Binding")
                 {
                     bindingAttributeFound = true;
