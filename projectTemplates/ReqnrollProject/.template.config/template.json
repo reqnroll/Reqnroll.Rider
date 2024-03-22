@@ -19,19 +19,20 @@
             "replaces": "$target$",
             "choices": [
                 {
+                    "choice": "net8.0",
+                    "description": "net8.0"
+                },                
+                {
+                    "choice": "net7.0",
+                    "description": "net7.0"
+                },                
+                {
                     "choice": "net6.0",
                     "description": "net6.0"
-                },                {
-                    "choice": "net5.0",
-                    "description": "net5.0"
-                },
+                },                
                 {
-                    "choice": "netcoreapp3.1",
-                    "description": "netcoreapp3.1"
-                },
-                {
-                    "choice": "netcoreapp2.1",
-                    "description": "netcoreapp2.1"
+                    "choice": "net481",
+                    "description": ".Net Framework v4.8.1"
                 },
                 {
                     "choice": "net48",
@@ -52,10 +53,6 @@
                 {
                     "choice": "net462",
                     "description": ".Net Framework v4.6.2"
-                },
-                {
-                    "choice": "net461",
-                    "description": ".Net Framework v4.6.1"
                 }
             ]
         },
