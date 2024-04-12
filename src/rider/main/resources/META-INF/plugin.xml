@@ -35,6 +35,8 @@
     <lang.psiStructureViewFactory language="GherkinDotnet"
                                   implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.structure.GherkinStructureViewFactory"/>
     <!--    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.reqnrollriderplugin.SampleOptionsPage" id="SampleOptionsPage" />-->
+    <dependencySupport kind="dotnet" coordinate="Reqnroll" displayName="Reqnroll"/>
+    <dependencySupport kind="dotnet" coordinate="Specflow" displayName="Specflow"/>
   </extensions>
   
   <actions>
