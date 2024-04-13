@@ -78,6 +78,8 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.ReqnrollJsonSettings
         {
             if (file.Name == "reqnroll.json")
                 return ConfigSource.Json;
+            if (file.Name == "specflow.json")
+                return ConfigSource.Json;
             if (file.Name.Equals("app.config", StringComparison.OrdinalIgnoreCase))
                 return ConfigSource.AppConfig;
             return ConfigSource.None;
