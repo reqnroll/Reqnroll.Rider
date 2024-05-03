@@ -29,7 +29,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
         }
         public bool IsSupported(IProject project, TargetFrameworkId targetFrameworkId)
         {
-            return project.GetAssemblyReferences(targetFrameworkId).Any(x => x.Name is "Reqnroll" or "TechTalk.SpecFlow");
+            return project.GetAssemblyReferences(targetFrameworkId).Any(x => x.Name == "Reqnroll" || x.Name == "TechTalk.SpecFlow");
         }
         public IUnitTestRunStrategy GetRunStrategy(IUnitTestElement element, IHostProvider hostProvider)
         {
