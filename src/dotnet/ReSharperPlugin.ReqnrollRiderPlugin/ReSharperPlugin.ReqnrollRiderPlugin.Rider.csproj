@@ -53,7 +53,7 @@
 
   <PropertyGroup Condition="'$(AppInsightsInstrumentationKey)' == ''">
     <!-- This is only the testing instance's instrumentation key -->
-    <AppInsightsInstrumentationKey>27cfb992-6c29-4bc8-8093-78d95e275b3a</AppInsightsInstrumentationKey>
+    <AppInsightsInstrumentationKey>3fd018ff-819d-4685-a6e1-6f09bc98d20b</AppInsightsInstrumentationKey>
   </PropertyGroup>
 
   <ItemGroup>
