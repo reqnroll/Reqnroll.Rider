@@ -35,6 +35,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Tests
         [TestCase("PystringWithParams")]
         [TestCase("PystringWithTripleQuoteInText")]
         [TestCase("FeatureRu")]
+        [TestCase("TableRowTrailingComments")]
         public void TestParser(string name) { DoOneTest(name); }
     }
 }

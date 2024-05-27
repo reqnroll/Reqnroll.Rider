@@ -1,6 +1,7 @@
 Language: PsiLanguageType:GHERKIN
 GherkinFile: WithoutFeatureKeyword.feature
-  GherkinToken(0,20): COMMENT('# No Feature in file')
+  GherkinComment
+    GherkinToken(0,20): COMMENT('# No Feature in file')
   GherkinToken(20,2): NEW_LINE('\n')
   GherkinTag: @tag
     GherkinToken(22,4): TAG('@tag')

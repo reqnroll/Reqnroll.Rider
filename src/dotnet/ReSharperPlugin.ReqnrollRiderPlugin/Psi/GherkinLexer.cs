@@ -133,7 +133,10 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
             }
             else if (_myState == STATE_TABLE)
             {
+                // We're right after a '|', meaning the start of a Table Cell
                 TokenType = GherkinTokenTypes.TABLE_CELL;
+                
+                // Loop until the end of the cell
                 while (_currentPosition < _myEndOffset)
                 {
                     // Cucumber: 0.7.3 Table cells can now contain escaped bars - \| and escaped backslashes - \\
@@ -152,8 +155,17 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
                             // else - common case
                         }
                     }
-                    else if (Buffer[_currentPosition] == '|' || Buffer[_currentPosition] == '\n')
+                    else if (Buffer[_currentPosition] == '\n')
                     {
+                        // We reached the end of the line without finding the next '|'
+                        // Turns out this wasn't a table cell, just some trailing text
+                        // Consider it a comment rather than a table cell, or it will result in an inconsistent cell count error (cf https://github.com/reqnroll/Reqnroll.Rider/issues/12)
+                        TokenType = GherkinTokenTypes.COMMENT;
+                        break;
+                    }
+                    else if (Buffer[_currentPosition] == '|')
+                    {
+                        // End of the cell found
                         break;
                     }
 

@@ -1,0 +1,306 @@
+Language: PsiLanguageType:GHERKIN
+GherkinFile: TableRowTrailingComments.feature
+  GherkinFeature: Data Table row with trailing comments
+    GherkinToken(0,7): FEATURE_KEYWORD('Feature')
+    GherkinToken(7,1): COLON(':')
+    GherkinToken(8,1): WHITE_SPACE(' ')
+    GherkinToken(9,37): TEXT('Data Table row with trailing comments')
+    GherkinToken(46,2): NEW_LINE('\n')
+    GherkinToken(48,2): NEW_LINE('\n')
+    GherkinScenario: Data Table example
+      GherkinToken(50,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(58,1): COLON(':')
+      GherkinToken(59,1): WHITE_SPACE(' ')
+      GherkinToken(60,18): TEXT('Data Table example')
+      GherkinToken(78,2): NEW_LINE('\n')
+      GherkinToken(80,4): WHITE_SPACE('    ')
+      GherkinStep: the data should be
+        GherkinToken(84,4): STEP_KEYWORD('Then')
+        GherkinToken(88,1): WHITE_SPACE(' ')
+        GherkinToken(89,18): TEXT('the data should be')
+        GherkinToken(107,2): NEW_LINE('\n')
+        GherkinToken(109,4): WHITE_SPACE('    ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(113,1): PIPE('|')
+            GherkinToken(114,1): WHITE_SPACE(' ')
+            GherkinTableCell: Id
+              GherkinToken(115,2): TABLE_CELL('Id')
+            GherkinToken(117,1): WHITE_SPACE(' ')
+            GherkinToken(118,1): PIPE('|')
+            GherkinToken(119,1): WHITE_SPACE(' ')
+            GherkinTableCell: Value
+              GherkinToken(120,5): TABLE_CELL('Value')
+            GherkinToken(125,3): WHITE_SPACE('   ')
+            GherkinToken(128,1): PIPE('|')
+          GherkinToken(129,2): NEW_LINE('\n')
+          GherkinToken(131,4): WHITE_SPACE('    ')
+          GherkinTableRow
+            GherkinToken(135,1): PIPE('|')
+            GherkinToken(136,1): WHITE_SPACE(' ')
+            GherkinTableCell: 1
+              GherkinToken(137,1): TABLE_CELL('1')
+            GherkinToken(138,2): WHITE_SPACE('  ')
+            GherkinToken(140,1): PIPE('|')
+            GherkinToken(141,1): WHITE_SPACE(' ')
+            GherkinTableCell: Charlie
+              GherkinToken(142,7): TABLE_CELL('Charlie')
+            GherkinToken(149,1): WHITE_SPACE(' ')
+            GherkinToken(150,1): PIPE('|')
+          GherkinToken(151,2): NEW_LINE('\n')
+          GherkinToken(153,4): WHITE_SPACE('    ')
+          GherkinTableRow
+            GherkinToken(157,1): PIPE('|')
+            GherkinToken(158,1): WHITE_SPACE(' ')
+            GherkinTableCell: 2
+              GherkinToken(159,1): TABLE_CELL('2')
+            GherkinToken(160,2): WHITE_SPACE('  ')
+            GherkinToken(162,1): PIPE('|')
+            GherkinToken(163,1): WHITE_SPACE(' ')
+            GherkinTableCell: Bob
+              GherkinToken(164,3): TABLE_CELL('Bob')
+            GherkinToken(167,5): WHITE_SPACE('     ')
+            GherkinToken(172,1): PIPE('|')
+    GherkinToken(173,2): NEW_LINE('\n')
+    GherkinToken(175,2): NEW_LINE('\n')
+    GherkinScenario: Data Table can have a comment trailing a row
+      GherkinToken(177,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(185,1): COLON(':')
+      GherkinToken(186,1): WHITE_SPACE(' ')
+      GherkinToken(187,44): TEXT('Data Table can have a comment trailing a row')
+      GherkinToken(231,2): NEW_LINE('\n')
+      GherkinToken(233,4): WHITE_SPACE('    ')
+      GherkinStep: the data should be
+        GherkinToken(237,4): STEP_KEYWORD('Then')
+        GherkinToken(241,1): WHITE_SPACE(' ')
+        GherkinToken(242,18): TEXT('the data should be')
+        GherkinToken(260,2): NEW_LINE('\n')
+        GherkinToken(262,4): WHITE_SPACE('    ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(266,1): PIPE('|')
+            GherkinToken(267,1): WHITE_SPACE(' ')
+            GherkinTableCell: Id
+              GherkinToken(268,2): TABLE_CELL('Id')
+            GherkinToken(270,1): WHITE_SPACE(' ')
+            GherkinToken(271,1): PIPE('|')
+            GherkinToken(272,1): WHITE_SPACE(' ')
+            GherkinTableCell: Value
+              GherkinToken(273,5): TABLE_CELL('Value')
+            GherkinToken(278,3): WHITE_SPACE('   ')
+            GherkinToken(281,1): PIPE('|')
+          GherkinToken(282,2): NEW_LINE('\n')
+          GherkinToken(284,4): WHITE_SPACE('    ')
+          GherkinTableRow
+            GherkinToken(288,1): PIPE('|')
+            GherkinToken(289,1): WHITE_SPACE(' ')
+            GherkinTableCell: 1
+              GherkinToken(290,1): TABLE_CELL('1')
+            GherkinToken(291,2): WHITE_SPACE('  ')
+            GherkinToken(293,1): PIPE('|')
+            GherkinToken(294,1): WHITE_SPACE(' ')
+            GherkinTableCell: Charlie
+              GherkinToken(295,7): TABLE_CELL('Charlie')
+            GherkinToken(302,1): WHITE_SPACE(' ')
+            GherkinToken(303,1): PIPE('|')
+            GherkinToken(304,1): WHITE_SPACE(' ')
+            GherkinToken(305,15): COMMENT('# Initial Value')
+          GherkinToken(320,2): NEW_LINE('\n')
+          GherkinToken(322,4): WHITE_SPACE('    ')
+          GherkinTableRow
+            GherkinToken(326,1): PIPE('|')
+            GherkinToken(327,1): WHITE_SPACE(' ')
+            GherkinTableCell: 2
+              GherkinToken(328,1): TABLE_CELL('2')
+            GherkinToken(329,2): WHITE_SPACE('  ')
+            GherkinToken(331,1): PIPE('|')
+            GherkinToken(332,1): WHITE_SPACE(' ')
+            GherkinTableCell: Bob
+              GherkinToken(333,3): TABLE_CELL('Bob')
+            GherkinToken(336,5): WHITE_SPACE('     ')
+            GherkinToken(341,1): PIPE('|')
+    GherkinToken(342,2): NEW_LINE('\n')
+    GherkinToken(344,2): NEW_LINE('\n')
+    GherkinScenario: Data Table can have a comment trailing its definition with a Note header
+      GherkinToken(346,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(354,1): COLON(':')
+      GherkinToken(355,1): WHITE_SPACE(' ')
+      GherkinToken(356,72): TEXT('Data Table can have a comment trailing its definition with a Note header')
+      GherkinToken(428,2): NEW_LINE('\n')
+      GherkinToken(430,4): WHITE_SPACE('    ')
+      GherkinStep: the data should be
+        GherkinToken(434,4): STEP_KEYWORD('Then')
+        GherkinToken(438,1): WHITE_SPACE(' ')
+        GherkinToken(439,18): TEXT('the data should be')
+        GherkinToken(457,2): NEW_LINE('\n')
+        GherkinToken(459,4): WHITE_SPACE('    ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(463,1): PIPE('|')
+            GherkinToken(464,1): WHITE_SPACE(' ')
+            GherkinTableCell: Id
+              GherkinToken(465,2): TABLE_CELL('Id')
+            GherkinToken(467,1): WHITE_SPACE(' ')
+            GherkinToken(468,1): PIPE('|')
+            GherkinToken(469,1): WHITE_SPACE(' ')
+            GherkinTableCell: Value
+              GherkinToken(470,5): TABLE_CELL('Value')
+            GherkinToken(475,3): WHITE_SPACE('   ')
+            GherkinToken(478,1): PIPE('|')
+            GherkinToken(479,1): WHITE_SPACE(' ')
+            GherkinToken(480,5): COMMENT('Notes')
+          GherkinToken(485,2): NEW_LINE('\n')
+          GherkinToken(487,4): WHITE_SPACE('    ')
+          GherkinTableRow
+            GherkinToken(491,1): PIPE('|')
+            GherkinToken(492,1): WHITE_SPACE(' ')
+            GherkinTableCell: 1
+              GherkinToken(493,1): TABLE_CELL('1')
+            GherkinToken(494,2): WHITE_SPACE('  ')
+            GherkinToken(496,1): PIPE('|')
+            GherkinToken(497,1): WHITE_SPACE(' ')
+            GherkinTableCell: Charlie
+              GherkinToken(498,7): TABLE_CELL('Charlie')
+            GherkinToken(505,1): WHITE_SPACE(' ')
+            GherkinToken(506,1): PIPE('|')
+            GherkinToken(507,1): WHITE_SPACE(' ')
+            GherkinToken(508,13): COMMENT('Initial Value')
+          GherkinToken(521,2): NEW_LINE('\n')
+          GherkinToken(523,4): WHITE_SPACE('    ')
+          GherkinTableRow
+            GherkinToken(527,1): PIPE('|')
+            GherkinToken(528,1): WHITE_SPACE(' ')
+            GherkinTableCell: 2
+              GherkinToken(529,1): TABLE_CELL('2')
+            GherkinToken(530,2): WHITE_SPACE('  ')
+            GherkinToken(532,1): PIPE('|')
+            GherkinToken(533,1): WHITE_SPACE(' ')
+            GherkinTableCell: Bob
+              GherkinToken(534,3): TABLE_CELL('Bob')
+            GherkinToken(537,5): WHITE_SPACE('     ')
+            GherkinToken(542,1): PIPE('|')
+    GherkinToken(543,2): NEW_LINE('\n')
+    GherkinToken(545,2): NEW_LINE('\n')
+    GherkinScenario: Data Table can have a comment in the header
+      GherkinToken(547,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(555,1): COLON(':')
+      GherkinToken(556,1): WHITE_SPACE(' ')
+      GherkinToken(557,43): TEXT('Data Table can have a comment in the header')
+      GherkinToken(600,2): NEW_LINE('\n')
+      GherkinToken(602,4): WHITE_SPACE('    ')
+      GherkinStep: the data should be
+        GherkinToken(606,4): STEP_KEYWORD('Then')
+        GherkinToken(610,1): WHITE_SPACE(' ')
+        GherkinToken(611,18): TEXT('the data should be')
+        GherkinToken(629,2): NEW_LINE('\n')
+        GherkinToken(631,4): WHITE_SPACE('    ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(635,1): PIPE('|')
+            GherkinToken(636,1): WHITE_SPACE(' ')
+            GherkinTableCell: Id
+              GherkinToken(637,2): TABLE_CELL('Id')
+            GherkinToken(639,1): WHITE_SPACE(' ')
+            GherkinToken(640,1): PIPE('|')
+            GherkinToken(641,1): WHITE_SPACE(' ')
+            GherkinTableCell: Value
+              GherkinToken(642,5): TABLE_CELL('Value')
+            GherkinToken(647,3): WHITE_SPACE('   ')
+            GherkinToken(650,1): PIPE('|')
+            GherkinToken(651,1): WHITE_SPACE(' ')
+            GherkinToken(652,7): COMMENT('# Notes')
+          GherkinToken(659,2): NEW_LINE('\n')
+          GherkinToken(661,4): WHITE_SPACE('    ')
+          GherkinTableRow
+            GherkinToken(665,1): PIPE('|')
+            GherkinToken(666,1): WHITE_SPACE(' ')
+            GherkinTableCell: 1
+              GherkinToken(667,1): TABLE_CELL('1')
+            GherkinToken(668,2): WHITE_SPACE('  ')
+            GherkinToken(670,1): PIPE('|')
+            GherkinToken(671,1): WHITE_SPACE(' ')
+            GherkinTableCell: Charlie
+              GherkinToken(672,7): TABLE_CELL('Charlie')
+            GherkinToken(679,1): WHITE_SPACE(' ')
+            GherkinToken(680,1): PIPE('|')
+            GherkinToken(681,1): WHITE_SPACE(' ')
+            GherkinToken(682,15): COMMENT('# Initial Value')
+          GherkinToken(697,2): NEW_LINE('\n')
+          GherkinToken(699,4): WHITE_SPACE('    ')
+          GherkinTableRow
+            GherkinToken(703,1): PIPE('|')
+            GherkinToken(704,1): WHITE_SPACE(' ')
+            GherkinTableCell: 2
+              GherkinToken(705,1): TABLE_CELL('2')
+            GherkinToken(706,2): WHITE_SPACE('  ')
+            GherkinToken(708,1): PIPE('|')
+            GherkinToken(709,1): WHITE_SPACE(' ')
+            GherkinTableCell: Bob
+              GherkinToken(710,3): TABLE_CELL('Bob')
+            GherkinToken(713,5): WHITE_SPACE('     ')
+            GherkinToken(718,1): PIPE('|')
+    GherkinToken(719,2): NEW_LINE('\n')
+    GherkinToken(721,4): WHITE_SPACE('    ')
+    GherkinToken(725,2): NEW_LINE('\n')
+    GherkinScenario: Data Table can have a comment between rows
+      GherkinToken(727,8): SCENARIO_KEYWORD('Scenario')
+      GherkinToken(735,1): COLON(':')
+      GherkinToken(736,1): WHITE_SPACE(' ')
+      GherkinToken(737,42): TEXT('Data Table can have a comment between rows')
+      GherkinToken(779,2): NEW_LINE('\n')
+      GherkinToken(781,4): WHITE_SPACE('    ')
+      GherkinStep: the data should be
+        GherkinToken(785,4): STEP_KEYWORD('Then')
+        GherkinToken(789,1): WHITE_SPACE(' ')
+        GherkinToken(790,18): TEXT('the data should be')
+        GherkinToken(808,2): NEW_LINE('\n')
+        GherkinToken(810,6): WHITE_SPACE('      ')
+        GherkinTable
+          GherkinTableHeaderRow
+            GherkinToken(816,1): PIPE('|')
+            GherkinToken(817,1): WHITE_SPACE(' ')
+            GherkinTableCell: Id
+              GherkinToken(818,2): TABLE_CELL('Id')
+            GherkinToken(820,1): WHITE_SPACE(' ')
+            GherkinToken(821,1): PIPE('|')
+            GherkinToken(822,1): WHITE_SPACE(' ')
+            GherkinTableCell: Value
+              GherkinToken(823,5): TABLE_CELL('Value')
+            GherkinToken(828,3): WHITE_SPACE('   ')
+            GherkinToken(831,1): PIPE('|')
+            GherkinToken(832,1): WHITE_SPACE(' ')
+            GherkinToken(833,7): COMMENT('# Notes')
+          GherkinToken(840,2): NEW_LINE('\n')
+          GherkinToken(842,6): WHITE_SPACE('      ')
+          GherkinTableRow
+            GherkinToken(848,1): PIPE('|')
+            GherkinToken(849,1): WHITE_SPACE(' ')
+            GherkinTableCell: 1
+              GherkinToken(850,1): TABLE_CELL('1')
+            GherkinToken(851,2): WHITE_SPACE('  ')
+            GherkinToken(853,1): PIPE('|')
+            GherkinToken(854,1): WHITE_SPACE(' ')
+            GherkinTableCell: Charlie
+              GherkinToken(855,7): TABLE_CELL('Charlie')
+            GherkinToken(862,1): WHITE_SPACE(' ')
+            GherkinToken(863,1): PIPE('|')
+            GherkinToken(864,1): WHITE_SPACE(' ')
+            GherkinToken(865,15): COMMENT('# Initial Value')
+            GherkinToken(880,2): NEW_LINE('\n')
+            GherkinToken(882,6): WHITE_SPACE('      ')
+            GherkinToken(888,20): COMMENT('# Here's another row')
+          GherkinToken(908,2): NEW_LINE('\n')
+          GherkinToken(910,6): WHITE_SPACE('      ')
+          GherkinTableRow
+            GherkinToken(916,1): PIPE('|')
+            GherkinToken(917,1): WHITE_SPACE(' ')
+            GherkinTableCell: 2
+              GherkinToken(918,1): TABLE_CELL('2')
+            GherkinToken(919,2): WHITE_SPACE('  ')
+            GherkinToken(921,1): PIPE('|')
+            GherkinToken(922,1): WHITE_SPACE(' ')
+            GherkinTableCell: Bob
+              GherkinToken(923,3): TABLE_CELL('Bob')
+            GherkinToken(926,5): WHITE_SPACE('     ')
+            GherkinToken(931,1): PIPE('|')
+

@@ -100,8 +100,8 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
             var element = (TreeElement)FirstChild;
             if (!withStepKeyWord)
             {
-                // Skip keyword and white space at tbe begining
-                for (; element != null && (element.NodeType == GherkinTokenTypes.STEP_KEYWORD || element.NodeType == GherkinTokenTypes.WHITE_SPACE); element = element.nextSibling)
+                // Skip keyword and white spaces at the beginning
+                while (element != null && (element.NodeType == GherkinTokenTypes.STEP_KEYWORD || element.NodeType == GherkinTokenTypes.WHITE_SPACE))
                     element = element.nextSibling;
             }
 

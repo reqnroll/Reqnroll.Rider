@@ -309,6 +309,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
             while (builder.GetTokenType() == GherkinTokenTypes.PIPE ||
                    builder.GetTokenType() == GherkinTokenTypes.TABLE_CELL ||
                    builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE ||
+                   builder.GetTokenType() == GherkinTokenTypes.COMMENT ||
                    builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
             {
                 var tokenType = builder.GetTokenType();
