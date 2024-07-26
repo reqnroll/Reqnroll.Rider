@@ -11,36 +11,38 @@
     },
     "sourceName": "Template",
     "symbols": {
-        "targetFramework": {
+        "Framework": {
             "type": "parameter",
             "description": "Target Framework",
             "datatype": "choice",
-            "defaultValue": "net6.0",
+            "defaultValue": "net8.0",
             "replaces": "$target$",
+            "allowMultipleValues": false,
+            "isRequired": true,
             "choices": [
                 {
                     "choice": "net8.0",
-                    "description": "net8.0"
-                },                
+                    "displayName": "net8.0"
+                },
                 {
                     "choice": "net7.0",
-                    "description": "net7.0"
-                },                
+                    "displayName": "net7.0"
+                },
                 {
                     "choice": "net6.0",
-                    "description": "net6.0"
-                },                
+                    "displayName": "net6.0"
+                },
                 {
                     "choice": "net481",
-                    "description": ".Net Framework v4.8.1"
+                    "displayName": ".Net Framework v4.8.1"
                 },
                 {
                     "choice": "net48",
-                    "description": ".Net Framework v4.8"
+                    "displayName": ".Net Framework v4.8"
                 },
                 {
                     "choice": "net472",
-                    "description": ".Net Framework v4.7.2"
+                    "displayName": ".Net Framework v4.7.2"
                 },
                 {
                     "choice": "net471",
@@ -61,18 +63,20 @@
             "description": "Provider for Unit Tests",
             "datatype": "choice",
             "defaultValue": "nunit",
+            "allowMultipleValues": false,
+            "isRequired": true,
             "choices": [
                 {
                     "choice": "nunit",
-                    "description": "NUnit"
+                    "displayName": "NUnit"
                 },
                 {
                     "choice": "xunit",
-                    "description": "xUnit"
-                },                
+                    "displayName": "xUnit"
+                },
                 {
                     "choice": "mstest",
-                    "description": "MSTest"
+                    "displayName": "MSTest"
                 }
             ]
         },
@@ -81,21 +85,6 @@
             "datatype": "bool",
             "description": "Add FluentAssertions library",
             "defaultValue": "true"
-        },
-        "LangVersion": {
-            "type": "generated",
-            "generator": "switch",
-            "replaces": "$langVersion$",
-            "parameters": {
-                "evaluator": "C++",
-                "datatype": "string",
-                "cases": [
-                    {
-                        "condition": "(targetFramework != 'net6.0')",
-                        "value": "\r\n<LangVersion>10</LangVersion>"
-                    }
-                ]
-            }
         },
         "ReqnrollNugetPackages": {
             "type": "generated",

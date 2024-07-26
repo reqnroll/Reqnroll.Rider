@@ -25,7 +25,12 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.ReqnrollJsonSettings
         /// <returns>true if it changes the current project config</returns>
         public bool TryUpdate(IProject project, ConfigSource source, ReqnrollSettings? settings)
         {
-            var lifetime = project.GetSolution().GetSolutionLifetimes().UntilSolutionCloseLifetime;
+            var solution = project.GetSolution();
+            // GetSolution() return null when the project is deleted
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            if (solution is null)
+                return false;
+            var lifetime = solution.GetSolutionLifetimes().UntilSolutionCloseLifetime;
 
             RegisterProjectLifetime(project, lifetime);
 
