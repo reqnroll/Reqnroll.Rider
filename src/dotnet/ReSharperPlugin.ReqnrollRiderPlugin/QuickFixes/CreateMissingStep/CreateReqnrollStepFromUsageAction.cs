@@ -204,7 +204,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
                     IsStatic = false,
                     Target = createNewFileTarget
                 });
-                if (result?.ResultDeclaration is not IClassDeclaration classDeclaration)
+                if (result.ResultDeclaration is not IClassDeclaration classDeclaration)
                     return null;
 
                 using (CompilationContextCookie.GetOrCreate(project.GetResolveContext()))

@@ -1,36 +1,33 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
 using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetTemplates;
 using JetBrains.Rider.Model;
+using Microsoft.TemplateEngine.Abstractions;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectTemplateParameters
+namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectTemplateParameters;
+
+public class FluentAssertionsProviderParameter()
+    : DotNetTemplateParameter("includeFluentAssertions", "FluentAssertions", "Add FluentAssertions library")
 {
-    public class FluentAssertionsProviderParameter : DotNetTemplateParameter
+
+    public override RdProjectTemplateOption CreateContent(
+        ITemplateInfo templateInfo,
+        ITemplateParameter templateParameter,
+        Dictionary<string, object> context)
     {
-        public FluentAssertionsProviderParameter() : base("includeFluentAssertions", "FluentAssertions", "Add FluentAssertions library")
-        {
+        if (!templateParameter.Name.Equals(Name, StringComparison.OrdinalIgnoreCase))
+            return null;
+        var parameter = templateInfo.GetParameter(Name);
+        if (parameter == null)
+            return null;
 
-        }
+        var boolOptions = new Dictionary<string, string> {{"true", "Include"}, {"false", "Exclude"}};
 
-        public override RdProjectTemplateContent CreateContent(DotNetProjectTemplateExpander expander, IDotNetTemplateContentFactory factory, int index, IDictionary<string, string> context)
-        {
-            var parameter = expander.TemplateInfo.GetParameter(Name);
-            if (parameter == null)
-            {
-                return factory.CreateNextParameters(new[] {expander}, index + 1, context);
-            }
+        var options = new List<RdProjectTemplateChoice>();
+        foreach (var boolOption in boolOptions)
+            options.Add(new RdProjectTemplateChoice(boolOption.Key, boolOption.Value));
 
-            var boolOptions = new Dictionary<string, string>() {{"true","Include"}, {"false","Exclude"}};
-            
-            var options = new List<RdProjectTemplateGroupOption>();
-            foreach (var boolOption in boolOptions)
-            {
-                var content = factory.CreateNextParameters(new[] {expander}, index + 1, context);
-                options.Add(new RdProjectTemplateGroupOption(boolOption.Key, boolOption.Value, null, content));
-            }
-            return new RdProjectTemplateGroupParameter(Name,PresentableName, parameter.DefaultValue, Tooltip, options);
-            
-        }
+        return new RdProjectTemplateChoiceOption(parameter.DefaultValue, false, options, Name, PresentableName, Tooltip);
     }
-
 }

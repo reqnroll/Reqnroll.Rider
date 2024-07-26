@@ -27,7 +27,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.MethodNameMismatchPattern
         {
             var consumer = new FilteringHighlightingConsumer(DaemonProcess.SourceFile, _file, DaemonProcess.ContextBoundSettingsStore);
             _file.ProcessDescendants(_elementProcessor, consumer);
-            committer(new DaemonStageResult(consumer.Highlightings));
+            committer(new DaemonStageResult(consumer.CollectHighlightings()));
         }
     }
 

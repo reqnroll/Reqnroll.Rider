@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions;
 
@@ -12,7 +13,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
         IEnumerable<(StepPatternUtil.StepPatternTokenType tokenType, string text, bool optional)> TokenizeStepPattern(string pattern);
     }
 
-    [PsiSharedComponent]
+    [PsiSharedComponent(Instantiation.DemandAnyThreadSafe)]
     public class StepPatternUtil : IStepPatternUtil
     {
         public enum StepPatternTokenType

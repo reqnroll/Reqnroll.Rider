@@ -17,22 +17,13 @@ using Reqnroll.Tracing;
 namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
 {
     [SolutionComponent]
-    internal class ReqnrollTestExplorer : IUnitTestExplorerFromFile
+    internal class ReqnrollTestExplorer(
+        ReqnrollUnitTestProvider unitTestProvider,
+        IUnitTestElementRepository unitTestElementRepository,
+        ILogger logger
+    ) : IUnitTestExplorerFromFile
     {
-        private readonly IUnitTestElementRepository _unitTestElementRepository;
-        private readonly ILogger _logger;
-        public IUnitTestProvider Provider { get; }
-
-        public ReqnrollTestExplorer(
-            ReqnrollUnitTestProvider unitTestProvider,
-            IUnitTestElementRepository unitTestElementRepository,
-            ILogger logger
-        )
-        {
-            Provider = unitTestProvider;
-            _unitTestElementRepository = unitTestElementRepository;
-            _logger = logger;
-        }
+        public IUnitTestProvider Provider { get; } = unitTestProvider;
 
         public void ProcessFile(
             IFile psiFile,
@@ -45,12 +36,12 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
             var project = psiFile.GetProject();
             if (project == null)
                 return;
-            
+
             var projectFile = gherkinFile.GetSourceFile().ToProjectFile();
             if (projectFile == null)
                 return;
 
-            var featureTests = _unitTestElementRepository.GetRelatedFeatureTests(gherkinFile, _logger);
+            var featureTests = unitTestElementRepository.GetRelatedFeatureTests(gherkinFile, logger);
             if (featureTests == null)
                 return;
 
@@ -71,9 +62,10 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
                 var scenarioText = scenario.GetScenarioText();
                 if (string.IsNullOrWhiteSpace(scenarioText))
                     continue;
-                
-                var matchingTest = featureTest.Children.FirstOrDefault(t => GetDescriptionFromAttributes(t) == scenarioText 
-                                                                            || CompareDescriptionWithShortName(scenarioText, t));
+
+                var matchingTest = featureTest.Children.FirstOrDefault(t => GetDescriptionFromAttributes(t) == scenarioText
+                                                                            || CompareDescriptionWithShortName(scenarioText, t)
+                );
                 if (matchingTest == null)
                     continue;
 

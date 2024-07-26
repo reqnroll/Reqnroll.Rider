@@ -25,7 +25,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.SyntaxError
                 return;
             var consumer = new FilteringHighlightingConsumer(psiSourceFile, _file, DaemonProcess.ContextBoundSettingsStore);
             _file.ProcessDescendants(_elementProcessor, consumer);
-            committer(new DaemonStageResult(consumer.Highlightings));
+            committer(new DaemonStageResult(consumer.CollectHighlightings()));
         }
     }
 }

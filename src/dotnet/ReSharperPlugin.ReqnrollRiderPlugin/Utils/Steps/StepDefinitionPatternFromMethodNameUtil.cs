@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using JetBrains;
 using JetBrains.Application;
+using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
@@ -15,7 +16,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
         string BuildRegexFromMethodName(IMethodDeclaration methodDeclaration);
     }
 
-    [ShellComponent]
+    [ShellComponent(Instantiation.DemandAnyThreadSafe)]
     public class StepDefinitionPatternFromMethodNameUtil : IUnderscoresMethodNameStepDefinitionUtil
     {
         public string BuildRegexFromMethodName(IMethodDeclaration methodDeclaration)

@@ -20,8 +20,8 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.SyntaxHighlighting.Rider
         public override SyntaxHighlightingStageProcess CreateProcess(IDaemonProcess process, IContextBoundSettingsStore settings, IFile getPrimaryPsiFile)
         {
             Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager:CreateProcess - {getPrimaryPsiFile.GetSourceFile().NotNull().Name}");
-            
-            return new GherkinSyntaxHighlightingStageProcess(process, settings, getPrimaryPsiFile, new GherkinSyntaxHighlightingProcessor());
+
+            return new GherkinSyntaxHighlightingStageProcess(process, getPrimaryPsiFile, new GherkinSyntaxHighlightingProcessor());
         }
     }
 }

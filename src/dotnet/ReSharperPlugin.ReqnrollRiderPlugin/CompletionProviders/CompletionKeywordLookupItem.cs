@@ -17,7 +17,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
         {
             base.Accept(textControl, nameRange, insertType, suffix, solution, keepCaretStill);
 
-            textControl.Document.InsertText(textControl.Caret.Offset(), " ");
+            textControl.Document.InsertText(textControl.Caret.DocumentOffset(), " ");
         }
     }
 }

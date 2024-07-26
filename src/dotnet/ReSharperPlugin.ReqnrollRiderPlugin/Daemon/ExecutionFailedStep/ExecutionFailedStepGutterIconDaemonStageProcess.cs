@@ -30,7 +30,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep
 
             var consumer = new FilteringHighlightingConsumer(psiSourceFile, _gherkinFile, DaemonProcess.ContextBoundSettingsStore);
             HighlightFailedSteps(psiSourceFile, consumer);
-            committer(new DaemonStageResult(consumer.Highlightings));
+            committer(new DaemonStageResult(consumer.CollectHighlightings()));
         }
 
         private void HighlightFailedSteps(IPsiSourceFile psiSourceFile, FilteringHighlightingConsumer consumer)

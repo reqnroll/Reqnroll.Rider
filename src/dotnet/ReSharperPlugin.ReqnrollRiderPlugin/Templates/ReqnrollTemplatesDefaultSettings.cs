@@ -1,5 +1,6 @@
 using System.IO;
 using JetBrains.Application;
+using JetBrains.Application.Parts;
 using JetBrains.Application.Settings;
 using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
@@ -8,21 +9,18 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Icons;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Templates
 {
-    [ShellComponent]
+    [ShellComponent(Instantiation.DemandAnyThreadSafe)]
     public class ReqnrollTemplatesDefaultSettings : IHaveDefaultSettingsStream
     {
+        public string Name => "Reqnroll default FileTemplates";
+
         static ReqnrollTemplatesDefaultSettings() => TemplateImage.Register("ReqnrollFile", ReqnrollIcons.ReqnrollIcon);
-        
-        
+
         public Stream GetDefaultSettingsStream(Lifetime lifetime)
         {
             var stream = typeof(ReqnrollTemplatesDefaultSettings).Assembly.GetManifestResourceStream("ReSharperPlugin.ReqnrollRiderPlugin.Templates.FileTemplates.xml").NotNull();
-            
             lifetime.OnTermination(stream);
-            
             return stream;
         }
-
-        public string Name => "Reqnroll default FileTemplates";
     }
 }

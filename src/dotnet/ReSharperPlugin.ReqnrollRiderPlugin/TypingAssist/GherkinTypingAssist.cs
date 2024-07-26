@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using JetBrains.Application.CommandProcessing;
 using JetBrains.Application.UI.ActionSystem.Text;
 using JetBrains.Diagnostics;
+using JetBrains.DocumentModel;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Options;
@@ -54,11 +55,11 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.TypingAssist
                     if (textControl.Selection.OneDocRangeWithCaret().Length > 0)
                         return false;
 
-                    var caret = textControl.Caret.Offset();
-                    if (caret == 0)
+                    var caret = textControl.Caret.DocumentOffset();
+                    if (caret.Offset == 0)
                         return false;
 
-                    var lastKeywordToken = FindLastKeywordToken(cachingLexer, caret, out var inTable);
+                    var lastKeywordToken = FindLastKeywordToken(cachingLexer, caret.Offset, out var inTable);
                     if (lastKeywordToken == null)
                         return false;
 
@@ -86,7 +87,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.TypingAssist
 
                     if (inTable)
                     {
-                        var indentSizeBasedOnPreviousRow = FindPreviousRowFirstPipeIndent(cachingLexer, caret);
+                        var indentSizeBasedOnPreviousRow = FindPreviousRowFirstPipeIndent(cachingLexer, caret.Offset);
                         var indentText = GetTableIndentText(indentSizeBasedOnPreviousRow);
                         textControl.Document.InsertText(caret, GetNewLineText(textControl) + indentText);
                         return true;
@@ -115,7 +116,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.TypingAssist
         {
             var textControl = context.TextControl;
 
-            textControl.Document.InsertText(context.TextControl.Caret.Offset(), "|");
+            textControl.Document.InsertText(context.TextControl.Caret.DocumentOffset(), "|");
             CommitPsiOnlyAndProceedWithDirtyCaches(textControl, (Func<IFile, object>) (file =>
             {
                 var tokenNode = file.FindNodeAt(textControl.Caret.DocumentOffset());

@@ -30,8 +30,9 @@ class ReqnrollRiderPluginModel private constructor(
     companion object : ISerializersOwner {
         
         override fun registerSerializersCore(serializers: ISerializers)  {
-            serializers.register(MyEnum.marshaller)
-            serializers.register(MyStructure)
+            val classLoader = javaClass.classLoader
+            serializers.register(LazyCompanionMarshaller(RdId(19180925632), classLoader, "com.jetbrains.rd.ide.model.MyEnum"))
+            serializers.register(LazyCompanionMarshaller(RdId(549145719450029844), classLoader, "com.jetbrains.rd.ide.model.MyStructure"))
         }
         
         
@@ -39,7 +40,7 @@ class ReqnrollRiderPluginModel private constructor(
         
         private val __MyEnumNullableSerializer = MyEnum.marshaller.nullable()
         
-        const val serializationHash = 652449028105363203L
+        const val serializationHash = -4094310014927154265L
         
     }
     override val serializersOwner: ISerializersOwner get() = ReqnrollRiderPluginModel
@@ -117,9 +118,20 @@ enum class MyEnum {
     FirstValue, 
     SecondValue;
     
-    companion object {
+    companion object : IMarshaller<MyEnum> {
         val marshaller = FrameworkMarshallers.enum<MyEnum>()
         
+        
+        override val _type: KClass<MyEnum> = MyEnum::class
+        override val id: RdId get() = RdId(19180925632)
+        
+        override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): MyEnum {
+            return marshaller.read(ctx, buffer)
+        }
+        
+        override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: MyEnum)  {
+            marshaller.write(ctx, buffer, value)
+        }
     }
 }
 
@@ -135,6 +147,7 @@ data class MyStructure (
     
     companion object : IMarshaller<MyStructure> {
         override val _type: KClass<MyStructure> = MyStructure::class
+        override val id: RdId get() = RdId(549145719450029844)
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): MyStructure  {

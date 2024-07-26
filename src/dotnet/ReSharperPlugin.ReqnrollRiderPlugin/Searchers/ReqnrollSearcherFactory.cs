@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Application.Parts;
 using JetBrains.Collections;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -12,8 +13,9 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Searchers
 {
-    [PsiSharedComponent]
-    public class ReqnrollSearcherFactory : DomainSpecificSearcherFactoryBase
+    [PsiSharedComponent(Instantiation.DemandAnyThreadSafe)]
+    public class ReqnrollSearcherFactory
+        : DomainSpecificSearcherFactoryBase
     {
         public override bool IsCompatibleWithLanguage(PsiLanguageType languageType)
         {

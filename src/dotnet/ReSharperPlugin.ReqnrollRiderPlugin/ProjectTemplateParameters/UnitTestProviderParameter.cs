@@ -1,41 +1,36 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
 using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetTemplates;
 using JetBrains.Rider.Model;
+using Microsoft.TemplateEngine.Abstractions;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectTemplateParameters
+namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectTemplateParameters;
+
+public class UnitTestProviderParameter()
+    : DotNetTemplateParameter("unitTestProvider", "Test Framework", null)
 {
-    public class UnitTestProviderParameter : DotNetTemplateParameter
+    private const string Runner = "nunit";
+    private const string MsTest = "mstest";
+
+    public override RdProjectTemplateOption CreateContent(
+        ITemplateInfo templateInfo,
+        ITemplateParameter templateParameter,
+        Dictionary<string, object> context
+    )
     {
-        private readonly string _runner = "nunit";
-        private readonly string _msTest = "mstest";
+        if (!templateParameter.Name.Equals(Name, StringComparison.OrdinalIgnoreCase))
+            return null;
+        var parameter = templateInfo.GetParameter(Name);
+        if (parameter == null)
+            return null;
 
-        public UnitTestProviderParameter() : base("unitTestProvider", "Test Framework", null)
-        {
+        var options = new List<RdProjectTemplateChoice>();
+        if (parameter.Choices != null)
+            foreach (var choice in parameter.Choices.Where(c => c.Key != Runner && c.Key != MsTest))
+                options.Add(new RdProjectTemplateChoice(choice.Key, choice.Value.Description ?? choice.Key));
 
-        }
-
-        public override RdProjectTemplateContent CreateContent(DotNetProjectTemplateExpander expander, IDotNetTemplateContentFactory factory, int index, IDictionary<string, string> context)
-        {
-            var parameter = expander.TemplateInfo.GetParameter(Name);
-            if (parameter?.Choices == null)
-            {
-                return factory.CreateNextParameters(new[] {expander}, index + 1, context);
-            }
-
-            var options = new List<RdProjectTemplateGroupOption>();
-            foreach (var choice in parameter.Choices.Where( c => c.Key != _runner && c.Key != _msTest))
-            {
-                var content = factory.CreateNextParameters(new[] {expander}, index + 1, context);
-                
-                options.Add(new RdProjectTemplateGroupOption(
-                    choice.Key,
-                    choice.Value.Description ?? choice.Key,
-                    null, content));
-            }
-            return new RdProjectTemplateGroupParameter(Name,PresentableName, parameter.DefaultValue, Tooltip, options);
-        }
+        return new RdProjectTemplateChoiceOption(parameter.DefaultValue, false, options, Name, PresentableName, Tooltip);
     }
-
 }

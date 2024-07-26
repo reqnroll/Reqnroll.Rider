@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Application.Parts;
 using JetBrains.Diagnostics;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
@@ -33,15 +34,10 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
         );
     }
 
-    [PsiSharedComponent]
-    public class CreateReqnrollStepUtil : ICreateReqnrollStepUtil
+    [PsiSharedComponent(Instantiation.DemandAnyThreadSafe)]
+    public class CreateReqnrollStepUtil(IStepDefinitionBuilder stepDefinitionBuilder)
+        : ICreateReqnrollStepUtil
     {
-        private readonly IStepDefinitionBuilder _stepDefinitionBuilder;
-
-        public CreateReqnrollStepUtil(IStepDefinitionBuilder stepDefinitionBuilder)
-        {
-            _stepDefinitionBuilder = stepDefinitionBuilder;
-        }
 
         public IClassMemberDeclaration AddReqnrollStep(
             IPsiSourceFile targetFile,
@@ -67,10 +63,10 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
                         continue;
 
                     var factory = CSharpElementFactory.GetInstance(classDeclaration);
-                    var methodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, getGherkinFileCulture);
+                    var methodName = stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, getGherkinFileCulture);
                     methodName = cSharpFile.GetPsiServices().Naming.Suggestion.GetDerivedName(methodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance.NotNull(), new SuggestionOptions(), targetFile);
-                    var parameters = _stepDefinitionBuilder.GetStepDefinitionParameters(stepText, getGherkinFileCulture);
-                    var pattern = _stepDefinitionBuilder.GetPattern(stepText, getGherkinFileCulture);
+                    var parameters = stepDefinitionBuilder.GetStepDefinitionParameters(stepText, getGherkinFileCulture);
+                    var pattern = stepDefinitionBuilder.GetPattern(stepText, getGherkinFileCulture);
                     var attributeType = CSharpTypeFactory.CreateType(ReqnrollAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
                     var formatString = $"[$0(@\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
                     var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
@@ -90,12 +86,14 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
                     IClassMemberDeclaration insertedDeclaration;
                     using (new PsiTransactionCookie(classDeclaration.GetPsiServices(), DefaultAction.Commit, "Generate reqnroll step"))
                     {
-                        insertedDeclaration = classDeclaration.AddClassMemberDeclaration((IClassMemberDeclaration) methodDeclaration);
+                        insertedDeclaration = classDeclaration.AddClassMemberDeclaration((IClassMemberDeclaration)methodDeclaration);
                     }
 
                     var analyticsTransmitter = targetFile.GetSolution().GetComponent<IAnalyticsTransmitter>();
                     analyticsTransmitter.TransmitRuntimeEvent(new GenericEvent("RiderActionExecuted", new Dictionary<string, string>
-                        {{"Type", "CreateStepBinding"}}));
+                            {{"Type", "CreateStepBinding"}}
+                        )
+                    );
 
                     return insertedDeclaration;
                 }

@@ -12,10 +12,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.SyntaxError
     {
         public bool InteriorShouldBeProcessed(ITreeNode element, IHighlightingConsumer context) => true;
 
-        public bool IsProcessingFinished(IHighlightingConsumer context)
-        {
-            return context.Highlightings.Select(h => h.Highlighting).OfType<GherkinHasNoFeatureError>().Any();
-        }
+        public bool IsProcessingFinished(IHighlightingConsumer context) => false;
 
         public void ProcessBeforeInterior(ITreeNode element, IHighlightingConsumer context)
         {

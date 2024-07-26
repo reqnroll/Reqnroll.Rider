@@ -36,11 +36,11 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Helpers
 
         public static GherkinStepKind? GetAttributeStepKind(IClrTypeName typeName)
         {
-            if (typeName.Equals(GivenAttribute))
+            if (GivenAttribute.Contains(typeName))
                 return GherkinStepKind.Given;
-            if (typeName.Equals(WhenAttribute))
+            if (WhenAttribute.Contains(typeName))
                 return GherkinStepKind.When;
-            if (typeName.Equals(ThenAttribute))
+            if (ThenAttribute.Contains(typeName))
                 return GherkinStepKind.Then;
             return null;
         }

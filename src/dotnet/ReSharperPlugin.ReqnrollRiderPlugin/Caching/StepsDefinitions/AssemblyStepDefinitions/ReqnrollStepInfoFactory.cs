@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
@@ -21,15 +22,11 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                                 [CanBeNull] IReadOnlyList<ReqnrollStepScope> methodScopes);
     }
 
-    [PsiSharedComponent]
-    public class ReqnrollStepInfoFactory : IReqnrollStepInfoFactory
-    {
-        private readonly IStepPatternUtil _stepPatternUtil;
 
-        public ReqnrollStepInfoFactory(IStepPatternUtil stepPatternUtil)
-        {
-            _stepPatternUtil = stepPatternUtil;
-        }
+    [PsiSharedComponent(Instantiation.DemandAnyThreadSafe)]
+    public class ReqnrollStepInfoFactory(IStepPatternUtil stepPatternUtil)
+        : IReqnrollStepInfoFactory
+    {
 
         public ReqnrollStepInfo Create(string classFullName,
                                        string methodName,
@@ -71,7 +68,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
             var regexesPerCapture = new List<Regex>();
             var partialPattern = new StringBuilder();
             var error = false;
-            foreach (var (type, text, _) in _stepPatternUtil.TokenizeStepPattern(pattern))
+            foreach (var (type, text, _) in stepPatternUtil.TokenizeStepPattern(pattern))
             {
                 switch (type)
                 {

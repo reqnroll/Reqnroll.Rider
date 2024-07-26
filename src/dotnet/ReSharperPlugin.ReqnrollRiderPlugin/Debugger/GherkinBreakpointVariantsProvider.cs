@@ -15,7 +15,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Debugger
     [Language(typeof(GherkinLanguage))]
     public class GherkinBreakpointVariantsProvider : IBreakpointVariantsProvider
     {
-        public IEnumerable<IBreakpoint> GetBreakpointVariants(IProjectFile file, int line, ISolution solution)
+        public IReadOnlyList<IBreakpoint> GetBreakpointVariants(IProjectFile file, int line, ISolution solution)
         {
             if (file.GetPrimaryPsiFile() is not GherkinFile gherkinFile)
                 return null;

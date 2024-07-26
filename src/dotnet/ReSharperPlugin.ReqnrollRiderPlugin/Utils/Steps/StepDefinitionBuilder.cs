@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Application;
+using JetBrains.Application.Parts;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 using Reqnroll.BindingSkeletons;
 using Reqnroll.Tracing;
@@ -18,7 +19,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
         string GetPattern(string stepText, CultureInfo cultureInfo);
     }
 
-    [ShellComponent]
+    [ShellComponent(Instantiation.DemandAnyThreadSafe)]
     public class StepDefinitionBuilder : IStepDefinitionBuilder
     {
         public string GetStepDefinitionMethodNameFromPattern(GherkinStepKind stepKind, string pattern, string[] parameterNames)

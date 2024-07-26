@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <SdkVersion>2024.1.2</SdkVersion>
+    <SdkVersion>2024.2.0-eap08</SdkVersion>
 
     <Title>Reqnroll for Rider</Title>
 

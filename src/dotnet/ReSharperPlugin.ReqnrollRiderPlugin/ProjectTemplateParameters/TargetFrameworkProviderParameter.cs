@@ -1,39 +1,32 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
 using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetTemplates;
 using JetBrains.Rider.Model;
+using Microsoft.TemplateEngine.Abstractions;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectTemplateParameters
+namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectTemplateParameters;
+
+public class TargetFrameworkProviderParameter()
+    : DotNetTemplateParameter("targetFramework", "Framework", null)
 {
-    public class TargetFrameworkProviderParameter : DotNetTemplateParameter
+    public override RdProjectTemplateOption CreateContent(
+        ITemplateInfo templateInfo,
+        ITemplateParameter templateParameter,
+        Dictionary<string, object> context
+    )
     {
-        public TargetFrameworkProviderParameter() : base("targetFramework", "Framework", null)
-        {
-            
-        }
-        
-        public override RdProjectTemplateContent CreateContent(DotNetProjectTemplateExpander expander, IDotNetTemplateContentFactory factory, int index, IDictionary<string, string> context)
-        {
-            var parameter = expander.TemplateInfo.GetParameter(Name);
-            if (parameter == null)
-            {
-                return factory.CreateNextParameters(new[] {expander}, index + 1, context);
-            }
-            
-            var options = new List<RdProjectTemplateGroupOption>();
-            if (parameter.Choices != null)
-            {
-                foreach (var choice in parameter.Choices)
-                {
-                    var content = factory.CreateNextParameters(new[] {expander}, index + 1, context);
-                
-                    options.Add(new RdProjectTemplateGroupOption(
-                        choice.Key,
-                        choice.Value.Description ?? choice.Key,
-                        null, content));
-                }
-            }
-            return new RdProjectTemplateGroupParameter(Name,PresentableName, parameter.DefaultValue, Tooltip, options);
-        }
+        if (!templateParameter.Name.Equals(Name, StringComparison.OrdinalIgnoreCase))
+            return null;
+        var parameter = templateInfo.GetParameter(Name);
+        if (parameter == null)
+            return null;
+
+        var options = new List<RdProjectTemplateChoice>();
+        if (parameter.Choices != null)
+            foreach (var choice in parameter.Choices)
+                options.Add(new RdProjectTemplateChoice(choice.Key, choice.Value.Description ?? choice.Key));
+
+        return new RdProjectTemplateChoiceOption(parameter.DefaultValue, false, options, Name, PresentableName, Tooltip);
     }
 }

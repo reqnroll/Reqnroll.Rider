@@ -6,7 +6,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Icons;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Navigation;
 
-[ShellComponent(Instantiation.DemandAnyThread)]
+[ShellComponent(Instantiation.DemandAnyThreadSafe)]
 public class ReqnrollOccurrenceKindIconProvider : IOccurrenceKindIconProvider
 {
     public IconId GetImageId(OccurrenceKind declaredElement)

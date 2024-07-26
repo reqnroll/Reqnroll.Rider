@@ -9,7 +9,7 @@ import java.io.OutputStream
 
 
 class GherkinActionSupportPolicy : RiderActionSupportPolicy() {
-    override fun isAvailable(psiElement: PsiElement, backendActionId: String): Boolean {
+    override fun isAvailable(psiElement: PsiElement, backendActionId: String): Boolean? {
         if (backendActionId == "ImplementMethods") return false;
         if (backendActionId == "OverrideMethods") return false;
         if (backendActionId == "ShowUsages") return false;
@@ -39,7 +39,7 @@ class GherkinActionSupportPolicy : RiderActionSupportPolicy() {
         if (backendActionId == "GotoBase") return false;
 
 
-        var result = super.isAvailable(psiElement, backendActionId);
+        val result = super.isAvailable(psiElement, backendActionId);
         return result;
     }
 }
