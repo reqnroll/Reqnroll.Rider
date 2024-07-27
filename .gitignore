@@ -1,18 +1,15 @@
-# User-specific stuff:
-**/.idea/**/workspace.xml
-**/.idea/**/tasks.xml
-**/.idea/**/codeStyleConfig.xml
-**/.idea/shelf/*
-**/.idea/dictionaries
+/.idea/
+/.gradle/
+/.intellijPlatform/
 
-# Sensitive or high-churn files:
-**/.idea/**/dataSources/
-**/.idea/**/dataSources.ids
-**/.idea/**/dataSources.xml
-**/.idea/**/dataSources.local.xml
-**/.idea/**/sqlDataSources.xml
-**/.idea/**/dynamic.xml
-**/.idea/**/uiDesigner.xml
+bin/
+obj/
+build/
+
+/src/rider/generated/**/*.Generated.kt
+/src/dotnet/*/Model/**/*.Generated.cs
+
+/src/dotnet/nuget.config
 
 # Gradle:
 # NOTE: gradle.xml is often also ignored here. This is only required if the gradle.xml

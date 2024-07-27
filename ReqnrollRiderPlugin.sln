@@ -1,6 +1,6 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSharperPlugin.ReqnrollRiderPlugin.Rider", "src\dotnet\ReSharperPlugin.ReqnrollRiderPlugin\ReSharperPlugin.ReqnrollRiderPlugin.Rider.csproj", "{084172D1-A9C6-46D0-96AD-05C5B09A5E5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSharperPlugin.ReqnrollRiderPlugin", "src\dotnet\ReSharperPlugin.ReqnrollRiderPlugin\ReSharperPlugin.ReqnrollRiderPlugin.csproj", "{084172D1-A9C6-46D0-96AD-05C5B09A5E5D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{4A9ABB95-3762-448B-B5BF-099E46DB22DE}"
 ProjectSection(SolutionItems) = preProject
@@ -11,9 +11,10 @@ ProjectSection(SolutionItems) = preProject
 	src\dotnet\Directory.Build.props = src\dotnet\Directory.Build.props
 	gradle.properties = gradle.properties
 	.github\workflows\build-plugin.yml = .github\workflows\build-plugin.yml
-	settings.gradle = settings.gradle
-	build.gradle = build.gradle
 	gradle\wrapper\gradle-wrapper.properties = gradle\wrapper\gradle-wrapper.properties
+	gradle\libs.versions.toml = gradle\libs.versions.toml
+	build.gradle.kts = build.gradle.kts
+	settings.gradle.kts = settings.gradle.kts
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSharperPlugin.ReqnrollRiderPlugin.Tests", "src\dotnet\ReSharperPlugin.ReqnrollRiderPlugin.Tests\ReSharperPlugin.ReqnrollRiderPlugin.Tests.csproj", "{A11F0703-5136-4641-A2B7-262AB200E862}"

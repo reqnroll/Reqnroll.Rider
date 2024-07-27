@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReSharperPlugin.ReqnrollRiderPlugin\ReSharperPlugin.ReqnrollRiderPlugin.Rider.csproj" />
+    <ProjectReference Include="..\ReSharperPlugin.ReqnrollRiderPlugin\ReSharperPlugin.ReqnrollRiderPlugin.csproj" />
   </ItemGroup>
 
   <ItemGroup>
