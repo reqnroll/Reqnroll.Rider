@@ -14,6 +14,10 @@
     <PackageReference Include="MSBuild.AdditionalTasks" Version="0.1.36" />
     <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+
+    <PackageReference Include="JetBrains.Rider.Native.Core.windows-arm64.Release" Version="242.0.20240716.124255-eap08"/>
+    <PackageReference Include="JetBrains.Rider.Native.Core.windows-x64.Release" Version="242.0.20240716.124300-eap08"/>
+    <PackageReference Include="JetBrains.Rider.Native.Core.windows-x86.Release" Version="242.0.20240716.124259-eap08"/>
   </ItemGroup>
   <ItemGroup Label="C#">
     <ErrorsGen Include="Daemon\Errors\CSharpErrors.xml">

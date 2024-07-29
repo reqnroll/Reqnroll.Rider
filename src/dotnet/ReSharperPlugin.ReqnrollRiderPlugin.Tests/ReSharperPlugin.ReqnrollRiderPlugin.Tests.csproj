@@ -11,6 +11,10 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="Reqnroll" Version="1.0.1" />
+
+    <PackageReference Include="JetBrains.Rider.Native.Core.windows-arm64.Release" Version="242.0.20240716.124255-eap08"/>
+    <PackageReference Include="JetBrains.Rider.Native.Core.windows-x64.Release" Version="242.0.20240716.124300-eap08"/>
+    <PackageReference Include="JetBrains.Rider.Native.Core.windows-x86.Release" Version="242.0.20240716.124259-eap08"/>
   </ItemGroup>
 
   <ItemGroup>
