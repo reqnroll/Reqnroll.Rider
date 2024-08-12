@@ -68,7 +68,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
                     var parameters = stepDefinitionBuilder.GetStepDefinitionParameters(stepText, getGherkinFileCulture);
                     var pattern = stepDefinitionBuilder.GetPattern(stepText, getGherkinFileCulture);
                     var attributeType = CSharpTypeFactory.CreateType(ReqnrollAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
-                    var formatString = $"[$0(@\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
+                    var formatString = $"[$0(\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
                     var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
                     if (methodDeclaration == null)
                         continue;

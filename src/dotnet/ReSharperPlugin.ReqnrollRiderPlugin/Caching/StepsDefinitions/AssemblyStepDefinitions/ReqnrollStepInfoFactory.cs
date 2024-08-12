@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
@@ -7,9 +8,67 @@ using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+using CucumberExpressions;
+
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions
 {
+
+    class CucumberParameterType<T> : IParameterType
+    {
+        public string[] RegexStrings { get; }
+        public string Name { get; }
+        public int Weight { get; }
+        public bool UseForSnippets { get; }
+
+        public Type ParameterType => typeof(T);
+
+        public CucumberParameterType(string name, params string[] regexps) : this(name, regexps, true)
+        {
+
+        }
+
+        public CucumberParameterType(string name, string[] regexps, bool useForSnippets = true, int weight = 0)
+        {
+            Name = name;
+            RegexStrings = regexps;
+            UseForSnippets = useForSnippets;
+            Weight = weight;
+        }
+
+    }
+
+    class ParameterTypeRegistry : IParameterTypeRegistry
+    {
+        private readonly List<IParameterType> _parameterTypes = new()
+        {
+            new CucumberParameterType<int>(ParameterTypeConstants.IntParameterName, ParameterTypeConstants.IntParameterRegexps, weight: 1000),
+            new CucumberParameterType<string>(ParameterTypeConstants.StringParameterName, ParameterTypeConstants.StringParameterRegexps),
+            new CucumberParameterType<string>(ParameterTypeConstants.WordParameterName, ParameterTypeConstants.WordParameterRegexps, false),
+            new CucumberParameterType<float>(ParameterTypeConstants.FloatParameterName, ParameterTypeConstants.FloatParameterRegexpsEn, false),
+            new CucumberParameterType<double>(ParameterTypeConstants.DoubleParameterName, ParameterTypeConstants.FloatParameterRegexpsEn)
+        };
+
+
+        public IParameterType LookupByTypeName(string name)
+        {
+            if (name == "unknown")
+                return null;
+
+            var paramType = _parameterTypes.FirstOrDefault(pt => pt.Name == name);
+            if (paramType != null)
+                return paramType;
+
+            return new CucumberParameterType<string>("???", ".*");
+        }
+
+        public IEnumerable<IParameterType> GetParameterTypes()
+        {
+            return _parameterTypes;
+
+        }
+    }
+
     public interface IReqnrollStepInfoFactory
     {
         ReqnrollStepInfo Create(string classFullName,
@@ -37,7 +96,17 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                                        IReadOnlyList<ReqnrollStepScope> classEntryScopes,
                                        IReadOnlyList<ReqnrollStepScope> methodScopes)
         {
+
             Regex regex;
+            var parameterTypeRegistry = new ParameterTypeRegistry();
+            var expression = new CucumberExpression(pattern, parameterTypeRegistry);
+            if (expression.ParameterTypes.Length > 0)
+            {
+                expression.ParameterTypes.ToList().ForEach(pt => Console.WriteLine($"DEBUG(ReqnrollStepInfoFactory.Create):\t{pt.Name}"));
+                pattern = expression.Regex.ToString();
+            }
+
+
             try
             {
                 var fullMatchPattern = pattern;
@@ -97,7 +166,6 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                 if (error)
                     break;
             }
-
             return new ReqnrollStepInfo(classFullName, methodName, methodParameterTypes, methodParameterNames, stepKind, pattern, regex, regexesPerCapture, scopes);
         }
     }

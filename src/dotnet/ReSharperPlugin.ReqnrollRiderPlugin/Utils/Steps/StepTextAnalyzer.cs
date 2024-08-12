@@ -62,7 +62,21 @@ namespace Reqnroll.BindingSkeletons
                 string regexPattern = defaultRegexPattern;
                 string value = paramMatch.Capture.Value;
                 int index = paramMatch.Capture.Index;
-
+                switch (paramMatch.ParameterType)
+                {
+                    case ParameterType.Text:
+                        regexPattern = "{string}";
+                        break;
+                    case ParameterType.Int:
+                        regexPattern = "{int}";
+                        break;
+                    case ParameterType.Decimal:
+                        regexPattern = "{decimal}";
+                        break;
+                    default:
+                        regexPattern = "{string}";
+                        break;
+                }
                 switch (value.Substring(0, 1))
                 {
                     case "\"":
@@ -76,7 +90,6 @@ namespace Reqnroll.BindingSkeletons
                         index++;
                         break;
                 }
-
                 result.TextParts.Add(stepText.Substring(textIndex, index - textIndex));
                 result.Parameters.Add(AnalyzeParameter(value, bindingCulture, result.Parameters.Count, regexPattern, paramMatch.ParameterType));
                 textIndex = index + value.Length;
