@@ -73,7 +73,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
             pattern.Append(EscapeRegex(result.TextParts[0]));
             for (int i = 1; i < result.TextParts.Count; i++)
             {
-                pattern.AppendFormat("({0})", result.Parameters[i-1].RegexPattern);
+                pattern.AppendFormat("{0}", result.Parameters[i-1].RegexPattern);
                 pattern.Append(EscapeRegex(result.TextParts[i]));
             }
 
