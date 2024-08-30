@@ -24,7 +24,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.UnresolvedReferenceHighligh
             if (psiSourceFile == null)
                 return;
             var consumer = new FilteringHighlightingConsumer(psiSourceFile, _file, DaemonProcess.ContextBoundSettingsStore);
-            _file.ProcessDescendants(_elementProcessor, consumer);
+            //_file.ProcessDescendants(_elementProcessor, consumer);
             committer(new DaemonStageResult(consumer.CollectHighlightings()));
         }
     }

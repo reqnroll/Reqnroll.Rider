@@ -87,7 +87,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsUsages
             {
                 if (!_mergeData.StepsUsages.ContainsKey(stepUsages.StepKind))
                 {
-                    _logger.Error("Failed to determine the kind of step the step {0} in {1}.", stepUsages.StepText, sourceFile);
+                    //_logger.Error("Failed to determine the kind of step the step {0} in {1}.", stepUsages.StepText, sourceFile);
                     continue;
                 }
 

@@ -13,6 +13,7 @@ using JetBrains.ReSharper.Psi.Impl.Reflection2;
 using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Compiled;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Resources;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.TestRunner.Abstractions.Extensions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions;
@@ -35,6 +36,8 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.References
 
         public override ResolveResultWithInfo ResolveWithoutCache()
         {
+            return ResolveResultWithInfo.Unresolved;
+
             var psiServices = myOwner.GetPsiServices();
             var reqnrollStepsDefinitionsCache = psiServices.GetComponent<ReqnrollStepsDefinitionsCache>();
             var stepKind = myOwner.EffectiveStepKind;
