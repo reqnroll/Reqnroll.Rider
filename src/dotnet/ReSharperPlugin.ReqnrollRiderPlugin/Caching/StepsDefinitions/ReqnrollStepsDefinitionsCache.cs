@@ -274,9 +274,12 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions
                 }
             }
 
-            var baseClassType = classDeclaration.DeclaredElement?.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
-            if (baseClassType is IClassDeclaration baseClassDeclaration)
-                ReadStepsFromMethodsOfClass(baseClassDeclaration, classCacheEntry);
+            using (CompilationContextCookie.GetOrCreate(classDeclaration.GetResolveContext()))
+            {
+                var baseClassType = classDeclaration.DeclaredElement?.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
+                if (baseClassType is IClassDeclaration baseClassDeclaration)
+                    ReadStepsFromMethodsOfClass(baseClassDeclaration, classCacheEntry);
+            }
         }
 
         private static void AddToCacheEntryBasedOnAttributeRegex(
