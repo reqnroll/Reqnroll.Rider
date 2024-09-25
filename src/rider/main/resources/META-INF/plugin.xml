@@ -18,7 +18,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <notificationGroup id="Reqnroll" displayType="BALLOON"/>
     <fileType name="Reqnroll" language="GherkinDotnet" extensions="feature" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinFileType" />
-    <lang.parserDefinition language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinParserDefinition"/>
+      <lang.parserDefinition language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinParserDefinition"/>
     <lang.syntaxHighlighterFactory language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinSyntaxHighlighterFactory"/>
     <completion.contributor language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.completion.GherkinCompletionContributor" />
     <completion.completionSessionStrategy language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.completion.GherkinCompletionStrategy" />

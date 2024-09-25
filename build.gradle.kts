@@ -153,7 +153,8 @@ tasks {
         val outputFolder = file("$dotNetSrcDir/$dotNetPluginId/bin/${dotNetPluginId}/$buildConfiguration")
         val pluginFiles = listOf(
             "$outputFolder/${dotNetPluginId}.dll",
-            "$outputFolder/${dotNetPluginId}.pdb"
+            "$outputFolder/${dotNetPluginId}.pdb",
+            "$outputFolder/CucumberExpressions.dll"
         )
 
         from(pluginFiles) {
