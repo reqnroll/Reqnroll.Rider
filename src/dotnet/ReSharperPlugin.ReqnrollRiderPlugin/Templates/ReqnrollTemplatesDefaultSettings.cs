@@ -4,12 +4,14 @@ using JetBrains.Application.Parts;
 using JetBrains.Application.Settings;
 using JetBrains.Diagnostics;
 using JetBrains.Lifetimes;
+using JetBrains.ReSharper.Feature.Services.LiveTemplates.Settings;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Templates;
 using ReSharperPlugin.ReqnrollRiderPlugin.Icons;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Templates
 {
     [ShellComponent(Instantiation.DemandAnyThreadSafe)]
+    [DefaultSettings(typeof(LiveTemplatesSettings))]
     public class ReqnrollTemplatesDefaultSettings : IHaveDefaultSettingsStream
     {
         public string Name => "Reqnroll default FileTemplates";
