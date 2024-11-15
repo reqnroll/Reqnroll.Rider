@@ -16,7 +16,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
         string BuildRegexFromMethodName(IMethodDeclaration methodDeclaration);
     }
 
-    [ShellComponent(Instantiation.DemandAnyThreadSafe)]
+    [ShellComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class StepDefinitionPatternFromMethodNameUtil : IUnderscoresMethodNameStepDefinitionUtil
     {
         public string BuildRegexFromMethodName(IMethodDeclaration methodDeclaration)

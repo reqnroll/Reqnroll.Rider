@@ -1,5 +1,6 @@
 using System.IO;
 using JetBrains.Annotations;
+using JetBrains.Application.Parts;
 using JetBrains.Application.Threading;
 using JetBrains.IDE.UI;
 using JetBrains.IDE.UI.Extensions;
@@ -23,7 +24,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
         void OpenCreateClassDialog(ISolution solution, IProject project, [CanBeNull] VirtualFileSystemPath defaultFolder, CreateStepClass onValidation);
     }
 
-    [PsiComponent]
+    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class CreateStepClassDialogUtil : ICreateStepClassDialogUtil
     {
         private readonly IDialogHost _dialogHost;

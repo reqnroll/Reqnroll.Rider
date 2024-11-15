@@ -13,7 +13,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
         IEnumerable<(StepPatternUtil.StepPatternTokenType tokenType, string text, bool optional)> TokenizeStepPattern(string pattern);
     }
 
-    [PsiSharedComponent(Instantiation.DemandAnyThreadSafe)]
+    [PsiSharedComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class StepPatternUtil : IStepPatternUtil
     {
         public enum StepPatternTokenType

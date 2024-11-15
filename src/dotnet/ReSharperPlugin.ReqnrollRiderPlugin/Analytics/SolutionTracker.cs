@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application.Notifications;
+using JetBrains.Application.Parts;
 using JetBrains.Application.StdApplicationUI;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
@@ -12,7 +13,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Guidance;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
  {
-     [SolutionComponent]
+     [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
      public class SolutionTracker
      {
          public SolutionTracker(ISolution solution, 

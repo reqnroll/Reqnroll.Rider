@@ -34,7 +34,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
         );
     }
 
-    [PsiSharedComponent(Instantiation.DemandAnyThreadSafe)]
+    [PsiSharedComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class CreateReqnrollStepUtil(IStepDefinitionBuilder stepDefinitionBuilder)
         : ICreateReqnrollStepUtil
     {

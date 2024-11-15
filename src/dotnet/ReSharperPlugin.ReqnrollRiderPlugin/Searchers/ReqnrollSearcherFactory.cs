@@ -13,7 +13,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Searchers
 {
-    [PsiSharedComponent(Instantiation.DemandAnyThreadSafe)]
+    [PsiSharedComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class ReqnrollSearcherFactory
         : DomainSpecificSearcherFactoryBase
     {

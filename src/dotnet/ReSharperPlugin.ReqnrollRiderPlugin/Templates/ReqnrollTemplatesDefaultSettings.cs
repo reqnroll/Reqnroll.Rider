@@ -10,9 +10,8 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Icons;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Templates
 {
-    [ShellComponent(Instantiation.DemandAnyThreadSafe)]
-    [DefaultSettings(typeof(LiveTemplatesSettings))]
-    public class ReqnrollTemplatesDefaultSettings : IHaveDefaultSettingsStream
+    [ShellComponent(Instantiation.DemandAnyThreadUnsafe)]
+    public class ReqnrollTemplatesDefaultSettings : IDefaultSettingsRootKey<LiveTemplatesSettings>
     {
         public string Name => "Reqnroll default FileTemplates";
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Application.Parts;
 using JetBrains.Application.Threading;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
@@ -12,7 +13,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Utils.TestOutput;
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.FailedStep
 {
 
-    [PsiComponent]
+    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class FailedStepCache : SimpleICache<ISet<FailedStepCacheEntry>>
     {
         public override string Version => "5";

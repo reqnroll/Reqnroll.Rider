@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Application.Parts;
 using JetBrains.Application.Threading;
 using JetBrains.Collections;
 using JetBrains.Diagnostics;
@@ -23,7 +24,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions
 {
-    [PsiComponent]
+    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class ReqnrollStepsDefinitionsCache : SimpleICache<ReqnrollStepsDefinitionsCacheEntries>
     {
         private const int VersionInt = 15;

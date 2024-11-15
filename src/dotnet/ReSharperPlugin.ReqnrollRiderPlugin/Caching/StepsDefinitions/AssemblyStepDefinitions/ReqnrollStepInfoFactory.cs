@@ -23,7 +23,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
     }
 
 
-    [PsiSharedComponent(Instantiation.DemandAnyThreadSafe)]
+    [PsiSharedComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class ReqnrollStepInfoFactory(IStepPatternUtil stepPatternUtil)
         : IReqnrollStepInfoFactory
     {

@@ -1,3 +1,4 @@
+using JetBrains.Application.Parts;
 using JetBrains.Application.Settings;
 using JetBrains.Diagnostics;
 using JetBrains.ProjectModel;
@@ -10,7 +11,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
 {
-    [SolutionComponent]
+    [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class GherkinReferenceAutomaticCompletionStrategy : IAutomaticCodeCompletionStrategy
     {
         public AutopopupType IsEnabledInSettings(IContextBoundSettingsStore settingsStore, ITextControl textControl)
