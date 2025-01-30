@@ -65,23 +65,27 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
                     var factory = CSharpElementFactory.GetInstance(classDeclaration);
                     var methodName = stepDefinitionBuilder.GetStepDefinitionMethodNameFromStepText(stepKind, stepText, getGherkinFileCulture);
                     methodName = cSharpFile.GetPsiServices().Naming.Suggestion.GetDerivedName(methodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance.NotNull(), new SuggestionOptions(), targetFile);
-                    var parameters = stepDefinitionBuilder.GetStepDefinitionParameters(stepText, getGherkinFileCulture);
+                    var parameters = stepDefinitionBuilder.GetStepDefinitionParameters(stepText, getGherkinFileCulture).ToList();
                     var pattern = stepDefinitionBuilder.GetPattern(stepText, getGherkinFileCulture);
                     var attributeType = CSharpTypeFactory.CreateType(ReqnrollAttributeHelper.GetAttributeClrName(stepKind), classDeclaration.GetPsiModule());
-                    var formatString = $"[$0(\"$1\")] public void {methodName}() {{ScenarioContext.StepIsPending();}}";
+
+                    // Create the method with parameters included in the initial declaration
+                    var parameterString = string.Join(", ", parameters.Select(p => $"{p.parameterType} {p.parameterName}"));
+                    if (hasMultilineParameter)
+                    {
+                        if (parameterString.Length > 0) parameterString += ", ";
+                        parameterString += "string multilineText";
+                    }
+                    if (hasTableParameter)
+                    {
+                        if (parameterString.Length > 0) parameterString += ", ";
+                        parameterString += "Reqnroll.Table table";
+                    }
+
+                    var formatString = $"[$0(\"$1\")] public void {methodName}({parameterString}) {{ScenarioContext.StepIsPending();}}";
                     var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
                     if (methodDeclaration == null)
                         continue;
-                    var psiModule = classDeclaration.GetPsiModule();
-
-                    foreach (var (parameterName, parameterType) in parameters)
-                        methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType(parameterType, psiModule), parameterName, null);
-
-                    if (hasMultilineParameter)
-                        methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("string", psiModule), "multilineText", null);
-
-                    if (hasTableParameter)
-                        methodDeclaration.AddParameterDeclarationBefore(ParameterKind.VALUE, CSharpTypeFactory.CreateType("Reqnroll.Table", psiModule), "table", null);
 
                     IClassMemberDeclaration insertedDeclaration;
                     using (new PsiTransactionCookie(classDeclaration.GetPsiServices(), DefaultAction.Commit, "Generate reqnroll step"))

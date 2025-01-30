@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using CucumberExpressions;
 using JetBrains.Annotations;
 using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
-using CucumberExpressions;
-
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions
 {
@@ -86,6 +85,8 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
     public class ReqnrollStepInfoFactory(IStepPatternUtil stepPatternUtil)
         : IReqnrollStepInfoFactory
     {
+        // Add parameter type registry with common types
+        private static readonly ParameterTypeRegistry DefaultParameterTypeRegistry = new();
 
         public ReqnrollStepInfo Create(string classFullName,
                                        string methodName,
@@ -96,20 +97,25 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                                        IReadOnlyList<ReqnrollStepScope> classEntryScopes,
                                        IReadOnlyList<ReqnrollStepScope> methodScopes)
         {
-
             Regex regex;
-            var parameterTypeRegistry = new ParameterTypeRegistry();
-            var expression = new CucumberExpression(pattern, parameterTypeRegistry);
-            if (expression.ParameterTypes.Length > 0)
-            {
-                expression.ParameterTypes.ToList().ForEach(pt => Console.WriteLine($"DEBUG(ReqnrollStepInfoFactory.Create):\t{pt.Name}"));
-                pattern = expression.Regex.ToString();
-            }
+            var finalPattern = pattern;
 
+            // Try parsing as Cucumber expression first
+            try
+            {
+                var expression = new CucumberExpression(pattern, DefaultParameterTypeRegistry);
+                if (expression.ParameterTypes.Length > 0)
+                    // Convert Cucumber expression to regex pattern
+                    finalPattern = expression.Regex.ToString();
+            }
+            catch
+            {
+                // Not a valid Cucumber expression, treat as regex
+            }
 
             try
             {
-                var fullMatchPattern = pattern;
+                var fullMatchPattern = finalPattern;
                 if (!fullMatchPattern.StartsWith("^"))
                     fullMatchPattern = "^" + fullMatchPattern;
                 if (!fullMatchPattern.EndsWith("$"))

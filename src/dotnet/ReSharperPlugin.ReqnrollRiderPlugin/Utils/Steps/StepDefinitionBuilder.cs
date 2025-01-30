@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using JetBrains.Application;
 using JetBrains.Application.Parts;
-using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 using Reqnroll.BindingSkeletons;
 using Reqnroll.Tracing;
+using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
 {
@@ -43,7 +41,10 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
             var stepTextAnalyzer = new StepTextAnalyzer();
             var result = stepTextAnalyzer.Analyze(stepText, cultureInfo);
 
-            return result.Parameters.Select(p => (p.Name, GetCSharpTypeName(p.Type)));
+            var parameterList = new List<(string parameterName, string parameterType)>();
+            foreach (var param in result.Parameters)
+                parameterList.Add((param.Name, GetCSharpTypeName(param.Type)));
+            return parameterList;
         }
         
         private string GetCSharpTypeName(string type)
@@ -67,22 +68,57 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
         {
             var stepTextAnalyzer = new StepTextAnalyzer();
             var result = stepTextAnalyzer.Analyze(stepText, cultureInfo);
-            
-            var pattern = new StringBuilder();
 
-            pattern.Append(EscapeRegex(result.TextParts[0]));
-            for (int i = 1; i < result.TextParts.Count; i++)
+            // First, let's check if this is a step with quoted strings
+            var hasQuotedStrings = stepText.Contains("\"") || stepText.Contains("'");
+            if (hasQuotedStrings)
             {
-                pattern.AppendFormat("{0}", result.Parameters[i-1].RegexPattern);
-                pattern.Append(EscapeRegex(result.TextParts[i]));
+                // For steps with quoted strings, use the original text but replace the quoted parts with {string}
+                var pattern = stepText;
+                foreach (var param in result.Parameters)
+                    if (param.Type == "String")
+                    {
+                        // Replace the quoted string with {string}
+                        pattern = pattern.Replace($"\"{param.Name}\"", "{string}");
+                        pattern = pattern.Replace($"'{param.Name}'", "{string}");
+                    }
+                return pattern;
             }
 
-            return pattern.ToString();
+            // For non-quoted parameters, use the standard approach
+            var sb = new StringBuilder();
+            sb.Append(result.TextParts[0]);
+            
+            for (int i = 1; i < result.TextParts.Count; i++)
+            {
+                var param = result.Parameters[i - 1];
+                switch (param.Type)
+                {
+                    case "String":
+                        sb.Append("{string}");
+                        break;
+                    case "Int32":
+                        sb.Append("{int}");
+                        break;
+                    case "Decimal":
+                        sb.Append("{decimal}");
+                        break;
+                    case "DateTime":
+                        sb.Append("{datetime}");
+                        break;
+                    default:
+                        sb.AppendFormat("(.*)");
+                        break;
+                }
+                sb.Append(result.TextParts[i]);
+            }
+
+            return sb.ToString();
         }
 
         private static string EscapeRegex(string text)
         {
-            return Regex.Escape(text).Replace("\"", "\"\"").Replace("\\ ", " ");
+            return text.Replace("\\ ", " ");
         }
     }
 
