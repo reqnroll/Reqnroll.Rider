@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 // ReSharper disable once CheckNamespace
@@ -115,12 +115,12 @@ namespace Reqnroll.BindingSkeletons
             return new AnalyzedStepParameter("String", paramName, regexPattern);
         }
 
-        private static readonly Regex QuotesRe = new Regex(@"""+(?<param>.*?)""+|'+(?<param>.*?)'+|(?<param>\<.*?\>)");
+        private static readonly Regex QuotesRe = new(@"""+(?<param>.*?)""+|'+(?<param>.*?)'+|(?<param>\<.*?\>)|\{\}");
         private IEnumerable<CaptureWithContext> RecognizeQuotedTexts(string stepText)
         {
             return QuotesRe.Matches(stepText)
                            .Cast<Match>()
-                           .Select(m => (Capture)m.Groups["param"])
+                           .Select(m => m.Groups["param"].Success ? (Capture)m.Groups["param"] : m.Groups[0])
                            .ToCaptureWithContext(ParameterType.Text);
         }
 

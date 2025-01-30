@@ -32,6 +32,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.References
         public string ScenarioText { get; private set; }
         public string FeatureText { get; private set; }
         public IList<string> Tags { get; private set; }
+        public string StepPattern { get; private set; }
 
         public override ResolveResultWithInfo ResolveWithoutCache()
         {
