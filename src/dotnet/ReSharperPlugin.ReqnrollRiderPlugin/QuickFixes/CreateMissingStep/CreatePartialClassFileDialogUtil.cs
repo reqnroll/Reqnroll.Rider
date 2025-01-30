@@ -1,4 +1,5 @@
 using System.IO;
+using JetBrains.Application.Parts;
 using JetBrains.Application.Threading;
 using JetBrains.Diagnostics;
 using JetBrains.IDE.UI;
@@ -19,7 +20,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
         void OpenCreatePartialClassFileDialog(IPsiSourceFile otherPartSourceFile, CreatePartialClassFile onValidation);
     }
 
-    [PsiComponent]
+    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class CreateStepPartialClassFile : ICreateStepPartialClassFile
     {
         private readonly IDialogHost _dialogHost;

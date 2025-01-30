@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Occurrences;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Navigation;
 
-[SolutionComponent]
+[SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
 public class ReqnrollOccurenceKindProvider : IOccurrenceKindProvider
 {
     public static readonly OccurrenceKind ReqnrollStep = OccurrenceKind.CreateSemantic("ReqnrollStep");

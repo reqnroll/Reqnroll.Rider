@@ -1,10 +1,11 @@
+using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
 using JetBrains.Serialization;
 using JetBrains.Util.PersistentMap;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.ReqnrollJsonSettings
 {
-    [PsiComponent]
+    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class ReqnrollSettingsMarshaller : IUnsafeMarshaller<ReqnrollSettings>
     {
         public void Marshal(UnsafeWriter writer, ReqnrollSettings value)

@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Application.CommandProcessing;
+using JetBrains.Application.Parts;
 using JetBrains.Application.UI.ActionSystem.Text;
 using JetBrains.Diagnostics;
 using JetBrains.DocumentModel;
@@ -22,7 +23,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.TypingAssist
 {
-    [SolutionComponent]
+    [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class GherkinTypingAssist : TypingAssistLanguageBase<GherkinLanguage>, ITypingHandler
     {
         public GherkinTypingAssist(

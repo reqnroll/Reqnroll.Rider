@@ -1,3 +1,4 @@
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Features.ReSpeller.Analyzers;
 using JetBrains.ReSharper.Features.ReSpeller.Analyzers.HighlightingGenerators;
@@ -8,7 +9,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.SpellCheck;
 
-[SolutionComponent]
+[SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
 public class GherkinTokenTextExtractor(
     ISpellingAndGrammarDataBuilder spellingAndGrammarDataBuilder,
     IRequiredSpellCheckingModesProvider requiredRequiredSpellCheckingModesProvider,

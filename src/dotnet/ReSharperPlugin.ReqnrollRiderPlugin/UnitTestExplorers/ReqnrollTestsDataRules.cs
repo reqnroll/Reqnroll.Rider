@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application.DataContext;
+using JetBrains.Application.Parts;
 using JetBrains.Application.UI.Actions.ActionManager;
 using JetBrains.DocumentModel.DataContext;
 using JetBrains.Lifetimes;
@@ -18,7 +19,7 @@ using JetBrains.Util;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
 {
-    [SolutionComponent]
+    [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class ReqnrollTestsDataRules
     {
         private readonly IUnitTestElementRepository _unitTestElementRepository;

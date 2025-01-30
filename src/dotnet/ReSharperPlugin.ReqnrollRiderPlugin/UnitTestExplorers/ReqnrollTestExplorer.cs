@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using JetBrains.Application.Parts;
 using JetBrains.Metadata.Reader.Impl;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
@@ -16,7 +17,7 @@ using Reqnroll.Tracing;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers
 {
-    [SolutionComponent]
+    [SolutionComponent(Instantiation.DemandAnyThreadUnsafe )]
     internal class ReqnrollTestExplorer(
         ReqnrollUnitTestProvider unitTestProvider,
         IUnitTestElementRepository unitTestElementRepository,

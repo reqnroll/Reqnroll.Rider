@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using JetBrains.Application.Parts;
 using JetBrains.Application.Threading;
 using JetBrains.Collections;
 using JetBrains.Diagnostics;
@@ -19,7 +20,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.ReqnrollJsonSettings
 {
-    [PsiComponent]
+    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class ReqnrollSettingsFilesCache : SimpleICache<ReqnrollSettings>
     {
         private readonly ReqnrollSettingsProvider _settingsProvider;

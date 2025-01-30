@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Application.Parts;
 using JetBrains.Application.Progress;
 using JetBrains.Collections;
 using JetBrains.ReSharper.Psi;
@@ -14,7 +15,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions
 {
-    [PsiComponent]
+    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
     // FIXME: Save this cache, see SolutionCaches and SimpleCache and implements ICacheWithVersion
     public class AssemblyStepDefinitionCache : IAssemblyCache
     {

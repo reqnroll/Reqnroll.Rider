@@ -19,7 +19,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
         string GetPattern(string stepText, CultureInfo cultureInfo);
     }
 
-    [ShellComponent(Instantiation.DemandAnyThreadSafe)]
+    [ShellComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class StepDefinitionBuilder : IStepDefinitionBuilder
     {
         public string GetStepDefinitionMethodNameFromPattern(GherkinStepKind stepKind, string pattern, string[] parameterNames)

@@ -1,5 +1,6 @@
 using System.Linq;
 using JetBrains.Application.Components;
+using JetBrains.Application.Parts;
 using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
@@ -12,7 +13,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Extensions;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectRefresher
 {
-    [SolutionComponent]
+    [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class ProjectRefresher
     {
         private readonly ISolution _solution;
