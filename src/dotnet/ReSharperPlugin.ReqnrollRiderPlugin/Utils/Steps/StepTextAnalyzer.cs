@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 // ReSharper disable once CheckNamespace
@@ -62,7 +62,21 @@ namespace Reqnroll.BindingSkeletons
                 string regexPattern = defaultRegexPattern;
                 string value = paramMatch.Capture.Value;
                 int index = paramMatch.Capture.Index;
-
+                switch (paramMatch.ParameterType)
+                {
+                    case ParameterType.Text:
+                        regexPattern = "{string}";
+                        break;
+                    case ParameterType.Int:
+                        regexPattern = "{int}";
+                        break;
+                    case ParameterType.Decimal:
+                        regexPattern = "{decimal}";
+                        break;
+                    default:
+                        regexPattern = "{string}";
+                        break;
+                }
                 switch (value.Substring(0, 1))
                 {
                     case "\"":
@@ -76,7 +90,6 @@ namespace Reqnroll.BindingSkeletons
                         index++;
                         break;
                 }
-
                 result.TextParts.Add(stepText.Substring(textIndex, index - textIndex));
                 result.Parameters.Add(AnalyzeParameter(value, bindingCulture, result.Parameters.Count, regexPattern, paramMatch.ParameterType));
                 textIndex = index + value.Length;
@@ -102,12 +115,12 @@ namespace Reqnroll.BindingSkeletons
             return new AnalyzedStepParameter("String", paramName, regexPattern);
         }
 
-        private static readonly Regex QuotesRe = new Regex(@"""+(?<param>.*?)""+|'+(?<param>.*?)'+|(?<param>\<.*?\>)");
+        private static readonly Regex QuotesRe = new(@"""+(?<param>.*?)""+|'+(?<param>.*?)'+|(?<param>\<.*?\>)|\{\}");
         private IEnumerable<CaptureWithContext> RecognizeQuotedTexts(string stepText)
         {
             return QuotesRe.Matches(stepText)
                            .Cast<Match>()
-                           .Select(m => (Capture)m.Groups["param"])
+                           .Select(m => m.Groups["param"].Success ? (Capture)m.Groups["param"] : m.Groups[0])
                            .ToCaptureWithContext(ParameterType.Text);
         }
 

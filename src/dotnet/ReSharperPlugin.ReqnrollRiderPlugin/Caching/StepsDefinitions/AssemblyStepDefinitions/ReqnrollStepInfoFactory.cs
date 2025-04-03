@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using CucumberExpressions;
 using JetBrains.Annotations;
 using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
@@ -10,6 +12,62 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions
 {
+
+    class CucumberParameterType<T> : IParameterType
+    {
+        public string[] RegexStrings { get; }
+        public string Name { get; }
+        public int Weight { get; }
+        public bool UseForSnippets { get; }
+
+        public Type ParameterType => typeof(T);
+
+        public CucumberParameterType(string name, params string[] regexps) : this(name, regexps, true)
+        {
+
+        }
+
+        public CucumberParameterType(string name, string[] regexps, bool useForSnippets = true, int weight = 0)
+        {
+            Name = name;
+            RegexStrings = regexps;
+            UseForSnippets = useForSnippets;
+            Weight = weight;
+        }
+
+    }
+
+    class ParameterTypeRegistry : IParameterTypeRegistry
+    {
+        private readonly List<IParameterType> _parameterTypes = new()
+        {
+            new CucumberParameterType<int>(ParameterTypeConstants.IntParameterName, ParameterTypeConstants.IntParameterRegexps, weight: 1000),
+            new CucumberParameterType<string>(ParameterTypeConstants.StringParameterName, ParameterTypeConstants.StringParameterRegexps),
+            new CucumberParameterType<string>(ParameterTypeConstants.WordParameterName, ParameterTypeConstants.WordParameterRegexps, false),
+            new CucumberParameterType<float>(ParameterTypeConstants.FloatParameterName, ParameterTypeConstants.FloatParameterRegexpsEn, false),
+            new CucumberParameterType<double>(ParameterTypeConstants.DoubleParameterName, ParameterTypeConstants.FloatParameterRegexpsEn)
+        };
+
+
+        public IParameterType LookupByTypeName(string name)
+        {
+            if (name == "unknown")
+                return null;
+
+            var paramType = _parameterTypes.FirstOrDefault(pt => pt.Name == name);
+            if (paramType != null)
+                return paramType;
+
+            return new CucumberParameterType<string>("???", ".*");
+        }
+
+        public IEnumerable<IParameterType> GetParameterTypes()
+        {
+            return _parameterTypes;
+
+        }
+    }
+
     public interface IReqnrollStepInfoFactory
     {
         ReqnrollStepInfo Create(string classFullName,
@@ -27,6 +85,8 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
     public class ReqnrollStepInfoFactory(IStepPatternUtil stepPatternUtil)
         : IReqnrollStepInfoFactory
     {
+        // Add parameter type registry with common types
+        private static readonly ParameterTypeRegistry DefaultParameterTypeRegistry = new();
 
         public ReqnrollStepInfo Create(string classFullName,
                                        string methodName,
@@ -38,9 +98,24 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                                        IReadOnlyList<ReqnrollStepScope> methodScopes)
         {
             Regex regex;
+            var finalPattern = pattern;
+
+            // Try parsing as Cucumber expression first
             try
             {
-                var fullMatchPattern = pattern;
+                var expression = new CucumberExpression(pattern, DefaultParameterTypeRegistry);
+                if (expression.ParameterTypes.Length > 0)
+                    // Convert Cucumber expression to regex pattern
+                    finalPattern = expression.Regex.ToString();
+            }
+            catch
+            {
+                // Not a valid Cucumber expression, treat as regex
+            }
+
+            try
+            {
+                var fullMatchPattern = finalPattern;
                 if (!fullMatchPattern.StartsWith("^"))
                     fullMatchPattern = "^" + fullMatchPattern;
                 if (!fullMatchPattern.EndsWith("$"))
@@ -97,7 +172,6 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                 if (error)
                     break;
             }
-
             return new ReqnrollStepInfo(classFullName, methodName, methodParameterTypes, methodParameterNames, stepKind, pattern, regex, regexesPerCapture, scopes);
         }
     }

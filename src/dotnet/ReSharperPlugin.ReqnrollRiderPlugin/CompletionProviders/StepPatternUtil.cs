@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CucumberExpressions;
 using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions;
+using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
 {
@@ -16,6 +18,8 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
     [PsiSharedComponent(Instantiation.DemandAnyThreadUnsafe)]
     public class StepPatternUtil : IStepPatternUtil
     {
+        private static readonly ParameterTypeRegistry DefaultParameterTypeRegistry = new();
+
         public enum StepPatternTokenType
         {
             Text,
@@ -131,8 +135,14 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
 
         private IEnumerable<string> ListPossibleValues(string captureText)
         {
-            if (captureText.IndexOf('|') == -1)
+            if (captureText.StartsWith("{") && captureText.EndsWith("}"))
+            {
+                yield return captureText;
+            }
+            else if (captureText.IndexOf('|') == -1)
+            {
                 yield return '(' + captureText + ')';
+            }
             else
             {
                 foreach (var substring in captureText.Split('|'))
@@ -142,36 +152,83 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders
 
         public IEnumerable<(StepPatternTokenType tokenType, string text, bool optional)> TokenizeStepPattern(string pattern)
         {
-            var i = 0;
-            var previousChar = '\0';
-            var buffer = new StringBuilder();
-            while (i < pattern.Length)
+            // Try parsing as Cucumber expression first
+            List<(StepPatternTokenType tokenType, string text, bool optional)> tokens = null;
+            try
             {
-                var c = pattern[i++];
+                var expression = new CucumberExpression(pattern, DefaultParameterTypeRegistry);
+                if (expression.ParameterTypes.Length > 0)
+                {
+                    tokens = new List<(StepPatternTokenType, string, bool)>();
+                    var buffer = new StringBuilder();
+                    var position = 0;
+                    while (position < pattern.Length)
+                    {
+                        var c = pattern[position++];
+                        if (c == '{')
+                        {
+                            if (buffer.Length > 0)
+                            {
+                                tokens.Add((StepPatternTokenType.Text, buffer.ToString(), false));
+                                buffer.Clear();
+                            }
+
+                            var parameterContent = ReadUntilChar(pattern, ref position, '}');
+                            tokens.Add((StepPatternTokenType.Capture, "{" + parameterContent + "}", false));
+                        }
+                        else
+                        {
+                            buffer.Append(c);
+                        }
+                    }
+                    if (buffer.Length > 0)
+                        tokens.Add((StepPatternTokenType.Text, buffer.ToString(), false));
+                }
+            }
+            catch
+            {
+                // Not a valid Cucumber expression, continue with regex parsing
+            }
+
+            // If we successfully parsed as Cucumber expression, return those tokens
+            if (tokens != null)
+            {
+                foreach (var token in tokens)
+                    yield return token;
+                yield break;
+            }
+
+            // Original regex parsing logic
+            var regexBuffer = new StringBuilder();
+            var previousChar = '\0';
+            var index = 0;
+            while (index < pattern.Length)
+            {
+                var c = pattern[index++];
                 if (c == '(' && previousChar != '\\')
                 {
-                    if (buffer.Length > 0)
+                    if (regexBuffer.Length > 0)
                     {
-                        yield return (StepPatternTokenType.Text, buffer.ToString(), false);
-                        buffer.Clear();
+                        yield return (StepPatternTokenType.Text, regexBuffer.ToString(), false);
+                        regexBuffer.Clear();
                     }
 
-                    var captureContent = ReadUntilChar(pattern, ref i, ')');
+                    var captureContent = ReadUntilChar(pattern, ref index, ')');
                     if (captureContent.StartsWith("?:"))
                         captureContent = captureContent.Substring(2);
-                    var isOptional = i < pattern.Length && pattern[i] == '?';
+                    var isOptional = index < pattern.Length && pattern[index] == '?';
                     if (isOptional)
-                        i++;
+                        index++;
                     yield return (StepPatternTokenType.Capture, captureContent, isOptional);
                 }
                 else
                 {
-                    buffer.Append(c);
+                    regexBuffer.Append(c);
                 }
                 previousChar = c;
             }
-            if (buffer.Length > 0)
-                yield return (StepPatternTokenType.Text, buffer.ToString(), false);
+            if (regexBuffer.Length > 0)
+                yield return (StepPatternTokenType.Text, regexBuffer.ToString(), false);
         }
 
         private string ReadUntilChar(string text, ref int index, char endCharacter)
