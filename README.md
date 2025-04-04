@@ -5,13 +5,12 @@ The "Reqnroll Support" plugin adds specific functionality for the [Reqnroll](htt
 
 **IMPORTANT**: This plugin is still at it's beginning, It may be still buggy. Don't hesitate to report any bug or cool feature to add and don't forget to :+1: any feature you want to help prioritize.
 
-## Build plugin
+## Usage
+See [Setup Rider](https://docs.reqnroll.net/latest/installation/setup-ide.html#setup-rider)
 
-```shell
-./gradlew :buildPlugin
-```
+### Limitations
 
-You can find CI builds in [Actions](https://github.com/reqnroll/Reqnroll.Rider/actions) tab
+- For now, it only supports step definitions using [Regular expressions in attributes](https://docs.reqnroll.net/projects/reqnroll/en/latest/Bindings/Step-Definitions.html#step-matching-styles-rules). If you are interested in the other ones, please open an issue.
 
 ## Features
 
@@ -50,9 +49,13 @@ Note: If this is not working, try to add the following configuration in the `req
 }
 ```
 
-## Limitations
+## Build plugin
 
-- For now, it only supports step definitions using [Regular expressions in attributes](https://docs.reqnroll.net/projects/reqnroll/en/latest/Bindings/Step-Definitions.html#step-matching-styles-rules). If you are interested in the other ones, please open an issue.
+```shell
+./gradlew :buildPlugin
+```
+
+You can find CI builds in [Actions](https://github.com/reqnroll/Reqnroll.Rider/actions) tab
 
 ## Notes
 
