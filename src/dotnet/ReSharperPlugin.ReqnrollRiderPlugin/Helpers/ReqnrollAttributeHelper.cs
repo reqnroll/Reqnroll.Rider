@@ -10,6 +10,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Helpers
     {
         public static readonly ClrTypeName[] BindingAttribute = [new ClrTypeName("Reqnroll.BindingAttribute"), new ClrTypeName("TechTalk.SpecFlow.BindingAttribute")];
         public static readonly ClrTypeName[] ScopeAttribute = [new ClrTypeName("Reqnroll.ScopeAttribute"), new ClrTypeName("TechTalk.SpecFlow.ScopeAttribute")];
+        public static readonly string[] ScopeAttributeShortName = ["Reqnroll.ScopeAttribute", "TechTalk.SpecFlow.ScopeAttribute", "ScopeAttribute"];
         public static readonly ClrTypeName[] StepDefinitionAttribute = [new ClrTypeName("Reqnroll.StepDefinitionAttribute"), new ClrTypeName("TechTalk.SpecFlow.StepDefinitionAttribute")];
         public static readonly ClrTypeName[] GivenAttribute = [new ClrTypeName("Reqnroll.GivenAttribute"), new ClrTypeName("TechTalk.SpecFlow.GivenAttribute")];
         public static readonly ClrTypeName[] WhenAttribute = [new ClrTypeName("Reqnroll.WhenAttribute"), new ClrTypeName("TechTalk.SpecFlow.WhenAttribute")];
@@ -79,6 +80,11 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Helpers
         public static bool IsScopeAttribute(string fullAttributeName)
         {
             return ScopeAttribute.Any(x => x.FullName == fullAttributeName);
+        }
+
+        public static bool IsScopeAttributeShortName(string fullAttributeName)
+        {
+            return ScopeAttributeShortName.Any(x => x == fullAttributeName);
         }
     }
 }

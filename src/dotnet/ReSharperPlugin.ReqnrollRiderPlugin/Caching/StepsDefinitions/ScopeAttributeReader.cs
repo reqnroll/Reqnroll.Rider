@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using JetBrains.Application;
 using JetBrains.Metadata.Reader.API;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.ReqnrollRiderPlugin.Helpers;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions;
@@ -13,53 +13,48 @@ public class ScopeAttributeUtil
 {
     public IReadOnlyList<ReqnrollStepScope>? GetScopes(IClassDeclaration classDeclaration)
     {
-        var attributeInstances = classDeclaration.DeclaredElement?.GetAttributeInstances(AttributesSource.Self);
-        if (attributeInstances == null)
-            return null;
-
-        return GetScopesFromAttributes(attributeInstances);
+        return GetScopesFromAttributes(classDeclaration.Attributes);
     }
 
     public IReadOnlyList<ReqnrollStepScope>? GetScopes(IMethodDeclaration methodDeclaration)
     {
-        var attributeInstances = methodDeclaration.DeclaredElement?.GetAttributeInstances(AttributesSource.Self);
-        if (attributeInstances == null)
-            return null;
-
-        return GetScopesFromAttributes(attributeInstances);
+        return GetScopesFromAttributes(methodDeclaration.Attributes);
     }
 
-    public IReadOnlyList<ReqnrollStepScope>? GetScopesFromAttributes(ICollection<IAttributeInstance> attributeInstances)
+    private IReadOnlyList<ReqnrollStepScope>? GetScopesFromAttributes(TreeNodeCollection<IAttribute> attributes)
     {
         List<ReqnrollStepScope>? scopes = null;
-        foreach (var attribute in attributeInstances)
+        foreach (var attribute in attributes)
         {
-            if (!ReqnrollAttributeHelper.IsScopeAttribute(attribute.GetAttributeType().GetClrName().FullName))
+            if (!ReqnrollAttributeHelper.IsScopeAttributeShortName(attribute.Name.ShortName))
                 continue;
 
             string? feature = null;
             string? tag = null;
             string? scenario = null;
 
-            foreach (var (name, value) in attribute.NamedParameters())
+            foreach (var propertyAssignment in attribute.Children<IPropertyAssignment>())
             {
-                if (!value.IsConstant)
+                if (propertyAssignment.Source is not ICSharpLiteralExpression source || !source.IsConstantValue())
                     continue;
+                if (!source.ConstantValue.IsString())
+                    continue;
+                var name = propertyAssignment.PropertyNameIdentifier.Name;
+                var value = source.ConstantValue.StringValue;
                 switch (name)
                 {
                     case "Feature":
-                        feature = value.ConstantValue.StringValue;
+                        feature = value;
                         break;
                     case "Tag":
-                        tag = value.ConstantValue.StringValue;
+                        tag = value;
                         break;
                     case "Scenario":
-                        scenario = value.ConstantValue.StringValue;
+                        scenario = value;
                         break;
                 }
             }
-
-            scopes ??= new List<ReqnrollStepScope>(attributeInstances.Count);
+            scopes ??= new List<ReqnrollStepScope>(attributes.Count);
             scopes.Add(new ReqnrollStepScope(feature, scenario, tag));
         }
 
