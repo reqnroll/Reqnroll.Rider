@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 2024.3.1
 
+- Add support to cucumber expressions
 - Fix missing translation for Rule in Dutch
 - Fix error when using Specflow
 
