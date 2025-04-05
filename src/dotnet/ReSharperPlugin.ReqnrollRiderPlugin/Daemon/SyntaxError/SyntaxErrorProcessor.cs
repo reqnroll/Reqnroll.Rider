@@ -71,13 +71,14 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.SyntaxError
                     ||
                     row.Children<GherkinToken>().Count(g => g.GetTokenType() == GherkinTokenTypes.PIPE) != pipeCount);
             }
-            return Enumerable.Empty<GherkinTableRow>();
+            return [];
         }
 
         private bool IsScenarioToken(ITreeNode token)
         {
-            return token.GetTokenType() == GherkinTokenTypes.SCENARIO_KEYWORD || token.GetTokenType() == GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD ||
-                   token.GetTokenType() == GherkinTokenTypes.BACKGROUND_KEYWORD;
+            return token.GetTokenType() == GherkinTokenTypes.SCENARIO_KEYWORD
+                   || token.GetTokenType() == GherkinTokenTypes.SCENARIO_OUTLINE_KEYWORD
+                   || token.GetTokenType() == GherkinTokenTypes.BACKGROUND_KEYWORD;
         }
 
         private bool IsInScenarioDescription(GherkinToken token)
@@ -87,6 +88,10 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.SyntaxError
             while (current != null)
             {
                 if (IsScenarioToken(current))
+                {
+                    hasScenarioKeyword = true;
+                }
+                if (current.GetTokenType() == GherkinTokenTypes.RULE_KEYWORD)
                 {
                     hasScenarioKeyword = true;
                 }
