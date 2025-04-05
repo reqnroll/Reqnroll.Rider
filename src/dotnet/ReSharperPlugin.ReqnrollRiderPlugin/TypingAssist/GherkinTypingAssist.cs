@@ -23,7 +23,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.TypingAssist
 {
-    [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
+    [SolutionComponent(InstantiationEx.LegacyDefault)]
     public class GherkinTypingAssist : TypingAssistLanguageBase<GherkinLanguage>, ITypingHandler
     {
         public GherkinTypingAssist(
@@ -187,7 +187,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.TypingAssist
             }
             return cachingLexer.TokenType;
         }
-        
+
         private int FindPreviousRowFirstPipeIndent(CachingLexer cachingLexer, int caret)
         {
             //find previous enter
@@ -200,9 +200,9 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.TypingAssist
             }
 
             var enterStart = cachingLexer.TokenStart;
-            
+
             cachingLexer.SetCurrentToken(cachingLexer.CurrentPosition + 1);
-            
+
             //find the first pipe after the enter
             while (GherkinTokenTypes.PIPE != cachingLexer.TokenType)
             {
