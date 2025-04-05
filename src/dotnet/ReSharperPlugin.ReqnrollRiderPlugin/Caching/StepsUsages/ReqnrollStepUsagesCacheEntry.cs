@@ -1,15 +1,9 @@
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsUsages
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsUsages;
+
+public class ReqnrollStepUsageCacheEntry(GherkinStepKind stepKind, string stepText)
 {
-    public class ReqnrollStepUsageCacheEntry
-    {
-        public ReqnrollStepUsageCacheEntry(GherkinStepKind stepKind, string stepText)
-        {
-            StepKind = stepKind;
-            StepText = stepText;
-        }
-        public GherkinStepKind StepKind { get; }
-        public string StepText { get; }
-    }
+    public GherkinStepKind StepKind { get; } = stepKind;
+    public string StepText { get; } = stepText;
 }

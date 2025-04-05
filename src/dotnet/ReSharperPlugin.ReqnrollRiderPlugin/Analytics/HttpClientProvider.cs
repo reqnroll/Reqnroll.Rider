@@ -5,46 +5,39 @@ using System.Threading.Tasks;
 using JetBrains.Application;
 using JetBrains.Util;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics;
+
+[ShellComponent]
+public class HttpClientProvider(ILogger logger) : IHttpClientProvider
 {
-    [ShellComponent]
-    public class HttpClientProvider : IHttpClientProvider
+    private static readonly HttpClient Client = new HttpClient();
+    static HttpClientProvider()
     {
-        private readonly ILogger _logger;
-        private static readonly HttpClient Client = new HttpClient();
-        static HttpClientProvider()
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+    }
+
+    public async Task<HttpResultString> PostStringAsync(Uri requestUri, string content)
+    {
+        try
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            var response = await Client.PostAsync(requestUri, new StringContent(content));
+
+            return new HttpResultString
+            {
+                Success = response.IsSuccessStatusCode,
+                StatusCode = response.StatusCode,
+                Value = response.IsSuccessStatusCode ? await response.Content.ReadAsStringAsync() : null
+            };
         }
-
-        public HttpClientProvider(ILogger logger)
+        catch (HttpRequestException e) when (e.InnerException != null)
         {
-            _logger = logger;
+            logger.Verbose(e.InnerException.Message);
+            return null;
         }
-
-        public async Task<HttpResultString> PostStringAsync(Uri requestUri, string content)
+        catch (Exception e)
         {
-            try
-            {
-                var response = await Client.PostAsync(requestUri, new StringContent(content));
-
-                return new HttpResultString
-                {
-                    Success = response.IsSuccessStatusCode,
-                    StatusCode = response.StatusCode,
-                    Value = response.IsSuccessStatusCode ? await response.Content.ReadAsStringAsync() : null
-                };
-            }
-            catch (HttpRequestException e) when (e.InnerException != null)
-            {
-                _logger.Verbose(e.InnerException.Message);
-                return null;
-            }
-            catch (Exception e)
-            {
-                _logger.Verbose(e.Message);
-                return null;
-            }
+            logger.Verbose(e.Message);
+            return null;
         }
     }
 }

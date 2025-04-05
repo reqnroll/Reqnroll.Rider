@@ -1,14 +1,13 @@
 using Reqnroll;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Tests.Utils.Steps
-{
-    [Binding]
-    public class SyntaxHighlightingSteps
-    {
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Tests.Utils.Steps;
 
-        [Given(@"this a step with a string (.+)")]
-        public void GivenThisAStepWithAString(string p1)
-        {
-        }
+[Binding]
+public class SyntaxHighlightingSteps
+{
+
+    [Given(@"this a step with a string (.+)")]
+    public void GivenThisAStepWithAString(string p1)
+    {
     }
 }

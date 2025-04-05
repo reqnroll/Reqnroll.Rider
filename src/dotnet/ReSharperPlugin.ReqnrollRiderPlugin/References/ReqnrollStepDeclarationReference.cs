@@ -20,217 +20,216 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepD
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 using IClassDeclaration = JetBrains.ReSharper.Psi.CSharp.Tree.IClassDeclaration;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.References
+namespace ReSharperPlugin.ReqnrollRiderPlugin.References;
+
+public class ReqnrollStepDeclarationReference : TreeReferenceBase<GherkinStep>
 {
-    public class ReqnrollStepDeclarationReference : TreeReferenceBase<GherkinStep>
+    public ReqnrollStepDeclarationReference([NotNull] GherkinStep owner) : base(owner)
     {
-        public ReqnrollStepDeclarationReference([NotNull] GherkinStep owner) : base(owner)
+    }
+
+    public Regex RegexPattern { get; private set; }
+    public string ScenarioText { get; private set; }
+    public string FeatureText { get; private set; }
+    public IList<string> Tags { get; private set; }
+    public string StepPattern { get; private set; }
+
+    public override ResolveResultWithInfo ResolveWithoutCache()
+    {
+        var psiServices = myOwner.GetPsiServices();
+        var reqnrollStepsDefinitionsCache = psiServices.GetComponent<ReqnrollStepsDefinitionsCache>();
+        var stepKind = myOwner.EffectiveStepKind;
+        var stepText = myOwner.GetStepText();
+        var psiModule = myOwner.GetPsiModule();
+        ScenarioText = myOwner.GetScenarioText();
+        FeatureText = myOwner.GetFeatureText();
+        Tags = myOwner.GetEffectiveTags().ToList();
+
+        var containingScenario = myOwner.GetContainingNode<IGherkinScenario>();
+        if (containingScenario is GherkinScenarioOutline scenarioOutline)
+            stepText = myOwner.GetStepTextForExample(scenarioOutline.GetExampleData(0));
+
+        foreach (var (sourceFile, cacheEntries) in reqnrollStepsDefinitionsCache.AllStepsPerFiles)
         {
-        }
+            if (!psiModule.Equals(sourceFile.PsiModule) && !psiModule.References(sourceFile.PsiModule))
+                continue;
 
-        public Regex RegexPattern { get; private set; }
-        public string ScenarioText { get; private set; }
-        public string FeatureText { get; private set; }
-        public IList<string> Tags { get; private set; }
-        public string StepPattern { get; private set; }
-
-        public override ResolveResultWithInfo ResolveWithoutCache()
-        {
-            var psiServices = myOwner.GetPsiServices();
-            var reqnrollStepsDefinitionsCache = psiServices.GetComponent<ReqnrollStepsDefinitionsCache>();
-            var stepKind = myOwner.EffectiveStepKind;
-            var stepText = myOwner.GetStepText();
-            var psiModule = myOwner.GetPsiModule();
-            ScenarioText = myOwner.GetScenarioText();
-            FeatureText = myOwner.GetFeatureText();
-            Tags = myOwner.GetEffectiveTags().ToList();
-
-            var containingScenario = myOwner.GetContainingNode<IGherkinScenario>();
-            if (containingScenario is GherkinScenarioOutline scenarioOutline)
-                stepText = myOwner.GetStepTextForExample(scenarioOutline.GetExampleData(0));
-
-            foreach (var (sourceFile, cacheEntries) in reqnrollStepsDefinitionsCache.AllStepsPerFiles)
+            foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
             {
-                if (!psiModule.Equals(sourceFile.PsiModule) && !psiModule.References(sourceFile.PsiModule))
+                if (!myOwner.MatchScope(cacheEntry.Scopes))
                     continue;
-
-                foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
+                if (cacheEntry.Regex?.IsMatch(stepText) == true)
                 {
-                    if (!myOwner.MatchScope(cacheEntry.Scopes))
-                        continue;
-                    if (cacheEntry.Regex?.IsMatch(stepText) == true)
+                    var types = psiServices.Symbols.GetTypesAndNamespacesInFile(sourceFile);
+                    foreach (var decElement in types)
                     {
-                        var types = psiServices.Symbols.GetTypesAndNamespacesInFile(sourceFile);
-                        foreach (var decElement in types)
-                        {
-                            if (decElement is not IClass cl)
-                                continue;
-                            if (cl.GetClrName().FullName != cacheEntry.ClassFullName)
-                                continue;
+                        if (decElement is not IClass cl)
+                            continue;
+                        if (cl.GetClrName().FullName != cacheEntry.ClassFullName)
+                            continue;
 
-                            IDeclaredElement matchingMethod = null;
-                            foreach (var method in GetAllMethodFromClassAndBaseClasses(cl))
+                        IDeclaredElement matchingMethod = null;
+                        foreach (var method in GetAllMethodFromClassAndBaseClasses(cl))
+                        {
+                            if (method.ShortName != cacheEntry.MethodName)
+                                continue;
+                            if (method.Parameters.Count != cacheEntry.MethodParameterTypes.Length)
+                                continue;
+                            var allParameterTypesMatch = true;
+                            for (var i = 0; i < method.Parameters.Count; i++)
                             {
-                                if (method.ShortName != cacheEntry.MethodName)
-                                    continue;
-                                if (method.Parameters.Count != cacheEntry.MethodParameterTypes.Length)
-                                    continue;
-                                var allParameterTypesMatch = true;
-                                for (var i = 0; i < method.Parameters.Count; i++)
+                                var methodParameter = method.Parameters[i];
+                                var expectedParameterName = cacheEntry.MethodParameterNames[i];
+                                if (methodParameter.ShortName != expectedParameterName)
                                 {
-                                    var methodParameter = method.Parameters[i];
-                                    var expectedParameterName = cacheEntry.MethodParameterNames[i];
-                                    if (methodParameter.ShortName != expectedParameterName)
+                                    allParameterTypesMatch = false;
+                                    break;
+                                }
+                                var expectedTypeName = cacheEntry.MethodParameterTypes[i];
+                                if (expectedTypeName != null)
+                                {
+                                    if (methodParameter.Type is IDeclaredType declarationType
+                                        && !declarationType.GetClrName().FullName.EndsWith(expectedTypeName)
+                                        && !declarationType.GetLongPresentableName(CSharpLanguage.Instance).SubstringBefore("<").EndsWith(expectedTypeName.SubstringBefore("<")))
                                     {
                                         allParameterTypesMatch = false;
                                         break;
                                     }
-                                    var expectedTypeName = cacheEntry.MethodParameterTypes[i];
-                                    if (expectedTypeName != null)
-                                    {
-                                        if (methodParameter.Type is IDeclaredType declarationType
-                                            && !declarationType.GetClrName().FullName.EndsWith(expectedTypeName)
-                                            && !declarationType.GetLongPresentableName(CSharpLanguage.Instance).SubstringBefore("<").EndsWith(expectedTypeName.SubstringBefore("<")))
-                                        {
-                                            allParameterTypesMatch = false;
-                                            break;
-                                        }
-                                    }
                                 }
-
-                                if (allParameterTypesMatch)
-                                    matchingMethod = method;
                             }
-                            if (matchingMethod == null)
-                                continue;
 
-                            var symbolInfo = new SymbolInfo(matchingMethod);
-                            var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
-
-                            RegexPattern = cacheEntry.Regex;
-                            return new ResolveResultWithInfo(resolveResult, ResolveErrorType.OK);
+                            if (allParameterTypesMatch)
+                                matchingMethod = method;
                         }
-                    }
-                }
-            }
-
-            var assemblyStepDefinitionCache = psiServices.GetComponent<AssemblyStepDefinitionCache>();
-            var psiAssemblyFileLoader = psiServices.GetComponent<IPsiAssemblyFileLoader>();
-            foreach (var (psiAssembly, cacheEntries) in assemblyStepDefinitionCache.AllStepsPerAssembly)
-            {
-                // FIXME: Should use `assembly` from reqnroll.json instead
-                if (!psiModule.Equals(psiAssembly.PsiModule) && !psiModule.References(psiAssembly.PsiModule))
-                    continue;
-
-                foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
-                {
-                    if (!myOwner.MatchScope(cacheEntry.Scopes))
-                        continue;
-                    if (cacheEntry.Regex?.IsMatch(stepText) == true)
-                    {
-                        var assemblyFile = psiAssemblyFileLoader.GetOrLoadAssembly(psiAssembly, false);
-                        if (assemblyFile == null)
+                        if (matchingMethod == null)
                             continue;
-                        foreach (var decElement in assemblyFile.Types)
-                        {
-                            if (!(decElement is IClass cl))
-                                continue;
 
-                            var method = cl.GetMembers().OfType<IMethod>().FirstOrDefault(x => x.ShortName == cacheEntry.MethodName);
-                            if (method == null)
-                                continue;
+                        var symbolInfo = new SymbolInfo(matchingMethod);
+                        var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
 
-                            var symbolInfo = new SymbolInfo(method);
-                            var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
-
-                            RegexPattern = cacheEntry.Regex;
-                            return new ResolveResultWithInfo(resolveResult, ResolveErrorType.OK);
-                        }
+                        RegexPattern = cacheEntry.Regex;
+                        return new ResolveResultWithInfo(resolveResult, ResolveErrorType.OK);
                     }
-
                 }
             }
-            return new ResolveResultWithInfo(EmptyResolveResult.Instance, ResolveErrorType.NOT_RESOLVED);
         }
 
-        private static IEnumerable<IMethod> GetAllMethodFromClassAndBaseClasses(IClass clazz)
+        var assemblyStepDefinitionCache = psiServices.GetComponent<AssemblyStepDefinitionCache>();
+        var psiAssemblyFileLoader = psiServices.GetComponent<IPsiAssemblyFileLoader>();
+        foreach (var (psiAssembly, cacheEntries) in assemblyStepDefinitionCache.AllStepsPerAssembly)
         {
-            foreach (var method in clazz.Methods)
-                yield return method;
-            var baseClassType = clazz.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
-            while (baseClassType is IClassDeclaration baseClassDeclaration)
+            // FIXME: Should use `assembly` from reqnroll.json instead
+            if (!psiModule.Equals(psiAssembly.PsiModule) && !psiModule.References(psiAssembly.PsiModule))
+                continue;
+
+            foreach (var cacheEntry in cacheEntries.Where(c => c.StepKind == stepKind))
             {
-                foreach (var declaredElementMethod in baseClassDeclaration.MethodDeclarationsEnumerable)
-                    yield return declaredElementMethod.DeclaredElement;
-                baseClassType = baseClassDeclaration.DeclaredElement?.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
+                if (!myOwner.MatchScope(cacheEntry.Scopes))
+                    continue;
+                if (cacheEntry.Regex?.IsMatch(stepText) == true)
+                {
+                    var assemblyFile = psiAssemblyFileLoader.GetOrLoadAssembly(psiAssembly, false);
+                    if (assemblyFile == null)
+                        continue;
+                    foreach (var decElement in assemblyFile.Types)
+                    {
+                        if (!(decElement is IClass cl))
+                            continue;
+
+                        var method = cl.GetMembers().OfType<IMethod>().FirstOrDefault(x => x.ShortName == cacheEntry.MethodName);
+                        if (method == null)
+                            continue;
+
+                        var symbolInfo = new SymbolInfo(method);
+                        var resolveResult = ResolveResultFactory.CreateResolveResult(symbolInfo.GetDeclaredElement(), symbolInfo.GetSubstitution());
+
+                        RegexPattern = cacheEntry.Regex;
+                        return new ResolveResultWithInfo(resolveResult, ResolveErrorType.OK);
+                    }
+                }
+
             }
         }
+        return new ResolveResultWithInfo(EmptyResolveResult.Instance, ResolveErrorType.NOT_RESOLVED);
+    }
 
-        public override string GetName()
+    private static IEnumerable<IMethod> GetAllMethodFromClassAndBaseClasses(IClass clazz)
+    {
+        foreach (var method in clazz.Methods)
+            yield return method;
+        var baseClassType = clazz.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
+        while (baseClassType is IClassDeclaration baseClassDeclaration)
         {
-            return myOwner.GetStepText();
+            foreach (var declaredElementMethod in baseClassDeclaration.MethodDeclarationsEnumerable)
+                yield return declaredElementMethod.DeclaredElement;
+            baseClassType = baseClassDeclaration.DeclaredElement?.GetBaseClassType()?.GetTypeElement()?.GetSingleDeclaration();
         }
+    }
 
-        public GherkinStepKind GetStepKind()
-        {
-            return myOwner.EffectiveStepKind;
-        }
+    public override string GetName()
+    {
+        return myOwner.GetStepText();
+    }
 
-        public string GetStepText()
-        {
-            var containingScenario = myOwner.GetContainingNode<IGherkinScenario>();
-            if (containingScenario is GherkinScenarioOutline scenarioOutline)
-                return myOwner.GetStepTextForExample(scenarioOutline.GetExampleData(0));
-            return myOwner.GetStepText();
-        }
+    public GherkinStepKind GetStepKind()
+    {
+        return myOwner.EffectiveStepKind;
+    }
 
-        public override ISymbolTable GetReferenceSymbolTable(bool useReferenceName)
-        {
-            throw new NotImplementedException();
-        }
+    public string GetStepText()
+    {
+        var containingScenario = myOwner.GetContainingNode<IGherkinScenario>();
+        if (containingScenario is GherkinScenarioOutline scenarioOutline)
+            return myOwner.GetStepTextForExample(scenarioOutline.GetExampleData(0));
+        return myOwner.GetStepText();
+    }
 
-        public override TreeTextRange GetTreeTextRange()
-        {
-            return myOwner.GetTreeTextRange();
-        }
+    public override ISymbolTable GetReferenceSymbolTable(bool useReferenceName)
+    {
+        throw new NotImplementedException();
+    }
 
-        public IProject GetProject()
-        {
-            return myOwner.GetProject();
-        }
+    public override TreeTextRange GetTreeTextRange()
+    {
+        return myOwner.GetTreeTextRange();
+    }
 
-        public override IReference BindTo(IDeclaredElement element)
-        {
-            return BindTo(element, EmptySubstitution.INSTANCE);
-        }
+    public IProject GetProject()
+    {
+        return myOwner.GetProject();
+    }
 
-        public override IReference BindTo(IDeclaredElement element, ISubstitution substitution)
-        {
-            if (!(element is Method))
-                return this;
-            /*var selector = CssElementFactory.GetInstance(myOwner).CreateSelector<ISimpleSelector>(".$0", (object) classDeclaredElement.ShortName);
-            if (selector.FirstChild != selector.LastChild)
-                return this;
-            if (!(selector.FirstChild is IClassSelector firstChild))
-                return this;
-            using (WriteLockCookie.Create(myOwner.IsPhysical(), "/Product.Root/Psi.Features/Web/Core/Psi/Src/Css/Impl/Tree/References/CssClassReference.cs", nameof (BindTo)))
-                ModificationUtil.ReplaceChild(myOwner, firstChild.Identifier);*/
-            return myOwner.GetReferences<IReference>().Single();
-        }
+    public override IReference BindTo(IDeclaredElement element)
+    {
+        return BindTo(element, EmptySubstitution.INSTANCE);
+    }
 
-        public override IAccessContext GetAccessContext()
-        {
-            return new ElementAccessContext(myOwner);
-        }
-        
-        public CultureInfo GetGherkinFileCulture()
-        {
-            return new (myOwner.GetContainingNode<GherkinFile>().NotNull().Lang);
-        }
+    public override IReference BindTo(IDeclaredElement element, ISubstitution substitution)
+    {
+        if (!(element is Method))
+            return this;
+        /*var selector = CssElementFactory.GetInstance(myOwner).CreateSelector<ISimpleSelector>(".$0", (object) classDeclaredElement.ShortName);
+        if (selector.FirstChild != selector.LastChild)
+            return this;
+        if (!(selector.FirstChild is IClassSelector firstChild))
+            return this;
+        using (WriteLockCookie.Create(myOwner.IsPhysical(), "/Product.Root/Psi.Features/Web/Core/Psi/Src/Css/Impl/Tree/References/CssClassReference.cs", nameof (BindTo)))
+            ModificationUtil.ReplaceChild(myOwner, firstChild.Identifier);*/
+        return myOwner.GetReferences<IReference>().Single();
+    }
 
-        public bool IsInsideScenarioOutline()
-        {
-            return myOwner.Parent is GherkinScenarioOutline;
-        }
+    public override IAccessContext GetAccessContext()
+    {
+        return new ElementAccessContext(myOwner);
+    }
+
+    public CultureInfo GetGherkinFileCulture()
+    {
+        return new (myOwner.GetContainingNode<GherkinFile>().NotNull().Lang);
+    }
+
+    public bool IsInsideScenarioOutline()
+    {
+        return myOwner.Parent is GherkinScenarioOutline;
     }
 }

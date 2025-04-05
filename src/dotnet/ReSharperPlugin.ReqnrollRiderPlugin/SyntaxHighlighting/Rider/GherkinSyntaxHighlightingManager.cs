@@ -7,21 +7,20 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.SyntaxHighlighting.Rider
+namespace ReSharperPlugin.ReqnrollRiderPlugin.SyntaxHighlighting.Rider;
+
+[Language(typeof(GherkinLanguage))]
+public class GherkinSyntaxHighlightingManager : SyntaxHighlightingManager
 {
-    [Language(typeof(GherkinLanguage))]
-    public class GherkinSyntaxHighlightingManager : SyntaxHighlightingManager
+    public GherkinSyntaxHighlightingManager()
     {
-        public GherkinSyntaxHighlightingManager()
-        {
-            Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager");
-        }
+        Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager");
+    }
 
-        public override SyntaxHighlightingStageProcess CreateProcess(IDaemonProcess process, IContextBoundSettingsStore settings, IFile getPrimaryPsiFile)
-        {
-            Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager:CreateProcess - {getPrimaryPsiFile.GetSourceFile().NotNull().Name}");
+    public override SyntaxHighlightingStageProcess CreateProcess(IDaemonProcess process, IContextBoundSettingsStore settings, IFile getPrimaryPsiFile)
+    {
+        Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager:CreateProcess - {getPrimaryPsiFile.GetSourceFile().NotNull().Name}");
 
-            return new GherkinSyntaxHighlightingStageProcess(process, getPrimaryPsiFile, new GherkinSyntaxHighlightingProcessor());
-        }
+        return new GherkinSyntaxHighlightingStageProcess(process, getPrimaryPsiFile, new GherkinSyntaxHighlightingProcessor());
     }
 }

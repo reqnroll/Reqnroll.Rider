@@ -13,52 +13,47 @@ using JetBrains.ReSharper.Resources.Resources.Icons;
 using JetBrains.Util;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting;
+
+[OptionsPage(
+    Pid,
+    "Gherkin (Reqnroll) Formatting Style",
+    typeof(PsiFeaturesUnsortedOptionsThemedIcons.Indent),
+    ParentId = CodeEditingPage.PID,
+    Sequence = 0,
+    FilterTags = new[] {ConfigFileUtils.EditorConfigName})]
+public class GherkinFormattingStylePage(
+    Lifetime lifetime,
+    [NotNull] OptionsSettingsSmartContext smartContext,
+    [NotNull] IUIApplication environment,
+    [NotNull] GherkinFormattingStylePageSchema schema,
+    [NotNull] CodeStylePreview preview,
+    IComponentContainer container)
+    : CodeStylePage(lifetime, smartContext, environment, schema, preview, container)
 {
-    [OptionsPage(
-        Pid,
-        "Gherkin (Reqnroll) Formatting Style",
-        typeof(PsiFeaturesUnsortedOptionsThemedIcons.Indent),
-        ParentId = CodeEditingPage.PID,
-        Sequence = 0,
-        FilterTags = new[] {ConfigFileUtils.EditorConfigName})]
-    public class GherkinFormattingStylePage : CodeStylePage
+    public const string Pid = "GherkinDotnetFormattingStylePage";
+
+    public override bool ShowAutoDetectAndConfigureFormattingTip => true;
+
+    public override string Id => Pid;
+
+}
+
+[FormattingSettingsPresentationComponent]
+public class GherkinFormattingStylePageSchema(
+    Lifetime lifetime,
+    [NotNull] IContextBoundSettingsStoreLive smartContext,
+    [NotNull] IValueEditorViewModelFactory itemViewModelFactory,
+    IComponentContainer container,
+    ISettingsToHide settingsToHide)
+    : IndentStylePageSchema<GherkinFormatSettingsKey, GherkinCodeStylePreview>(lifetime, smartContext, itemViewModelFactory, container, settingsToHide)
+{
+    public override KnownLanguage Language => GherkinLanguage.Instance;
+    public override string PageName => "Gherkin (Reqnroll) Formatting Style";
+
+    protected override Pair<string, PreviewParseType> GetPreviewForIndents()
     {
-        public const string Pid = "GherkinDotnetFormattingStylePage";
-
-        public override bool ShowAutoDetectAndConfigureFormattingTip => true;
-
-        public override string Id => Pid;
-
-        public GherkinFormattingStylePage(Lifetime lifetime,
-                                          [NotNull] OptionsSettingsSmartContext smartContext,
-                                          [NotNull] IUIApplication environment,
-                                          [NotNull] GherkinFormattingStylePageSchema schema,
-                                          [NotNull] CodeStylePreview preview,
-                                          IComponentContainer container)
-            : base(lifetime, smartContext, environment, schema, preview, container)
-        {
-        }
-    }
-
-    [FormattingSettingsPresentationComponent]
-    public class GherkinFormattingStylePageSchema : IndentStylePageSchema<GherkinFormatSettingsKey, GherkinCodeStylePreview>
-    {
-        public override KnownLanguage Language => GherkinLanguage.Instance;
-        public override string PageName => "Gherkin (Reqnroll) Formatting Style";
-
-        public GherkinFormattingStylePageSchema(Lifetime lifetime,
-                                                [NotNull] IContextBoundSettingsStoreLive smartContext,
-                                                [NotNull] IValueEditorViewModelFactory itemViewModelFactory,
-                                                IComponentContainer container,
-                                                ISettingsToHide settingsToHide)
-            : base(lifetime, smartContext, itemViewModelFactory, container, settingsToHide)
-        {
-        }
-
-        protected override Pair<string, PreviewParseType> GetPreviewForIndents()
-        {
-            return Pair.Of(@"
+        return Pair.Of(@"
 Feature: Score Calculation (alternative forms)
   In order to know my performance
   As a player
@@ -76,18 +71,18 @@ Scenario: All spares
   And I roll 1
   Then my total score should be 110
 ", PreviewParseType.File);
-        }
+    }
 
-        protected override void Describe(SchemaBuilder builder)
-        {
-            base.Describe(builder);
+    protected override void Describe(SchemaBuilder builder)
+    {
+        base.Describe(builder);
 
-            var tagsExample = """
-                              Feature: Calculator
-                                  @ignore @myTag1 @myTag2
-                                  Scenario: Add two numbers
-                              """;
-            var indentationExample = @"
+        var tagsExample = """
+                          Feature: Calculator
+                              @ignore @myTag1 @myTag2
+                              Scenario: Add two numbers
+                          """;
+        var indentationExample = @"
 Feature: Cucumber stock keeping
 Scenario: eat 5 out of 20
   Given there are 20 cucumbers
@@ -111,26 +106,25 @@ Scenario Outline: eating
     |    12 |   5 |    7 |
     |    20 |   5 |   15 |
 ";
-            builder
-                .Category("Indentation rules")
-                .ItemFor(key => key.ExampleIndentSize, indentationExample)
-                .ItemFor(key => key.PyStringIndentSize, indentationExample)
-                .ItemFor(key => key.ScenarioIndentSize, indentationExample)
-                .ItemFor(key => key.StepIndentSize, indentationExample)
-                .ItemFor(key => key.AndStepIndentSize, indentationExample)
-                .ItemFor(key => key.TableIndentSize, indentationExample)
-                .ItemFor(key => key.SmallTableIndent, indentationExample)
-                .EndCategory();
-            builder
-                .Category("Blank lines rules")
-                .ItemFor(key => key.BlankLinesBeforeExamples, indentationExample)
-                .ItemFor(key => key.BlankLinesBeforeScenario, indentationExample)
-                .EndCategory();
-            builder
-                .Category("New Lines")
-                .ItemFor(key => key.WrapTagsOnDifferentLines, tagsExample)
-                .EndCategory();
+        builder
+            .Category("Indentation rules")
+            .ItemFor(key => key.ExampleIndentSize, indentationExample)
+            .ItemFor(key => key.PyStringIndentSize, indentationExample)
+            .ItemFor(key => key.ScenarioIndentSize, indentationExample)
+            .ItemFor(key => key.StepIndentSize, indentationExample)
+            .ItemFor(key => key.AndStepIndentSize, indentationExample)
+            .ItemFor(key => key.TableIndentSize, indentationExample)
+            .ItemFor(key => key.SmallTableIndent, indentationExample)
+            .EndCategory();
+        builder
+            .Category("Blank lines rules")
+            .ItemFor(key => key.BlankLinesBeforeExamples, indentationExample)
+            .ItemFor(key => key.BlankLinesBeforeScenario, indentationExample)
+            .EndCategory();
+        builder
+            .Category("New Lines")
+            .ItemFor(key => key.WrapTagsOnDifferentLines, tagsExample)
+            .EndCategory();
 
-        }
     }
 }

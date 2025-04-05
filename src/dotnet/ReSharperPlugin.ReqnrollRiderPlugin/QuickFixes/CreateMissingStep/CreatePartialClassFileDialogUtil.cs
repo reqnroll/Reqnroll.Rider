@@ -11,79 +11,70 @@ using JetBrains.ReSharper.Feature.Services.UI.Validation;
 using JetBrains.ReSharper.Psi;
 using JetBrains.Rider.Model.UIAutomation;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep
-{
-    public interface ICreateStepPartialClassFile
-    {
-        public delegate void CreatePartialClassFile(string path, string filename);
+namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes.CreateMissingStep;
 
-        void OpenCreatePartialClassFileDialog(IPsiSourceFile otherPartSourceFile, CreatePartialClassFile onValidation);
+public interface ICreateStepPartialClassFile
+{
+    public delegate void CreatePartialClassFile(string path, string filename);
+
+    void OpenCreatePartialClassFileDialog(IPsiSourceFile otherPartSourceFile, CreatePartialClassFile onValidation);
+}
+
+[PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
+public class CreateStepPartialClassFile(
+    IDialogHost dialogHost,
+    IThreading threading) : ICreateStepPartialClassFile
+{
+
+    public void OpenCreatePartialClassFileDialog(IPsiSourceFile otherPartSourceFile, ICreateStepPartialClassFile.CreatePartialClassFile onValidation)
+    {
+        threading.ReentrancyGuard.Queue("Open Create Reqnroll Steps Class dialog", () =>
+        {
+            dialogHost.Show(lifetime =>
+            {
+                var panel = CreateControl(lifetime, otherPartSourceFile);
+                return CreateDialog(lifetime, onValidation, panel);
+            });
+        });
     }
 
-    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
-    public class CreateStepPartialClassFile : ICreateStepPartialClassFile
+    private static BeDialog CreateDialog(Lifetime lifetime, ICreateStepPartialClassFile.CreatePartialClassFile onValidation, BeControl panel)
     {
-        private readonly IDialogHost _dialogHost;
-        private readonly IThreading _threading;
-
-        public CreateStepPartialClassFile(
-            IDialogHost dialogHost,
-            IThreading threading)
-        {
-            _dialogHost = dialogHost;
-            _threading = threading;
-        }
-
-        public void OpenCreatePartialClassFileDialog(IPsiSourceFile otherPartSourceFile, ICreateStepPartialClassFile.CreatePartialClassFile onValidation)
-        {
-            _threading.ReentrancyGuard.Queue("Open Create Reqnroll Steps Class dialog", () =>
-            {
-                _dialogHost.Show(lifetime =>
+        return panel.InDialog(
+                "Create new binding class",
+                "",
+                DialogModality.MODAL,
+                BeControlSizes.GetSize(BeControlSizeType.MEDIUM))
+            .WithOkButton(
+                lifetime,
+                () =>
                 {
-                    var panel = CreateControl(lifetime, otherPartSourceFile);
-                    return CreateDialog(lifetime, onValidation, panel);
-                });
-            });
-        }
+                    onValidation(
+                        panel.GetBeControlById<BeTextBox>("path").GetText(),
+                        panel.GetBeControlById<BeTextBox>("filename").GetText()
+                    );
+                },
+                disableWhenInvalid: true)
+            .WithCancelButton(lifetime);
+    }
 
-        private static BeDialog CreateDialog(Lifetime lifetime, ICreateStepPartialClassFile.CreatePartialClassFile onValidation, BeControl panel)
-        {
-            return panel.InDialog(
-                    "Create new binding class",
-                    "",
-                    DialogModality.MODAL,
-                    BeControlSizes.GetSize(BeControlSizeType.MEDIUM))
-                .WithOkButton(
-                    lifetime,
-                    () =>
-                    {
-                        onValidation(
-                            panel.GetBeControlById<BeTextBox>("path").GetText(),
-                            panel.GetBeControlById<BeTextBox>("filename").GetText()
-                        );
-                    },
-                    disableWhenInvalid: true)
-                .WithCancelButton(lifetime);
-        }
+    private BeControl CreateControl(Lifetime lifetime, IPsiSourceFile otherPartSourceFile)
+    {
+        var grid = BeControls.GetGrid();
 
-        private BeControl CreateControl(Lifetime lifetime, IPsiSourceFile otherPartSourceFile)
-        {
-            var grid = BeControls.GetGrid();
+        var solution = otherPartSourceFile.GetSolution();
+        var project = otherPartSourceFile.GetProject().NotNull();
+        grid.AddElement(BeControls.GetTextBox(lifetime, id: "filename")
+            .WithTextNotEmpty(lifetime, null)
+            .WithValidFileName(lifetime, null)
+            .WithDescription("Filename", lifetime));
+        grid.AddElement(BeControls.GetTextBox(lifetime, id: "path", initialText: project.Name + Path.DirectorySeparatorChar + otherPartSourceFile.GetLocation().Parent.MakeRelativeTo(project.Location).FullPath)
+            .WithTextNotEmpty(lifetime, null)
+            .WithFolderCompletion(solution, lifetime)
+            .WithValidPath(lifetime, ValidationIcons.Error)
+            .WithFolderExistsOrMustBeCreated(solution, lifetime)
+            .WithDescription("Folder", lifetime));
 
-            var solution = otherPartSourceFile.GetSolution();
-            var project = otherPartSourceFile.GetProject().NotNull();
-            grid.AddElement(BeControls.GetTextBox(lifetime, id: "filename")
-                .WithTextNotEmpty(lifetime, null)
-                .WithValidFileName(lifetime, null)
-                .WithDescription("Filename", lifetime));
-            grid.AddElement(BeControls.GetTextBox(lifetime, id: "path", initialText: project.Name + Path.DirectorySeparatorChar + otherPartSourceFile.GetLocation().Parent.MakeRelativeTo(project.Location).FullPath)
-                .WithTextNotEmpty(lifetime, null)
-                .WithFolderCompletion(solution, lifetime)
-                .WithValidPath(lifetime, ValidationIcons.Error)
-                .WithFolderExistsOrMustBeCreated(solution, lifetime)
-                .WithDescription("Folder", lifetime));
-
-            return grid;
-        }
+        return grid;
     }
 }

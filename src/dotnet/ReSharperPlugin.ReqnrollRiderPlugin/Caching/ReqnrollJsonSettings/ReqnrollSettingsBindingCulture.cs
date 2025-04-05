@@ -1,10 +1,9 @@
 using System.Xml.Serialization;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.ReqnrollJsonSettings
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.ReqnrollJsonSettings;
+
+public class ReqnrollSettingsBindingCulture
 {
-    public class ReqnrollSettingsBindingCulture
-    {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
-    }
+    [XmlAttribute("name")]
+    public string Name { get; set; }
 }

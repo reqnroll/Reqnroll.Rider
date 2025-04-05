@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics;
+
+public interface IAnalyticsTransmitterSink
 {
-    public interface IAnalyticsTransmitterSink
-    {
-        Task TransmitEvent(IAnalyticsEvent analyticsEvent, string userId);
-    }
+    Task TransmitEvent(IAnalyticsEvent analyticsEvent, string userId);
 }

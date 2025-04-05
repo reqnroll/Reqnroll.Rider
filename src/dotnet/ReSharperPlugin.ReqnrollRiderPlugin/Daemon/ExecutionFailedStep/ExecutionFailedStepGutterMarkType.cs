@@ -5,19 +5,15 @@ using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.Util;
 using ReSharperPlugin.ReqnrollRiderPlugin.Icons;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep;
+
+public class ExecutionFailedStepGutterMarkType() : IconGutterMarkType(ReqnrollIcons.FailedStepIcon)
 {
-    public class ExecutionFailedStepGutterMarkType : IconGutterMarkType
+
+    public override IAnchor Priority => BulbMenuAnchors.PermanentItem;
+
+    public override IEnumerable<BulbMenuItem> GetBulbMenuItems(IHighlighter highlighter)
     {
-        public ExecutionFailedStepGutterMarkType() : base(ReqnrollIcons.FailedStepIcon)
-        {
-        }
-
-        public override IAnchor Priority => BulbMenuAnchors.PermanentItem;
-
-        public override IEnumerable<BulbMenuItem> GetBulbMenuItems(IHighlighter highlighter)
-        {
-            return EmptyList<BulbMenuItem>.Enumerable;
-        }
+        return EmptyList<BulbMenuItem>.Enumerable;
     }
 }

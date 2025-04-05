@@ -1,29 +1,17 @@
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Guidance
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Guidance;
+
+public class GuidanceStep(GuidanceNotification userLevel, int? usageDays, string url, string title, string content, string linkText)
 {
-    public class GuidanceStep
-    {
 
-        public GuidanceStep(GuidanceNotification userLevel, int? usageDays, string url, string title, string content, string linkText)
-        {
-            UserLevel = userLevel;
-            UsageDays = usageDays;
-            Url = url;
-            Title = title;
-            Content = content;
-            LinkText = linkText;
+    public GuidanceNotification UserLevel { get; } = userLevel;
 
-        }
+    public int? UsageDays { get; } = usageDays;
 
-        public GuidanceNotification UserLevel { get; }
+    public string Url { get; } = url;
 
-        public int? UsageDays { get; }
+    public string Title { get; } = title;
 
-        public string Url { get; }
+    public string Content { get; } = content;
 
-        public string Title { get; }
-
-        public string Content { get; }
-
-        public string LinkText { get; }
-    }
+    public string LinkText { get; } = linkText;
 }

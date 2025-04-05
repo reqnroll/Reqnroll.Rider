@@ -1,9 +1,3 @@
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
-{
-    public class GherkinRule : GherkinElement
-    {
-        public GherkinRule() : base(GherkinNodeTypes.RULE)
-        {
-        }
-    }
-}
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+
+public class GherkinRule() : GherkinElement(GherkinNodeTypes.RULE);

@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics;
+
+public interface IAnalyticsEvent
 {
-    public interface IAnalyticsEvent
-    {
-        string EventName { get; }
+    string EventName { get; }
 
-        Dictionary<string, string> Properties { get; }
-    }
-
+    Dictionary<string, string> Properties { get; }
 }

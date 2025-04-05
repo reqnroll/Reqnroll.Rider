@@ -1,7 +1,6 @@
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics;
+
+public interface IEnvironmentReqnrollTelemetryChecker
 {
-    public interface IEnvironmentReqnrollTelemetryChecker
-    {
-        bool IsReqnrollTelemetryEnabled();
-    }
+    bool IsReqnrollTelemetryEnabled();
 }

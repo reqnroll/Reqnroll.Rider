@@ -8,72 +8,62 @@ using JetBrains.Util.Media;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.Utils.TestOutput;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep;
+
+[StaticSeverityHighlighting(
+    Severity.INFO,
+    typeof(ExecutionFailedStepGutterMarks),
+    AttributeId = "Reqnroll Failed Step",
+    OverlapResolve = OverlapResolveKind.NONE,
+    ShowToolTipInStatusBar = false
+)]
+public class ExecutionFailedStepHighlighting(GherkinStep gherkinStep, StepTestOutput stepTestOutput) : IRichTextToolTipHighlighting
 {
-    [StaticSeverityHighlighting(
-        Severity.INFO,
-        typeof(ExecutionFailedStepGutterMarks),
-        AttributeId = "Reqnroll Failed Step",
-        OverlapResolve = OverlapResolveKind.NONE,
-        ShowToolTipInStatusBar = false
-    )]
-    public class ExecutionFailedStepHighlighting : IRichTextToolTipHighlighting
+    public string ToolTip => BuildTooltip();
+
+    private string BuildTooltip()
     {
-        public string ToolTip => BuildTooltip();
+        if (!string.IsNullOrWhiteSpace(stepTestOutput.ErrorOutput))
+            return stepTestOutput.StatusLine + Environment.NewLine + Environment.NewLine + stepTestOutput.ErrorOutput;
 
-        private string BuildTooltip()
+        return stepTestOutput.StatusLine;
+    }
+
+    public string ErrorStripeToolTip => ToolTip;
+
+    public bool IsValid()
+    {
+        return true;
+    }
+
+    public RichTextBlock TryGetTooltip(HighlighterTooltipKind where)
+    {
+        var richTextBlock = new RichTextBlock();
+
+        switch (stepTestOutput.Status)
         {
-            if (!string.IsNullOrWhiteSpace(_stepTestOutput.ErrorOutput))
-                return _stepTestOutput.StatusLine + Environment.NewLine + Environment.NewLine + _stepTestOutput.ErrorOutput;
-
-            return _stepTestOutput.StatusLine;
+            case StepTestOutput.StepStatus.Failed:
+                var statusLineText = new RichText(stepTestOutput.Status.ToString(), new TextStyle(JetFontStyles.Bold, JetRgbaColors.DarkRed))
+                    .Append(new RichText(" - "))
+                    .Append(new RichText(stepTestOutput.StatusLine.Replace("<", "&lt;")));
+                richTextBlock.Add(statusLineText);
+                break;
+            default:
+                richTextBlock.Add(new RichText(stepTestOutput.StatusLine.Replace("<", "&lt;")));
+                break;
         }
 
-        public string ErrorStripeToolTip => ToolTip;
-
-        private readonly GherkinStep _gherkinStep;
-        private readonly StepTestOutput _stepTestOutput;
-
-        public ExecutionFailedStepHighlighting(GherkinStep gherkinStep, StepTestOutput stepTestOutput)
+        if (!string.IsNullOrWhiteSpace(stepTestOutput.ErrorOutput))
         {
-            _gherkinStep = gherkinStep;
-            _stepTestOutput = stepTestOutput;
+            richTextBlock.Add(new RichText("---------------------"));
+            richTextBlock.Add(new RichText(stepTestOutput.ErrorOutput.Replace("<", "&lt;")));
         }
 
-        public bool IsValid()
-        {
-            return true;
-        }
+        return richTextBlock;
+    }
 
-        public RichTextBlock TryGetTooltip(HighlighterTooltipKind where)
-        {
-            var richTextBlock = new RichTextBlock();
-
-            switch (_stepTestOutput.Status)
-            {
-                case StepTestOutput.StepStatus.Failed:
-                    var statusLineText = new RichText(_stepTestOutput.Status.ToString(), new TextStyle(JetFontStyles.Bold, JetRgbaColors.DarkRed))
-                        .Append(new RichText(" - "))
-                        .Append(new RichText(_stepTestOutput.StatusLine.Replace("<", "&lt;")));
-                    richTextBlock.Add(statusLineText);
-                    break;
-                default:
-                    richTextBlock.Add(new RichText(_stepTestOutput.StatusLine.Replace("<", "&lt;")));
-                    break;
-            }
-
-            if (!string.IsNullOrWhiteSpace(_stepTestOutput.ErrorOutput))
-            {
-                richTextBlock.Add(new RichText("---------------------"));
-                richTextBlock.Add(new RichText(_stepTestOutput.ErrorOutput.Replace("<", "&lt;")));
-            }
-
-            return richTextBlock;
-        }
-
-        public DocumentRange CalculateRange()
-        {
-            return _gherkinStep.GetDocumentRange();
-        }
+    public DocumentRange CalculateRange()
+    {
+        return gherkinStep.GetDocumentRange();
     }
 }

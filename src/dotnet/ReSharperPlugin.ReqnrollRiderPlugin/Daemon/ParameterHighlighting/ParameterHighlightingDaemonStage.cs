@@ -9,33 +9,32 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ParameterHighlighting
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ParameterHighlighting;
+
+[DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
+public class ParameterHighlightingDaemonStage : IDaemonStage
 {
-    [DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
-    public class ParameterHighlightingDaemonStage : IDaemonStage
+    public ParameterHighlightingDaemonStage(
+        ResolveHighlighterRegistrar registrar,
+        ReqnrollStepsDefinitionsCache reqnrollStepsDefinitionsCache,
+        IStepDefinitionBuilder stepDefinitionBuilder
+    )
     {
-        public ParameterHighlightingDaemonStage(
-            ResolveHighlighterRegistrar registrar,
-            ReqnrollStepsDefinitionsCache reqnrollStepsDefinitionsCache,
-            IStepDefinitionBuilder stepDefinitionBuilder
-        )
-        {
-        }
+    }
 
-        public IEnumerable<IDaemonStageProcess> CreateProcess(
-            IDaemonProcess process,
-            IContextBoundSettingsStore settings,
-            DaemonProcessKind processKind
-        )
-        {
-            if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
-                return Enumerable.Empty<IDaemonStageProcess>();
+    public IEnumerable<IDaemonStageProcess> CreateProcess(
+        IDaemonProcess process,
+        IContextBoundSettingsStore settings,
+        DaemonProcessKind processKind
+    )
+    {
+        if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
+            return Enumerable.Empty<IDaemonStageProcess>();
 
-            var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
-            if (gherkinFile == null)
-                return Enumerable.Empty<IDaemonStageProcess>();
+        var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
+        if (gherkinFile == null)
+            return Enumerable.Empty<IDaemonStageProcess>();
 
-            return new[] {new ParameterHighlightingDaemonStageProcess(process, (GherkinFile) gherkinFile)};
-        }
+        return new[] {new ParameterHighlightingDaemonStageProcess(process, (GherkinFile) gherkinFile)};
     }
 }

@@ -6,25 +6,24 @@ using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.ExtendSelection
+namespace ReSharperPlugin.ReqnrollRiderPlugin.ExtendSelection;
+
+[ProjectFileType(typeof(GherkinProjectFileType))]
+[Language(typeof(GherkinLanguage))]
+public class GherkinSelectEmbracingConstructProvider : ISelectEmbracingConstructProvider
 {
-    [ProjectFileType(typeof(GherkinProjectFileType))]
-    [Language(typeof(GherkinLanguage))]
-    public class GherkinSelectEmbracingConstructProvider : ISelectEmbracingConstructProvider
+    public bool IsAvailable(IPsiSourceFile sourceFile)
+        => sourceFile.Properties.ShouldBuildPsi;
+
+    public ISelectedRange GetSelectedRange(IPsiSourceFile sourceFile, DocumentRange documentRange)
     {
-        public bool IsAvailable(IPsiSourceFile sourceFile)
-            => sourceFile.Properties.ShouldBuildPsi;
+        if (sourceFile.GetPrimaryPsiFile() is not GherkinFile gherkinFile)
+            return null;
 
-        public ISelectedRange GetSelectedRange(IPsiSourceFile sourceFile, DocumentRange documentRange)
-        {
-            if (sourceFile.GetPrimaryPsiFile() is not GherkinFile gherkinFile)
-                return null;
+        var gherkinNode = gherkinFile.FindNodeAt(documentRange);
+        if (gherkinNode == null)
+            return null;
 
-            var gherkinNode = gherkinFile.FindNodeAt(documentRange);
-            if (gherkinNode == null)
-                return null;
-
-            return new GherkinNodeSelection(gherkinFile, gherkinNode);
-        }
+        return new GherkinNodeSelection(gherkinFile, gherkinNode);
     }
 }

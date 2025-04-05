@@ -6,30 +6,25 @@ using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Text;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+
+public class GherkinToken(
+    TokenNodeType nodeType,
+    [NotNull] IBuffer buffer,
+    TreeOffset startOffset,
+    TreeOffset endOffset)
+    : BoundToBufferLeafElement(nodeType, buffer, startOffset, endOffset), ITokenNode
 {
-    public class GherkinToken : BoundToBufferLeafElement, ITokenNode
-    {
-        private readonly TokenNodeType _nodeType;
 
-        public GherkinToken(TokenNodeType nodeType,
-                            [NotNull] IBuffer buffer,
-                            TreeOffset startOffset,
-                            TreeOffset endOffset) : base(nodeType, buffer, startOffset, endOffset)
-        {
-            _nodeType = nodeType;
-        }
-
-        public override PsiLanguageType Language => GherkinLanguage.Instance.NotNull();
+    public override PsiLanguageType Language => GherkinLanguage.Instance.NotNull();
         
-        public TokenNodeType GetTokenType()
-        {
-            return _nodeType;
-        }
+    public TokenNodeType GetTokenType()
+    {
+        return nodeType;
+    }
 
-        public override string ToString()
-        {
-            return $"GherkinToken({GetTreeStartOffset()},{Length}): {NodeType}('{GetText()}')";
-        }
+    public override string ToString()
+    {
+        return $"GherkinToken({GetTreeStartOffset()},{Length}): {NodeType}('{GetText()}')";
     }
 }

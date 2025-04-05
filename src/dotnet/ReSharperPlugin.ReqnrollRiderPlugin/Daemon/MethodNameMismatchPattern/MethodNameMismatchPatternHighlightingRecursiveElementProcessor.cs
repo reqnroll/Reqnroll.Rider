@@ -15,86 +15,77 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Daemon.Errors;
 using ReSharperPlugin.ReqnrollRiderPlugin.Helpers;
 using ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.MethodNameMismatchPattern
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.MethodNameMismatchPattern;
+
+internal class MethodNameMismatchPatternHighlightingRecursiveElementProcessor(IDaemonProcess daemonProcess, IStepDefinitionBuilder stepDefinitionBuilder) : IRecursiveElementProcessor<FilteringHighlightingConsumer>
 {
-    internal class MethodNameMismatchPatternHighlightingRecursiveElementProcessor : IRecursiveElementProcessor<FilteringHighlightingConsumer>
+
+    public bool InteriorShouldBeProcessed(ITreeNode element, FilteringHighlightingConsumer context)
     {
-        private readonly IDaemonProcess _daemonProcess;
-        private readonly IStepDefinitionBuilder _stepDefinitionBuilder;
+        if (element is ITypeDeclaration)
+            return true;
+        if (element is INamespaceDeclaration)
+            return true;
+        if (element is INamespaceBody)
+            return true;
+        if (element is IClassBody)
+            return true;
 
-        public MethodNameMismatchPatternHighlightingRecursiveElementProcessor(IDaemonProcess daemonProcess, IStepDefinitionBuilder stepDefinitionBuilder)
+        return false;
+    }
+
+    public bool IsProcessingFinished(FilteringHighlightingConsumer context)
+    {
+        return daemonProcess.InterruptFlag;
+    }
+
+    public void ProcessBeforeInterior(ITreeNode element, FilteringHighlightingConsumer context)
+    {
+        if (!(element is IMethodDeclaration method))
+            return;
+
+        var psiServices = method.GetPsiServices();
+        var invalidNames = new LocalList<string>();
+        foreach (var attribute in method.Attributes)
         {
-            _daemonProcess = daemonProcess;
-            _stepDefinitionBuilder = stepDefinitionBuilder;
-        }
+            var stepKind = ReqnrollAttributeHelper.GetAttributeStepKind(attribute.GetAttributeType().GetClrName());
+            if (stepKind == null)
+                continue;
 
-        public bool InteriorShouldBeProcessed(ITreeNode element, FilteringHighlightingConsumer context)
-        {
-            if (element is ITypeDeclaration)
-                return true;
-            if (element is INamespaceDeclaration)
-                return true;
-            if (element is INamespaceBody)
-                return true;
-            if (element is IClassBody)
-                return true;
+            var attributeInstance = attribute.GetAttributeInstance();
+            if (attributeInstance.PositionParameterCount < 1)
+                continue;
 
-            return false;
-        }
+            var constantValue = attributeInstance.PositionParameter(0).ConstantValue;
+            if (!constantValue.IsValid())
+                continue;
 
-        public bool IsProcessingFinished(FilteringHighlightingConsumer context)
-        {
-            return _daemonProcess.InterruptFlag;
-        }
+            if (constantValue.Kind is not ConstantValueKind.String)
+                continue;
 
-        public void ProcessBeforeInterior(ITreeNode element, FilteringHighlightingConsumer context)
-        {
-            if (!(element is IMethodDeclaration method))
+            if (method.DeclaredElement == null)
+                continue;
+
+            var expectedMethodName = stepDefinitionBuilder.GetStepDefinitionMethodNameFromPattern(stepKind.Value, constantValue.StringValue, method.DeclaredElement.Parameters.SelectNotNull(x => x.ShortName).ToArray());
+            expectedMethodName = psiServices.Naming.Suggestion.GetDerivedName(expectedMethodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance.NotNull(), new SuggestionOptions(), daemonProcess.SourceFile);
+
+            if (string.Equals(method.DeclaredName, expectedMethodName, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
-            var psiServices = method.GetPsiServices();
-            var invalidNames = new LocalList<string>();
-            foreach (var attribute in method.Attributes)
-            {
-                var stepKind = ReqnrollAttributeHelper.GetAttributeStepKind(attribute.GetAttributeType().GetClrName());
-                if (stepKind == null)
-                    continue;
-
-                var attributeInstance = attribute.GetAttributeInstance();
-                if (attributeInstance.PositionParameterCount < 1)
-                    continue;
-
-                var constantValue = attributeInstance.PositionParameter(0).ConstantValue;
-                if (!constantValue.IsValid())
-                    continue;
-
-                if (constantValue.Kind is not ConstantValueKind.String)
-                    continue;
-
-                if (method.DeclaredElement == null)
-                    continue;
-
-                var expectedMethodName = _stepDefinitionBuilder.GetStepDefinitionMethodNameFromPattern(stepKind.Value, constantValue.StringValue, method.DeclaredElement.Parameters.SelectNotNull(x => x.ShortName).ToArray());
-                expectedMethodName = psiServices.Naming.Suggestion.GetDerivedName(expectedMethodName, NamedElementKinds.Method, ScopeKind.Common, CSharpLanguage.Instance.NotNull(), new SuggestionOptions(), _daemonProcess.SourceFile);
-
-                if (string.Equals(method.DeclaredName, expectedMethodName, StringComparison.InvariantCultureIgnoreCase))
-                    return;
-
-                if (method.DeclaredName.ToLowerInvariant().StartsWith(stepKind.ToString().ToLowerInvariant()))
-                    invalidNames.Insert(0, expectedMethodName);
-                else
-                    invalidNames.Add(expectedMethodName);
-            }
-
-            if (invalidNames.Count > 0)
-            {
-                var expectedName = invalidNames.FirstOrDefault();
-                context.AddHighlighting(new MethodNameMismatchPatternInfo(method, expectedName));
-            }
+            if (method.DeclaredName.ToLowerInvariant().StartsWith(stepKind.ToString().ToLowerInvariant()))
+                invalidNames.Insert(0, expectedMethodName);
+            else
+                invalidNames.Add(expectedMethodName);
         }
 
-        public void ProcessAfterInterior(ITreeNode element, FilteringHighlightingConsumer context)
+        if (invalidNames.Count > 0)
         {
+            var expectedName = invalidNames.FirstOrDefault();
+            context.AddHighlighting(new MethodNameMismatchPatternInfo(method, expectedName));
         }
+    }
+
+    public void ProcessAfterInterior(ITreeNode element, FilteringHighlightingConsumer context)
+    {
     }
 }

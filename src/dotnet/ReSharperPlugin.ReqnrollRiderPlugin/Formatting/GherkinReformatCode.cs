@@ -13,86 +13,82 @@ using JetBrains.ReSharper.Psi.Files;
 using JetBrains.Util;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting;
+
+[CodeCleanupModule]
+public class GherkinReformatCode : IReformatCodeCleanupModule
 {
-    [CodeCleanupModule]
-    public class GherkinReformatCode : IReformatCodeCleanupModule
+    public string Name => "Reformat Gherkin";
+    public PsiLanguageType LanguageType => GherkinLanguage.Instance.NotNull();
+    public bool IsAvailableOnSelection => true;
+
+    private static readonly Descriptor OurDescriptor = new Descriptor();
+    public ICollection<CodeCleanupOptionDescriptor> Descriptors
     {
-        public string Name => "Reformat Gherkin";
-        public PsiLanguageType LanguageType => GherkinLanguage.Instance.NotNull();
-        public bool IsAvailableOnSelection => true;
+        get { return new CodeCleanupOptionDescriptor[] { OurDescriptor }; }
+    }
+    public bool IsAvailable(IPsiSourceFile sourceFile) => sourceFile.IsLanguageSupported<GherkinLanguage>();
+    public bool IsAvailable(CodeCleanupProfile profile) => profile.GetSetting(OurDescriptor);
 
-        private static readonly Descriptor OurDescriptor = new Descriptor();
-        public ICollection<CodeCleanupOptionDescriptor> Descriptors
+    public void SetDefaultSetting(CodeCleanupProfile profile, CodeCleanupService.DefaultProfileType profileType)
+    {
+        switch (profileType)
         {
-            get { return new CodeCleanupOptionDescriptor[] { OurDescriptor }; }
+            case CodeCleanupService.DefaultProfileType.FULL:
+            case CodeCleanupService.DefaultProfileType.REFORMAT:
+            case CodeCleanupService.DefaultProfileType.CODE_STYLE:
+                profile.SetSetting(OurDescriptor, true);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("profileType");
         }
-        public bool IsAvailable(IPsiSourceFile sourceFile) => sourceFile.IsLanguageSupported<GherkinLanguage>();
-        public bool IsAvailable(CodeCleanupProfile profile) => profile.GetSetting(OurDescriptor);
+    }
 
-        public void SetDefaultSetting(CodeCleanupProfile profile, CodeCleanupService.DefaultProfileType profileType)
+    public void Process(IPsiSourceFile sourceFile, IRangeMarker rangeMarker, CodeCleanupProfile profile, IProgressIndicator progressIndicator, IUserDataHolder cache)
+    {
+        var solution = sourceFile.GetSolution();
+
+        if (!profile.GetSetting(OurDescriptor)) return;
+
+        var psiServices = sourceFile.GetPsiServices();
+        GherkinFile[] files;
+        using (new ReleaseLockCookie(psiServices.Locks, LockKind.FullWrite))
         {
-            switch (profileType)
-            {
-                case CodeCleanupService.DefaultProfileType.FULL:
-                case CodeCleanupService.DefaultProfileType.REFORMAT:
-                case CodeCleanupService.DefaultProfileType.CODE_STYLE:
-                    profile.SetSetting(OurDescriptor, true);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("profileType");
-            }
+            psiServices.Locks.AssertReadAccessAllowed();
+            files = sourceFile.GetPsiFiles<GherkinLanguage>().Cast<GherkinFile>().ToArray();
         }
-
-        public void Process(IPsiSourceFile sourceFile, IRangeMarker rangeMarker, CodeCleanupProfile profile, IProgressIndicator progressIndicator, IUserDataHolder cache)
+        using (progressIndicator.SafeTotal(Name, files.Length))
         {
-            var solution = sourceFile.GetSolution();
-
-            if (!profile.GetSetting(OurDescriptor)) return;
-
-            var psiServices = sourceFile.GetPsiServices();
-            GherkinFile[] files;
-            using (new ReleaseLockCookie(psiServices.Locks, LockKind.FullWrite))
+            foreach (var file in files)
             {
-                psiServices.Locks.AssertReadAccessAllowed();
-                files = sourceFile.GetPsiFiles<GherkinLanguage>().Cast<GherkinFile>().ToArray();
-            }
-            using (progressIndicator.SafeTotal(Name, files.Length))
-            {
-                foreach (var file in files)
+                using (var indicator = progressIndicator.CreateSubProgress(1))
                 {
-                    using (var indicator = progressIndicator.CreateSubProgress(1))
+                    var service = file.Language.LanguageService();
+                    if (service == null) return;
+
+                    var formatter = service.CodeFormatter.NotNull();
+
+                    sourceFile.GetPsiServices().Transactions.Execute("Code cleanup", delegate
                     {
-                        var service = file.Language.LanguageService();
-                        if (service == null) return;
-
-                        var formatter = service.CodeFormatter.NotNull();
-
-                        sourceFile.GetPsiServices().Transactions.Execute("Code cleanup", delegate
+                        if (rangeMarker != null && rangeMarker.IsValid)
+                            CodeFormatterHelper.Format(file.Language,
+                                solution, rangeMarker.DocumentRange, CodeFormatProfile.DEFAULT, true, false, indicator);
+                        else
                         {
-                            if (rangeMarker != null && rangeMarker.IsValid)
-                                CodeFormatterHelper.Format(file.Language,
-                                    solution, rangeMarker.DocumentRange, CodeFormatProfile.DEFAULT, true, false, indicator);
-                            else
-                            {
-                                formatter.FormatFile(
-                                    file,
-                                    CodeFormatProfile.DEFAULT,
-                                    indicator);
-                            }
-                        });
-                    }
+                            formatter.FormatFile(
+                                file,
+                                CodeFormatProfile.DEFAULT,
+                                indicator);
+                        }
+                    });
                 }
             }
         }
-
-        [DefaultValue(false)]
-        [DisplayName("Reformat code")]
-        [Category("Gherkin")]
-        private class Descriptor : CodeCleanupBoolOptionDescriptor
-        {
-            public Descriptor() : base("GherkinReformatCode") { }
-        }
-
     }
+
+    [DefaultValue(false)]
+    [DisplayName("Reformat code")]
+    [Category("Gherkin")]
+    private class Descriptor() : CodeCleanupBoolOptionDescriptor("GherkinReformatCode");
+
 }

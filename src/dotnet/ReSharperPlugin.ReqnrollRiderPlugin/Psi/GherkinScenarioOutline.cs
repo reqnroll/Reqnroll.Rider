@@ -3,45 +3,41 @@ using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+
+public class GherkinScenarioOutline() : GherkinElement(GherkinNodeTypes.SCENARIO_OUTLINE), IGherkinScenario
 {
-    public class GherkinScenarioOutline : GherkinElement, IGherkinScenario
+
+    public bool IsBackground()
     {
-        public GherkinScenarioOutline() : base(GherkinNodeTypes.SCENARIO_OUTLINE)
-        {
-        }
+        return FirstChild?.NodeType == GherkinTokenTypes.BACKGROUND_KEYWORD;
+    }
 
-        public bool IsBackground()
-        {
-            return FirstChild?.NodeType == GherkinTokenTypes.BACKGROUND_KEYWORD;
-        }
+    public string GetScenarioText()
+    {
+        return this.FindChild<GherkinToken>(o => o.NodeType == GherkinTokenTypes.TEXT)?.GetText();
+    }
 
-        public string GetScenarioText()
-        {
-            return this.FindChild<GherkinToken>(o => o.NodeType == GherkinTokenTypes.TEXT)?.GetText();
-        }
+    public IEnumerable<GherkinStep> GetSteps()
+    {
+        return this.Children<GherkinStep>();
+    }
 
-        public IEnumerable<GherkinStep> GetSteps()
-        {
-            return this.Children<GherkinStep>();
-        }
+    public override string ToString()
+    {
+        if (IsBackground())
+            return "GherkinScenarioOutline(Background):";
 
-        public override string ToString()
-        {
-            if (IsBackground())
-                return "GherkinScenarioOutline(Background):";
+        return $"GherkinScenarioOutline: {GetScenarioText()}";
+    }
 
-            return $"GherkinScenarioOutline: {GetScenarioText()}";
-        }
+    public GherkinExamplesBlock GetExamplesBlock()
+    {
+        return this.Children<GherkinExamplesBlock>().FirstOrDefault();
+    }
 
-        public GherkinExamplesBlock GetExamplesBlock()
-        {
-            return this.Children<GherkinExamplesBlock>().FirstOrDefault();
-        }
-
-        public IDictionary<string, string> GetExampleData(int exampleIndex)
-        {
-            return GetExamplesBlock()?.GetExampleData(exampleIndex) ?? ImmutableDictionary<string, string>.Empty;
-        }
+    public IDictionary<string, string> GetExampleData(int exampleIndex)
+    {
+        return GetExamplesBlock()?.GetExampleData(exampleIndex) ?? ImmutableDictionary<string, string>.Empty;
     }
 }

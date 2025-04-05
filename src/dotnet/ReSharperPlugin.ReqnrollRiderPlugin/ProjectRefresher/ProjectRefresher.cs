@@ -11,31 +11,30 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Util;
 using ReSharperPlugin.ReqnrollRiderPlugin.Extensions;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectRefresher
+namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectRefresher;
+
+[SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
+public class ProjectRefresher
 {
-    [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
-    public class ProjectRefresher
+    private readonly ISolution _solution;
+
+    public ProjectRefresher(ISolution solution, ISolutionBuilder solutionBuilder, Lifetime lifetime)
     {
-        private readonly ISolution _solution;
+        _solution = solution;
+        solutionBuilder.RunningRequest.ForEachValue_NotNull(lifetime, (_, request) => HandleNewRequest(request));
+    }
 
-        public ProjectRefresher(ISolution solution, ISolutionBuilder solutionBuilder, Lifetime lifetime)
+    private void HandleNewRequest(SolutionBuilderRequest request)
+    {
+        var myProjectsHostContainer = _solution.ProjectsHostContainer();
+        var solutionHost = myProjectsHostContainer.GetComponent<ISolutionHost>();
+        request.AfterBuildCompleted.Advise(request.Lifetime, () =>
         {
-            _solution = solution;
-            solutionBuilder.RunningRequest.ForEachValue_NotNull(lifetime, (_, request) => HandleNewRequest(request));
-        }
-
-        private void HandleNewRequest(SolutionBuilderRequest request)
-        {
-            var myProjectsHostContainer = _solution.ProjectsHostContainer();
-            var solutionHost = myProjectsHostContainer.GetComponent<ISolutionHost>();
-            request.AfterBuildCompleted.Advise(request.Lifetime, () =>
-            {
-                using (ReadLockCookie.Create()) 
-                {  
-                    var reqnrollProjects = request.Projects.Where(p => p.Project.IsReqnrollProject()).Select(p => p.Project);
-                    solutionHost.ReloadProjectsAsync(reqnrollProjects.Select(x => x.GetProjectMark()).WhereNotNull().ToList());
-                }
-            });   
-        }
+            using (ReadLockCookie.Create()) 
+            {  
+                var reqnrollProjects = request.Projects.Where(p => p.Project.IsReqnrollProject()).Select(p => p.Project);
+                solutionHost.ReloadProjectsAsync(reqnrollProjects.Select(x => x.GetProjectMark()).WhereNotNull().ToList());
+            }
+        });   
     }
 }

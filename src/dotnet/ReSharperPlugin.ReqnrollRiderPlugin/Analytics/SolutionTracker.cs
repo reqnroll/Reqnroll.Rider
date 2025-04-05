@@ -11,80 +11,79 @@ using JetBrains.ProjectModel.Tasks;
 using ReSharperPlugin.ReqnrollRiderPlugin.Extensions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Guidance;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
- {
-     [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
-     public class SolutionTracker
-     {
-         public SolutionTracker(ISolution solution, 
-                                ISolutionLoadTasksScheduler solutionLoadTasksScheduler, 
-                                IAnalyticsTransmitter transmitter, 
-                                IRiderInstallationStatusService riderInstallationStatusService, 
-                                IGuidanceConfiguration guidanceConfiguration, 
-                                UserNotifications userNotifications,
-                                Lifetime lifetime,
-                                OpensUri opensUri)
-         {
-             solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask(GetType(), "Reqnroll", SolutionLoadTaskKinds.AsLateAsPossible, () =>
-                 {
-                     var projects = ((SolutionElement)solution).GetAllProjects();
-                     var isReqnrollSolution = false;
-                     foreach (var project in projects)
-                     {
-                         var targetFrameworks = project.TargetFrameworkIds;
-                         if(project.IsReqnrollProject())
-                         {
-                             isReqnrollSolution = true;
-                             transmitter.TransmitRuntimeEvent(new GenericEvent("Rider Reqnroll loaded", new Dictionary<string, string>()
-                             {
-                                 {"ProjectTargetFramework", string.Join(";", targetFrameworks.Select(t => t.PresentableString))}
-                             }));
-                         }
-                     }
-                     if (isReqnrollSolution)
-                     {
-                         var statusData = riderInstallationStatusService.GetRiderInstallationStatus();
-                         var today = DateTime.Today;
-                         if (statusData.LastUsedDate != today)
-                         {
-                             statusData.UsageDays++;
-                             statusData.LastUsedDate = today;
-                         }
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics;
 
-                         var guidance = guidanceConfiguration.UsageSequence
-                             .LastOrDefault(i => statusData.UsageDays >= i.UsageDays && statusData.UserLevel < (int)i.UserLevel);
+[SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
+public class SolutionTracker
+{
+    public SolutionTracker(ISolution solution, 
+                           ISolutionLoadTasksScheduler solutionLoadTasksScheduler, 
+                           IAnalyticsTransmitter transmitter, 
+                           IRiderInstallationStatusService riderInstallationStatusService, 
+                           IGuidanceConfiguration guidanceConfiguration, 
+                           UserNotifications userNotifications,
+                           Lifetime lifetime,
+                           OpensUri opensUri)
+    {
+        solutionLoadTasksScheduler.EnqueueTask(new SolutionLoadTask(GetType(), "Reqnroll", SolutionLoadTaskKinds.AsLateAsPossible, () =>
+            {
+                var projects = ((SolutionElement)solution).GetAllProjects();
+                var isReqnrollSolution = false;
+                foreach (var project in projects)
+                {
+                    var targetFrameworks = project.TargetFrameworkIds;
+                    if(project.IsReqnrollProject())
+                    {
+                        isReqnrollSolution = true;
+                        transmitter.TransmitRuntimeEvent(new GenericEvent("Rider Reqnroll loaded", new Dictionary<string, string>()
+                        {
+                            {"ProjectTargetFramework", string.Join(";", targetFrameworks.Select(t => t.PresentableString))}
+                        }));
+                    }
+                }
+                if (isReqnrollSolution)
+                {
+                    var statusData = riderInstallationStatusService.GetRiderInstallationStatus();
+                    var today = DateTime.Today;
+                    if (statusData.LastUsedDate != today)
+                    {
+                        statusData.UsageDays++;
+                        statusData.LastUsedDate = today;
+                    }
+
+                    var guidance = guidanceConfiguration.UsageSequence
+                        .LastOrDefault(i => statusData.UsageDays >= i.UsageDays && statusData.UserLevel < (int)i.UserLevel);
                 
-                         if (guidance?.UsageDays != null)
-                         {
-                             if (guidance.Url != null)
-                             {
+                    if (guidance?.UsageDays != null)
+                    {
+                        if (guidance.Url != null)
+                        {
 
-                                 userNotifications.CreateNotification(lifetime,
-                                     NotificationSeverity.INFO,
-                                     guidance.Title,
-                                     body: guidance.Content,
+                            userNotifications.CreateNotification(lifetime,
+                                NotificationSeverity.INFO,
+                                guidance.Title,
+                                body: guidance.Content,
 
-                                     executed: new UserNotificationCommand(guidance.LinkText, () => ShowNotification(opensUri, guidance)));
-                             }
+                                executed: new UserNotificationCommand(guidance.LinkText, () => ShowNotification(opensUri, guidance)));
+                        }
                              
-                             transmitter.TransmitRuntimeEvent(new GenericEvent($"{guidance.UsageDays.Value} day usage"));
+                        transmitter.TransmitRuntimeEvent(new GenericEvent($"{guidance.UsageDays.Value} day usage"));
 
-                             statusData.UserLevel = (int)guidance.UserLevel;
-                         }
+                        statusData.UserLevel = (int)guidance.UserLevel;
+                    }
                          
-                         riderInstallationStatusService.SaveNewStatus(statusData);
+                    riderInstallationStatusService.SaveNewStatus(statusData);
 
-                     }
-                 }
-             ));
-         }
+                }
+            }
+        ));
+    }
 
-         private static void ShowNotification(OpensUri opensUri, GuidanceStep guidance)
-         {
-             if (!opensUri.IsInternetConnected())
-                 return;
+    private static void ShowNotification(OpensUri opensUri, GuidanceStep guidance)
+    {
+        if (!opensUri.IsInternetConnected())
+            return;
 
-             opensUri.OpenUri(new Uri(guidance.Url));
-         }
-     }
+        opensUri.OpenUri(new Uri(guidance.Url));
+    }
 }

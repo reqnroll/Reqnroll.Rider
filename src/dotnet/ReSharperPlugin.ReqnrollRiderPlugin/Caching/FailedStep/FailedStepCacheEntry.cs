@@ -1,36 +1,35 @@
 using System.Collections.Generic;
 using ReSharperPlugin.ReqnrollRiderPlugin.Utils.TestOutput;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.FailedStep
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.FailedStep;
+
+public class FailedStepCacheEntry
 {
-    public class FailedStepCacheEntry
+    public string FeatureText { get; init; }
+    public string ScenarioText { get; init; }
+    public IList<StepTestOutput> StepsOutputs { get; set; }
+
+    protected bool Equals(FailedStepCacheEntry other)
     {
-        public string FeatureText { get; init; }
-        public string ScenarioText { get; init; }
-        public IList<StepTestOutput> StepsOutputs { get; set; }
+        return FeatureText == other.FeatureText && ScenarioText == other.ScenarioText;
+    }
 
-        protected bool Equals(FailedStepCacheEntry other)
-        {
-            return FeatureText == other.FeatureText && ScenarioText == other.ScenarioText;
-        }
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj))
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj.GetType() != GetType())
+            return false;
+        return Equals((FailedStepCacheEntry) obj);
+    }
 
-        public override bool Equals(object obj)
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            if (ReferenceEquals(null, obj))
-                return false;
-            if (ReferenceEquals(this, obj))
-                return true;
-            if (obj.GetType() != GetType())
-                return false;
-            return Equals((FailedStepCacheEntry) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((FeatureText != null ? FeatureText.GetHashCode() : 0) * 397) ^ (ScenarioText != null ? ScenarioText.GetHashCode() : 0);
-            }
+            return ((FeatureText != null ? FeatureText.GetHashCode() : 0) * 397) ^ (ScenarioText != null ? ScenarioText.GetHashCode() : 0);
         }
     }
 }

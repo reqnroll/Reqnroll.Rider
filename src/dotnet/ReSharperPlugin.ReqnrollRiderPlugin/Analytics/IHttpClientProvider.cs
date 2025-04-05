@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics;
+
+public interface IHttpClientProvider
 {
-    public interface IHttpClientProvider
-    {
-        Task<HttpResultString> PostStringAsync(Uri requestUri, string content);
-    }
+    Task<HttpResultString> PostStringAsync(Uri requestUri, string content);
 }

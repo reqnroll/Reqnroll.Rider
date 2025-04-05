@@ -1,8 +1,7 @@
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Analytics;
+
+public interface IRiderInstallationStatusService
 {
-    public interface IRiderInstallationStatusService
-    {
-        RiderInstallationStatus GetRiderInstallationStatus();
-        void SaveNewStatus(RiderInstallationStatus newStatus);
-    }
+    RiderInstallationStatus GetRiderInstallationStatus();
+    void SaveNewStatus(RiderInstallationStatus newStatus);
 }

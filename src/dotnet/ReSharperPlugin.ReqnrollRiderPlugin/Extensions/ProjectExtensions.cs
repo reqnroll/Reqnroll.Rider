@@ -9,35 +9,34 @@ using JetBrains.ReSharper.Psi.Paths;
 using JetBrains.Util;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Extensions
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Extensions;
+
+public static class ProjectExtensions
 {
-    public static class ProjectExtensions
+    [CanBeNull]
+    public static ICSharpFile GetCSharpFile(this IProject project, string filename)
     {
-        [CanBeNull]
-        public static ICSharpFile GetCSharpFile(this IProject project, string filename)
-        {
-            var sourceFileInProject = project.GetPsiSourceFileInProject(VirtualFileSystemPath.Parse(filename, InteractionContext.Local, FileSystemPathInternStrategy.INTERN));
-            return sourceFileInProject?.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault();
-        }
+        var sourceFileInProject = project.GetPsiSourceFileInProject(VirtualFileSystemPath.Parse(filename, InteractionContext.Local, FileSystemPathInternStrategy.INTERN));
+        return sourceFileInProject?.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault();
+    }
 
-        [CanBeNull]
-        public static GherkinFile GetGherkinFile(this IProject project, string filename)
-        {
-            var sourceFileInProject = project.GetPsiSourceFileInProject(VirtualFileSystemPath.Parse(filename, InteractionContext.Local, FileSystemPathInternStrategy.INTERN));
-            return sourceFileInProject?.GetPsiFiles<GherkinLanguage>().SafeOfType<GherkinFile>().SingleOrDefault();
-        }
+    [CanBeNull]
+    public static GherkinFile GetGherkinFile(this IProject project, string filename)
+    {
+        var sourceFileInProject = project.GetPsiSourceFileInProject(VirtualFileSystemPath.Parse(filename, InteractionContext.Local, FileSystemPathInternStrategy.INTERN));
+        return sourceFileInProject?.GetPsiFiles<GherkinLanguage>().SafeOfType<GherkinFile>().SingleOrDefault();
+    }
 
-        public static bool IsReqnrollProject(this IProject project)
+    public static bool IsReqnrollProject(this IProject project)
+    {
+        var isReqnrollProject = false;
+        var assemblies = project.GetAllReferencedAssemblies();
+        var nugetPackages = project.GetAllPackagesReferences().ToArray();
+        if (assemblies.Any(a => a.Name == "Reqnroll") ||
+            nugetPackages.Any(p => p.Name.IndexOf("Reqnroll", StringComparison.OrdinalIgnoreCase) >= 0))
         {
-            var isReqnrollProject = false;
-            var assemblies = project.GetAllReferencedAssemblies();
-            var nugetPackages = project.GetAllPackagesReferences().ToArray();
-            if (assemblies.Any(a => a.Name == "Reqnroll") ||
-                nugetPackages.Any(p => p.Name.IndexOf("Reqnroll", StringComparison.OrdinalIgnoreCase) >= 0))
-            {
-                isReqnrollProject = true;
-            }
-            return isReqnrollProject;
+            isReqnrollProject = true;
         }
+        return isReqnrollProject;
     }
 }

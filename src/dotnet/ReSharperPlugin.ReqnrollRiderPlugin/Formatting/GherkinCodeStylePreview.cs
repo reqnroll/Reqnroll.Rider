@@ -6,28 +6,27 @@ using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting;
+
+[CodePreviewPreparatorComponent]
+public class GherkinCodeStylePreview : CodePreviewPreparator
 {
-  [CodePreviewPreparatorComponent]
-  public class GherkinCodeStylePreview : CodePreviewPreparator
+  public override KnownLanguage Language => GherkinLanguage.Instance;
+  public override ProjectFileType ProjectFileType => GherkinProjectFileType.Instance;
+
+  protected override ITreeNode Parse(IParser parser, PreviewParseType parseType)
   {
-    public override KnownLanguage Language => GherkinLanguage.Instance;
-    public override ProjectFileType ProjectFileType => GherkinProjectFileType.Instance;
-
-    protected override ITreeNode Parse(IParser parser, PreviewParseType parseType)
+    var gherkinParser = (GherkinParser)parser;
+    switch (parseType)
     {
-      var gherkinParser = (GherkinParser)parser;
-      switch (parseType)
-      {
-        case PreviewParseType.File:
-          return gherkinParser.ParseFile();
+      case PreviewParseType.File:
+        return gherkinParser.ParseFile();
 
-        case PreviewParseType.None:
-          return null;
+      case PreviewParseType.None:
+        return null;
 
-        default:
-          throw new NotImplementedException();
-      }
+      default:
+        throw new NotImplementedException();
     }
   }
 }

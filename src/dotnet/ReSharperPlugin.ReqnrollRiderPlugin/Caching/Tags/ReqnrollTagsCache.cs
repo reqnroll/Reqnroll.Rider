@@ -11,41 +11,36 @@ using JetBrains.Util;
 using ReSharperPlugin.ReqnrollRiderPlugin.Extensions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.Tags
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.Tags;
+
+[PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
+public class ReqnrollTagsCache(
+    Lifetime lifetime,
+    IShellLocks locks,
+    IPersistentIndexManager persistentIndexManager)
+    : SimpleICache<IList<string>>(lifetime, locks, persistentIndexManager, new ReqnrollTagMarshaller(), VersionInt)
 {
-    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
-    public class ReqnrollTagsCache : SimpleICache<IList<string>>
+    private const int VersionInt = 1;
+    public override string Version => VersionInt.ToString();
+
+    public ISet<string> GetAllTags()
     {
-        private const int VersionInt = 1;
-        public override string Version => VersionInt.ToString();
+        return Map.Values.SelectMany(x => x).ToSet();
+    }
 
-        public ReqnrollTagsCache(
-            Lifetime lifetime,
-            IShellLocks locks,
-            IPersistentIndexManager persistentIndexManager
-        ) : base(lifetime, locks, persistentIndexManager, new ReqnrollTagMarshaller(), VersionInt)
-        {
-        }
+    public override object Build(IPsiSourceFile sourceFile, bool isStartup)
+    {
+        if (!sourceFile.IsValid())
+            return null;
+        var file = sourceFile.GetPrimaryPsiFile().NotNull();
+        if (!file.Language.Is<GherkinLanguage>())
+            return null;
+        if (!(file is GherkinFile gherkinFile))
+            return null;
 
-        public ISet<string> GetAllTags()
-        {
-            return Map.Values.SelectMany(x => x).ToSet();
-        }
-
-        public override object Build(IPsiSourceFile sourceFile, bool isStartup)
-        {
-            if (!sourceFile.IsValid())
-                return null;
-            var file = sourceFile.GetPrimaryPsiFile().NotNull();
-            if (!file.Language.Is<GherkinLanguage>())
-                return null;
-            if (!(file is GherkinFile gherkinFile))
-                return null;
-
-            var tags = new List<string>();
-            var tagsNodes = gherkinFile.GetChildrenInSubtrees<GherkinTag>();
-            tags.AddRange(tagsNodes.Select(x => x.GetTagText()).WhereNotNull());
-            return tags;
-        }
+        var tags = new List<string>();
+        var tagsNodes = gherkinFile.GetChildrenInSubtrees<GherkinTag>();
+        tags.AddRange(tagsNodes.Select(x => x.GetTagText()).WhereNotNull());
+        return tags;
     }
 }

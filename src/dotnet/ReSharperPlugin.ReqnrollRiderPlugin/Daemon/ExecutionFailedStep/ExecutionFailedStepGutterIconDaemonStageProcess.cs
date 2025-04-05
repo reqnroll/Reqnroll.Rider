@@ -6,54 +6,43 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Caching.FailedStep;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.Utils.TestOutput;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep;
+
+public class ExecutionFailedStepGutterIconDaemonStageProcess(IDaemonProcess daemonProcess, GherkinFile gherkinFile, FailedStepCache failedStepCache) : IDaemonStageProcess
 {
-    public class ExecutionFailedStepGutterIconDaemonStageProcess : IDaemonStageProcess
+    public IDaemonProcess DaemonProcess { get; } = daemonProcess;
+
+    public void Execute(Action<DaemonStageResult> committer)
     {
-        public IDaemonProcess DaemonProcess { get; }
+        var psiSourceFile = gherkinFile.GetSourceFile();
+        if (psiSourceFile == null)
+            return;
 
-        private readonly GherkinFile _gherkinFile;
-        private readonly FailedStepCache _failedStepCache;
+        var consumer = new FilteringHighlightingConsumer(psiSourceFile, gherkinFile, DaemonProcess.ContextBoundSettingsStore);
+        HighlightFailedSteps(psiSourceFile, consumer);
+        committer(new DaemonStageResult(consumer.CollectHighlightings()));
+    }
 
-        public ExecutionFailedStepGutterIconDaemonStageProcess(IDaemonProcess daemonProcess, GherkinFile gherkinFile, FailedStepCache failedStepCache)
+    private void HighlightFailedSteps(IPsiSourceFile psiSourceFile, FilteringHighlightingConsumer consumer)
+    {
+        var failedSteps = failedStepCache.GetFailedSteps(psiSourceFile);
+        foreach (var failedStep in failedSteps)
         {
-            DaemonProcess = daemonProcess;
-            _gherkinFile = gherkinFile;
-            _failedStepCache = failedStepCache;
-        }
+            var feature = gherkinFile.GetFeature(failedStep.FeatureText);
+            var scenario = feature?.GetScenario(failedStep.ScenarioText);
+            if (scenario == null)
+                continue;
 
-        public void Execute(Action<DaemonStageResult> committer)
-        {
-            var psiSourceFile = _gherkinFile.GetSourceFile();
-            if (psiSourceFile == null)
-                return;
-
-            var consumer = new FilteringHighlightingConsumer(psiSourceFile, _gherkinFile, DaemonProcess.ContextBoundSettingsStore);
-            HighlightFailedSteps(psiSourceFile, consumer);
-            committer(new DaemonStageResult(consumer.CollectHighlightings()));
-        }
-
-        private void HighlightFailedSteps(IPsiSourceFile psiSourceFile, FilteringHighlightingConsumer consumer)
-        {
-            var failedSteps = _failedStepCache.GetFailedSteps(psiSourceFile);
-            foreach (var failedStep in failedSteps)
+            var steps = scenario.GetSteps().ToList();
+            for (var i = 0; i < steps.Count && i < failedStep.StepsOutputs.Count; i++)
             {
-                var feature = _gherkinFile.GetFeature(failedStep.FeatureText);
-                var scenario = feature?.GetScenario(failedStep.ScenarioText);
-                if (scenario == null)
-                    continue;
-
-                var steps = scenario.GetSteps().ToList();
-                for (var i = 0; i < steps.Count && i < failedStep.StepsOutputs.Count; i++)
-                {
-                    var stepTestOutput = failedStep.StepsOutputs[i];
-                    if (!steps[i].Match(stepTestOutput))
-                        continue; // Does not match, maybe the file has changed
-                    if (stepTestOutput.Status != StepTestOutput.StepStatus.Done
-                        && stepTestOutput.Status != StepTestOutput.StepStatus.Skipped
-                        && stepTestOutput.Status != StepTestOutput.StepStatus.NotImplemented)
-                        consumer.AddHighlighting(new ExecutionFailedStepHighlighting(steps[i], stepTestOutput));
-                }
+                var stepTestOutput = failedStep.StepsOutputs[i];
+                if (!steps[i].Match(stepTestOutput))
+                    continue; // Does not match, maybe the file has changed
+                if (stepTestOutput.Status != StepTestOutput.StepStatus.Done
+                    && stepTestOutput.Status != StepTestOutput.StepStatus.Skipped
+                    && stepTestOutput.Status != StepTestOutput.StepStatus.NotImplemented)
+                    consumer.AddHighlighting(new ExecutionFailedStepHighlighting(steps[i], stepTestOutput));
             }
         }
     }

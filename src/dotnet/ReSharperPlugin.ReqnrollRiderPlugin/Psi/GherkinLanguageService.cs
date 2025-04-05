@@ -11,50 +11,41 @@ using JetBrains.ReSharper.Psi.Tree;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.ReqnrollJsonSettings;
 using ReSharperPlugin.ReqnrollRiderPlugin.Formatting;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+
+[Language(typeof (GherkinLanguage))]
+public class GherkinLanguageService(
+    [NotNull] GherkinLanguage language,
+    [NotNull] IConstantValueService constantValueService,
+    [NotNull] GherkinKeywordProvider keywordProvider,
+    [NotNull] ReqnrollSettingsProvider settingsProvider,
+    [NotNull] GherkinCodeFormatter gherkinCodeFormatter)
+    : LanguageService(language, constantValueService)
 {
-    [Language(typeof (GherkinLanguage))]
-    public class GherkinLanguageService : LanguageService
+
+    public override ILexerFactory GetPrimaryLexerFactory()
     {
-        [NotNull] private readonly GherkinKeywordProvider _keywordProvider;
-        [NotNull] private readonly ReqnrollSettingsProvider _settingsProvider;
-        [NotNull] private readonly GherkinCodeFormatter _gherkinCodeFormatter;
-
-        public GherkinLanguageService([NotNull] GherkinLanguage language,
-                                      [NotNull] IConstantValueService constantValueService,
-                                      [NotNull] GherkinKeywordProvider keywordProvider,
-                                      [NotNull] ReqnrollSettingsProvider settingsProvider,
-                                      [NotNull] GherkinCodeFormatter gherkinCodeFormatter) : base(language, constantValueService)
-        {
-            _keywordProvider = keywordProvider;
-            _settingsProvider = settingsProvider;
-            _gherkinCodeFormatter = gherkinCodeFormatter;
-        }
-
-        public override ILexerFactory GetPrimaryLexerFactory()
-        {
-            return new GherkinLexerFactory(_keywordProvider, _settingsProvider);
-        }
-
-        public override ILexer CreateFilteringLexer(ILexer lexer)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override IParser CreateParser(ILexer lexer, IPsiModule module, IPsiSourceFile sourceFile)
-        {
-            return new GherkinParser(lexer, sourceFile, _settingsProvider, _keywordProvider);
-        }
-
-        public override IEnumerable<ITypeDeclaration> FindTypeDeclarations(IFile file)
-        {
-            return Enumerable.Empty<ITypeDeclaration>();
-        }
-
-        public override ILanguageCacheProvider CacheProvider => null;
-        public override bool IsCaseSensitive => true;
-        public override bool SupportTypeMemberCache => false;
-        public override ITypePresenter TypePresenter => DefaultTypePresenter.Instance;
-        public override ICodeFormatter CodeFormatter => _gherkinCodeFormatter;
+        return new GherkinLexerFactory(keywordProvider, settingsProvider);
     }
+
+    public override ILexer CreateFilteringLexer(ILexer lexer)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override IParser CreateParser(ILexer lexer, IPsiModule module, IPsiSourceFile sourceFile)
+    {
+        return new GherkinParser(lexer, sourceFile, settingsProvider, keywordProvider);
+    }
+
+    public override IEnumerable<ITypeDeclaration> FindTypeDeclarations(IFile file)
+    {
+        return Enumerable.Empty<ITypeDeclaration>();
+    }
+
+    public override ILanguageCacheProvider CacheProvider => null;
+    public override bool IsCaseSensitive => true;
+    public override bool SupportTypeMemberCache => false;
+    public override ITypePresenter TypePresenter => DefaultTypePresenter.Instance;
+    public override ICodeFormatter CodeFormatter => gherkinCodeFormatter;
 }

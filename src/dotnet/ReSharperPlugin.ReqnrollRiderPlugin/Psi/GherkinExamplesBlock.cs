@@ -3,21 +3,17 @@ using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+
+public class GherkinExamplesBlock() : GherkinElement(GherkinNodeTypes.EXAMPLES_BLOCK)
 {
-    public class GherkinExamplesBlock : GherkinElement
+
+    public IDictionary<string, string> GetExampleData(int exampleIndex)
     {
-        public GherkinExamplesBlock() : base(GherkinNodeTypes.EXAMPLES_BLOCK)
-        {
-        }
+        var table = this.Children<GherkinTable>().FirstOrDefault();
+        if (table == null)
+            return ImmutableDictionary<string, string>.Empty;
 
-        public IDictionary<string, string> GetExampleData(int exampleIndex)
-        {
-            var table = this.Children<GherkinTable>().FirstOrDefault();
-            if (table == null)
-                return ImmutableDictionary<string, string>.Empty;
-
-            return table.GetValuesOfRow(exampleIndex);
-        }
+        return table.GetValuesOfRow(exampleIndex);
     }
 }

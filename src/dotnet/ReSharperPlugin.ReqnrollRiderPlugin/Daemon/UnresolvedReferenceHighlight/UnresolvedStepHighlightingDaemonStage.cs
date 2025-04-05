@@ -9,46 +9,35 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsUsages;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.UnresolvedReferenceHighlight
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.UnresolvedReferenceHighlight;
+
+[DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
+public class UnresolvedStepHighlightingDaemonStage(
+    ResolveHighlighterRegistrar registrar,
+    ReqnrollStepsDefinitionsCache reqnrollStepsDefinitionsCache,
+    ReqnrollStepsUsagesCache reqnrollStepsUsagesCache)
+    : IDaemonStage
 {
-    [DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
-    public class UnresolvedStepHighlightingDaemonStage : IDaemonStage
+
+    public IEnumerable<IDaemonStageProcess> CreateProcess(
+        IDaemonProcess process,
+        IContextBoundSettingsStore settings,
+        DaemonProcessKind processKind
+    )
     {
-        private readonly ResolveHighlighterRegistrar _registrar;
-        private readonly ReqnrollStepsDefinitionsCache _reqnrollStepsDefinitionsCache;
-        private readonly ReqnrollStepsUsagesCache _reqnrollStepsUsagesCache;
+        if (processKind != DaemonProcessKind.SOLUTION_ANALYSIS && processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
+            return Enumerable.Empty<IDaemonStageProcess>();
 
-        public UnresolvedStepHighlightingDaemonStage(
-            ResolveHighlighterRegistrar registrar,
-            ReqnrollStepsDefinitionsCache reqnrollStepsDefinitionsCache,
-            ReqnrollStepsUsagesCache reqnrollStepsUsagesCache
-        )
-        {
-            _registrar = registrar;
-            _reqnrollStepsDefinitionsCache = reqnrollStepsDefinitionsCache;
-            _reqnrollStepsUsagesCache = reqnrollStepsUsagesCache;
-        }
+        if (reqnrollStepsDefinitionsCache.AllStepsPerFiles.ContainsKey(process.SourceFile))
+            return reqnrollStepsUsagesCache.StepUsages.SelectMany(x => x.Value.Keys).Distinct()
+                .Select(x => x.GetPsiFile<GherkinLanguage>(x.Document.GetDocumentRange()))
+                .Where(x => x != null && x.IsValid())
+                .Select(file => new UnresolvedStepsHighlightingDaemonStageProcess(process, (GherkinFile) file, registrar));
 
-        public IEnumerable<IDaemonStageProcess> CreateProcess(
-            IDaemonProcess process,
-            IContextBoundSettingsStore settings,
-            DaemonProcessKind processKind
-        )
-        {
-            if (processKind != DaemonProcessKind.SOLUTION_ANALYSIS && processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
-                return Enumerable.Empty<IDaemonStageProcess>();
+        var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
+        if (gherkinFile == null)
+            return Enumerable.Empty<IDaemonStageProcess>();
 
-            if (_reqnrollStepsDefinitionsCache.AllStepsPerFiles.ContainsKey(process.SourceFile))
-                return _reqnrollStepsUsagesCache.StepUsages.SelectMany(x => x.Value.Keys).Distinct()
-                    .Select(x => x.GetPsiFile<GherkinLanguage>(x.Document.GetDocumentRange()))
-                    .Where(x => x != null && x.IsValid())
-                    .Select(file => new UnresolvedStepsHighlightingDaemonStageProcess(process, (GherkinFile) file, _registrar));
-
-            var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
-            if (gherkinFile == null)
-                return Enumerable.Empty<IDaemonStageProcess>();
-
-            return new[] {new UnresolvedStepsHighlightingDaemonStageProcess(process, (GherkinFile) gherkinFile, _registrar)};
-        }
+        return new[] {new UnresolvedStepsHighlightingDaemonStageProcess(process, (GherkinFile) gherkinFile, registrar)};
     }
 }

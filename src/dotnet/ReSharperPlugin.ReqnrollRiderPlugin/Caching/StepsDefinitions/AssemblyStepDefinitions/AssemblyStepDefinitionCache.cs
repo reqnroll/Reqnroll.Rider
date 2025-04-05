@@ -13,149 +13,138 @@ using JetBrains.Util;
 using ReSharperPlugin.ReqnrollRiderPlugin.Helpers;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
+
+[PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
+// FIXME: Save this cache, see SolutionCaches and SimpleCache and implements ICacheWithVersion
+public class AssemblyStepDefinitionCache(
+    IPsiAssemblyFileLoader psiAssemblyFileLoader,
+    IReqnrollStepInfoFactory reqnrollStepInfoFactory,
+    ScopeAttributeUtil scopeAttributeUtil)
+    : IAssemblyCache
 {
-    [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
-    // FIXME: Save this cache, see SolutionCaches and SimpleCache and implements ICacheWithVersion
-    public class AssemblyStepDefinitionCache : IAssemblyCache
+    private readonly ReqnrollAssemblyStepsDefinitionMergeData _mergeData = new();
+
+    // FIXME: per step kind
+    public OneToSetMap<IPsiAssembly, ReqnrollStepInfo> AllStepsPerAssembly => _mergeData.StepsDefinitionsPerFiles;
+
+    public IEnumerable<ReqnrollStepInfo> GetStepAccessibleForModule(IPsiModule module, GherkinStepKind stepKind)
     {
-        private readonly IPsiAssemblyFileLoader _psiAssemblyFileLoader;
-        private readonly ReqnrollAssemblyStepsDefinitionMergeData _mergeData = new();
-        private readonly IReqnrollStepInfoFactory _reqnrollStepInfoFactory;
-        private readonly ScopeAttributeUtil _scopeAttributeUtil;
-
-        // FIXME: per step kind
-        public OneToSetMap<IPsiAssembly, ReqnrollStepInfo> AllStepsPerAssembly => _mergeData.StepsDefinitionsPerFiles;
-
-        public AssemblyStepDefinitionCache(
-            IPsiAssemblyFileLoader psiAssemblyFileLoader,
-            IReqnrollStepInfoFactory reqnrollStepInfoFactory,
-            ScopeAttributeUtil scopeAttributeUtil
-        )
+        foreach (var (stepSourceFile, stepDefinitions) in _mergeData.StepsDefinitionsPerFiles)
         {
-            _psiAssemblyFileLoader = psiAssemblyFileLoader;
-            _reqnrollStepInfoFactory = reqnrollStepInfoFactory;
-            _scopeAttributeUtil = scopeAttributeUtil;
+            if (!ReferenceEquals(module, stepSourceFile.PsiModule) && !module.References(stepSourceFile.PsiModule))
+                continue;
+            foreach (var stepDefinitionInfo in stepDefinitions.Where(s => s.StepKind == stepKind))
+                yield return stepDefinitionInfo;
         }
+    }
 
-        public IEnumerable<ReqnrollStepInfo> GetStepAccessibleForModule(IPsiModule module, GherkinStepKind stepKind)
+    public object Load(IProgressIndicator progress, bool enablePersistence)
+    {
+        return null;
+    }
+
+    public void MergeLoaded(object data)
+    {
+    }
+
+    public void Save(IProgressIndicator progress, bool enablePersistence)
+    {
+    }
+
+    public object Build(IPsiAssembly assembly)
+    {
+        ReqnrollStepsDefinitionsCacheEntries stepDefinitions = null;
+        psiAssemblyFileLoader.GetOrLoadAssembly(assembly, true, (_, _, metadataAssembly) =>
         {
-            foreach (var (stepSourceFile, stepDefinitions) in _mergeData.StepsDefinitionsPerFiles)
+            stepDefinitions = new ReqnrollStepsDefinitionsCacheEntries();
+
+            foreach (var type in metadataAssembly.GetTypes())
             {
-                if (!ReferenceEquals(module, stepSourceFile.PsiModule) && !module.References(stepSourceFile.PsiModule))
+                if (type.CustomAttributesTypeNames.All(a => !ReqnrollAttributeHelper.IsBindingAttribute(a.FullName.GetText())))
                     continue;
-                foreach (var stepDefinitionInfo in stepDefinitions.Where(s => s.StepKind == stepKind))
-                    yield return stepDefinitionInfo;
-            }
-        }
 
-        public object Load(IProgressIndicator progress, bool enablePersistence)
-        {
-            return null;
-        }
+                var classScopes = scopeAttributeUtil.GetScopesFromAttributes(type.CustomAttributes);
+                var classCacheEntry = new ReqnrollStepDefinitionCacheClassEntry(type.FullyQualifiedName, true, classScopes);
 
-        public void MergeLoaded(object data)
-        {
-        }
-
-        public void Save(IProgressIndicator progress, bool enablePersistence)
-        {
-        }
-
-        public object Build(IPsiAssembly assembly)
-        {
-            ReqnrollStepsDefinitionsCacheEntries stepDefinitions = null;
-            _psiAssemblyFileLoader.GetOrLoadAssembly(assembly, true, (_, _, metadataAssembly) =>
-            {
-                stepDefinitions = new ReqnrollStepsDefinitionsCacheEntries();
-
-                foreach (var type in metadataAssembly.GetTypes())
+                foreach (var method in type.GetMethods().Where(x => x.IsPublic))
                 {
-                    if (type.CustomAttributesTypeNames.All(a => !ReqnrollAttributeHelper.IsBindingAttribute(a.FullName.GetText())))
-                        continue;
-
-                    var classScopes = _scopeAttributeUtil.GetScopesFromAttributes(type.CustomAttributes);
-                    var classCacheEntry = new ReqnrollStepDefinitionCacheClassEntry(type.FullyQualifiedName, true, classScopes);
-
-                    foreach (var method in type.GetMethods().Where(x => x.IsPublic))
+                    // FIXME: We should avoid adding method that are not step here (it's just using more memory)
+                    var methodScopes = scopeAttributeUtil.GetScopesFromAttributes(method.CustomAttributes);
+                    var methodParameterTypes = new string[method.Parameters.Length];
+                    var methodParameterNames = new string[method.Parameters.Length];
+                    for (var i = 0; i < method.Parameters.Length; i++)
                     {
-                        // FIXME: We should avoid adding method that are not step here (it's just using more memory)
-                        var methodScopes = _scopeAttributeUtil.GetScopesFromAttributes(method.CustomAttributes);
-                        var methodParameterTypes = new string[method.Parameters.Length];
-                        var methodParameterNames = new string[method.Parameters.Length];
-                        for (var i = 0; i < method.Parameters.Length; i++)
-                        {
-                            var parameterDeclaration = method.Parameters[i];
-                            methodParameterTypes[i] = parameterDeclaration.Type.FullName;
-                            methodParameterNames[i] = parameterDeclaration.Name;
-                        }
-                        var methodCacheEntry = classCacheEntry.AddMethod(method.Name, methodParameterTypes, methodParameterNames, methodScopes);
-
-                        for (var index = 0; index < method.CustomAttributes.Length; index++)
-                        {
-                            var attributeInstance = method.CustomAttributes[index];
-                            if (attributeInstance.ConstructorArguments.Length == 0)
-                                continue;
-
-                            if (attributeInstance.ConstructorArguments[0].Value is not string regex)
-                                continue;
-
-                            var attributeTypeName = method.CustomAttributesTypeNames[index].FullName.ToString();
-                            if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.Given, attributeTypeName))
-                                methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
-                            if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.When, attributeTypeName))
-                                methodCacheEntry.AddStep(GherkinStepKind.When, regex);
-                            if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.Then, attributeTypeName))
-                                methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
-                        }
+                        var parameterDeclaration = method.Parameters[i];
+                        methodParameterTypes[i] = parameterDeclaration.Type.FullName;
+                        methodParameterNames[i] = parameterDeclaration.Name;
                     }
-                    stepDefinitions.Add(classCacheEntry);
-                }
-            });
-            return stepDefinitions;
-        }
+                    var methodCacheEntry = classCacheEntry.AddMethod(method.Name, methodParameterTypes, methodParameterNames, methodScopes);
 
-        public void Merge(IPsiAssembly assembly, object builtPart, Func<bool> checkForTermination)
+                    for (var index = 0; index < method.CustomAttributes.Length; index++)
+                    {
+                        var attributeInstance = method.CustomAttributes[index];
+                        if (attributeInstance.ConstructorArguments.Length == 0)
+                            continue;
+
+                        if (attributeInstance.ConstructorArguments[0].Value is not string regex)
+                            continue;
+
+                        var attributeTypeName = method.CustomAttributesTypeNames[index].FullName.ToString();
+                        if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.Given, attributeTypeName))
+                            methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
+                        if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.When, attributeTypeName))
+                            methodCacheEntry.AddStep(GherkinStepKind.When, regex);
+                        if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.Then, attributeTypeName))
+                            methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
+                    }
+                }
+                stepDefinitions.Add(classCacheEntry);
+            }
+        });
+        return stepDefinitions;
+    }
+
+    public void Merge(IPsiAssembly assembly, object builtPart, Func<bool> checkForTermination)
+    {
+        RemoveFromLocalCache(assembly);
+        AddToLocalCache(assembly, builtPart as ReqnrollStepsDefinitionsCacheEntries);
+    }
+
+    public void Drop(IEnumerable<IPsiAssembly> assemblies)
+    {
+        foreach (var assembly in assemblies)
         {
             RemoveFromLocalCache(assembly);
-            AddToLocalCache(assembly, builtPart as ReqnrollStepsDefinitionsCacheEntries);
         }
+    }
 
-        public void Drop(IEnumerable<IPsiAssembly> assemblies)
+    private void AddToLocalCache(IPsiAssembly assembly, [CanBeNull] ReqnrollStepsDefinitionsCacheEntries cacheItems)
+    {
+        if (cacheItems == null)
+            return;
+
+        foreach (var classEntry in cacheItems)
         {
-            foreach (var assembly in assemblies)
-            {
-                RemoveFromLocalCache(assembly);
-            }
+            if (classEntry.HasReqnrollBindingAttribute)
+                _mergeData.ReqnrollBindingTypes.Add(classEntry.ClassName, assembly);
+            else
+                _mergeData.PotentialReqnrollBindingTypes.Add(classEntry.ClassName, assembly);
+            foreach (var method in classEntry.Methods)
+            foreach (var step in method.Steps)
+                _mergeData.StepsDefinitionsPerFiles.Add(assembly, reqnrollStepInfoFactory.Create(classEntry.ClassName, method.MethodName, method.MethodParameterTypes, method.MethodParameterNames, step.StepKind, step.Pattern, classEntry.Scopes, method.Scopes));
         }
+    }
 
-        private void AddToLocalCache(IPsiAssembly assembly, [CanBeNull] ReqnrollStepsDefinitionsCacheEntries cacheItems)
+    private void RemoveFromLocalCache(IPsiAssembly assembly)
+    {
+        var fileSteps = _mergeData.StepsDefinitionsPerFiles[assembly];
+        foreach (var classNameInFile in fileSteps.Select(x => x.ClassFullName).Distinct())
         {
-            if (cacheItems == null)
-                return;
-
-            foreach (var classEntry in cacheItems)
-            {
-                if (classEntry.HasReqnrollBindingAttribute)
-                    _mergeData.ReqnrollBindingTypes.Add(classEntry.ClassName, assembly);
-                else
-                    _mergeData.PotentialReqnrollBindingTypes.Add(classEntry.ClassName, assembly);
-                foreach (var method in classEntry.Methods)
-                foreach (var step in method.Steps)
-                    _mergeData.StepsDefinitionsPerFiles.Add(assembly, _reqnrollStepInfoFactory.Create(classEntry.ClassName, method.MethodName, method.MethodParameterTypes, method.MethodParameterNames, step.StepKind, step.Pattern, classEntry.Scopes, method.Scopes));
-            }
+            _mergeData.ReqnrollBindingTypes.Remove(classNameInFile);
+            _mergeData.PotentialReqnrollBindingTypes.Remove(classNameInFile);
         }
 
-        private void RemoveFromLocalCache(IPsiAssembly assembly)
-        {
-            var fileSteps = _mergeData.StepsDefinitionsPerFiles[assembly];
-            foreach (var classNameInFile in fileSteps.Select(x => x.ClassFullName).Distinct())
-            {
-                _mergeData.ReqnrollBindingTypes.Remove(classNameInFile);
-                _mergeData.PotentialReqnrollBindingTypes.Remove(classNameInFile);
-            }
-
-            _mergeData.StepsDefinitionsPerFiles.RemoveKey(assembly);
-        }
+        _mergeData.StepsDefinitionsPerFiles.RemoveKey(assembly);
     }
 }

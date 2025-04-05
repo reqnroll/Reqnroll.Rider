@@ -7,29 +7,22 @@ using JetBrains.TextControl;
 using JetBrains.Util;
 using ReSharperPlugin.ReqnrollRiderPlugin.Daemon.Errors;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes
+namespace ReSharperPlugin.ReqnrollRiderPlugin.QuickFixes;
+
+[QuickFix]
+public class MethodNameMismatchPatternQuickFix(MethodNameMismatchPatternInfo warning) : QuickFixBase
 {
-    [QuickFix]
-    public class MethodNameMismatchPatternQuickFix : QuickFixBase
+
+    public override string Text => "Rename to " + warning.ExpectedName;
+
+    protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
     {
-        private readonly MethodNameMismatchPatternInfo _warning;
+        CSharpImplUtil.ReplaceIdentifier(warning.Method.NameIdentifier, warning.ExpectedName);
+        return _ => { };
+    }
 
-        public override string Text => "Rename to " + _warning.ExpectedName;
-
-        public MethodNameMismatchPatternQuickFix(MethodNameMismatchPatternInfo warning)
-        {
-            _warning = warning;
-        }
-
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
-        {
-            CSharpImplUtil.ReplaceIdentifier(_warning.Method.NameIdentifier, _warning.ExpectedName);
-            return _ => { };
-        }
-
-        public override bool IsAvailable(IUserDataHolder cache)
-        {
-            return true;
-        }
+    public override bool IsAvailable(IUserDataHolder cache)
+    {
+        return true;
     }
 }

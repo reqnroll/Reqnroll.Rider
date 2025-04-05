@@ -8,29 +8,22 @@ using JetBrains.ReSharper.Psi.Files;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.FailedStep;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep;
+
+[DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
+public class ExecutionFailedStepGutterIconDaemonStage(FailedStepCache failedStepCache) : IDaemonStage
 {
-    [DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
-    public class ExecutionFailedStepGutterIconDaemonStage : IDaemonStage
+
+    public IEnumerable<IDaemonStageProcess> CreateProcess(IDaemonProcess process, IContextBoundSettingsStore settings, DaemonProcessKind processKind)
     {
-        private readonly FailedStepCache _failedStepCache;
+        if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
+            return Enumerable.Empty<IDaemonStageProcess>();
 
-        public ExecutionFailedStepGutterIconDaemonStage(FailedStepCache failedStepCache)
-        {
-            _failedStepCache = failedStepCache;
-        }
+        var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
+        if (gherkinFile == null)
+            return Enumerable.Empty<IDaemonStageProcess>();
 
-        public IEnumerable<IDaemonStageProcess> CreateProcess(IDaemonProcess process, IContextBoundSettingsStore settings, DaemonProcessKind processKind)
-        {
-            if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
-                return Enumerable.Empty<IDaemonStageProcess>();
-
-            var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
-            if (gherkinFile == null)
-                return Enumerable.Empty<IDaemonStageProcess>();
-
-            var daemonStageProcess = new ExecutionFailedStepGutterIconDaemonStageProcess(process, (GherkinFile) gherkinFile, _failedStepCache);
-            return new[] {daemonStageProcess};
-        }
+        var daemonStageProcess = new ExecutionFailedStepGutterIconDaemonStageProcess(process, (GherkinFile) gherkinFile, failedStepCache);
+        return new[] {daemonStageProcess};
     }
 }

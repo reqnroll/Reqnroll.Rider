@@ -8,20 +8,19 @@ using JetBrains.ReSharper.Feature.Services.LiveTemplates.Settings;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Templates;
 using ReSharperPlugin.ReqnrollRiderPlugin.Icons;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Templates
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Templates;
+
+[ShellComponent(Instantiation.DemandAnyThreadUnsafe)]
+public class ReqnrollTemplatesDefaultSettings : IDefaultSettingsRootKey<LiveTemplatesSettings>
 {
-    [ShellComponent(Instantiation.DemandAnyThreadUnsafe)]
-    public class ReqnrollTemplatesDefaultSettings : IDefaultSettingsRootKey<LiveTemplatesSettings>
+    public string Name => "Reqnroll default FileTemplates";
+
+    static ReqnrollTemplatesDefaultSettings() => TemplateImage.Register("ReqnrollFile", ReqnrollIcons.ReqnrollIcon);
+
+    public Stream GetDefaultSettingsStream(Lifetime lifetime)
     {
-        public string Name => "Reqnroll default FileTemplates";
-
-        static ReqnrollTemplatesDefaultSettings() => TemplateImage.Register("ReqnrollFile", ReqnrollIcons.ReqnrollIcon);
-
-        public Stream GetDefaultSettingsStream(Lifetime lifetime)
-        {
-            var stream = typeof(ReqnrollTemplatesDefaultSettings).Assembly.GetManifestResourceStream("ReSharperPlugin.ReqnrollRiderPlugin.Templates.FileTemplates.xml").NotNull();
-            lifetime.OnTermination(stream);
-            return stream;
-        }
+        var stream = typeof(ReqnrollTemplatesDefaultSettings).Assembly.GetManifestResourceStream("ReSharperPlugin.ReqnrollRiderPlugin.Templates.FileTemplates.xml").NotNull();
+        lifetime.OnTermination(stream);
+        return stream;
     }
 }

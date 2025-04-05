@@ -9,90 +9,83 @@ using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util.Text;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting;
+
+[Language(typeof(GherkinLanguage))]
+public class GherkinCodeFormatter(PsiLanguageType languageType, CodeFormatterRequirements requirements, GherkinFormatterInfoProvider formatterInfoProvider)
+    : CodeFormatterBase<GherkinFormatSettingsKey>(languageType, requirements)
 {
-    [Language(typeof(GherkinLanguage))]
-    public class GherkinCodeFormatter : CodeFormatterBase<GherkinFormatSettingsKey>
+
+    protected override CodeFormattingContext CreateFormatterContext(
+        AdditionalFormatterParameters parameters,
+        ICustomFormatterInfoProvider provider,
+        int tabWidth,
+        SingleLangChangeAccu changeAccu,
+        FormatTask[] formatTasks)
     {
-        private readonly GherkinFormatterInfoProvider _formatterInfoProvider;
+        return new CodeFormattingContext(this, FormatterLoggerProvider.FormatterLogger, parameters, tabWidth, changeAccu, formatTasks);
+    }
 
-        public GherkinCodeFormatter(PsiLanguageType languageType, CodeFormatterRequirements requirements, GherkinFormatterInfoProvider formatterInfoProvider)
-            : base(languageType, requirements)
-        {
-            _formatterInfoProvider = formatterInfoProvider;
-        }
+    public override MinimalSeparatorType GetMinimalSeparatorByNodeTypes(TokenNodeType leftToken, TokenNodeType rightToken)
+    {
+        if (leftToken == GherkinTokenTypes.TAG && rightToken != GherkinTokenTypes.TAG)
+            return MinimalSeparatorType.NewLine;
+        if (leftToken != GherkinTokenTypes.TAG && rightToken == GherkinTokenTypes.TAG)
+            return MinimalSeparatorType.NewLine;
+        if (leftToken == GherkinTokenTypes.TABLE_CELL && rightToken == GherkinTokenTypes.PIPE)
+            return MinimalSeparatorType.Space;
+        if (rightToken == GherkinTokenTypes.TABLE_CELL && leftToken == GherkinTokenTypes.PIPE)
+            return MinimalSeparatorType.Space;
 
-        protected override CodeFormattingContext CreateFormatterContext(
-            AdditionalFormatterParameters parameters,
-            ICustomFormatterInfoProvider provider,
-            int tabWidth,
-            SingleLangChangeAccu changeAccu,
-            FormatTask[] formatTasks)
-        {
-            return new CodeFormattingContext(this, FormatterLoggerProvider.FormatterLogger, parameters, tabWidth, changeAccu, formatTasks);
-        }
+        return MinimalSeparatorType.NotRequired;
+    }
 
-        public override MinimalSeparatorType GetMinimalSeparatorByNodeTypes(TokenNodeType leftToken, TokenNodeType rightToken)
-        {
-            if (leftToken == GherkinTokenTypes.TAG && rightToken != GherkinTokenTypes.TAG)
-                return MinimalSeparatorType.NewLine;
-            if (leftToken != GherkinTokenTypes.TAG && rightToken == GherkinTokenTypes.TAG)
-                return MinimalSeparatorType.NewLine;
-            if (leftToken == GherkinTokenTypes.TABLE_CELL && rightToken == GherkinTokenTypes.PIPE)
-                return MinimalSeparatorType.Space;
-            if (rightToken == GherkinTokenTypes.TABLE_CELL && leftToken == GherkinTokenTypes.PIPE)
-                return MinimalSeparatorType.Space;
+    public override ITreeNode CreateSpace(string indent, NodeType replacedOrLeftSiblingType)
+    {
+        return GherkinTokenTypes.WHITE_SPACE.CreateLeafElement(indent);
+    }
 
-            return MinimalSeparatorType.NotRequired;
-        }
+    public override ITreeNode CreateNewLine(LineEnding lineEnding, NodeType lineBreakType = null)
+    {
+        return GherkinTokenTypes.NEW_LINE.CreateLeafElement(lineEnding.GetPresentation());
+    }
 
-        public override ITreeNode CreateSpace(string indent, NodeType replacedOrLeftSiblingType)
-        {
-            return GherkinTokenTypes.WHITE_SPACE.CreateLeafElement(indent);
-        }
+    public override ITreeRange Format(ITreeNode firstElement, ITreeNode lastElement, CodeFormatProfile profile, AdditionalFormatterParameters parameters = null)
+    {
+        parameters ??= AdditionalFormatterParameters.Empty;
 
-        public override ITreeNode CreateNewLine(LineEnding lineEnding, NodeType lineBreakType = null)
-        {
-            return GherkinTokenTypes.NEW_LINE.CreateLeafElement(lineEnding.GetPresentation());
-        }
+        var task = new FormatTask(firstElement, lastElement, profile);
+        task.Adjust(this);
 
-        public override ITreeRange Format(ITreeNode firstElement, ITreeNode lastElement, CodeFormatProfile profile, AdditionalFormatterParameters parameters = null)
-        {
-            parameters ??= AdditionalFormatterParameters.Empty;
-
-            var task = new FormatTask(firstElement, lastElement, profile);
-            task.Adjust(this);
-
-            if (task.FirstElement == null)
-                return new TreeRange(firstElement, lastElement);
-
-            var formatterSettings = GetFormattingSettings(task.FirstElement, parameters, _formatterInfoProvider);
-            formatterSettings.Settings.SetValue(key => key.WRAP_LINES, false);
-
-            DoDeclarativeFormat(formatterSettings, _formatterInfoProvider, null, new[] {task}, parameters, null, null);
-
+        if (task.FirstElement == null)
             return new TreeRange(firstElement, lastElement);
-        }
 
-        public override void FormatInsertedNodes(ITreeNode nodeFirst, ITreeNode nodeLast, bool formatSurround, bool indentSurround = false)
-        {
-        }
+        var formatterSettings = GetFormattingSettings(task.FirstElement, parameters, formatterInfoProvider);
+        formatterSettings.Settings.SetValue(key => key.WRAP_LINES, false);
 
-        public override ITreeRange FormatInsertedRange(ITreeNode nodeFirst, ITreeNode nodeLast, ITreeRange origin)
-        {
-            return new TreeRange(nodeFirst, nodeLast);
-        }
+        DoDeclarativeFormat(formatterSettings, formatterInfoProvider, null, new[] {task}, parameters, null, null);
 
-        public override void FormatReplacedNode(ITreeNode oldNode, ITreeNode newNode)
-        {
-        }
+        return new TreeRange(firstElement, lastElement);
+    }
 
-        public override void FormatReplacedRange(ITreeNode first, ITreeNode last, ITreeRange oldNodes)
-        {
-        }
+    public override void FormatInsertedNodes(ITreeNode nodeFirst, ITreeNode nodeLast, bool formatSurround, bool indentSurround = false)
+    {
+    }
 
-        public override void FormatDeletedNodes(ITreeNode parent, ITreeNode prevNode, ITreeNode nextNode)
-        {
-        }
+    public override ITreeRange FormatInsertedRange(ITreeNode nodeFirst, ITreeNode nodeLast, ITreeRange origin)
+    {
+        return new TreeRange(nodeFirst, nodeLast);
+    }
+
+    public override void FormatReplacedNode(ITreeNode oldNode, ITreeNode newNode)
+    {
+    }
+
+    public override void FormatReplacedRange(ITreeNode first, ITreeNode last, ITreeRange oldNodes)
+    {
+    }
+
+    public override void FormatDeletedNodes(ITreeNode parent, ITreeNode prevNode, ITreeNode nextNode)
+    {
     }
 }

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 
-namespace ReSharperPlugin.ReqnrollRiderPlugin.Guidance
+namespace ReSharperPlugin.ReqnrollRiderPlugin.Guidance;
+
+public interface IGuidanceConfiguration
 {
-    public interface IGuidanceConfiguration
-    {
-        IEnumerable<GuidanceStep> UsageSequence { get; }
-    }
+    IEnumerable<GuidanceStep> UsageSequence { get; }
 }
