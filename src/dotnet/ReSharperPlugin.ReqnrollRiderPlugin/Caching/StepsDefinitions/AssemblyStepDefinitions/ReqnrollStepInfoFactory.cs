@@ -6,13 +6,14 @@ using System.Text.RegularExpressions;
 using CucumberExpressions;
 using JetBrains.Annotations;
 using JetBrains.Application.Parts;
+using JetBrains.Diagnostics;
 using JetBrains.ReSharper.Psi;
 using ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
+using Exception = System.Exception;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions
 {
-
     class CucumberParameterType<T> : IParameterType
     {
         public string[] RegexStrings { get; }
@@ -82,8 +83,10 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
 
 
     [PsiSharedComponent(Instantiation.DemandAnyThreadUnsafe)]
-    public class ReqnrollStepInfoFactory(IStepPatternUtil stepPatternUtil)
-        : IReqnrollStepInfoFactory
+    public class ReqnrollStepInfoFactory(
+        IStepPatternUtil stepPatternUtil,
+        JetBrains.Util.ILogger logger
+    ) : IReqnrollStepInfoFactory
     {
         // Add parameter type registry with common types
         private static readonly ParameterTypeRegistry DefaultParameterTypeRegistry = new();
@@ -100,6 +103,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
             Regex regex;
             var finalPattern = pattern;
 
+            Exception exCucumberExpression = null;
             // Try parsing as Cucumber expression first
             try
             {
@@ -108,11 +112,12 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     // Convert Cucumber expression to regex pattern
                     finalPattern = expression.Regex.ToString();
             }
-            catch
+            catch (Exception ex)
             {
-                // Not a valid Cucumber expression, treat as regex
+                exCucumberExpression = ex;
             }
 
+            // Not a valid Cucumber expression, treat as regex
             try
             {
                 var fullMatchPattern = finalPattern;
@@ -122,9 +127,12 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                     fullMatchPattern += "$";
                 regex = new Regex(fullMatchPattern, RegexOptions.Compiled, TimeSpan.FromSeconds(2));
             }
-            catch (ArgumentException)
+            catch (ArgumentException exRegex)
             {
                 regex = null;
+                if (exCucumberExpression is not null)
+                    logger.Warn(exCucumberExpression, $"Failed to parse step with pattern {pattern}. Not a valid a cucumber expression");
+                logger.Warn(exRegex, $"Failed to parse step with pattern {pattern}. Neither a valid regex or a cucumber expression");
             }
 
             IReadOnlyList<ReqnrollStepScope> scopes = null;
