@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using JetBrains.Application.Components;
 using JetBrains.Application.Settings;
+using JetBrains.Application.Settings.Calculated.Interface;
 using JetBrains.Application.UI.Components;
 using JetBrains.Application.UI.Options;
 using JetBrains.Lifetimes;
@@ -21,15 +22,16 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting;
     typeof(PsiFeaturesUnsortedOptionsThemedIcons.Indent),
     ParentId = CodeEditingPage.PID,
     Sequence = 0,
-    FilterTags = new[] {ConfigFileUtils.EditorConfigName})]
+    FilterTags = new[] {ConfigFileUtils.EditorConfigName}
+)]
 public class GherkinFormattingStylePage(
     Lifetime lifetime,
     [NotNull] OptionsSettingsSmartContext smartContext,
     [NotNull] IUIApplication environment,
     [NotNull] GherkinFormattingStylePageSchema schema,
     [NotNull] CodeStylePreview preview,
-    IComponentContainer container)
-    : CodeStylePage(lifetime, smartContext, environment, schema, preview, container)
+    IComponentContainer container
+) : CodeStylePage(lifetime, smartContext, environment, schema, preview, container)
 {
     public const string Pid = "GherkinDotnetFormattingStylePage";
 
@@ -45,8 +47,9 @@ public class GherkinFormattingStylePageSchema(
     [NotNull] IContextBoundSettingsStoreLive smartContext,
     [NotNull] IValueEditorViewModelFactory itemViewModelFactory,
     IComponentContainer container,
-    ISettingsToHide settingsToHide)
-    : IndentStylePageSchema<GherkinFormatSettingsKey, GherkinCodeStylePreview>(lifetime, smartContext, itemViewModelFactory, container, settingsToHide)
+    ISettingsToHide settingsToHide,
+    [NotNull] ICalculatedSettingsSchema calculatedSettingsSchema
+) : IndentStylePageSchema<GherkinFormatSettingsKey, GherkinCodeStylePreview>(lifetime, smartContext, itemViewModelFactory, container, settingsToHide, calculatedSettingsSchema)
 {
     public override KnownLanguage Language => GherkinLanguage.Instance;
     public override string PageName => "Gherkin (Reqnroll) Formatting Style";
@@ -70,7 +73,8 @@ Scenario: All spares
   When I roll 10 times 1 and 9
   And I roll 1
   Then my total score should be 110
-", PreviewParseType.File);
+", PreviewParseType.File
+        );
     }
 
     protected override void Describe(SchemaBuilder builder)

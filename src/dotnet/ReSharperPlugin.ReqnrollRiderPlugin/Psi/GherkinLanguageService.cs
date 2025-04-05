@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Application.Components;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
@@ -13,14 +14,14 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Formatting;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-[Language(typeof (GherkinLanguage))]
+[Language(typeof(GherkinLanguage))]
 public class GherkinLanguageService(
     [NotNull] GherkinLanguage language,
-    [NotNull] IConstantValueService constantValueService,
+    [NotNull] ILazy<IConstantValueService> constantValueService,
     [NotNull] GherkinKeywordProvider keywordProvider,
     [NotNull] ReqnrollSettingsProvider settingsProvider,
-    [NotNull] GherkinCodeFormatter gherkinCodeFormatter)
-    : LanguageService(language, constantValueService)
+    [NotNull] GherkinCodeFormatter gherkinCodeFormatter
+) : LanguageService(language, constantValueService)
 {
 
     public override ILexerFactory GetPrimaryLexerFactory()

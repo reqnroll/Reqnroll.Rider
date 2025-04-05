@@ -1,8 +1,8 @@
 [versions]
 # https://plugins.jetbrains.com/docs/intellij/using-kotlin.html#kotlin-standard-library
-kotlin = "2.0.21"
+kotlin = "2.1.20"
 # https://github.com/JetBrains/rd/releases
-rdGen = "2024.3.1"
+rdGen = "2025.1.1"
 
 [libraries]
 kotlinStdLib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
@@ -11,6 +11,6 @@ rdGen = { group = "com.jetbrains.rd", name = "rd-gen", version.ref = "rdGen" }
 
 [plugins]
 changelog = "org.jetbrains.changelog:2.2.1"
-gradleIntelliJPlatform = "org.jetbrains.intellij.platform:2.0.0-beta6"
+gradleIntelliJPlatform = "org.jetbrains.intellij.platform:2.5.0"
 gradleJvmWrapper = "me.filippov.gradle.jvm.wrapper:0.14.0"
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

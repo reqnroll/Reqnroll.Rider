@@ -115,9 +115,4 @@ public class StepDefinitionBuilder : IStepDefinitionBuilder
 
         return sb.ToString();
     }
-
-    private static string EscapeRegex(string text)
-    {
-        return text.Replace("\\ ", " ");
-    }
 }

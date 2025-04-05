@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using JetBrains.Application;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel.ProjectsHost;
 using JetBrains.ProjectModel.ProjectsHost.MsBuild.Strategies;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectRefresher;
 
-[ShellComponent]
+[ShellComponent(Instantiation.DemandAnyThreadSafe)]
 public class XunitProjectModificator : MsBuildDefaultLoadStrategy.IModificator
 {
     public bool IsApplicable(IProjectMark projectMark)
