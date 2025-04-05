@@ -1,13 +1,13 @@
 <Project>
   <PropertyGroup>
-    <SdkVersion>2024.3.0</SdkVersion>
+    <SdkVersion>2024.3.6</SdkVersion>
 
     <Title>Reqnroll for Rider</Title>
 
     <Description>Description</Description>
   
     <Authors>Valentin Livkin;Bertrand Provost (Socolin)</Authors>
-    <Copyright>Copyright 2024 Maintainers of ReqnrollRiderPlugin</Copyright>
+    <Copyright>Copyright 2025 Maintainers of ReqnrollRiderPlugin</Copyright>
     <PackageTags>resharper plugin</PackageTags>
   
     <PackageProjectUrl>https://github.com/reqnroll/Reqnroll.Rider</PackageProjectUrl>

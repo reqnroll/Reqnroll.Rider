@@ -139,8 +139,12 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions
             var reqnrollGeneratedAttribute = false;
             foreach (var potentialBindingAttribute in potentialBindingAttributes.Select(x => x.GetAttributeInstance()))
             {
-                if (potentialBindingAttribute.GetClrName().FullName == "System.CodeDom.Compiler.GeneratedCodeAttribute"
-                    && potentialBindingAttribute.PositionParameter(0).ConstantValue.StringValue == "Reqnroll")
+                if (potentialBindingAttribute.GetClrName().FullName != "System.CodeDom.Compiler.GeneratedCodeAttribute")
+                    continue;
+                if (potentialBindingAttribute.PositionParameterCount < 1)
+                    continue;
+                var generatedCodeAttributeValue = potentialBindingAttribute.PositionParameter(0).ConstantValue.StringValue;
+                if (generatedCodeAttributeValue == "Reqnroll" || generatedCodeAttributeValue == "TechTalk.SpecFlow")
                     reqnrollGeneratedAttribute = true;
             }
             return reqnrollGeneratedAttribute;
