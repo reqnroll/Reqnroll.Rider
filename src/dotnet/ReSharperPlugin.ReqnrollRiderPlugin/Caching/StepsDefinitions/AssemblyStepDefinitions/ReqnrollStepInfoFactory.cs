@@ -172,7 +172,9 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
                 if (error)
                     break;
             }
-            return new ReqnrollStepInfo(classFullName, methodName, methodParameterTypes, methodParameterNames, stepKind, pattern, regex, regexesPerCapture, scopes);
+
+            var cleanPattern = pattern.TrimStart('^').TrimEnd('$');
+            return new ReqnrollStepInfo(classFullName, methodName, methodParameterTypes, methodParameterNames, stepKind, cleanPattern, regex, regexesPerCapture, scopes);
         }
     }
 }
