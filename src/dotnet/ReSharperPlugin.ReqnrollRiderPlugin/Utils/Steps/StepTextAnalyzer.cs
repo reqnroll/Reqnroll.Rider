@@ -17,13 +17,13 @@ namespace Reqnroll.BindingSkeletons
     {
         public readonly string Type;
         public readonly string Name;
-        public readonly string RegexPattern;
+        public readonly string OriginalValue;
 
-        public AnalyzedStepParameter(string type, string name, string regexPattern = null)
+        public AnalyzedStepParameter(string type, string name, string originalValue)
         {
             Type = type;
             Name = name;
-            RegexPattern = regexPattern;
+            OriginalValue = originalValue;
         }
     }
 
@@ -38,16 +38,17 @@ namespace Reqnroll.BindingSkeletons
     public class StepTextAnalyzer : IStepTextAnalyzer
     {
         private readonly List<string> _usedParameterNames = new();
+
         public AnalyzedStepText Analyze(string stepText, CultureInfo bindingCulture)
         {
             var result = new AnalyzedStepText();
 
             var paramMatches = RecognizeQuotedTexts(stepText)
-                               .Concat(RecognizeDates(stepText))
-                               .Concat(RecognizeIntegers(stepText))
-                               .Concat(RecognizeDecimals(stepText, bindingCulture))
-                               .OrderBy(m => m.Capture.Index)
-                               .ThenByDescending(m => m.Capture.Length);
+                .Concat(RecognizeDates(stepText))
+                .Concat(RecognizeIntegers(stepText))
+                .Concat(RecognizeDecimals(stepText, bindingCulture))
+                .OrderBy(m => m.Capture.Index)
+                .ThenByDescending(m => m.Capture.Length);
 
             int textIndex = 0;
             foreach (var paramMatch in paramMatches)
@@ -55,43 +56,21 @@ namespace Reqnroll.BindingSkeletons
                 if (paramMatch.Capture.Index < textIndex)
                     continue;
 
-                const string singleQuoteRegexPattern = "[^']*";
-                const string doubleQuoteRegexPattern = "[^\"\"]*";
-                const string defaultRegexPattern = ".*";
-
-                string regexPattern = defaultRegexPattern;
-                string value = paramMatch.Capture.Value;
-                int index = paramMatch.Capture.Index;
-                switch (paramMatch.ParameterType)
-                {
-                    case ParameterType.Text:
-                        regexPattern = "{string}";
-                        break;
-                    case ParameterType.Int:
-                        regexPattern = "{int}";
-                        break;
-                    case ParameterType.Decimal:
-                        regexPattern = "{decimal}";
-                        break;
-                    default:
-                        regexPattern = "{string}";
-                        break;
-                }
+                var value = paramMatch.Capture.Value;
+                var index = paramMatch.Capture.Index;
                 switch (value.Substring(0, 1))
                 {
                     case "\"":
-                        regexPattern = doubleQuoteRegexPattern;
                         value = value.Substring(1, value.Length - 2);
                         index++;
                         break;
                     case "'":
-                        regexPattern = singleQuoteRegexPattern;
                         value = value.Substring(1, value.Length - 2);
                         index++;
                         break;
                 }
                 result.TextParts.Add(stepText.Substring(textIndex, index - textIndex));
-                result.Parameters.Add(AnalyzeParameter(value, bindingCulture, result.Parameters.Count, regexPattern, paramMatch.ParameterType));
+                result.Parameters.Add(AnalyzeParameter(value, bindingCulture, result.Parameters.Count, paramMatch.ParameterType));
                 textIndex = index + value.Length;
             }
 
@@ -99,29 +78,30 @@ namespace Reqnroll.BindingSkeletons
             return result;
         }
 
-        private AnalyzedStepParameter AnalyzeParameter(string value, CultureInfo bindingCulture, int paramIndex, string regexPattern, ParameterType parameterType)
+        private AnalyzedStepParameter AnalyzeParameter(string value, CultureInfo bindingCulture, int paramIndex, ParameterType parameterType)
         {
             string paramName = StepParameterNameGenerator.GenerateParameterName(value, paramIndex, _usedParameterNames);
 
             if (parameterType == ParameterType.Int && int.TryParse(value, NumberStyles.Integer, bindingCulture, out _))
-                return new AnalyzedStepParameter("Int32", paramName, regexPattern);
+                return new AnalyzedStepParameter("Int32", paramName, value);
 
             if (parameterType == ParameterType.Decimal && decimal.TryParse(value, NumberStyles.Number, bindingCulture, out _))
-                return new AnalyzedStepParameter("Decimal", paramName, regexPattern);
+                return new AnalyzedStepParameter("Decimal", paramName, value);
 
             if (parameterType == ParameterType.Date && DateTime.TryParse(value, bindingCulture, DateTimeStyles.AllowWhiteSpaces, out _))
-                return new AnalyzedStepParameter("DateTime", paramName, regexPattern);
+                return new AnalyzedStepParameter("DateTime", paramName, value);
 
-            return new AnalyzedStepParameter("String", paramName, regexPattern);
+            return new AnalyzedStepParameter("String", paramName, value);
         }
 
         private static readonly Regex QuotesRe = new(@"""+(?<param>.*?)""+|'+(?<param>.*?)'+|(?<param>\<.*?\>)|\{\}");
+
         private IEnumerable<CaptureWithContext> RecognizeQuotedTexts(string stepText)
         {
             return QuotesRe.Matches(stepText)
-                           .Cast<Match>()
-                           .Select(m => m.Groups["param"].Success ? (Capture)m.Groups["param"] : m.Groups[0])
-                           .ToCaptureWithContext(ParameterType.Text);
+                .Cast<Match>()
+                .Select(m => m.Groups["param"].Success ? (Capture)m.Groups["param"] : m.Groups[0])
+                .ToCaptureWithContext(ParameterType.Text);
         }
 
         private static readonly Regex IntRe = new Regex(@"-?\d+");
@@ -167,6 +147,7 @@ namespace Reqnroll.BindingSkeletons
         {
             return collection.Cast<Capture>().ToCaptureWithContext(parameterType);
         }
+
         public static IEnumerable<CaptureWithContext> ToCaptureWithContext(this IEnumerable<Capture> collection, ParameterType parameterType)
         {
             return collection.Select(c => new CaptureWithContext(c, parameterType));

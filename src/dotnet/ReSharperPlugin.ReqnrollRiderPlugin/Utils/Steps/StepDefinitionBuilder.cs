@@ -79,8 +79,8 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps
                     if (param.Type == "String")
                     {
                         // Replace the quoted string with {string}
-                        pattern = pattern.Replace($"\"{param.Name}\"", "{string}");
-                        pattern = pattern.Replace($"'{param.Name}'", "{string}");
+                        pattern = pattern.Replace($"\"{param.OriginalValue}\"", "{string}");
+                        pattern = pattern.Replace($"'{param.OriginalValue}'", "{string}");
                     }
                 return pattern;
             }
