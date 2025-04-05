@@ -16,6 +16,14 @@ plugins {
     id("java")
 }
 
+jvmWrapper {
+    linuxAarch64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_linux-aarch64_bin.tar.gz"
+    linuxX64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_linux-x64_bin.tar.gz"
+    macAarch64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-aarch64_bin.tar.gz"
+    macX64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-x64_bin.tar.gz"
+    windowsX64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_windows-x64_bin.zip"
+}
+
 allprojects {
     repositories {
         mavenCentral()
@@ -31,7 +39,6 @@ repositories {
 
 val pluginVersion: String by project
 val riderSdkVersion: String by project
-val untilBuildVersion: String by project
 val buildConfiguration: String by project
 val dotNetPluginId: String by project
 
@@ -49,10 +56,9 @@ val riderSdkPath by lazy {
 
 dependencies {
     intellijPlatform {
-        rider(riderSdkVersion)
+        rider(riderSdkVersion, useInstaller = false)
         jetbrainsRuntime()
-        instrumentationTools()
-        testFramework(TestFrameworkType.Platform.Bundled)
+        testFramework(TestFrameworkType.Bundled)
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
         bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
     }
@@ -65,7 +71,7 @@ intellijPlatform {
 
 kotlin {
     jvmToolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -78,6 +84,11 @@ sourceSets {
 }
 
 tasks {
+    wrapper {
+        gradleVersion = "8.13"
+        distributionType = Wrapper.DistributionType.ALL
+    }
+
     val generateDotNetSdkProperties by registering {
         val dotNetSdkGeneratedPropsFile = File(projectDir, "build/DotNetSdkPath.Generated.props")
         doLast {
@@ -131,7 +142,6 @@ tasks {
     }
 
     patchPluginXml {
-        untilBuild.set(untilBuildVersion)
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {

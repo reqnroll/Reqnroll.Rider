@@ -170,14 +170,12 @@ public class CreateReqnrollStepFromUsageAction(
             projectFolder.Location,
             projectFolder.Name,
             className,
-            CSharpProjectFileType.Instance,
+            CSharpProjectFileType.Instance.NotNull(),
             null,
-            CSharpLanguage.Instance
+            CSharpLanguage.Instance.NotNull()
         );
             
         createNewFileTarget.PreExecute();
-        if (createNewFileTarget.GetTargetDeclarationFile() == null)
-            return null;
 
         using (new PsiTransactionCookie(solution.GetPsiServices(), DefaultAction.Commit, "Creating new step class"))
         {
@@ -231,9 +229,9 @@ public class CreateReqnrollStepFromUsageAction(
             projectFolder.Location,
             string.Join(".", clrTypeName.NamespaceNames),
             filename,
-            CSharpProjectFileType.Instance,
+            CSharpProjectFileType.Instance.NotNull(),
             null,
-            CSharpLanguage.Instance
+            CSharpLanguage.Instance.NotNull()
         );
         createNewFileTarget.PreExecute();
 
@@ -248,7 +246,7 @@ public class CreateReqnrollStepFromUsageAction(
                 Target = createNewFileTarget
             });
 
-            if (result?.ResultDeclaration is not IClassDeclaration classDeclaration)
+            if (result.ResultDeclaration is not IClassDeclaration classDeclaration)
                 return null;
 
             return classDeclaration;
