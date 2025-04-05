@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2024.3.3
+
+- Fix invalid error being reported on `Rule:` preceded by a tag. Fix #31
+- Fix Typing Assists was not initialized. Fix #40
+- Fix invalid error being reported when no text was present after `Background:`. Fix #43
+
 ## 2024.3.2
 
 - Fix errors when parsing steps during the cache step
