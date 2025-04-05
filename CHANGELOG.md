@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2024.3.2
+
+- Fix errors when parsing steps during the cache step
+- Fix code injection. Do not include the indentation in the injected context. This fix error when injecting XML.
+
 ## 2024.3.1
 
 - Add support to cucumber expressions
