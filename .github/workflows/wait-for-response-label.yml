@@ -22,7 +22,7 @@ jobs:
             }
             
             const waitForResponseLabel = 'wait-for-user-response';
-            const userRespondedLabel = 'user-responded-label';
+            const userRespondedLabel = 'user-responded';
             
             const hasWaitForResponseLabel = issue.labels.some(label => label.name === waitForResponseLabel);
             
