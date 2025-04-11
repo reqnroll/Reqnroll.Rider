@@ -5,6 +5,8 @@ on:
     types: [created]
 
 jobs:
+  permissions:
+    issues: write
   update-labels:
     runs-on: ubuntu-latest
     if: github.event.issue.pull_request == null # Only run on issues, not PRs
