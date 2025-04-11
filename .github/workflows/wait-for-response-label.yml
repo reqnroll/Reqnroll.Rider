@@ -8,6 +8,8 @@ jobs:
   update-labels:
     runs-on: ubuntu-latest
     if: github.event.issue.pull_request == null # Only run on issues, not PRs
+    permissions:
+      issues: write
     steps:
       - name: User Responded Labels
         uses: actions/github-script@v7
