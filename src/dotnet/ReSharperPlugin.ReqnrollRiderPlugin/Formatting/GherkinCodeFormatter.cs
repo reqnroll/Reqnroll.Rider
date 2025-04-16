@@ -63,7 +63,7 @@ public class GherkinCodeFormatter(PsiLanguageType languageType, CodeFormatterReq
         var formatterSettings = GetFormattingSettings(task.FirstElement, parameters, formatterInfoProvider);
         formatterSettings.Settings.SetValue(key => key.WRAP_LINES, false);
 
-        DoDeclarativeFormat(formatterSettings, formatterInfoProvider, null, new[] {task}, parameters, null, null);
+        DoDeclarativeFormat(formatterSettings, formatterInfoProvider, null, [task], parameters, null, null);
 
         return new TreeRange(firstElement, lastElement);
     }

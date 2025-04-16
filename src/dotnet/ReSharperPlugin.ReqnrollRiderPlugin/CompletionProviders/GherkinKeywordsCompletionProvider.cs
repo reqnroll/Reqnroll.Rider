@@ -16,17 +16,17 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.CompletionProviders;
 [Language(typeof(GherkinLanguage))]
 public class GherkinKeywordsCompletionProvider : ItemsProviderOfSpecificContext<GherkinSpecificCodeCompletionContext>
 {
-    private static readonly List<(string keyword, bool addColon)> ValidKeywordsInFeature = new List<(string keyword, bool addColon)>
-    {
+    private static readonly List<(string keyword, bool addColon)> ValidKeywordsInFeature =
+    [
         ("Background", true),
         ("Feature", true),
         ("Rule", true),
         ("Scenario", true),
         ("Scenario Outline", true),
-    };
+    ];
 
-    private static readonly List<(string keyword, bool addColon)> ValidKeywordsInScenario = new List<(string keyword, bool addColon)>
-    {
+    private static readonly List<(string keyword, bool addColon)> ValidKeywordsInScenario =
+    [
         ("And", false),
         ("Background", true),
         ("But", false),
@@ -37,7 +37,7 @@ public class GherkinKeywordsCompletionProvider : ItemsProviderOfSpecificContext<
         ("Scenario Outline", true),
         ("Then", false),
         ("When", false),
-    };
+    ];
 
     protected override bool IsAvailable(GherkinSpecificCodeCompletionContext context)
     {

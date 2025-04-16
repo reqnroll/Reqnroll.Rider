@@ -32,7 +32,7 @@ public class GherkinFoldingTest : HighlightingTestBase
 }
     
     
-[DaemonStage(StagesBefore = new[] {typeof (SmartResolverStage)})]
+[DaemonStage(StagesBefore = [typeof (SmartResolverStage)])]
 public class TestCodeFoldingStage : IDaemonStage
 {
     public IEnumerable<IDaemonStageProcess> CreateProcess(
@@ -42,9 +42,9 @@ public class TestCodeFoldingStage : IDaemonStage
     {
         if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
             return ImmutableArray<IDaemonStageProcess>.Empty;
-        return new[]
-        {
-            new CodeFoldingProcess(process, settings)
-        };
+        return
+        [
+            new CodeFoldingProcess(process, settings),
+        ];
     }
 }

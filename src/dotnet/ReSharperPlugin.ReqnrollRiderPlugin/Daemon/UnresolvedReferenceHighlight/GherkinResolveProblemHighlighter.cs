@@ -18,8 +18,8 @@ public class GherkinResolveProblemHighlighter : IResolveProblemHighlighter
         return null;
     }
 
-    public IEnumerable<ResolveErrorType> ErrorTypes { get; } = new []
-    {
-        ResolveErrorType.NOT_RESOLVED
-    };
+    public IEnumerable<ResolveErrorType> ErrorTypes { get; } =
+    [
+        ResolveErrorType.NOT_RESOLVED,
+    ];
 }

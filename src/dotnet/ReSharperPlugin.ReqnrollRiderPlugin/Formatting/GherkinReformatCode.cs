@@ -25,7 +25,7 @@ public class GherkinReformatCode : IReformatCodeCleanupModule
     private static readonly Descriptor OurDescriptor = new Descriptor();
     public ICollection<CodeCleanupOptionDescriptor> Descriptors
     {
-        get { return new CodeCleanupOptionDescriptor[] { OurDescriptor }; }
+        get { return [OurDescriptor]; }
     }
     public bool IsAvailable(IPsiSourceFile sourceFile) => sourceFile.IsLanguageSupported<GherkinLanguage>();
     public bool IsAvailable(CodeCleanupProfile profile) => profile.GetSetting(OurDescriptor);

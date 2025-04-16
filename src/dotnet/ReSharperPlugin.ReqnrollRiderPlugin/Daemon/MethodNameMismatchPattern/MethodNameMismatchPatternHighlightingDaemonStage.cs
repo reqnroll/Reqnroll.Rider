@@ -12,7 +12,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.MethodNameMismatchPattern;
 
-[DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
+[DaemonStage(StagesBefore = [typeof(GlobalFileStructureCollectorStage)], StagesAfter = [typeof(CollectUsagesStage)])]
 public class MethodNameMismatchPatternHighlightingDaemonStage : IDaemonStage
 {
     private readonly ReqnrollStepsDefinitionsCache _reqnrollStepsDefinitionsCache;
@@ -35,10 +35,10 @@ public class MethodNameMismatchPatternHighlightingDaemonStage : IDaemonStage
     )
     {
         if (processKind != DaemonProcessKind.SOLUTION_ANALYSIS && processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
-            return Enumerable.Empty<IDaemonStageProcess>();
+            return [];
 
         if (!_reqnrollStepsDefinitionsCache.AllStepsPerFiles.ContainsKey(process.SourceFile))
-            return Enumerable.Empty<IDaemonStageProcess>();
+            return [];
 
         return process.SourceFile.GetPsiFiles<CSharpLanguage>()
             .SelectNotNull(file => new MethodNameMismatchPatternHighlightingDaemonStageProcess(process, (ICSharpFile) file, _stepDefinitionBuilder));

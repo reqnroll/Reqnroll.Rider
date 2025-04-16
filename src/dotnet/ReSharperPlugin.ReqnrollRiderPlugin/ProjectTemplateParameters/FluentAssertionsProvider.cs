@@ -11,6 +11,6 @@ public class FluentAssertionsProvider : IDotNetTemplateParameterProvider
 
     public IReadOnlyCollection<DotNetTemplateParameter> Get()
     {
-        return new[] {new FluentAssertionsProviderParameter()};
+        return [new FluentAssertionsProviderParameter()];
     }
 }

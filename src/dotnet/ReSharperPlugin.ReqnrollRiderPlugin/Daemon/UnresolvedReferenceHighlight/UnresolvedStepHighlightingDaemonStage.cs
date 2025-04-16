@@ -11,7 +11,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.UnresolvedReferenceHighlight;
 
-[DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
+[DaemonStage(StagesBefore = [typeof(GlobalFileStructureCollectorStage)], StagesAfter = [typeof(CollectUsagesStage)])]
 public class UnresolvedStepHighlightingDaemonStage(
     ResolveHighlighterRegistrar registrar,
     ReqnrollStepsDefinitionsCache reqnrollStepsDefinitionsCache,
@@ -26,7 +26,7 @@ public class UnresolvedStepHighlightingDaemonStage(
     )
     {
         if (processKind != DaemonProcessKind.SOLUTION_ANALYSIS && processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
-            return Enumerable.Empty<IDaemonStageProcess>();
+            return [];
 
         if (reqnrollStepsDefinitionsCache.AllStepsPerFiles.ContainsKey(process.SourceFile))
             return reqnrollStepsUsagesCache.StepUsages.SelectMany(x => x.Value.Keys).Distinct()
@@ -36,8 +36,8 @@ public class UnresolvedStepHighlightingDaemonStage(
 
         var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
         if (gherkinFile == null)
-            return Enumerable.Empty<IDaemonStageProcess>();
+            return [];
 
-        return new[] {new UnresolvedStepsHighlightingDaemonStageProcess(process, (GherkinFile) gherkinFile, registrar)};
+        return [new UnresolvedStepsHighlightingDaemonStageProcess(process, (GherkinFile) gherkinFile, registrar)];
     }
 }

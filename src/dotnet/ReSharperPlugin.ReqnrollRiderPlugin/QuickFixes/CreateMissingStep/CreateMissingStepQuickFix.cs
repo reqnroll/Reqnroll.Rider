@@ -30,7 +30,7 @@ public class CreateMissingStepQuickFix : IQuickFix
     {
         var gherkinStep = _error?.GherkinStep ?? _info?.GherkinStep;
         if (gherkinStep == null)
-            return Enumerable.Empty<IntentionAction>();
+            return [];
         var psiServices = gherkinStep.GetPsiServices();
 
         return new List<IntentionAction>

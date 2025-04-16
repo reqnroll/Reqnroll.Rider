@@ -14,7 +14,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 public class GherkinKeywordList
 {
     // i18n.json file contains list of keywords and some meta-information about the language. At the moment it's three attributes below. 
-    private static readonly string[] GherkinLanguageMetaAttributes = {"name", "native", "encoding"};
+    private static readonly string[] GherkinLanguageMetaAttributes = ["name", "native", "encoding"];
 
     private static readonly Dictionary<string, GherkinTokenType> TokenTypes =
         new Dictionary<string, GherkinTokenType>
@@ -35,7 +35,7 @@ public class GherkinKeywordList
             {"*", GherkinTokenTypes.STEP_KEYWORD}
         };
 
-    private readonly HashSet<string> _spaceAfterKeywords = new HashSet<string>();
+    private readonly HashSet<string> _spaceAfterKeywords = [];
     private readonly Dictionary<string, string> _translatedKeywords = new  Dictionary<string, string>();
     private readonly Dictionary<string, List<string>> _translationsPerKeyword = new  Dictionary<string, List<string>>();
     private readonly Dictionary<string, GherkinTokenType> _translatedTokenTypes = new  Dictionary<string, GherkinTokenType>();

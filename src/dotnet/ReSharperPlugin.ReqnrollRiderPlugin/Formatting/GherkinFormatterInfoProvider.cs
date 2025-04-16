@@ -139,8 +139,8 @@ public class GherkinFormatterInfoProvider(ISettingsSchema settingsSchema, ICalcu
         where TContext : CodeFormattingContext
         where TSettingsKey : FormatSettingsKeyBase
     {
-        return new IBuildableBuilder<OptionTreeBlank>[]
-        {
+        return
+        [
             provider.When(ContinuousLineIndent.None).Return(indentType, 0),
             provider.When(ContinuousLineIndent.Single).Return(indentType, 1),
             provider.When(ContinuousLineIndent.Double).Return(indentType, 2),
@@ -151,8 +151,8 @@ public class GherkinFormatterInfoProvider(ISettingsSchema settingsSchema, ICalcu
             provider.When(4).Return(indentType, 4),
             provider.When(5).Return(indentType, 5),
             provider.When(6).Return(indentType, 6),
-            provider.When(7).Return(indentType, 7)
-        };
+            provider.When(7).Return(indentType, 7),
+        ];
     }
 
 }

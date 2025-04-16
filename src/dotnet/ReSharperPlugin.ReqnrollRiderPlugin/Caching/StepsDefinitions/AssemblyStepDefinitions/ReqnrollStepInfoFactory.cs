@@ -33,14 +33,14 @@ class CucumberParameterType<T>(string name, string[] regexps, bool useForSnippet
 
 class ParameterTypeRegistry : IParameterTypeRegistry
 {
-    private readonly List<IParameterType> _parameterTypes = new()
-    {
+    private readonly List<IParameterType> _parameterTypes =
+    [
         new CucumberParameterType<int>(ParameterTypeConstants.IntParameterName, ParameterTypeConstants.IntParameterRegexps, weight: 1000),
         new CucumberParameterType<string>(ParameterTypeConstants.StringParameterName, ParameterTypeConstants.StringParameterRegexps),
         new CucumberParameterType<string>(ParameterTypeConstants.WordParameterName, ParameterTypeConstants.WordParameterRegexps, false),
         new CucumberParameterType<float>(ParameterTypeConstants.FloatParameterName, ParameterTypeConstants.FloatParameterRegexpsEn, false),
-        new CucumberParameterType<double>(ParameterTypeConstants.DoubleParameterName, ParameterTypeConstants.FloatParameterRegexpsEn)
-    };
+        new CucumberParameterType<double>(ParameterTypeConstants.DoubleParameterName, ParameterTypeConstants.FloatParameterRegexpsEn),
+    ];
 
 
     public IParameterType LookupByTypeName(string name)

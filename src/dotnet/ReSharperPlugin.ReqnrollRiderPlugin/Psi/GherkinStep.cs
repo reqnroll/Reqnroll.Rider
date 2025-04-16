@@ -35,7 +35,7 @@ public class GherkinStep(GherkinStepKind stepKind, GherkinStepKind effectiveStep
     {
         var gherkinScenario = GetContainingNode<GherkinScenario>();
         if (gherkinScenario == null)
-            return Enumerable.Empty<string>();
+            return [];
         var gherkinFeature = gherkinScenario.GetContainingNode<GherkinFeature>();
         if (gherkinFeature == null)
             return gherkinScenario.GetTags();

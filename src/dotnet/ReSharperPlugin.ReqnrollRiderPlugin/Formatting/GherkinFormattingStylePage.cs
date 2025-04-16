@@ -22,7 +22,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Formatting;
     typeof(PsiFeaturesUnsortedOptionsThemedIcons.Indent),
     ParentId = CodeEditingPage.PID,
     Sequence = 0,
-    FilterTags = new[] {ConfigFileUtils.EditorConfigName}
+    FilterTags = [ConfigFileUtils.EditorConfigName]
 )]
 public class GherkinFormattingStylePage(
     Lifetime lifetime,

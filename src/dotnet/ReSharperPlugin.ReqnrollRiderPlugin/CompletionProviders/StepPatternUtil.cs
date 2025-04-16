@@ -62,7 +62,7 @@ public class StepPatternUtil : IStepPatternUtil
                 }
                 var possibleValues = ListPossibleValues(text).ToList();
                 if (capturedValue != null && (possibleValues.Count == 1 || !preferPossibleValues))
-                    captureValues.Add(new List<string> {capturedValue});
+                    captureValues.Add([capturedValue]);
                 else
                     captureValues.Add(possibleValues);
             }
@@ -107,7 +107,7 @@ public class StepPatternUtil : IStepPatternUtil
 
     private List<string> ExpandAllOptionalVariant(string text, StringBuilder buffer = null, List<string> result = null, int startPos = 0)
     {
-        result = result ?? new List<string>();
+        result = result ?? [];
         buffer = buffer ?? new StringBuilder();
 
         var i = startPos;

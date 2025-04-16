@@ -11,7 +11,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.SyntaxError;
 
-[DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
+[DaemonStage(StagesBefore = [typeof(GlobalFileStructureCollectorStage)], StagesAfter = [typeof(CollectUsagesStage)])]
 public class SyntaxErrorDaemonStage : IDaemonStage
 {
     public SyntaxErrorDaemonStage(
@@ -29,12 +29,12 @@ public class SyntaxErrorDaemonStage : IDaemonStage
     )
     {
         if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT && processKind != DaemonProcessKind.SOLUTION_ANALYSIS)
-            return Enumerable.Empty<IDaemonStageProcess>();
+            return [];
 
         var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
         if (gherkinFile == null)
-            return Enumerable.Empty<IDaemonStageProcess>();
+            return [];
 
-        return new[] {new SyntaxErrorDaemonStageProcess(process, (GherkinFile) gherkinFile)};
+        return [new SyntaxErrorDaemonStageProcess(process, (GherkinFile) gherkinFile)];
     }
 }

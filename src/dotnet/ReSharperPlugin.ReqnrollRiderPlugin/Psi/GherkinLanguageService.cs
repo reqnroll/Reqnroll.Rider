@@ -41,7 +41,7 @@ public class GherkinLanguageService(
 
     public override IEnumerable<ITypeDeclaration> FindTypeDeclarations(IFile file)
     {
-        return Enumerable.Empty<ITypeDeclaration>();
+        return [];
     }
 
     public override ILanguageCacheProvider CacheProvider => null;

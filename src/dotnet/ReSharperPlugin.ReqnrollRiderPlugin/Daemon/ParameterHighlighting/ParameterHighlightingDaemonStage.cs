@@ -11,7 +11,7 @@ using ReSharperPlugin.ReqnrollRiderPlugin.Utils.Steps;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ParameterHighlighting;
 
-[DaemonStage(StagesBefore = new[] {typeof(GlobalFileStructureCollectorStage)}, StagesAfter = new[] {typeof(CollectUsagesStage)})]
+[DaemonStage(StagesBefore = [typeof(GlobalFileStructureCollectorStage)], StagesAfter = [typeof(CollectUsagesStage)])]
 public class ParameterHighlightingDaemonStage : IDaemonStage
 {
     public ParameterHighlightingDaemonStage(
@@ -29,12 +29,12 @@ public class ParameterHighlightingDaemonStage : IDaemonStage
     )
     {
         if (processKind != DaemonProcessKind.VISIBLE_DOCUMENT)
-            return Enumerable.Empty<IDaemonStageProcess>();
+            return [];
 
         var gherkinFile = process.SourceFile.GetPsiFile<GherkinLanguage>(process.Document.GetDocumentRange());
         if (gherkinFile == null)
-            return Enumerable.Empty<IDaemonStageProcess>();
+            return [];
 
-        return new[] {new ParameterHighlightingDaemonStageProcess(process, (GherkinFile) gherkinFile)};
+        return [new ParameterHighlightingDaemonStageProcess(process, (GherkinFile) gherkinFile)];
     }
 }
