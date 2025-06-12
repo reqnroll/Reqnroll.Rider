@@ -74,7 +74,6 @@ public interface IReqnrollStepInfoFactory
                             [CanBeNull] IReadOnlyList<ReqnrollStepScope> methodScopes);
 }
 
-
 [PsiSharedComponent(Instantiation.DemandAnyThreadUnsafe)]
 public class ReqnrollStepInfoFactory(
     IStepPatternUtil stepPatternUtil,
@@ -160,7 +159,10 @@ public class ReqnrollStepInfoFactory(
                     partialPattern.Append('(').Append(captureText).Append(")");
                     try
                     {
-                        regexesPerCapture.Add(new Regex("^" + partialPattern + "(?:(?:[ \"\\)])|$)", RegexOptions.Compiled));
+                        var regexPattern = partialPattern
+                            .Replace("{word}", "\\w+")
+                            .Replace("{string}", "\"[^\"']+\"");
+                        regexesPerCapture.Add(new Regex("^" + regexPattern + "(?:(?:[ \"\\)])|$)", RegexOptions.Compiled));
                     }
                     catch (ArgumentException)
                     {

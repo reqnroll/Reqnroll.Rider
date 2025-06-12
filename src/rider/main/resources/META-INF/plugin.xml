@@ -22,6 +22,7 @@
     <lang.syntaxHighlighterFactory language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinSyntaxHighlighterFactory"/>
     <completion.contributor language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.completion.GherkinCompletionContributor" />
     <completion.completionSessionStrategy language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.completion.GherkinCompletionStrategy" />
+    <frontend.completion.helper language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.completion.GherkinCompletionHelper" />
     <backend.markup.adapterFactory language="GherkinDotnet" implementationClass="com.jetbrains.rdclient.daemon.FrontendMarkupAdapterFactory" />
     <backend.typedHandler language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.psi.GherkinTypedHandler" />
     <backend.actions.support language="GherkinDotnet" implementationClass="com.jetbrains.rider.plugins.reqnrollriderplugin.ideaInterop.fileTypes.GherkinActionSupportPolicy" />
