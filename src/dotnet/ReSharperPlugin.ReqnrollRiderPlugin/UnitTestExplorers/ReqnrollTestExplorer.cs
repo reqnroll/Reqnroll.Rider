@@ -17,7 +17,7 @@ using Reqnroll.Tracing;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.UnitTestExplorers;
 
-[SolutionComponent(Instantiation.DemandAnyThreadUnsafe )]
+[SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
 internal class ReqnrollTestExplorer(
     ReqnrollUnitTestProvider unitTestProvider,
     IUnitTestElementRepository unitTestElementRepository,
@@ -80,18 +80,28 @@ internal class ReqnrollTestExplorer(
 
     private bool CompareDescriptionWithShortName(string scenarioText, IUnitTestElement relatedTest)
     {
+        var scenarioIdentifier = scenarioText.ToIdentifier();
+
+        var declaredElement = relatedTest.GetDeclaredElement();
+        var declaredShortName = declaredElement?.ShortName;
+        if (!string.IsNullOrEmpty(declaredShortName))
+        {
+            if (string.Equals(scenarioIdentifier, declaredShortName, StringComparison.InvariantCultureIgnoreCase))
+                return true;
+        }
+
         switch (relatedTest.Provider.ID)
         {
             case NUnitTestProvider.PROVIDER_ID:
             case "MSTest":
             {
-                var scenarioTextWithoutSpace = scenarioText.ToIdentifier();
-                return string.Compare(scenarioTextWithoutSpace, relatedTest.ShortName, StringComparison.InvariantCultureIgnoreCase) == 0;
-
+                return string.Compare(scenarioIdentifier, relatedTest.ShortName, StringComparison.InvariantCultureIgnoreCase) == 0;
             }
             case "xUnit":
             {
-                return scenarioText == relatedTest.ShortName;
+                if (string.Equals(scenarioText, relatedTest.ShortName, StringComparison.Ordinal))
+                    return true;
+                return string.Equals(scenarioIdentifier, relatedTest.ShortName, StringComparison.InvariantCultureIgnoreCase);
             }
         }
         return false;
