@@ -1,6 +1,6 @@
 package com.jetbrains.rider.plugins.reqnrollriderplugin.psi
 
-import com.jetbrains.rider.ideaInterop.fileTypes.RiderLanguageBase
+import com.intellij.lang.Language
 
-object GherkinLanguage : RiderLanguageBase("GherkinDotnet", "GHERKIN") {
+object GherkinLanguage : Language("GherkinDotnet") {
 }
