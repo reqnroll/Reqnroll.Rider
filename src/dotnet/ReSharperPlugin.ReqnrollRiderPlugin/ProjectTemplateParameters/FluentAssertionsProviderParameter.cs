@@ -28,6 +28,6 @@ public class FluentAssertionsProviderParameter()
         foreach (var boolOption in boolOptions)
             options.Add(new RdProjectTemplateChoice(boolOption.Key, boolOption.Value));
 
-        return new RdProjectTemplateChoiceOption(parameter.DefaultValue, false, options, Name, PresentableName, Tooltip);
+        return new RdProjectTemplateChoiceOption(parameter.DefaultValue, false, options, Name, PresentableName, Tooltip, "Include");
     }
 }

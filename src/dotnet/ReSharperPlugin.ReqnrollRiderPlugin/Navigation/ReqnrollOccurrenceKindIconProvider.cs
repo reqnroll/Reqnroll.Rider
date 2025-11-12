@@ -9,7 +9,7 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Navigation;
 [ShellComponent(Instantiation.DemandAnyThreadUnsafe)]
 public class ReqnrollOccurrenceKindIconProvider : IOccurrenceKindIconProvider
 {
-    public IconId GetImageId(OccurrenceKind declaredElement)
+    public IconId GetImageId(OccurrenceKind declaredElement, IOccurrence occurrence)
     {
         if (declaredElement == ReqnrollOccurenceKindProvider.ReqnrollStep)
             return ReqnrollIcons.ReqnrollIcon;

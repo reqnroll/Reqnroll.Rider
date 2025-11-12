@@ -3,12 +3,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
+using JetBrains.Application.Parts;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.ReqnrollJsonSettings;
 
-[ShellComponent]
+[ShellComponent(Instantiation.DemandAnyThreadSafe)]
 public class ReqnrollSettingsProvider
 {
     public static readonly ReqnrollSettings DefaultSettings = new();

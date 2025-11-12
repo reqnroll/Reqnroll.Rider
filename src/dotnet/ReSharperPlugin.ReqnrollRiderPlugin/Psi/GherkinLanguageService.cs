@@ -20,8 +20,8 @@ public class GherkinLanguageService(
     [NotNull] ILazy<IConstantValueService> constantValueService,
     [NotNull] GherkinKeywordProvider keywordProvider,
     [NotNull] ReqnrollSettingsProvider settingsProvider,
-    [NotNull] GherkinCodeFormatter gherkinCodeFormatter
-) : LanguageService(language, constantValueService)
+    [NotNull] ISimpleLazy<GherkinCodeFormatter> gherkinCodeFormatter
+) : LanguageService(language, constantValueService, gherkinCodeFormatter)
 {
 
     public override ILexerFactory GetPrimaryLexerFactory()
@@ -48,5 +48,4 @@ public class GherkinLanguageService(
     public override bool IsCaseSensitive => true;
     public override bool SupportTypeMemberCache => false;
     public override ITypePresenter TypePresenter => DefaultTypePresenter.Instance;
-    public override ICodeFormatter CodeFormatter => gherkinCodeFormatter;
 }
