@@ -2,7 +2,7 @@
 # https://plugins.jetbrains.com/docs/intellij/using-kotlin.html#kotlin-standard-library
 kotlin = "2.1.20"
 # https://github.com/JetBrains/rd/releases
-rdGen = "2025.1.1"
+rdGen = "2025.3.1"
 
 [libraries]
 kotlinStdLib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
