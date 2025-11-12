@@ -60,7 +60,7 @@ dependencies {
         jetbrainsRuntime()
         testFramework(TestFrameworkType.Bundled)
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
-        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
+        bundledModules(providers.gradleProperty("platformBundledModules").map { it.split(',') })
     }
     testImplementation(libs.openTest4J)
 }
