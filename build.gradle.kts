@@ -56,7 +56,9 @@ val riderSdkPath by lazy {
 
 dependencies {
     intellijPlatform {
-        rider(riderSdkVersion, useInstaller = false)
+        rider(riderSdkVersion) {
+            useInstaller = false
+        }
         jetbrainsRuntime()
         testFramework(TestFrameworkType.Bundled)
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
