@@ -4,9 +4,11 @@
   <version>_PLACEHOLDER_</version>
   <vendor url="https://reqnroll.net/">Reqnroll</vendor>
   <idea-version since-build="_PLACEHOLDER_" until-build="_PLACEHOLDER_" />
-  <depends>com.intellij.modules.rider</depends>
-  <depends>com.intellij.modules.xml</depends>
-  <module name="intellij.platform.langInjection"/>
+  <dependencies>
+      <plugin id="com.intellij.modules.rider" />
+      <plugin id="com.intellij.modules.xml" />
+      <module name="intellij.platform.langInjection"/>
+  </dependencies>
   <incompatible-with>com.settler.rider.specflow</incompatible-with>
 
   <description>
@@ -40,7 +42,7 @@
     <dependencySupport kind="dotnet" coordinate="Specflow" displayName="Specflow"/>
     <rd.languageAssociation backendLanguage="GherkinDotnet" frontendLanguage="GHERKIN" />
   </extensions>
-  
+
   <actions>
 <!--    <action id="SampleAction" class="com.jetbrains.rider.plugins.reqnrollriderplugin.SampleAction"-->
 <!--            text="Do Something" description="Do Something Description">-->
