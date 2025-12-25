@@ -24,7 +24,8 @@ public class GherkinFeature() : GherkinElement(GherkinNodeTypes.FEATURE)
     {
         return this.Children<GherkinScenario>().Cast<IGherkinScenario>()
             .Concat(this.Children<GherkinScenarioOutline>())
-            .Concat(this.Children<GherkinRule>().SelectMany(x => x.Children<GherkinScenario>()));
+            .Concat(this.Children<GherkinRule>().SelectMany(x => x.Children<GherkinScenario>()))
+            .Concat(this.Children<GherkinRule>().SelectMany(x => x.Children<GherkinScenarioOutline>()));
     }
 
     public IList<string> GetTags()
