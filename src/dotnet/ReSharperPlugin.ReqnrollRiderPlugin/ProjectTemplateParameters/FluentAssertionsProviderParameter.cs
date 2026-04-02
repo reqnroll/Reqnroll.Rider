@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using JetBrains.ProjectTemplates.Core;
 using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetExtensions;
-using JetBrains.Rider.Backend.Features.ProjectModel.ProjectTemplates.DotNetTemplates;
 using JetBrains.Rider.Model;
 using Microsoft.TemplateEngine.Abstractions;
 

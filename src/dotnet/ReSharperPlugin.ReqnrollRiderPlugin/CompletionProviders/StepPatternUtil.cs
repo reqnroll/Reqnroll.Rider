@@ -4,7 +4,6 @@ using System.Text;
 using CucumberExpressions;
 using JetBrains.Application.Parts;
 using JetBrains.ReSharper.Psi;
-using JetBrains.Util.PaternMatching;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyStepDefinitions;
 

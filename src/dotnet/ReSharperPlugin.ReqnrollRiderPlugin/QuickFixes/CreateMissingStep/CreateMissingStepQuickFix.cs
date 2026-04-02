@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Intentions;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Feature.Services.Resources;

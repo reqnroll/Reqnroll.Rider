@@ -9,6 +9,7 @@ using JetBrains.ProjectModel.ProjectsHost;
 using JetBrains.ProjectModel.ProjectsHost.SolutionHost;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Util;
+using JetBrains.Util.Threading;
 using ReSharperPlugin.ReqnrollRiderPlugin.Extensions;
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.ProjectRefresher;
@@ -30,7 +31,7 @@ public class ProjectRefresher
         var solutionHost = myProjectsHostContainer.GetComponent<ISolutionHost>();
         request.AfterBuildCompleted.Advise(request.Lifetime, () =>
         {
-            using (ReadLockCookie.Create()) 
+            using (ReadLockCookie.Create(CallerInfo.CreateByCurrentContext()))
             {  
                 var reqnrollProjects = request.Projects.Where(p => p.Project.IsReqnrollProject()).Select(p => p.Project);
                 solutionHost.ReloadProjectsAsync(reqnrollProjects.Select(x => x.GetProjectMark()).WhereNotNull().ToList());

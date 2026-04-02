@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Components;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
 using JetBrains.ReSharper.Psi.Impl;
 using JetBrains.ReSharper.Psi.Modules;

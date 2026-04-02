@@ -18,6 +18,7 @@ using JetBrains.ReSharper.UnitTestFramework.Execution;
 using JetBrains.ReSharper.UnitTestFramework.Session;
 using JetBrains.Util;
 using JetBrains.Util.Collections;
+using JetBrains.Util.Threading;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.FailedStep;
 using ReSharperPlugin.ReqnrollRiderPlugin.Extensions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Psi;
@@ -70,7 +71,7 @@ public class ExecutionFailedStepGutterIconUpdater
         using (_myLogger.UsingLogBracket(LoggingLevel.TRACE, "Updating gutter mark icons for {0} elements", set.Count))
         {
             HashSet<IPsiSourceFile> updatedFiles;
-            using (ReadLockCookie.Create())
+            using (ReadLockCookie.Create(CallerInfo.CreateByCurrentContext()))
             {
                 updatedFiles = UpdateIconsInActiveDocuments(set);
                 foreach (var psiSourceFile in updatedFiles)

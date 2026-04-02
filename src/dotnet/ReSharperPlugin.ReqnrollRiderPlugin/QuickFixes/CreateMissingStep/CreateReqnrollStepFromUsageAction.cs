@@ -28,6 +28,7 @@ using JetBrains.TextControl;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 using JetBrains.Util.Media;
+using JetBrains.Util.Threading;
 using ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Extensions;
 using ReSharperPlugin.ReqnrollRiderPlugin.Helpers;
@@ -63,7 +64,7 @@ public class CreateReqnrollStepFromUsageAction(
             var (project, defaultFolder) = SelectDefaultFolderForNewFile();
             createStepClassDialogUtil.OpenCreateClassDialog(solution, project, defaultFolder, (className, path, isPartial) =>
             {
-                using (ReadLockCookie.Create())
+                using (ReadLockCookie.Create(CallerInfo.CreateByCurrentContext()))
                 {
                     var classDeclaration = CreateCSharpFile(solution, className, path, isPartial);
                     if (classDeclaration != null)
@@ -114,7 +115,7 @@ public class CreateReqnrollStepFromUsageAction(
             {
                 createStepPartialClassFile.OpenCreatePartialClassFileDialog(availableBindingClasses.First().SourceFile, (path, filename) =>
                 {
-                    using (ReadLockCookie.Create())
+                    using (ReadLockCookie.Create(CallerInfo.CreateByCurrentContext()))
                     {
                         var classDeclaration = CreatePartialPartCSharpFile(solution, fullClassName, path, filename);
                         if (classDeclaration != null)
