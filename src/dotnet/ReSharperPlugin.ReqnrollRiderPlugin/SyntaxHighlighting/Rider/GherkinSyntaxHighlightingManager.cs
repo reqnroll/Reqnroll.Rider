@@ -17,7 +17,7 @@ public class GherkinSyntaxHighlightingManager : SyntaxHighlightingManager
         Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager");
     }
 
-    public override SyntaxHighlightingStageProcess CreateProcess(IDaemonProcess process, IContextBoundSettingsStore settings, IFile getPrimaryPsiFile)
+    public override IDaemonStageProcess CreateDaemonProcess(IDaemonProcess process, IContextBoundSettingsStore settings, IFile getPrimaryPsiFile)
     {
         Protocol.Logger.Log(LoggingLevel.INFO, $"GherkinSyntaxHighlightingManager:CreateProcess - {getPrimaryPsiFile.GetSourceFile().NotNull().Name}");
 
