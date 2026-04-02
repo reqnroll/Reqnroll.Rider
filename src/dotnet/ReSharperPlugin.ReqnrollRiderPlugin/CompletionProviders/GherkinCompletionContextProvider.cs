@@ -65,14 +65,16 @@ public class GherkinCompletionContextProvider : CodeCompletionContextProviderBas
                 relatedText = "@";
                 ranges = new TextLookupRanges(
                     new DocumentRange(tag.GetDocumentEndOffset().Shift(1), context.CaretDocumentOffset),
-                    new DocumentRange(tag.GetDocumentEndOffset().Shift(1), context.CaretDocumentOffset)
+                    new DocumentRange(tag.GetDocumentEndOffset().Shift(1), context.CaretDocumentOffset),
+                    isGreedyToLeft: true
                 );
             }
             else
             {
                 ranges = new TextLookupRanges(
                     new DocumentRange(tag.GetDocumentStartOffset(), context.CaretDocumentOffset),
-                    tag.GetDocumentRange()
+                    tag.GetDocumentRange(),
+                    isGreedyToLeft: true
                 );
             }
 
@@ -99,7 +101,7 @@ public class GherkinCompletionContextProvider : CodeCompletionContextProviderBas
             var replaceRange = stepTextRange;
             var insertRange = stepTextRange.SetEndTo(context.SelectedRange.EndOffset);
 
-            ranges = new TextLookupRanges(insertRange, replaceRange);
+            ranges = new TextLookupRanges(insertRange, replaceRange, isGreedyToLeft: true);
         }
         return new GherkinSpecificCodeCompletionContext(context, ranges, interestingNode, isStartOfLine ? startOfLineText : relatedText, isStartOfLine);
     }
