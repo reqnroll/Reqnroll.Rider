@@ -1,9 +1,11 @@
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 // ReSharper disable InconsistentNaming
 
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Psi;
 
-public static class GherkinNodeTypes
+[Language(typeof(GherkinLanguage))]
+public class GherkinNodeTypes : INodeTypesInitializer
 {
     private static int _lastNodeId = 3000;
     private static int NextId => ++_lastNodeId;
@@ -26,7 +28,7 @@ public static class GherkinNodeTypes
     public static readonly GherkinNodeType LANGUAGE_COMMENT = new GherkinLanguageCommentNodeType("LANGUAGE_COMMENT", NextId);
     public static readonly GherkinNodeType COMMENT = new GherkinCommentNodeType("COMMENT", NextId);
 
-    private class GherkinFileNodeType(string name, int index) : GherkinNodeType(name, index)
+    private class GherkinFileNodeType(string name, int index) : GherkinNodeType(name, index, typeof(GherkinFile))
     {
 
         public override CompositeElement Create(object userData)
@@ -45,7 +47,7 @@ public static class GherkinNodeTypes
         
     private class GherkinScenarioOutlineNodeType(string name, int index) : GherkinNodeType<GherkinScenarioOutline>(name, index);
         
-    private class GherkinStepNodeType(string name, int index) : GherkinNodeType(name, index)
+    private class GherkinStepNodeType(string name, int index) : GherkinNodeType(name, index, typeof(GherkinStep))
     {
 
         public override CompositeElement Create(object userData)
@@ -71,7 +73,7 @@ public static class GherkinNodeTypes
         
     private class GherkinRuleNodeType(string name, int index) : GherkinNodeType<GherkinRule>(name, index);
 
-    private class GherkinLanguageCommentNodeType(string name, int index) : GherkinNodeType(name, index)
+    private class GherkinLanguageCommentNodeType(string name, int index) : GherkinNodeType(name, index,  typeof(GherkinLanguageComment))
     {
 
         public override CompositeElement Create(object userData)
@@ -80,7 +82,7 @@ public static class GherkinNodeTypes
         }
     }
 
-    private class GherkinCommentNodeType(string name, int index) : GherkinNodeType(name, index)
+    private class GherkinCommentNodeType(string name, int index) : GherkinNodeType(name, index, typeof(GherkinComment))
     {
 
         public override CompositeElement Create(object userData)
