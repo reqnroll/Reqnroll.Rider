@@ -6,8 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## 2026.1.0
+- Support for Rider 2026.1
 - Replaced existing plugin settings with new settings that match the Reqnroll Visual Studio extension
 - Enhanced .editorconfig support to ensure cross-compatible setting standardization between Rider and Visual Studio
+- Fix blank lines or comments between table rows causing formatting issues. Fixes [#70](https://github.com/reqnroll/Reqnroll.Rider/issues/70)
 
 ## 2025.3.1
 - Fix step completion not always working as expected after a space or at the end of a line
