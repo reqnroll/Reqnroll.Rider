@@ -65,6 +65,8 @@ public class GherkinCodeFormatter(PsiLanguageType languageType, CodeFormatterReq
 
         DoDeclarativeFormat(formatterSettings, formatterInfoProvider, null, [task], parameters, null, null);
 
+        GherkinTableFormatUtil.AlignTables(task.FirstElement, formatterSettings);
+
         return new TreeRange(firstElement, lastElement);
     }
 

@@ -116,15 +116,16 @@ public class GherkinFormattingStylePageSchema(
 
         builder
             .Category("Indentation rules")
-            .ItemFor(key => key.IndentFeatureChildren, indentationExample)
-            .ItemFor(key => key.IndentRuleChildren,    indentationExample)
-            .ItemFor(key => key.IndentSteps,           indentationExample)
-            .ItemFor(key => key.IndentAndSteps,        indentationExample)
-            .ItemFor(key => key.IndentDataTable,       indentationExample)
-            .ItemFor(key => key.IndentDocString,       indentationExample)
-            .ItemFor(key => key.IndentExamples,        indentationExample)
-            .ItemFor(key => key.IndentExamplesTable,   indentationExample)
-            .ItemFor(key => key.TableCellPaddingSize,  indentationExample)
+            .ItemFor(key => key.IndentFeatureChildren,             indentationExample)
+            .ItemFor(key => key.IndentRuleChildren,                indentationExample)
+            .ItemFor(key => key.IndentSteps,                       indentationExample)
+            .ItemFor(key => key.IndentAndSteps,                    indentationExample)
+            .ItemFor(key => key.IndentDataTable,                   indentationExample)
+            .ItemFor(key => key.IndentDocString,                   indentationExample)
+            .ItemFor(key => key.IndentExamples,                    indentationExample)
+            .ItemFor(key => key.IndentExamplesTable,               indentationExample)
+            .ItemFor(key => key.TableCellPaddingSize,              indentationExample)
+            .ItemFor(key => key.TableCellRightAlignNumericContent, indentationExample)
             .EndCategory();
 
         builder

@@ -22,7 +22,6 @@ public class GherkinFormatterInfoProvider(ISettingsSchema settingsSchema, ICalcu
         base.Initialize();
 
         Indenting();
-        Aligning();
         Formatting();
     }
 
@@ -93,16 +92,6 @@ public class GherkinFormatterInfoProvider(ISettingsSchema settingsSchema, ICalcu
                 Parent().HasType(GherkinNodeTypes.EXAMPLES_BLOCK),
                 Node().HasType(GherkinNodeTypes.TABLE))
             .Switch(s => s.IndentExamplesTable, IndentIfTrue(this))
-            .Build();
-    }
-
-    private void Aligning()
-    {
-        Describe<IntAlignRule>()
-            .Name("AlignTableCells")
-            .Where(
-                Node().HasType(GherkinNodeTypes.TABLE_CELL))
-            .Calculate((_, _) => new IntAlignOptionValue("pipe", 1))
             .Build();
     }
 

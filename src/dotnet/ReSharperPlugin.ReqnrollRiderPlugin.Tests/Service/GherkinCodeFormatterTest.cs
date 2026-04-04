@@ -15,6 +15,7 @@ public class GherkinCodeFormatterTest : CodeFormatterWithExplicitSettingsTestBas
     [TestCase("BlankLines - BetweenScenario")]
     [TestCase("BlankLines - BetweenStepAndExamplesBlock")]
     [TestCase("Formatting - Table 1")]
+    [TestCase("Formatting - Table With Blank Line")]
     [TestCase("Indent - Background")]
     [TestCase("Indent - Basics")]
     [TestCase("Indent - Configuration - AllFalse")]

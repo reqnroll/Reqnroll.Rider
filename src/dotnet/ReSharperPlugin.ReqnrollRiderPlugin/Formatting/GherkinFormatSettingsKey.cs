@@ -92,4 +92,11 @@ public class GherkinFormatSettingsKey : FormatSettingsKeyBase
     [EditorConfigEntryAlias("wrap_tags_on_different_lines", EditorConfigAliasType.LanguageSpecificStandard)]
     [SettingsEntry(true, "Wrap tags on different lines")]
     public bool WrapTagsOnDifferentLines { get; set; } = true;
+
+    /// <summary>
+    ///     Right-align numeric table cells
+    /// </summary>
+    [EditorConfigEntryAlias("table_cell_right_align_numeric_content", EditorConfigAliasType.LanguageSpecificStandard)]
+    [SettingsEntry(true, "Table cell right align numeric content")]
+    public bool TableCellRightAlignNumericContent { get; set; } = true;
 }
