@@ -117,29 +117,22 @@ It can also be configured using `Switch` like the following example
 .Switch(key => key.SOME_BOOLEAN, When(true).Return(IntervalFormatType.NewLine), When(false).Return(IntervalFormatType.None))
 ```
 
-
-### `IntAlignRule`
-
-/!\ This rule is not executed if the parameter `shouldDoIntAlign` is not `true` in `DoDeclarativeFormat`
-
-This rules is used to aligned element internally, like the Gherkin tables
-
-the `Calculate` method returns for each node an `IntAlignOptionValue` and the first parameter is an `id`, it will then aligned all the element with the same `id`
-
-```
-Describe<IntAlignRule>()
-    .Name("AlignTableCells")
-    .Where(
-        Node().HasType(GherkinNodeTypes.TABLE_CELL))
-    .Calculate((o, context) => new IntAlignOptionValue("pipe", 1))
-    .Build();
-```
-
 ### `WrapRule`
 
 This rules is used to define if the line need to be wrapped.
 
 `Returns` should use a value from the enum `WrapType`
+
+### Formatting Gherkin Tables
+
+In versions prior to 2026.1, Gherkin Tables were formatted with `IntAlignRule`. 
+There are a couple of issues caused by this, which meant that it couldn't handle every scenario.
+Gherkin Tables are now formatted programmatically rather than declaratively. This allows it to handle for unique situations such as right-aligning of columns, configurable cell padding, blank lines or comments between rows, and so on.
+
+This is done via the `GherkinTableFormatUtil` class, called directly from the `GherkinCodeFormatter`. 
+The whitespace on either side of the cell's content is padded appropriately, and then the PSI element representing the whitespace is directly replaced with a new PSI element with the updated whitespace. 
+For example, if our configuration says that we should right-align numeric columns, then we want to add extra padding to the whitespace on the LEFT of the cell's text, and vice versa when we aren't right-aligning.
+A similar process occurs for adding general cell padding.
 
 # Tests
 
