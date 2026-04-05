@@ -1,0 +1,15 @@
+{
+IndentFeatureChildren: true
+IndentRuleChildren: true
+IndentSteps: true
+IndentAndSteps: true
+IndentDataTable: true
+IndentDocString: true
+IndentExamples: true
+IndentExamplesTable: true
+TableCellPaddingSize: 1
+BlankLinesBeforeExamples: 1
+BlankLinesBeforeScenario: 1
+WrapTagsOnDifferentLines: true
+TableCellRightAlignNumericContent: true
+}

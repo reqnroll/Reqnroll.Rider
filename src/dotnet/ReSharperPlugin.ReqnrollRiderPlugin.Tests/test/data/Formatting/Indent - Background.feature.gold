@@ -1,4 +1,4 @@
 Feature:
 
-  Background:
-    Given this
+Background:
+  Given this

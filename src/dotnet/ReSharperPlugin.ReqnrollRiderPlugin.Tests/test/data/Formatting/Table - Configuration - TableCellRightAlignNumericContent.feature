@@ -1,0 +1,7 @@
+Feature: test
+
+  Scenario: Some scenario
+    Given Some table
+      |header1|header2|long-header3 |
+      |text 1|some-long-text2|3|
+      |some-long-text-1 | text2 |3|
