@@ -1,9 +1,15 @@
 {
-ExampleIndentSize: 0
-FeatureIndentSize: 0
-PyStringIndentSize: 0
-ScenarioIndentSize: 0
-StepIndentSize: 0
-TableIndentSize: 0
-SmallTableIndent: false
+IndentFeatureChildren: false
+IndentRuleChildren: false
+IndentSteps: false
+IndentAndSteps: false
+IndentDataTable: false
+IndentDocString: false
+IndentExamples: false
+IndentExamplesTable: false
+TableCellPaddingSize: 1
+BlankLinesBeforeExamples: 1
+BlankLinesBeforeScenario: 1
+WrapTagsOnDifferentLines: false
+TableCellRightAlignNumericContent: false
 }

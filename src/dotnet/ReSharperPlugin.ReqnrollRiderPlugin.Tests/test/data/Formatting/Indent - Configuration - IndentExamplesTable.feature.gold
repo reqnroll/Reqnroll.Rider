@@ -6,3 +6,4 @@ Scenario Outline: eating
 Examples: Good
   | start |
   | 12 23 |
+  | 20    |

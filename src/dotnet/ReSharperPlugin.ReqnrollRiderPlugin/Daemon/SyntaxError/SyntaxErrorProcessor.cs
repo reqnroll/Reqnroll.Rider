@@ -19,7 +19,7 @@ public class SyntaxErrorProcessor : IRecursiveElementProcessor<IHighlightingCons
         if (element is not GherkinToken token)
             return;
 
-        if (token.Parent is GherkinFile gherkinFile)
+        if (token.Parent is GherkinFile gherkinFile && gherkinFile.Children().FirstOrDefault() == token)
         {
             var feature = gherkinFile.Children<GherkinFeature>().FirstOrDefault();
             if (feature == null)

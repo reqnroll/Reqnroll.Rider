@@ -1,0 +1,18 @@
+Feature: Cucumber stock keeping
+
+  Scenario: eating
+    Given something
+      And something else
+
+  Scenario Outline: eating
+    Given there are <start> cucumbers
+
+    Examples: Good
+      | start |
+      | 12 23 |
+      | 20    |
+
+  Rule:
+
+    Scenario:
+      Given something
