@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Enhanced .editorconfig support to ensure cross-compatible setting standardization between Rider and Visual Studio
 - Fix blank lines or comments between table rows causing formatting issues. Fixes [#70](https://github.com/reqnroll/Reqnroll.Rider/issues/70)
 
+## 2025.3.4
+- Fix comment action not working in feature files. Fix #75
+
 ## 2025.3.1
 - Fix step completion not always working as expected after a space or at the end of a line
 
