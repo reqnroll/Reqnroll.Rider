@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 2026.1.1
 - Fix comment action not working in feature files. Fixes [#75](https://github.com/reqnroll/Reqnroll.Rider/issues/75)
+- Fix gutter icons for failed steps not showing
 
 ## 2026.1.0
 - Support for Rider 2026.1
