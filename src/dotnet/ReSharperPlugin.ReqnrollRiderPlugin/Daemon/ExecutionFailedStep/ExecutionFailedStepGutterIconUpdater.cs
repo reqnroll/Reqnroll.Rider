@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Application.Components;
 using JetBrains.Application.Parts;
 using JetBrains.Application.Threading;
 using JetBrains.Collections;
@@ -28,7 +29,7 @@ using GroupingEvent = JetBrains.Threading.GroupingEvent;
 namespace ReSharperPlugin.ReqnrollRiderPlugin.Daemon.ExecutionFailedStep;
 
 [SolutionComponent(Instantiation.DemandAnyThreadUnsafe)]
-public class ExecutionFailedStepGutterIconUpdater
+public class ExecutionFailedStepGutterIconUpdater : IStartupActivity
 {
     private static readonly ClrTypeName MsTestPropertyAttribute = new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute");
     private static readonly ClrTypeName MsTestDescriptionAttribute = new ClrTypeName("Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute");
