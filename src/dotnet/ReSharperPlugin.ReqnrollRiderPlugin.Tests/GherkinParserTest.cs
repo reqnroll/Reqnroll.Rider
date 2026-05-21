@@ -36,5 +36,7 @@ public class GherkinParserTest : ParserTestBase<GherkinLanguage>
     [TestCase("PystringWithTripleQuoteInText")]
     [TestCase("FeatureRu")]
     [TestCase("TableRowTrailingComments")]
+    [TestCase("StepWithTextStartingWithAt")]
+    [TestCase("StepWithTextStartingWithColon")]
     public void TestParser(string name) { DoOneTest(name); }
 }
