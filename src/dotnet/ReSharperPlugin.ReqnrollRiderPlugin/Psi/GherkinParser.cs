@@ -247,6 +247,7 @@ public class GherkinParser : IParser
                builder.GetTokenType() == GherkinTokenTypes.STEP_PARAMETER_BRACE ||
                builder.GetTokenType() == GherkinTokenTypes.STEP_PARAMETER_TEXT ||
                builder.GetTokenType() == GherkinTokenTypes.WHITE_SPACE ||
+               builder.GetTokenType() == GherkinTokenTypes.COLON ||
                builder.GetTokenType() == GherkinTokenTypes.NEW_LINE)
         {
             if (IsLineBreak(builder))

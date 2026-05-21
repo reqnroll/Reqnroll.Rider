@@ -1,5 +1,5 @@
 Language: PsiLanguageType:GHERKIN
-GherkinFile: Simple.feature
+GherkinFile: StepWithTextStartingWithAt.feature
   GherkinFeature: @Do stuff
     GherkinToken(0,7): FEATURE_KEYWORD('Feature')
     GherkinToken(7,1): COLON(':')
@@ -18,8 +18,14 @@ GherkinFile: Simple.feature
       GherkinToken(46,12): TEXT('@My scenario')
       GherkinToken(58,2): NEW_LINE('\n')
       GherkinToken(60,4): WHITE_SPACE('    ')
-      GherkinStep: something
+      GherkinStep: @something
         GherkinToken(64,5): STEP_KEYWORD('Given')
         GherkinToken(69,1): WHITE_SPACE(' ')
         GherkinToken(70,10): TEXT('@something')
+      GherkinToken(80,2): NEW_LINE('\n')
+      GherkinToken(82,4): WHITE_SPACE('    ')
+      GherkinStep: something else
+        GherkinToken(86,3): STEP_KEYWORD('And')
+        GherkinToken(89,1): WHITE_SPACE(' ')
+        GherkinToken(90,14): TEXT('something else')
 
