@@ -11,7 +11,7 @@ Scenario: Should generate step with a title cased method name
 		[Given(@"the first number")]
 		public void GivenTheFirstNumber()
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -26,7 +26,7 @@ Scenario: Should generate step with the corrent step attribute
 		[When(@"the first number")]
 		public void WhenTheFirstNumber()
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -41,7 +41,7 @@ Scenario: Should generate steps with integer argument
 		[When(@"the first number (.*)")]
 		public void WhenTheFirstNumber(int p0)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 	
@@ -56,7 +56,7 @@ Scenario: Should generate steps with decimal argument
 		[When(@"the first number (.*)")]
 		public void WhenTheFirstNumber(decimal p0)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 	
@@ -71,7 +71,7 @@ Scenario: Should generate steps with datetime argument
 		[When(@"the first number (.*)")]
 		public void WhenTheFirstNumber(DateTime p0)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 	
@@ -88,7 +88,7 @@ Scenario: Should generate steps with Table argument
 		[When(@"this step has a table")]
 		public void WhenThisStepHasATable(Table table)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 	
@@ -106,7 +106,7 @@ Scenario: Should generate steps with multiline arguments
 		[When(@"this step has a multiline")]
 		public void WhenThisStepHasAMultiline(string multilineText)
 		{ 
-		   ScenarioContext.StepIsPending();
+		   throw new PendingStepException();
 		}
 		"""
 
@@ -121,7 +121,7 @@ Scenario: Should generate steps with integer argument in double quotes as string
 		[When(@"the first number ""(.*)""")]
 		public void WhenTheFirstNumber(string p0)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -136,7 +136,7 @@ Scenario: Should generate steps with integer argument in sigle quotes as strings
 		[When(@"the first number '(.*)'")]
 		public void WhenTheFirstNumber(string p0)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -151,7 +151,7 @@ Scenario: Should generate steps with string argument in double quotes
 		[When(@"the first number ""(.*)""")]
 		public void WhenTheFirstNumber(string twelve)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -166,7 +166,7 @@ Scenario: Should generate steps with string argument in single quotes
 		[When(@"the first number '(.*)'")]
 		public void WhenTheFirstNumber(string twelve)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -181,7 +181,7 @@ Scenario: Should generate steps with multiple argument
 		[When(@"the first number ""(.*)"" or ""(.*)""")]
 		public void WhenTheFirstNumberOr(string twelve, string eleven)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -201,7 +201,7 @@ Scenario Outline: Should generate steps with outline parameters inlined from the
 		[When(@"the first number ten")]
 		public void WhenTheFirstNumberTen()
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -221,7 +221,7 @@ Scenario Outline: Should generate steps with outline parameters inlined from the
 		[When(@"the first number (.*)")]
 		public void WhenTheFirstNumber(int p0)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -241,7 +241,7 @@ Scenario Outline: Should generate steps with missing outline parameters as strin
 		[When(@"the first number (.*)")]
 		public void WhenTheFirstNumber(string other)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
 
@@ -261,6 +261,6 @@ Scenario Outline: Should generate steps with outline parameters in single quoute
 		[When(@"the first number '(.*)'")]
 		public void WhenTheFirstNumber(string twelve)
 		{
-		    ScenarioContext.StepIsPending();
+		    throw new PendingStepException();
 		}
 		"""
