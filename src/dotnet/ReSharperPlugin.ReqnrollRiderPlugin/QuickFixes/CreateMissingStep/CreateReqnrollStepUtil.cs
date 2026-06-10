@@ -82,7 +82,7 @@ public class CreateReqnrollStepUtil(IStepDefinitionBuilder stepDefinitionBuilder
                     parameterString += "Reqnroll.Table table";
                 }
 
-                var formatString = $"[$0(\"$1\")] public void {methodName}({parameterString}) {{ScenarioContext.StepIsPending();}}";
+                var formatString = $"[$0(\"$1\")] public void {methodName}({parameterString}) {{throw new PendingStepException();}}";
                 var methodDeclaration = factory.CreateTypeMemberDeclaration(formatString, attributeType, pattern) as IMethodDeclaration;
                 if (methodDeclaration == null)
                     continue;
