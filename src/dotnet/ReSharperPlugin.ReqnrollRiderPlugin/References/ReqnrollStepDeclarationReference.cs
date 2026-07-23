@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using JetBrains.Collections;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 using JetBrains.ReSharper.Psi.Impl.Reflection2;
@@ -127,7 +128,7 @@ public class ReqnrollStepDeclarationReference : TreeReferenceBase<GherkinStep>
                     continue;
                 if (cacheEntry.Regex?.IsMatch(stepText) == true)
                 {
-                    var assemblyFile = psiAssemblyFileLoader.GetOrLoadAssembly(psiAssembly, false);
+                    var assemblyFile = LoadAssemblyFile(psiAssemblyFileLoader, psiAssembly);
                     if (assemblyFile == null)
                         continue;
                     foreach (var decElement in assemblyFile.Types)
@@ -150,6 +151,19 @@ public class ReqnrollStepDeclarationReference : TreeReferenceBase<GherkinStep>
             }
         }
         return new ResolveResultWithInfo(EmptyResolveResult.Instance, ResolveErrorType.NOT_RESOLVED);
+    }
+
+    private static IPsiAssemblyFile LoadAssemblyFile(
+        IPsiAssemblyFileLoader psiAssemblyFileLoader,
+        IPsiAssembly psiAssembly)
+    {
+        IPsiAssemblyFile assemblyFile = null;
+        psiAssemblyFileLoader.LoadAssembly(
+            psiAssembly,
+            PsiAssemblyLoadOptions.LoadAssemblyFile,
+            psiAssembly,
+            (_, loadedAssemblyFile, _, _) => assemblyFile = loadedAssemblyFile);
+        return assemblyFile;
     }
 
     private static IEnumerable<IMethod> GetAllMethodFromClassAndBaseClasses(IClass clazz)

@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using JetBrains.Application.Parts;
 using JetBrains.Application.Progress;
 using JetBrains.Collections;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.Impl.Reflection2;
@@ -18,7 +19,6 @@ namespace ReSharperPlugin.ReqnrollRiderPlugin.Caching.StepsDefinitions.AssemblyS
 [PsiComponent(Instantiation.DemandAnyThreadUnsafe)]
 // FIXME: Save this cache, see SolutionCaches and SimpleCache and implements ICacheWithVersion
 public class AssemblyStepDefinitionCache(
-    IPsiAssemblyFileLoader psiAssemblyFileLoader,
     IReqnrollStepInfoFactory reqnrollStepInfoFactory,
     ScopeAttributeUtil scopeAttributeUtil)
     : IAssemblyCache
@@ -52,56 +52,70 @@ public class AssemblyStepDefinitionCache(
     {
     }
 
-    public object Build(IPsiAssembly assembly)
+    public bool IsApplicable(IPsiAssembly assembly)
     {
-        ReqnrollStepsDefinitionsCacheEntries stepDefinitions = null;
-        psiAssemblyFileLoader.GetOrLoadAssembly(assembly, true, (_, _, metadataAssembly) =>
+        return true;
+    }
+
+    public AssemblyCacheBuildParameters GetBuildParameters(IPsiAssembly assembly)
+    {
+        return new AssemblyCacheBuildParameters(
+            PsiAssemblyLoadOptions.LoadMetadataAssembly |
+            PsiAssemblyLoadOptions.LoadMetadataTypes);
+    }
+
+    public object Build(
+        IPsiAssembly assembly,
+        IMetadataAssembly metadataAssembly,
+        IPsiAssemblyFile assemblyFile,
+        object context)
+    {
+        if (metadataAssembly == null)
+            return null;
+
+        var stepDefinitions = new ReqnrollStepsDefinitionsCacheEntries();
+        foreach (var type in metadataAssembly.GetTypes())
         {
-            stepDefinitions = new ReqnrollStepsDefinitionsCacheEntries();
+            if (type.CustomAttributesTypeNames.All(a => !ReqnrollAttributeHelper.IsBindingAttribute(a.FullName.GetText())))
+                continue;
 
-            foreach (var type in metadataAssembly.GetTypes())
+            var classScopes = scopeAttributeUtil.GetScopesFromAttributes(type.CustomAttributes);
+            var classCacheEntry = new ReqnrollStepDefinitionCacheClassEntry(type.FullyQualifiedName, true, classScopes);
+
+            foreach (var method in type.GetMethods().Where(x => x.IsPublic))
             {
-                if (type.CustomAttributesTypeNames.All(a => !ReqnrollAttributeHelper.IsBindingAttribute(a.FullName.GetText())))
-                    continue;
-
-                var classScopes = scopeAttributeUtil.GetScopesFromAttributes(type.CustomAttributes);
-                var classCacheEntry = new ReqnrollStepDefinitionCacheClassEntry(type.FullyQualifiedName, true, classScopes);
-
-                foreach (var method in type.GetMethods().Where(x => x.IsPublic))
+                // FIXME: We should avoid adding method that are not step here (it's just using more memory)
+                var methodScopes = scopeAttributeUtil.GetScopesFromAttributes(method.CustomAttributes);
+                var methodParameterTypes = new string[method.Parameters.Length];
+                var methodParameterNames = new string[method.Parameters.Length];
+                for (var i = 0; i < method.Parameters.Length; i++)
                 {
-                    // FIXME: We should avoid adding method that are not step here (it's just using more memory)
-                    var methodScopes = scopeAttributeUtil.GetScopesFromAttributes(method.CustomAttributes);
-                    var methodParameterTypes = new string[method.Parameters.Length];
-                    var methodParameterNames = new string[method.Parameters.Length];
-                    for (var i = 0; i < method.Parameters.Length; i++)
-                    {
-                        var parameterDeclaration = method.Parameters[i];
-                        methodParameterTypes[i] = parameterDeclaration.Type.FullName;
-                        methodParameterNames[i] = parameterDeclaration.Name;
-                    }
-                    var methodCacheEntry = classCacheEntry.AddMethod(method.Name, methodParameterTypes, methodParameterNames, methodScopes);
-
-                    for (var index = 0; index < method.CustomAttributes.Length; index++)
-                    {
-                        var attributeInstance = method.CustomAttributes[index];
-                        if (attributeInstance.ConstructorArguments.Length == 0)
-                            continue;
-
-                        if (attributeInstance.ConstructorArguments[0].Value is not string regex)
-                            continue;
-
-                        var attributeTypeName = method.CustomAttributesTypeNames[index].FullName.ToString();
-                        if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.Given, attributeTypeName))
-                            methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
-                        if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.When, attributeTypeName))
-                            methodCacheEntry.AddStep(GherkinStepKind.When, regex);
-                        if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.Then, attributeTypeName))
-                            methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
-                    }
+                    var parameterDeclaration = method.Parameters[i];
+                    methodParameterTypes[i] = parameterDeclaration.Type.FullName;
+                    methodParameterNames[i] = parameterDeclaration.Name;
                 }
-                stepDefinitions.Add(classCacheEntry);
+                var methodCacheEntry = classCacheEntry.AddMethod(method.Name, methodParameterTypes, methodParameterNames, methodScopes);
+
+                for (var index = 0; index < method.CustomAttributes.Length; index++)
+                {
+                    var attributeInstance = method.CustomAttributes[index];
+                    if (attributeInstance.ConstructorArguments.Length == 0)
+                        continue;
+
+                    if (attributeInstance.ConstructorArguments[0].Value is not string regex)
+                        continue;
+
+                    var attributeTypeName = method.CustomAttributesTypeNames[index].FullName.ToString();
+                    if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.Given, attributeTypeName))
+                        methodCacheEntry.AddStep(GherkinStepKind.Given, regex);
+                    if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.When, attributeTypeName))
+                        methodCacheEntry.AddStep(GherkinStepKind.When, regex);
+                    if (ReqnrollAttributeHelper.IsAttributeForKind(GherkinStepKind.Then, attributeTypeName))
+                        methodCacheEntry.AddStep(GherkinStepKind.Then, regex);
+                }
             }
-        });
+            stepDefinitions.Add(classCacheEntry);
+        }
         return stepDefinitions;
     }
 
