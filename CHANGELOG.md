@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2026.2.0
+- Support for Rider 2026.2. Fixes [#87](https://github.com/reqnroll/Reqnroll.Rider/issues/87)
+
 ## 2026.1.2
 - Fix incorrect translation for Dutch feature files containing a 'Rule' section. Fixes [#85](https://github.com/reqnroll/Reqnroll.Rider/issues/85) (@thimok)
 
