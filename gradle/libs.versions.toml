@@ -1,6 +1,6 @@
 [versions]
 # https://plugins.jetbrains.com/docs/intellij/using-kotlin.html#kotlin-standard-library
-kotlin = "2.2.20"
+kotlin = "2.4.0"
 # https://github.com/JetBrains/rd/releases
 rdGen = "2026.2.5"
 
