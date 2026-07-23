@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Copyright © 2015-2021 the original authors.
+# Copyright © 2015 the original authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -114,7 +114,6 @@ case "$( uname )" in                #(
   NONSTOP* )        nonstop=true ;;
 esac
 
-CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
 
 # GRADLE JVM WRAPPER START MARKER
@@ -124,30 +123,30 @@ JVM_TEMP_FILE=$BUILD_DIR/gradle-jvm-temp.tar.gz
 if [ "$darwin" = "true" ]; then
     case $JVM_ARCH in
     x86_64)
-        JVM_URL=https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-x64_bin.tar.gz
-        JVM_TARGET_DIR=$BUILD_DIR/jdk-21.0.3_macos-x64_bin-6c24ae
+        JVM_URL=https://download.oracle.com/java/25/archive/jdk-25_macos-x64_bin.tar.gz
+        JVM_TARGET_DIR=$BUILD_DIR/jdk-25_macos-x64_bin-80ddf8
         ;;
     arm64)
-        JVM_URL=https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-aarch64_bin.tar.gz
-        JVM_TARGET_DIR=$BUILD_DIR/jdk-21.0.3_macos-aarch64_bin-612aa7
+        JVM_URL=https://download.oracle.com/java/25/archive/jdk-25_macos-aarch64_bin.tar.gz
+        JVM_TARGET_DIR=$BUILD_DIR/jdk-25_macos-aarch64_bin-648be8
         ;;
     *) 
         die "Unknown architecture $JVM_ARCH"
         ;;
     esac
 elif [ "$cygwin" = "true" ] || [ "$msys" = "true" ]; then
-    JVM_URL=https://download.oracle.com/java/21/archive/jdk-21.0.3_windows-x64_bin.zip
-    JVM_TARGET_DIR=$BUILD_DIR/jdk-21.0.3_windows-x64_bin-125c41
+    JVM_URL=https://download.oracle.com/java/25/archive/jdk-25_windows-x64_bin.zip
+    JVM_TARGET_DIR=$BUILD_DIR/jdk-25_windows-x64_bin-aa3e1f
 else
     JVM_ARCH=$(linux$(getconf LONG_BIT) uname -m)
      case $JVM_ARCH in
         x86_64)
-            JVM_URL=https://download.oracle.com/java/21/archive/jdk-21.0.3_linux-x64_bin.tar.gz
-            JVM_TARGET_DIR=$BUILD_DIR/jdk-21.0.3_linux-x64_bin-5412b9
+            JVM_URL=https://download.oracle.com/java/25/archive/jdk-25_linux-x64_bin.tar.gz
+            JVM_TARGET_DIR=$BUILD_DIR/jdk-25_linux-x64_bin-d63c41
             ;;
         aarch64)
-            JVM_URL=https://download.oracle.com/java/21/archive/jdk-21.0.3_linux-aarch64_bin.tar.gz
-            JVM_TARGET_DIR=$BUILD_DIR/jdk-21.0.3_linux-aarch64_bin-7910df
+            JVM_URL=https://download.oracle.com/java/25/archive/jdk-25_linux-aarch64_bin.tar.gz
+            JVM_TARGET_DIR=$BUILD_DIR/jdk-25_linux-aarch64_bin-854c35
             ;;
         *) 
             die "Unknown architecture $JVM_ARCH"
@@ -263,7 +262,6 @@ fi
 # For Cygwin or MSYS, switch paths to Windows format before running java
 if "$cygwin" || "$msys" ; then
     APP_HOME=$( cygpath --path --mixed "$APP_HOME" )
-    CLASSPATH=$( cygpath --path --mixed "$CLASSPATH" )
 
     JAVACMD=$( cygpath --unix "$JAVACMD" )
 
@@ -303,8 +301,7 @@ DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
 
 set -- \
         "-Dorg.gradle.appname=$APP_BASE_NAME" \
-        -classpath "$CLASSPATH" \
-        org.gradle.wrapper.GradleWrapperMain \
+        -jar "$APP_HOME/gradle/wrapper/gradle-wrapper.jar" \
         "$@"
 
 # Stop when "xargs" is not available.
