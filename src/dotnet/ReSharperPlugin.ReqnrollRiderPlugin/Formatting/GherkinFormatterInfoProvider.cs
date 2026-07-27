@@ -106,6 +106,14 @@ public class GherkinFormatterInfoProvider(ISettingsSchema settingsSchema, ICalcu
             .Build();
 
         Describe<BlankLinesRule>()
+            .Name("LineBeforeRule")
+            .Group(ExtendedLineBreakGroup)
+            .Where(
+                Right().HasType(GherkinNodeTypes.RULE))
+            .SwitchBlankLines(s => s.BlankLinesBeforeRule, true, BlankLineLimitKind.LimitBothStrict)
+            .Build();
+
+        Describe<BlankLinesRule>()
             .Name("LineBetweenStepAndExamples")
             .Group(ExtendedLineBreakGroup)
             .Where(
