@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+- Discover step definitions written with [Bobcat](https://github.com/JasperFx/bobcat)'s attributes (`Bobcat.Given`/`When`/`Then`, and `Bobcat.Check` as a Then), in source and in referenced assemblies. A class that declares steps no longer needs a `[Binding]` to be indexed. Reqnroll and SpecFlow behaviour is unchanged.
+
 ## 2026.2.0
 - Support for Rider 2026.2. Fixes [#87](https://github.com/reqnroll/Reqnroll.Rider/issues/87)
 - Fix step-definition caching and navigation for referenced assemblies with Rider 2026.2
