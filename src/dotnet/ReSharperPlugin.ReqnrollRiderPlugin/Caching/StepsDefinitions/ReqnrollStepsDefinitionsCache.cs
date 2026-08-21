@@ -34,7 +34,7 @@ public class ReqnrollStepsDefinitionsCache(
     ScopeAttributeUtil scopeAttributeUtil)
     : SimpleICache<ReqnrollStepsDefinitionsCacheEntries>(lifetime, locks, persistentIndexManager, new ReqnrollStepDefinitionsEntriesMarshaller(), VersionInt)
 {
-    private const int VersionInt = 15;
+    private const int VersionInt = 16;
     public override string Version => VersionInt.ToString();
 
     // FIXME: per step kind
@@ -96,7 +96,8 @@ public class ReqnrollStepsDefinitionsCache(
             if (!(type is IClassDeclaration classDeclaration))
                 continue;
             var hasBindingAttribute = HasBindingAttribute(classDeclaration);
-            if (!hasBindingAttribute && !classDeclaration.IsPartial)
+            // Bobcat fixtures and grammar modules carry no [Binding]: a class that declares steps is a step class.
+            if (!hasBindingAttribute && !classDeclaration.IsPartial && !DeclaresSteps(classDeclaration))
                 continue;
             if (IsReqnrollFeatureFile(classDeclaration))
                 continue;
@@ -167,6 +168,19 @@ public class ReqnrollStepsDefinitionsCache(
             }
         }
         return bindingAttributeFound;
+    }
+
+    // Syntactic on purpose: this runs while the cache is being built, where resolving the attribute types is not an
+    // option (see GetBindingTypes), so it applies the same short-name rule as AddToCacheEntryBasedOnAttributeRegex.
+    private static bool DeclaresSteps(IClassDeclaration classDeclaration)
+    {
+        foreach (var methodDeclaration in classDeclaration.MethodDeclarations)
+        foreach (var attribute in methodDeclaration.Attributes)
+        {
+            if (attribute.Arguments.Count == 1 && ReqnrollAttributeHelper.IsStepAttributeShortName(attribute.Name.ShortName))
+                return true;
+        }
+        return false;
     }
 
     public override void MergeLoaded(object data)

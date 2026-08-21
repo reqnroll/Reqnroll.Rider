@@ -74,13 +74,16 @@ public class AssemblyStepDefinitionCache(
             return null;
 
         var stepDefinitions = new ReqnrollStepsDefinitionsCacheEntries();
+        var canContainBobcatSteps = ReqnrollAttributeHelper.CanContainBobcatSteps(metadataAssembly);
         foreach (var type in metadataAssembly.GetTypes())
         {
-            if (type.CustomAttributesTypeNames.All(a => !ReqnrollAttributeHelper.IsBindingAttribute(a.FullName.GetText())))
+            var hasBindingAttribute = type.CustomAttributesTypeNames.Any(a => ReqnrollAttributeHelper.IsBindingAttribute(a.FullName.GetText()));
+            // Bobcat fixtures and grammar modules carry no [Binding]: a type that declares steps is a step class.
+            if (!hasBindingAttribute && !(canContainBobcatSteps && DeclaresSteps(type)))
                 continue;
 
             var classScopes = scopeAttributeUtil.GetScopesFromAttributes(type.CustomAttributes);
-            var classCacheEntry = new ReqnrollStepDefinitionCacheClassEntry(type.FullyQualifiedName, true, classScopes);
+            var classCacheEntry = new ReqnrollStepDefinitionCacheClassEntry(type.FullyQualifiedName, hasBindingAttribute, classScopes);
 
             foreach (var method in type.GetMethods().Where(x => x.IsPublic))
             {
@@ -117,6 +120,11 @@ public class AssemblyStepDefinitionCache(
             stepDefinitions.Add(classCacheEntry);
         }
         return stepDefinitions;
+    }
+
+    private static bool DeclaresSteps(IMetadataTypeInfo type)
+    {
+        return type.GetMethods().Any(method => method.IsPublic && method.CustomAttributesTypeNames.Any(a => ReqnrollAttributeHelper.IsStepAttribute(a.FullName.GetText())));
     }
 
     public void Merge(IPsiAssembly assembly, object builtPart, Func<bool> checkForTermination)
