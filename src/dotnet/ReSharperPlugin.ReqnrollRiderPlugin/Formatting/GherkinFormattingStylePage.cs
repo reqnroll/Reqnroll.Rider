@@ -96,6 +96,8 @@ public class GherkinFormattingStylePageSchema(
               When I eat 5 cucumbers
               Then I should have 15 cucumbers
             
+            Rule: Cucumber rule
+            
             Scenario: PyString
               Given the following text
               """
@@ -132,6 +134,7 @@ public class GherkinFormattingStylePageSchema(
             .Category("Blank lines rules")
             .ItemFor(key => key.BlankLinesBeforeExamples, indentationExample)
             .ItemFor(key => key.BlankLinesBeforeScenario, indentationExample)
+            .ItemFor(key => key.BlankLinesBeforeRule,     indentationExample)
             .EndCategory();
 
         builder

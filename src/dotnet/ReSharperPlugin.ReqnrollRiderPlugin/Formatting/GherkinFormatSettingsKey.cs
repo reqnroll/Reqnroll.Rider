@@ -80,11 +80,18 @@ public class GherkinFormatSettingsKey : FormatSettingsKeyBase
     public int BlankLinesBeforeExamples { get; set; } = 1;
 
     /// <summary>
-    ///     The number of blank lines before the "Examples" clause
+    ///     The number of blank lines before the "Scenario" clause
     /// </summary>
     [EditorConfigEntryAlias("blank_lines_before_scenario", EditorConfigAliasType.LanguageSpecificStandard)]
     [SettingsEntry(1, "Blank lines before scenario")]
     public int BlankLinesBeforeScenario { get; set; } = 1;
+
+    /// <summary>
+    ///     The number of blank lines before the "Rule" clause
+    /// </summary>
+    [EditorConfigEntryAlias("blank_lines_before_rule", EditorConfigAliasType.LanguageSpecificStandard)]
+    [SettingsEntry(1, "Blank lines before rule")]
+    public int BlankLinesBeforeRule { get; set; } = 1;
 
     /// <summary>
     ///     Wrap tags on different lines
